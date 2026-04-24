@@ -527,6 +527,7 @@
 
   <!-- Scripts -->
   <script src="js/main.js"></script>
+  <script src="js/sb.js"></script>
   <script>
   (function(){
     var DEFAULTS = {
@@ -555,6 +556,13 @@
 
     function set(id, txt){ var el=document.getElementById(id); if(el && txt!==undefined && txt!==null) el.textContent=txt; }
 
+    /* Sync from Supabase if localStorage empty, then apply */
+    (async function(){
+      await sbSyncLocal('page_rn_v1','intal_rn_v1');
+      applyData();
+    })();
+
+    function applyData(){
     var d = loadData();
 
     // Apliko imazhin e sfondit gjithmonë nëse ekziston
@@ -617,6 +625,7 @@
         if(section) section.style.display='none';
       }
     } catch(e){ console.warn('Rreth Nesh render error:', e); }
+    } // end applyData
   })();
   </script>
 

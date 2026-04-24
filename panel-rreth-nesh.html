@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Panel — Rreth Nesh</title>
 <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
+<script src="js/sb.js"></script>
 <style>
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
   :root{
@@ -244,7 +245,11 @@
     return JSON.parse(JSON.stringify(DEFAULTS));
   }
 
-  function saveData(d){ localStorage.setItem('intal_rn_v1', JSON.stringify(d)); }
+  function saveData(d){
+    var str = JSON.stringify(d);
+    localStorage.setItem('intal_rn_v1', str);
+    if(d._saved) sbSet('page_rn_v1', str).catch(function(){});
+  }
 
   function getFormData(){
     var d = loadData();

@@ -223,6 +223,7 @@
 
 
   <script src="js/main.js"></script>
+  <script src="js/sb.js"></script>
   <script>
   (function(){
     function loadData(){ try{ var r=localStorage.getItem('intal_cache_v1'); if(r) return JSON.parse(r); }catch(e){} return null; }
@@ -485,7 +486,14 @@
     document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeArtDetail(); });
 
     window.addEventListener('hashchange',route);
-    route();
+    /* Supabase sync: load cache if empty, then route */
+    (async function(){
+      var refreshed = await sbSyncCache();
+      /* also sync page-level content (hero banner etc.) */
+      var pageRefreshed = await sbSyncLocal('page_art_v1','intal_art_page_v1');
+      route();
+      if(pageRefreshed) location.reload();
+    })();
   })();
   </script>
 

@@ -728,6 +728,7 @@
 
   <!-- Scripts -->
   <script src="js/main.js"></script>
+  <script src="js/sb.js"></script>
 
   <script>
     /* ── Multi-select product picker ────────────────────────── */
@@ -1239,7 +1240,13 @@
       }
     });
 
-    renderShowcase();
+    /* Supabase sync on first visit */
+    (async function(){
+      var refreshed = await sbSyncCache();
+      await sbSyncLocal('page_home_v1','intal_home_v1');
+      renderShowcase();
+      if(refreshed) renderShowcase();
+    })();
   })();
   </script>
 

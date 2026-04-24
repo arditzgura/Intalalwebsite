@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Panel Home — Intal</title>
 <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
+<script src="js/sb.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{--accent:#C8003E;--black:#111;--white:#fff;--bg:#f4f4f4;--border:#e2e2e2;--muted:#888;}
@@ -327,7 +328,9 @@ function liveUpdate(){
 function saveAll(){
   var d = collectData();
   d._saved = true;
-  localStorage.setItem(KEY, JSON.stringify(d));
+  var str = JSON.stringify(d);
+  localStorage.setItem(KEY, str);
+  sbSet('page_home_v1', str).catch(function(){});
   refreshPreview();
   var btn = document.querySelector('.btn-save');
   btn.textContent = '✓ Ruajtur';
