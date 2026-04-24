@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Panel Artikujt — Intal</title>
+<link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--accent:#C8003E;--black:#111;--white:#fff;--bg:#f4f4f4;--border:#e2e2e2;--muted:#888;}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);height:100vh;display:flex;flex-direction:column;overflow:hidden;}
+
+.top-bar{background:var(--black);padding:0 24px;height:48px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:12px;}
+.top-bar .logo{background:var(--accent);padding:3px 10px;border-radius:4px;font-weight:900;font-size:13px;color:#fff;letter-spacing:-.5px;}
+.top-bar .title{font-size:12px;color:#888;letter-spacing:.5px;flex:1;text-align:center;}
+.top-bar .actions{display:flex;align-items:center;gap:8px;}
+.btn-save{background:var(--accent);color:#fff;border:none;padding:6px 16px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:.5px;cursor:pointer;text-transform:uppercase;}
+.btn-save:hover{opacity:.85;}
+.btn-back{font-size:11px;color:#aaa;text-decoration:none;border:1px solid #444;padding:5px 12px;border-radius:4px;letter-spacing:.5px;}
+.btn-back:hover{color:#fff;border-color:#fff;}
+
+.split{display:flex;flex:1;overflow:hidden;}
+
+.left-panel{width:380px;flex-shrink:0;background:var(--white);border-right:.5px solid var(--border);display:flex;flex-direction:column;overflow:hidden;}
+.tabs{display:flex;border-bottom:.5px solid var(--border);flex-shrink:0;}
+.tab{flex:1;padding:10px 6px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);background:none;border:none;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;}
+.tab.active{color:var(--black);border-bottom-color:var(--black);}
+.tab-content{display:none;overflow-y:auto;flex:1;padding:20px;}
+.tab-content.active{display:block;}
+
+.field{margin-bottom:16px;}
+.field label{display:block;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+.field input,.field textarea{width:100%;border:.5px solid var(--border);border-radius:4px;padding:8px 10px;font-size:13px;font-family:inherit;background:#fafafa;color:var(--black);outline:none;transition:border-color .15s;}
+.field input:focus,.field textarea:focus{border-color:var(--black);background:#fff;}
+.field textarea{resize:vertical;min-height:72px;line-height:1.5;}
+.section-title{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--black);margin:20px 0 12px;padding-bottom:6px;border-bottom:.5px solid var(--border);}
+.section-title:first-child{margin-top:0;}
+.img-upload-wrap{position:relative;background:#f0f0f0;border:.5px solid var(--border);border-radius:4px;overflow:hidden;cursor:pointer;height:120px;display:flex;align-items:center;justify-content:center;}
+.img-upload-wrap img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+.img-upload-wrap .upload-hint{font-size:11px;color:var(--muted);text-align:center;pointer-events:none;z-index:1;}
+.img-upload-wrap input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;z-index:2;}
+.hint-text{font-size:11px;color:var(--muted);line-height:1.5;margin-bottom:16px;padding:10px 12px;background:#f8f8f8;border-radius:4px;border:.5px solid var(--border);}
+
+.right-preview{flex:1;background:#e0e0e0;position:relative;overflow:hidden;}
+.right-preview iframe{width:100%;height:100%;border:none;pointer-events:none;}
+.preview-label{position:absolute;bottom:12px;right:12px;background:rgba(0,0,0,.6);color:#fff;font-size:10px;letter-spacing:1px;padding:4px 10px;border-radius:20px;}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="logo">intal</div>
+  <span class="title">ARTIKUJT — Faqja Publike</span>
+  <div class="actions">
+    <a class="btn-back" href="panel-dashboard.html" onclick="sessionStorage.setItem('intal_logged','1')">← Dashboard</a>
+    <button class="btn-save" onclick="saveAll()">Ruaj &amp; Refresh</button>
+  </div>
+</div>
+
+<div class="split">
+  <div class="left-panel">
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('hero',this)">Banner Hero</button>
+      <button class="tab" onclick="switchTab('footer',this)">Footer</button>
+    </div>
+
+    <!-- TAB: HERO -->
+    <div class="tab-content active" id="tab-hero">
+      <p class="hint-text">Banner hero shfaqet mbi listën e artikujve. Nëse nuk vendos asnjë vlerë, banner-i mbetet i fshehur.</p>
+      <p class="section-title">Imazhi Background</p>
+      <div class="field">
+        <div class="img-upload-wrap" id="hero-bg-wrap">
+          <div class="upload-hint"><i class="ri-image-line" style="font-size:22px;display:block;margin-bottom:4px;"></i>Kliko për të ngarkuar</div>
+          <input type="file" accept="image/*" onchange="uploadHeroBg(this)">
+        </div>
+      </div>
+      <p class="section-title">Teksti</p>
+      <div class="field"><label>Eyebrow (tekst i vogël sipër)</label><input type="text" id="hero-eyebrow" placeholder="p.sh. Koleksioni 2025" oninput="liveUpdate()"></div>
+      <div class="field"><label>Titulli Kryesor</label><input type="text" id="hero-heading" placeholder="p.sh. Artikujt" oninput="liveUpdate()"></div>
+      <div class="field"><label>Nëntitulli</label><textarea id="hero-sub" placeholder="p.sh. Zbulo koleksionin e plotë të brendëshmes..." oninput="liveUpdate()"></textarea></div>
+    </div>
+
+    <!-- TAB: FOOTER -->
+    <div class="tab-content" id="tab-footer">
+      <p class="section-title">Lokacioni 1</p>
+      <div class="field"><label>Emërtimi</label><input type="text" id="loc0-name" oninput="liveUpdate()"></div>
+      <div class="field"><label>Adresa</label><input type="text" id="loc0-addr" oninput="liveUpdate()"></div>
+      <p class="section-title">Lokacioni 2</p>
+      <div class="field"><label>Emërtimi</label><input type="text" id="loc1-name" oninput="liveUpdate()"></div>
+      <div class="field"><label>Adresa</label><input type="text" id="loc1-addr" oninput="liveUpdate()"></div>
+    </div>
+  </div>
+
+  <div class="right-preview">
+    <iframe id="preview-frame" src="artikujt.html"></iframe>
+    <div class="preview-label">Pamja Live</div>
+  </div>
+</div>
+
+<script>
+if(!sessionStorage.getItem('intal_logged')) location.href='index.html';
+
+var KEY = 'intal_art_page_v1';
+var _deb = null;
+
+var DEFAULTS = {
+  _saved: false,
+  hero: { eyebrow:'', heading:'', sub:'', bgImage:'' },
+  footer: {
+    loc0name:'Selia Kryesore', loc0addr:'Rrobaqepësi INTAL, Rruga Arbanes, Vaqarr, Tiranë 1035',
+    loc1name:'Dyqani', loc1addr:'Intal, Rruga 5 Maji 67/1, Tiranë 1032'
+  }
+};
+
+function loadData(){
+  try{ var r=localStorage.getItem(KEY); if(r) return JSON.parse(r); }catch(e){}
+  return JSON.parse(JSON.stringify(DEFAULTS));
+}
+
+function val(id){ var el=document.getElementById(id); return el?el.value:''; }
+
+function fillForm(){
+  var d=loadData();
+  var h=d.hero||DEFAULTS.hero, f=d.footer||DEFAULTS.footer;
+  document.getElementById('hero-eyebrow').value=h.eyebrow||'';
+  document.getElementById('hero-heading').value=h.heading||'';
+  document.getElementById('hero-sub').value=h.sub||'';
+  if(h.bgImage){
+    var w=document.getElementById('hero-bg-wrap');
+    w.innerHTML='<img src="'+h.bgImage+'"><input type="file" accept="image/*" onchange="uploadHeroBg(this)" style="position:absolute;inset:0;opacity:0;cursor:pointer;z-index:2;">';
+  }
+  document.getElementById('loc0-name').value=f.loc0name||'';
+  document.getElementById('loc0-addr').value=f.loc0addr||'';
+  document.getElementById('loc1-name').value=f.loc1name||'';
+  document.getElementById('loc1-addr').value=f.loc1addr||'';
+}
+
+function collectData(){
+  var d=loadData();
+  d._saved=true;
+  d.hero={
+    eyebrow:val('hero-eyebrow'), heading:val('hero-heading'),
+    sub:val('hero-sub'), bgImage:(d.hero&&d.hero.bgImage)||''
+  };
+  d.footer={
+    loc0name:val('loc0-name'), loc0addr:val('loc0-addr'),
+    loc1name:val('loc1-name'), loc1addr:val('loc1-addr')
+  };
+  return d;
+}
+
+function liveUpdate(){
+  clearTimeout(_deb);
+  _deb=setTimeout(function(){
+    var d=collectData();
+    localStorage.setItem(KEY,JSON.stringify(d));
+    refreshPreview();
+  },600);
+}
+
+function saveAll(){
+  var d=collectData(); d._saved=true;
+  localStorage.setItem(KEY,JSON.stringify(d));
+  refreshPreview();
+  var btn=document.querySelector('.btn-save');
+  btn.textContent='✓ Ruajtur';
+  setTimeout(function(){btn.textContent='Ruaj & Refresh';},1800);
+}
+
+function refreshPreview(){
+  document.getElementById('preview-frame').src='artikujt.html?v='+Date.now();
+}
+
+function uploadHeroBg(input){
+  var file=input.files[0]; if(!file) return;
+  var reader=new FileReader();
+  reader.onload=function(e){
+    var src=e.target.result;
+    var d=loadData(); if(!d.hero) d.hero={};
+    d.hero.bgImage=src; d._saved=true;
+    localStorage.setItem(KEY,JSON.stringify(d));
+    var w=document.getElementById('hero-bg-wrap');
+    w.innerHTML='<img src="'+src+'"><input type="file" accept="image/*" onchange="uploadHeroBg(this)" style="position:absolute;inset:0;opacity:0;cursor:pointer;z-index:2;">';
+    refreshPreview();
+  };
+  reader.readAsDataURL(file);
+}
+
+function switchTab(id,btn){
+  document.querySelectorAll('.tab').forEach(function(b){b.classList.remove('active');});
+  document.querySelectorAll('.tab-content').forEach(function(t){t.classList.remove('active');});
+  btn.classList.add('active');
+  document.getElementById('tab-'+id).classList.add('active');
+}
+
+fillForm();
+</script>
+</body>
+</html>

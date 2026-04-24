@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Panel — Rreth Nesh</title>
+<link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  :root{
+    --bg:#f4f4f4;--white:#fff;--black:#111;--border:#e2e2e2;--muted:#888;
+    --accent:#C8003E;--panel:400px;
+  }
+  body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);display:flex;height:100vh;overflow:hidden;}
+
+  /* ── Sidebar panel ── */
+  #panel{width:var(--panel);flex-shrink:0;background:var(--white);border-right:.5px solid var(--border);display:flex;flex-direction:column;height:100vh;overflow:hidden;}
+  #panel-top{padding:16px 20px;border-bottom:.5px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0;}
+  #panel-top .logo{background:var(--accent);padding:4px 10px;border-radius:4px;font-weight:900;font-size:13px;color:#fff;letter-spacing:-0.5px;}
+  #panel-top .title{font-size:13px;font-weight:600;color:var(--black);}
+  #panel-top .back{margin-left:auto;font-size:11px;color:var(--muted);text-decoration:none;display:flex;align-items:center;gap:4px;}
+  #panel-top .back:hover{color:var(--black);}
+
+  #panel-tabs{display:flex;border-bottom:.5px solid var(--border);flex-shrink:0;overflow-x:auto;}
+  .ptab{padding:10px 14px;font-size:11px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all .15s;}
+  .ptab.active{color:var(--black);border-bottom-color:var(--black);}
+  .ptab:hover{color:var(--black);}
+
+  #panel-body{flex:1;overflow-y:auto;padding:20px;}
+  .panel-section{display:none;}
+  .panel-section.active{display:block;}
+
+  .pfield{margin-bottom:16px;}
+  .pfield label{display:block;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+  .pfield input[type=text],.pfield textarea{width:100%;background:var(--bg);border:.5px solid var(--border);border-radius:4px;padding:8px 10px;font-size:13px;color:var(--black);resize:vertical;font-family:inherit;transition:border-color .15s;}
+  .pfield input[type=text]:focus,.pfield textarea:focus{outline:none;border-color:var(--black);}
+  .pfield textarea{min-height:80px;}
+
+  .pgroup{background:var(--bg);border:.5px solid var(--border);border-radius:6px;padding:14px;margin-bottom:14px;}
+  .pgroup-title{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:12px;}
+
+  .img-upload-wrap{position:relative;border:.5px dashed var(--border);border-radius:4px;overflow:hidden;aspect-ratio:16/5;background:var(--bg);cursor:pointer;transition:border-color .15s;}
+  .img-upload-wrap:hover{border-color:var(--black);}
+  .img-upload-wrap img{width:100%;height:100%;object-fit:cover;display:block;}
+  .img-upload-wrap .img-placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:var(--muted);font-size:11px;letter-spacing:.5px;}
+  .img-upload-wrap .img-placeholder i{font-size:22px;}
+  .img-upload-wrap input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;}
+  .img-clear{margin-top:6px;font-size:11px;color:var(--muted);cursor:pointer;background:none;border:none;padding:0;}
+  .img-clear:hover{color:var(--accent);}
+
+  #panel-footer{padding:14px 20px;border-top:.5px solid var(--border);flex-shrink:0;display:flex;gap:8px;}
+  .btn-save{flex:1;background:var(--black);color:#fff;border:none;padding:10px;font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border-radius:3px;transition:opacity .15s;}
+  .btn-save:hover{opacity:.8;}
+  .btn-reset{background:none;border:.5px solid var(--border);color:var(--muted);padding:10px 14px;font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border-radius:3px;transition:all .15s;}
+  .btn-reset:hover{border-color:var(--black);color:var(--black);}
+  #save-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--black);color:#fff;padding:8px 20px;border-radius:4px;font-size:12px;font-weight:500;letter-spacing:.5px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999;}
+  #save-toast.show{opacity:1;}
+
+  /* ── Partners ── */
+  .partner-item{background:var(--white);border:.5px solid var(--border);border-radius:6px;padding:12px;margin-bottom:10px;display:flex;gap:10px;align-items:flex-start;}
+  .partner-thumb-wrap{position:relative;width:80px;height:56px;flex-shrink:0;background:var(--bg);border:.5px dashed var(--border);border-radius:4px;overflow:hidden;cursor:pointer;transition:border-color .15s;}
+  .partner-thumb-wrap:hover{border-color:var(--black);}
+  .partner-thumb-wrap img{width:100%;height:100%;object-fit:contain;display:block;}
+  .partner-thumb-wrap .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--border);}
+  .partner-thumb-wrap input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;}
+  .partner-info{flex:1;display:flex;flex-direction:column;gap:6px;}
+  .partner-info input{width:100%;background:var(--bg);border:.5px solid var(--border);border-radius:4px;padding:6px 8px;font-size:12px;color:var(--black);font-family:inherit;}
+  .partner-info input:focus{outline:none;border-color:var(--black);}
+  .partner-del{background:none;border:none;cursor:pointer;color:var(--border);font-size:16px;padding:2px;flex-shrink:0;transition:color .15s;}
+  .partner-del:hover{color:var(--accent);}
+  .btn-add-partner{width:100%;border:.5px dashed var(--border);background:none;padding:10px;font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted);cursor:pointer;border-radius:4px;margin-top:4px;transition:all .15s;}
+  .btn-add-partner:hover{border-color:var(--black);color:var(--black);}
+
+  /* ── Preview iframe ── */
+  #preview-wrap{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+  #preview-bar{padding:8px 16px;background:var(--white);border-bottom:.5px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0;}
+  #preview-bar span{font-size:11px;color:var(--muted);letter-spacing:.5px;}
+  #preview-bar .url{flex:1;background:var(--bg);border:.5px solid var(--border);border-radius:20px;padding:5px 14px;font-size:11px;color:var(--muted);}
+  #preview-bar .refresh-btn{background:none;border:none;cursor:pointer;color:var(--muted);font-size:16px;padding:4px;}
+  #preview-bar .refresh-btn:hover{color:var(--black);}
+  #preview-iframe{flex:1;border:none;width:100%;background:#fff;}
+</style>
+</head>
+<body>
+
+<!-- ── Sidebar ── -->
+<div id="panel">
+  <div id="panel-top">
+    <div class="logo">intal</div>
+    <span class="title">Rreth Nesh — Editor</span>
+    <a href="panel.html" class="back"><i class="ri-arrow-left-line"></i> Panel</a>
+  </div>
+
+  <div id="panel-tabs">
+    <div class="ptab active" data-tab="hero">Hero</div>
+    <div class="ptab" data-tab="overview">Kompania</div>
+    <div class="ptab" data-tab="mv">Misioni</div>
+    <div class="ptab" data-tab="values">Vlerat</div>
+    <div class="ptab" data-tab="partners">Partnerët</div>
+    <div class="ptab" data-tab="cta">CTA</div>
+  </div>
+
+  <div id="panel-body">
+
+    <!-- HERO -->
+    <div class="panel-section active" id="tab-hero">
+      <div class="pfield">
+        <label>Imazhi i Sfondit</label>
+        <div class="img-upload-wrap" id="hero-img-wrap">
+          <img id="hero-img-preview" src="" style="display:none;">
+          <div class="img-placeholder"><i class="ri-image-add-line"></i><span>Ngarko Imazh</span></div>
+          <input type="file" accept="image/*" id="hero-img-input">
+        </div>
+        <button class="img-clear" id="hero-img-clear">✕ Hiq imazhin</button>
+      </div>
+      <div class="pfield"><label>Teksti i Vogël (eyebrow)</label><input type="text" id="hero-eyebrow"></div>
+      <div class="pfield"><label>Titulli Kryesor</label><input type="text" id="hero-heading"></div>
+    </div>
+
+    <!-- OVERVIEW -->
+    <div class="panel-section" id="tab-overview">
+      <div class="pfield"><label>Etiketa e Seksionit</label><input type="text" id="ov-eyebrow"></div>
+      <div class="pfield"><label>Titulli</label><input type="text" id="ov-heading"></div>
+      <div class="pfield"><label>Teksti</label><textarea id="ov-body"></textarea></div>
+      <div class="pgroup">
+        <div class="pgroup-title">Statistikat</div>
+        <div class="pfield"><label>Numri 1</label><input type="text" id="stat-0-num"></div>
+        <div class="pfield"><label>Etiketa 1</label><input type="text" id="stat-0-lbl"></div>
+        <div class="pfield"><label>Numri 2</label><input type="text" id="stat-1-num"></div>
+        <div class="pfield"><label>Etiketa 2</label><input type="text" id="stat-1-lbl"></div>
+        <div class="pfield"><label>Numri 3</label><input type="text" id="stat-2-num"></div>
+        <div class="pfield"><label>Etiketa 3</label><input type="text" id="stat-2-lbl"></div>
+      </div>
+    </div>
+
+    <!-- MISSION & VISION -->
+    <div class="panel-section" id="tab-mv">
+      <div class="pgroup">
+        <div class="pgroup-title">Karta 1 — Vizioni</div>
+        <div class="pfield"><label>Titulli</label><input type="text" id="mv-0-title"></div>
+        <div class="pfield"><label>Teksti</label><textarea id="mv-0-text"></textarea></div>
+      </div>
+      <div class="pgroup">
+        <div class="pgroup-title">Karta 2 — Misioni</div>
+        <div class="pfield"><label>Titulli</label><input type="text" id="mv-1-title"></div>
+        <div class="pfield"><label>Teksti</label><textarea id="mv-1-text"></textarea></div>
+      </div>
+    </div>
+
+    <!-- VALUES -->
+    <div class="panel-section" id="tab-values">
+      <div class="pgroup">
+        <div class="pgroup-title">Vlera 1</div>
+        <div class="pfield"><label>Titulli</label><input type="text" id="val-0-title"></div>
+        <div class="pfield"><label>Teksti</label><textarea id="val-0-text"></textarea></div>
+      </div>
+      <div class="pgroup">
+        <div class="pgroup-title">Vlera 2</div>
+        <div class="pfield"><label>Titulli</label><input type="text" id="val-1-title"></div>
+        <div class="pfield"><label>Teksti</label><textarea id="val-1-text"></textarea></div>
+      </div>
+      <div class="pgroup">
+        <div class="pgroup-title">Vlera 3</div>
+        <div class="pfield"><label>Titulli</label><input type="text" id="val-2-title"></div>
+        <div class="pfield"><label>Teksti</label><textarea id="val-2-text"></textarea></div>
+      </div>
+    </div>
+
+    <!-- PARTNERS -->
+    <div class="panel-section" id="tab-partners">
+      <div class="pfield"><label>Etiketa e Seksionit</label><input type="text" id="pt-eyebrow"></div>
+      <div class="pfield"><label>Titulli</label><input type="text" id="pt-heading"></div>
+      <div id="partners-list"></div>
+      <button class="btn-add-partner" id="btn-add-partner"><i class="ri-add-line"></i> Shto Partner</button>
+    </div>
+
+    <!-- CTA -->
+    <div class="panel-section" id="tab-cta">
+      <div class="pfield"><label>Etiketa e Vogël</label><input type="text" id="cta-eyebrow"></div>
+      <div class="pfield"><label>Titulli</label><input type="text" id="cta-heading"></div>
+      <div class="pfield"><label>Teksti i Butonit</label><input type="text" id="cta-btn"></div>
+    </div>
+
+  </div><!-- /panel-body -->
+
+  <div id="panel-footer">
+    <button class="btn-save" id="btn-save">Ruaj & Refresh</button>
+    <button class="btn-reset" id="btn-reset" title="Kthe vlerat fillestare">Rikthe</button>
+  </div>
+</div>
+
+<!-- ── Preview ── -->
+<div id="preview-wrap">
+  <div id="preview-bar">
+    <span>PREVIEW</span>
+    <div class="url">rreth-nesh.html</div>
+    <button class="refresh-btn" id="btn-refresh" title="Rifresko"><i class="ri-refresh-line"></i></button>
+  </div>
+  <iframe id="preview-iframe" src="rreth-nesh.html"></iframe>
+</div>
+
+<div id="save-toast">Ndryshimet u ruajtën ✓</div>
+
+<script>
+(function(){
+  // Auth check
+  if(!sessionStorage.getItem('intal_logged')){ location.href='index.html'; return; }
+
+  var DEFAULTS = {
+    hero: { eyebrow:'Na Njihni', heading:'Rreth Intal', bgImage:'' },
+    overview: {
+      eyebrow:'Kompania',
+      heading:'Prodhues Shqiptar i Brendëshmes Premium',
+      body:'Intal është një nga prodhuesit kryesorë të brendëshmes në Shqipëri, me mbi 15 vite eksperiencë në industrinë e tekstilit. Kompania jonë është e dedikuar për prodhimin e brendëshmes premium duke përdorur materialet më të mira vendase dhe ndërkombëtare. Nga materiali deri te produkti final, çdo hap i prodhimit kryhet me standarde të larta cilësie, duke garantuar rehati dhe qëndrueshmëri afatgjatë. Ne bashkëpunojmë me mbi 500 partnerë biznesi në të gjithë rajonin, duke ofruar zgjidhje të personalizuara për çdo nevojë.',
+      stats:[{num:'15+',lbl:'Vite Eksperiencë'},{num:'100%',lbl:'Prodhim Vendor'},{num:'500+',lbl:'Partnerë'}]
+    },
+    mv:[
+      {title:'Vizioni Ynë', text:'Të bëhemi referencë kryesore e brendëshmes premium në rajon, duke udhëhequr me cilësi, inovacion dhe vlera shqiptare.'},
+      {title:'Misioni Ynë', text:'Ofrojmë produkte me cilësi të lartë, çmime konkurruese dhe shërbim të shkëlqyer ndaj çdo klienti, duke forcuar industrinë vendase.'}
+    ],
+    values:[
+      {title:'Cilësi', text:'Çdo produkt i Intal kalon kontrolle rigoroze të cilësisë. Përdorim vetëm materialet më të mira për të garantuar produkte që zgjasin dhe kënaqin.'},
+      {title:'Rehati', text:'Dizajnimi ynë ka rehatin si prioritet kryesor. Çdo prerje dhe material zgjidhet me kujdes për të ofruar ndjenjën e komfortit gjatë gjithë ditës.'},
+      {title:'Besueshmëri', text:'Mbi 500 partnerë biznesi zgjedhin Intal çdo ditë. Besimi i tyre ndaj nesh është pasqyrë e qëndrueshmërisë dhe profesionalizmit tonë.'}
+    ],
+    cta:{ eyebrow:'Kontakt', heading:'Bashkohuni me ne', btn:'Na Kontaktoni' },
+    partners:{
+      eyebrow:'Bashkëpunimi',
+      heading:'Partnerë të besuar në gjithë rajonin',
+      items:[]
+    }
+  };
+
+  function loadData(){
+    try{
+      var r=localStorage.getItem('intal_rn_v1');
+      if(r){
+        var d=JSON.parse(r);
+        // merge missing keys from DEFAULTS
+        if(!d.partners) d.partners=JSON.parse(JSON.stringify(DEFAULTS.partners));
+        return d;
+      }
+    }catch(e){}
+    return JSON.parse(JSON.stringify(DEFAULTS));
+  }
+
+  function saveData(d){ localStorage.setItem('intal_rn_v1', JSON.stringify(d)); }
+
+  function getFormData(){
+    var d = loadData();
+    d.hero.eyebrow = document.getElementById('hero-eyebrow').value;
+    d.hero.heading  = document.getElementById('hero-heading').value;
+    // bgImage handled by image upload, keep existing
+    d.overview.eyebrow = document.getElementById('ov-eyebrow').value;
+    d.overview.heading = document.getElementById('ov-heading').value;
+    d.overview.body    = document.getElementById('ov-body').value;
+    for(var i=0;i<3;i++){
+      d.overview.stats[i] = {
+        num: document.getElementById('stat-'+i+'-num').value,
+        lbl: document.getElementById('stat-'+i+'-lbl').value
+      };
+    }
+    for(var j=0;j<2;j++){
+      d.mv[j] = {
+        title: document.getElementById('mv-'+j+'-title').value,
+        text:  document.getElementById('mv-'+j+'-text').value
+      };
+    }
+    for(var k=0;k<3;k++){
+      d.values[k] = {
+        title: document.getElementById('val-'+k+'-title').value,
+        text:  document.getElementById('val-'+k+'-text').value
+      };
+    }
+    d.cta.eyebrow = document.getElementById('cta-eyebrow').value;
+    d.cta.heading = document.getElementById('cta-heading').value;
+    d.cta.btn     = document.getElementById('cta-btn').value;
+    // partners
+    d.partners.eyebrow = document.getElementById('pt-eyebrow').value;
+    d.partners.heading = document.getElementById('pt-heading').value;
+    d.partners.items = [];
+    document.querySelectorAll('.partner-item').forEach(function(el){
+      d.partners.items.push({
+        img:  el.dataset.img||'',
+        name: el.querySelector('.p-name').value
+      });
+    });
+    return d;
+  }
+
+  function fillForm(d){
+    document.getElementById('hero-eyebrow').value = d.hero.eyebrow||'';
+    document.getElementById('hero-heading').value  = d.hero.heading||'';
+    if(d.hero.bgImage){
+      document.getElementById('hero-img-preview').src = d.hero.bgImage;
+      document.getElementById('hero-img-preview').style.display = 'block';
+    }
+    document.getElementById('ov-eyebrow').value = d.overview.eyebrow||'';
+    document.getElementById('ov-heading').value = d.overview.heading||'';
+    document.getElementById('ov-body').value    = d.overview.body||'';
+    for(var i=0;i<3;i++){
+      var s = d.overview.stats[i]||{};
+      document.getElementById('stat-'+i+'-num').value = s.num||'';
+      document.getElementById('stat-'+i+'-lbl').value = s.lbl||'';
+    }
+    for(var j=0;j<2;j++){
+      var m = d.mv[j]||{};
+      document.getElementById('mv-'+j+'-title').value = m.title||'';
+      document.getElementById('mv-'+j+'-text').value  = m.text||'';
+    }
+    for(var k=0;k<3;k++){
+      var v = d.values[k]||{};
+      document.getElementById('val-'+k+'-title').value = v.title||'';
+      document.getElementById('val-'+k+'-text').value  = v.text||'';
+    }
+    document.getElementById('cta-eyebrow').value = d.cta.eyebrow||'';
+    document.getElementById('cta-heading').value = d.cta.heading||'';
+    document.getElementById('cta-btn').value     = d.cta.btn||'';
+    // partners
+    var pt = d.partners||{};
+    document.getElementById('pt-eyebrow').value = pt.eyebrow||'';
+    document.getElementById('pt-heading').value = pt.heading||'';
+    document.getElementById('partners-list').innerHTML='';
+    (pt.items||[]).forEach(function(item){ addPartnerRow(item.img, item.name); });
+  }
+
+  // Partner row builder
+  function addPartnerRow(imgSrc, name){
+    var li = document.createElement('div');
+    li.className = 'partner-item';
+    li.dataset.img = imgSrc||'';
+    li.innerHTML =
+      '<div class="partner-thumb-wrap">'
+      +'<img src="'+(imgSrc||'')+'" style="display:'+(imgSrc?'block':'none')+';">'
+      +'<div class="ph"><i class="ri-image-line"></i></div>'
+      +'<input type="file" accept="image/*">'
+      +'</div>'
+      +'<div class="partner-info">'
+      +'<input class="p-name" type="text" placeholder="Emri i partnerit" value="'+(name||'')+'">'
+      +'</div>'
+      +'<button class="partner-del" title="Fshi"><i class="ri-delete-bin-line"></i></button>';
+
+    // image upload
+    li.querySelector('input[type=file]').addEventListener('change', function(e){
+      var file = e.target.files[0]; if(!file) return;
+      var reader = new FileReader();
+      reader.onload = function(ev){
+        li.dataset.img = ev.target.result;
+        var img = li.querySelector('img');
+        img.src = ev.target.result; img.style.display='block';
+        var pd = getFormData(); pd._saved = true; saveData(pd); refreshPreview();
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // delete
+    li.querySelector('.partner-del').addEventListener('click', function(){
+      li.remove();
+      saveData(getFormData()); refreshPreview();
+    });
+
+    document.getElementById('partners-list').appendChild(li);
+  }
+
+  document.getElementById('btn-add-partner').addEventListener('click', function(){
+    addPartnerRow('','');
+    saveData(getFormData());
+  });
+
+  // Tabs
+  document.querySelectorAll('.ptab').forEach(function(tab){
+    tab.addEventListener('click', function(){
+      document.querySelectorAll('.ptab').forEach(function(t){ t.classList.remove('active'); });
+      document.querySelectorAll('.panel-section').forEach(function(s){ s.classList.remove('active'); });
+      tab.classList.add('active');
+      document.getElementById('tab-'+tab.dataset.tab).classList.add('active');
+    });
+  });
+
+  // Image upload
+  document.getElementById('hero-img-input').addEventListener('change', function(e){
+    var file = e.target.files[0]; if(!file) return;
+    var reader = new FileReader();
+    reader.onload = function(ev){
+      var src = ev.target.result;
+      document.getElementById('hero-img-preview').src = src;
+      document.getElementById('hero-img-preview').style.display = 'block';
+      var d = loadData(); d.hero.bgImage = src; d._saved = true; saveData(d);
+      refreshPreview();
+    };
+    reader.readAsDataURL(file);
+  });
+
+  document.getElementById('hero-img-clear').addEventListener('click', function(){
+    document.getElementById('hero-img-preview').src = '';
+    document.getElementById('hero-img-preview').style.display = 'none';
+    var d = loadData(); d.hero.bgImage = ''; saveData(d);
+    refreshPreview();
+  });
+
+  // Auto-save on input (debounced)
+  var autoTimer;
+  document.getElementById('panel-body').addEventListener('input', function(){
+    clearTimeout(autoTimer);
+    autoTimer = setTimeout(function(){
+      saveData(getFormData());
+      refreshPreview();
+    }, 600);
+  });
+
+  // Save button
+  document.getElementById('btn-save').addEventListener('click', function(){
+    var d = getFormData();
+    d._saved = true;
+    saveData(d);
+    refreshPreview();
+    showToast();
+  });
+
+  // Reset button
+  document.getElementById('btn-reset').addEventListener('click', function(){
+    if(!confirm('Kthehen vlerat fillestare. Vazhdo?')) return;
+    localStorage.removeItem('intal_rn_v1');
+    fillForm(JSON.parse(JSON.stringify(DEFAULTS)));
+    saveData(JSON.parse(JSON.stringify(DEFAULTS)));
+    refreshPreview();
+  });
+
+  // Refresh preview
+  function refreshPreview(){
+    var iframe = document.getElementById('preview-iframe');
+    iframe.src = 'rreth-nesh.html?t=' + Date.now();
+  }
+
+  document.getElementById('btn-refresh').addEventListener('click', refreshPreview);
+
+  function showToast(){
+    var t = document.getElementById('save-toast');
+    t.classList.add('show');
+    setTimeout(function(){ t.classList.remove('show'); }, 2000);
+  }
+
+  // Init
+  fillForm(loadData());
+})();
+</script>
+</body>
+</html>

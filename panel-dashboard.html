@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Panel Admin — Intal</title>
+<link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--bg:#f4f4f4;--white:#fff;--black:#111;--border:#e2e2e2;--muted:#888;--accent:#C8003E;}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);min-height:100vh;}
+
+.top-bar{background:var(--black);padding:0 32px;height:52px;display:flex;align-items:center;justify-content:space-between;}
+.top-bar .logo{background:var(--accent);padding:4px 12px;border-radius:4px;font-weight:900;font-size:14px;color:#fff;letter-spacing:-0.5px;}
+.top-bar .info{font-size:11px;color:#666;letter-spacing:.5px;}
+.top-bar .logout{font-size:11px;color:#666;background:none;border:none;cursor:pointer;letter-spacing:.5px;display:flex;align-items:center;gap:5px;}
+.top-bar .logout:hover{color:#fff;}
+
+.hero-bar{background:var(--white);border-bottom:.5px solid var(--border);padding:32px 32px 28px;}
+.hero-bar h1{font-size:22px;font-weight:600;letter-spacing:-0.3px;color:var(--black);margin-bottom:4px;}
+.hero-bar p{font-size:13px;color:var(--muted);}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;padding:28px 32px;}
+
+.card{background:var(--white);border:.5px solid var(--border);border-radius:8px;overflow:hidden;cursor:pointer;text-decoration:none;transition:box-shadow .2s,transform .2s;display:block;}
+.card:hover{box-shadow:0 8px 24px rgba(0,0,0,.1);transform:translateY(-2px);}
+.card-thumb{height:140px;background:#f0f0f0;position:relative;overflow:hidden;}
+.card-thumb iframe{width:200%;height:200%;transform:scale(.5);transform-origin:top left;pointer-events:none;border:none;}
+.card-thumb .overlay{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 50%,rgba(0,0,0,.3));}
+.card-body{padding:18px 20px 20px;}
+.card-label{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:6px;}
+.card-title{font-size:15px;font-weight:600;color:var(--black);margin-bottom:4px;}
+.card-desc{font-size:12px;color:var(--muted);line-height:1.5;}
+.card-footer{padding:12px 20px;border-top:.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.card-footer span{font-size:11px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--black);}
+.card-footer i{color:var(--muted);font-size:14px;}
+.card:hover .card-footer i{color:var(--accent);}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="logo">intal</div>
+  <span class="info">PANEL ADMIN</span>
+  <button class="logout" onclick="sessionStorage.removeItem('intal_logged');location.href='index.html'">
+    <i class="ri-logout-box-line"></i> Dil
+  </button>
+</div>
+
+<div class="hero-bar">
+  <h1>Panel Admin</h1>
+  <p>Zgjidhni seksionin që dëshironi të editoni.</p>
+</div>
+
+<div class="grid">
+
+  <a class="card" href="panel-home.html">
+    <div class="card-thumb">
+      <iframe src="index.html" scrolling="no" tabindex="-1"></iframe>
+      <div class="overlay"></div>
+    </div>
+    <div class="card-body">
+      <p class="card-label">Faqja Kryesore</p>
+      <p class="card-title">Home</p>
+      <p class="card-desc">Hero, About, Shërbimet, seksioni i kontaktit.</p>
+    </div>
+    <div class="card-footer">
+      <span>Edito</span>
+      <i class="ri-arrow-right-line"></i>
+    </div>
+  </a>
+
+  <a class="card" href="panel-artikujt.html">
+    <div class="card-thumb">
+      <iframe src="artikujt.html" scrolling="no" tabindex="-1"></iframe>
+      <div class="overlay"></div>
+    </div>
+    <div class="card-body">
+      <p class="card-label">Produktet</p>
+      <p class="card-title">Artikujt</p>
+      <p class="card-desc">Banner hero, tekstet dhe fotot e faqes publike.</p>
+    </div>
+    <div class="card-footer">
+      <span>Edito</span>
+      <i class="ri-arrow-right-line"></i>
+    </div>
+  </a>
+
+  <a class="card" href="panel-pelhura.html">
+    <div class="card-thumb">
+      <iframe src="pelhura.html" scrolling="no" tabindex="-1"></iframe>
+      <div class="overlay"></div>
+    </div>
+    <div class="card-body">
+      <p class="card-label">Materialet</p>
+      <p class="card-title">Pelhura</p>
+      <p class="card-desc">Banner hero, tekstet dhe fotot e faqes publike.</p>
+    </div>
+    <div class="card-footer">
+      <span>Edito</span>
+      <i class="ri-arrow-right-line"></i>
+    </div>
+  </a>
+
+  <a class="card" href="panel.html">
+    <div class="card-thumb" style="background:#111;display:flex;align-items:center;justify-content:center;">
+      <div style="text-align:center;color:#555;">
+        <i class="ri-database-2-line" style="font-size:36px;display:block;margin-bottom:6px;"></i>
+        <span style="font-size:10px;letter-spacing:2px;text-transform:uppercase;">Artikujt &amp; Pelhura</span>
+      </div>
+      <div class="overlay"></div>
+    </div>
+    <div class="card-body">
+      <p class="card-label">Menaxhimi</p>
+      <p class="card-title">Admin Details</p>
+      <p class="card-desc">Shto, ndrysho, fshi artikujt, pelhurën dhe detajet e tyre.</p>
+    </div>
+    <div class="card-footer">
+      <span>Hap</span>
+      <i class="ri-arrow-right-line"></i>
+    </div>
+  </a>
+
+  <a class="card" href="panel-rreth-nesh.html">
+    <div class="card-thumb">
+      <iframe src="rreth-nesh.html" scrolling="no" tabindex="-1"></iframe>
+      <div class="overlay"></div>
+    </div>
+    <div class="card-body">
+      <p class="card-label">Kompania</p>
+      <p class="card-title">Rreth Nesh</p>
+      <p class="card-desc">Hero, misioni, vlerat, partnerët.</p>
+    </div>
+    <div class="card-footer">
+      <span>Edito</span>
+      <i class="ri-arrow-right-line"></i>
+    </div>
+  </a>
+
+</div>
+
+<script>
+if(!sessionStorage.getItem('intal_logged')) location.href='index.html';
+</script>
+</body>
+</html>

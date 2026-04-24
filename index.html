@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Intal Underwear — Prodhim Shqiptar</title>
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+  <style>
+    /* ── Hero ──────────────────────────────────────────────────── */
+    .hero {
+      height: calc(100vh - var(--navbar-h));
+      height: calc(100dvh - var(--navbar-h));
+      background-color: #1a1a1a;
+      background-image: url('IMAGE/Page (3).png');
+      background-size: cover;
+      background-position: center top;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: clamp(22px, 3.7vw, 50px);
+      border-bottom: 0.5px solid var(--border);
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(201.43deg, rgba(0,0,0,0) 55.88%, rgba(0,0,0,0.45) 100%);
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      gap: clamp(12px, 1.5vw, 20px);
+    }
+
+    .hero-eyebrow {
+      font-family: 'Switzer', sans-serif;
+      font-weight: 400;
+      font-size: clamp(10px, 0.8vw, 12px);
+      letter-spacing: clamp(1.5px, 0.22vw, 2.8px);
+      text-transform: uppercase;
+      color: var(--off-white);
+    }
+
+    .hero-heading {
+      font-family: 'Switzer', sans-serif;
+      font-weight: 500;
+      font-size: clamp(23px, 4vw, 55px);
+      letter-spacing: clamp(-0.5px, -0.12vw, -1.5px);
+      line-height: 1.08;
+      color: var(--off-white);
+      max-width: min(600px, 90%);
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: clamp(8px, 0.9vw, 12px);
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 600px) {
+      .hero { background-position: center center; }
+    }
+
+    /* ── Showcase ───────────────────────────────────────────────── */
+    .showcase-section {
+      padding: clamp(60px, 8vw, 100px) var(--side);
+      border-top: 0.5px solid var(--border);
+    }
+    .showcase-header {
+      display: flex;
+      align-items: baseline;
+      gap: 20px;
+      margin-bottom: clamp(28px, 4vw, 48px);
+      flex-wrap: wrap;
+    }
+    .showcase-eyebrow {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .showcase-heading {
+      font-size: clamp(18px, 2vw, 26px);
+      font-weight: 500;
+      letter-spacing: -0.3px;
+      color: var(--black);
+      flex: 1;
+    }
+    .showcase-cta {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--black);
+      text-decoration: none;
+      border-bottom: 0.5px solid var(--black);
+      padding-bottom: 1px;
+      white-space: nowrap;
+      transition: opacity 0.15s;
+    }
+    .showcase-cta:hover { opacity: 0.5; }
+    .showcase-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+      gap: clamp(12px, 1.5vw, 20px);
+      align-items: start;
+    }
+    @media (max-width: 600px) {
+      #showcase-grid { grid-template-columns: 1fr !important; }
+    }
+    .showcase-card {
+      cursor: pointer;
+      background: #fff;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,.07);
+      transition: box-shadow .25s, transform .25s;
+    }
+    .showcase-card:hover { box-shadow: 0 8px 28px rgba(0,0,0,.13); transform: translateY(-3px); }
+    .showcase-img-wrap {
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 3 / 4;
+      background: var(--surface-gray);
+    }
+    .showcase-img-wrap img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      transition: transform 0.5s ease;
+    }
+    .showcase-card:hover .showcase-img-wrap img { transform: scale(1.04); }
+    .showcase-cat-label {
+      position: absolute;
+      top: 14px; left: 14px;
+      background: rgba(255,255,255,.93);
+      backdrop-filter: blur(4px);
+      border-radius: 4px;
+      padding: 5px 11px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--black);
+      z-index: 2;
+    }
+    .showcase-body {
+      padding: clamp(14px,1.4vw,22px);
+    }
+    .showcase-body-name {
+      font-size: clamp(14px,1.1vw,16px);
+      font-weight: 600;
+      letter-spacing: -0.2px;
+      color: var(--black);
+      margin-bottom: 6px;
+    }
+    .showcase-body-desc {
+      font-size: clamp(11px,0.85vw,13px);
+      line-height: 1.6;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+    .showcase-body-cta {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--black);
+      border-bottom: 0.5px solid var(--black);
+      padding-bottom: 1px;
+      transition: opacity .15s;
+    }
+    .showcase-card:hover .showcase-body-cta { opacity: .5; }
+
+    /* ── About ──────────────────────────────────────────────────── */
+    .about-section {
+      background: var(--black);
+      padding: clamp(60px, 8vw, 100px) var(--side);
+    }
+    .about-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(40px, 6vw, 100px);
+      align-items: start;
+    }
+    @media (max-width: 768px) { .about-inner { grid-template-columns: 1fr; } }
+    .about-eyebrow {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 16px;
+    }
+    .about-heading {
+      font-size: clamp(22px, 3vw, 40px);
+      font-weight: 500;
+      letter-spacing: -0.5px;
+      line-height: 1.15;
+      color: var(--off-white);
+      margin-bottom: 20px;
+    }
+    .about-body {
+      font-size: 14px;
+      line-height: 1.7;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 32px;
+    }
+    .about-btn {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--off-white);
+      text-decoration: none;
+      border-bottom: 0.5px solid rgba(255,255,255,0.4);
+      padding-bottom: 2px;
+      transition: border-color 0.15s;
+    }
+    .about-btn:hover { border-color: var(--off-white); }
+    .about-right {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+    .about-stat {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .about-stat-num {
+      font-size: clamp(28px, 4vw, 52px);
+      font-weight: 500;
+      letter-spacing: -1px;
+      color: var(--off-white);
+      line-height: 1;
+    }
+    .about-stat-label {
+      font-size: 11px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+    }
+    .about-columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      border-top: 0.5px solid rgba(255,255,255,0.1);
+      padding-top: 28px;
+    }
+    .about-col-title {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 8px;
+    }
+    .about-col-text {
+      font-size: 13px;
+      line-height: 1.6;
+      color: rgba(255,255,255,0.55);
+    }
+
+    /* ── Services ───────────────────────────────────────────────── */
+    .services-section {
+      padding: clamp(60px, 8vw, 100px) var(--side);
+      background: var(--white);
+      border-top: 0.5px solid var(--border);
+    }
+    .services-header {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      margin-bottom: clamp(28px, 4vw, 48px);
+    }
+    .services-eyebrow {
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: var(--muted);
+    }
+    .services-heading {
+      font-size: clamp(18px, 2vw, 26px);
+      font-weight: 500;
+      letter-spacing: -0.3px;
+    }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: clamp(16px, 2.5vw, 32px);
+    }
+    @media (max-width: 700px) { .services-grid { grid-template-columns: 1fr; } }
+    .service-card { display: flex; flex-direction: column; gap: 14px; }
+    .service-img-wrap {
+      aspect-ratio: 4 / 3;
+      overflow: hidden;
+      background: var(--surface-gray);
+    }
+    .service-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+    .service-card:hover .service-img-wrap img { transform: scale(1.03); }
+    .service-title {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--black);
+    }
+    .service-desc {
+      font-size: 13px;
+      line-height: 1.65;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Navbar ──────────────────────────────────────────────── -->
+  <nav class="navbar" role="navigation" aria-label="Navigimi kryesor">
+    <div class="navbar-inner">
+      <div class="navbar-left">
+        <button class="nav-hamburger" aria-label="Menu" onclick="openMenuDrawer()">
+          <i class="ri-menu-line"></i>
+        </button>
+        <div class="nav-links">
+          <a href="index.html" class="nav-link active">Home</a>
+          <a href="artikujt.html" class="nav-link">Artikujt</a>
+          <a href="pelhura.html" class="nav-link">Pelhura</a>
+          <a href="rreth-nesh.html" class="nav-link">Rreth Nesh</a>
+        </div>
+      </div>
+
+      <a href="index.html" class="navbar-brand">Intal Underwear</a>
+
+      <div class="navbar-right">
+        <button class="search-btn" aria-label="Kërko">
+          <i class="ri-search-line"></i>
+        </button>
+        <a href="#kontakt" class="btn-order">Porosit</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── Hero ────────────────────────────────────────────────── -->
+  <section class="hero" aria-label="Hero">
+    <div class="hero-content">
+      <p class="hero-eyebrow">Prodhim Shqiptar</p>
+      <h1 class="hero-heading">Fabrike Prodhimi të Brëndshem</h1>
+      <div class="hero-buttons">
+        <a href="artikujt.html" class="btn-primary">Shiko Artikujt</a>
+        <a href="#kontakt" class="btn-outline">Na Kontakto</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Products Showcase ────────────────────────────────────── -->
+  <section class="showcase-section">
+    <div class="showcase-header">
+      <p class="showcase-eyebrow">Produktet</p>
+      <h2 class="showcase-heading">Zbulo Koleksionin</h2>
+    </div>
+    <div class="showcase-grid" id="showcase-grid">
+      <!-- rendered dynamically -->
+    </div>
+  </section>
+
+  <!-- ── Articles Overlay ──────────────────────────────────────── -->
+  <div id="art-overlay" style="display:none;position:fixed;inset:0;z-index:800;background:#fff;overflow-y:auto;">
+    <div style="position:sticky;top:0;background:#fff;border-bottom:0.5px solid var(--border);z-index:10;padding:0 var(--side);display:flex;align-items:center;justify-content:space-between;height:clamp(42px,4.2vw,55px);">
+      <div id="art-breadcrumb" style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:500;letter-spacing:0.5px;"></div>
+      <span id="art-overlay-count" style="font-size:11px;color:var(--muted);letter-spacing:1px;"></span>
+    </div>
+    <div id="art-filter-bar" style="padding:12px 40px;border-bottom:0.5px solid var(--border);display:flex;gap:8px;flex-wrap:wrap;align-items:center;"></div>
+    <style>
+      #art-overlay-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; padding:24px 40px; }
+      @media(max-width:700px){ #art-overlay-grid { grid-template-columns:repeat(2,1fr); gap:10px; padding:16px; } #art-filter-bar { padding:10px 16px; } }
+      .art-filter-chip { padding:5px 16px; border:0.5px solid var(--border); background:#fff; font-size:11px; font-weight:500; letter-spacing:1px; text-transform:uppercase; cursor:pointer; transition:all .15s; }
+      .art-filter-chip:hover { border-color:var(--black); }
+      .art-filter-chip.active { background:var(--black); color:#fff; border-color:var(--black); }
+    </style>
+    <div id="art-overlay-grid"></div>
+  </div>
+
+  <!-- ── Article Detail Popup ──────────────────────────────────── -->
+  <style>
+    #art-detail-overlay { display:none;position:fixed;inset:0;z-index:900;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:1rem; }
+    #art-detail-box { background:#fff;border-radius:4px;width:min(980px,96vw);height:min(560px,88vh);display:grid;grid-template-columns:1fr 1fr;overflow:hidden;position:relative;flex-shrink:0; }
+    #art-detail-photos { background:#f5f5f5;overflow:hidden;display:flex;flex-direction:column; }
+    #art-det-main-img { width:100%;height:100%;object-fit:cover;display:block;cursor:pointer; }
+    .art-det-side { display:flex;flex-direction:column;overflow-y:auto;height:100%; }
+    /* Card hover carousel */
+    .art-card { cursor:pointer;position:relative; }
+    .art-card-img-wrap { aspect-ratio:3/4;overflow:hidden;background:#f0f0f0;position:relative; }
+    .art-card-img-wrap img { width:100%;height:100%;object-fit:cover;display:block;transition:opacity .25s; }
+    .art-card-arr { position:absolute;top:50%;transform:translateY(-50%);background:none;border:none;padding:0;cursor:pointer;font-size:20px;line-height:1;opacity:0;transition:opacity .15s;pointer-events:none;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.6); }
+    .art-card:hover .art-card-arr { opacity:1;pointer-events:auto; }
+    .art-card-arr.l { left:8px; } .art-card-arr.r { right:8px; }
+    /* Article prev/next nav — floating above the box */
+    .art-nav-btn { position:fixed;top:calc(50% - min(280px,44vh) - 44px);background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.4);color:#fff;border-radius:50%;width:40px;height:40px;font-size:20px;display:flex;align-items:center;justify-content:center;cursor:pointer;backdrop-filter:blur(6px);transition:background .15s;z-index:910; }
+    .art-nav-btn:hover:not(:disabled) { background:rgba(255,255,255,.3); }
+    .art-nav-btn:disabled { opacity:.2;cursor:default; }
+    .art-nav-btn.prev { left:calc(50% - min(490px,48vw) - 52px); }
+    .art-nav-btn.next { right:calc(50% - min(490px,48vw) - 52px); }
+    @media(max-width:700px){
+      .art-nav-btn.prev { left:6px; }
+      .art-nav-btn.next { right:6px; }
+      .art-nav-btn { top:calc(50% - min(210px,47vw) - 44px); }
+    }
+    /* Thumbnails */
+    #art-det-thumbs { display:flex;gap:5px;padding:8px 12px;background:rgba(0,0,0,.4);overflow-x:auto;flex-shrink:0; }
+    #art-det-thumbs::-webkit-scrollbar { height:2px; }
+    #art-det-thumbs::-webkit-scrollbar-thumb { background:#666; }
+    .det-th { width:46px;height:46px;border-radius:3px;object-fit:cover;border:2px solid transparent;cursor:pointer;flex-shrink:0;transition:border-color .15s;display:block; }
+    .det-th.active { border-color:#fff; }
+    /* Mobile: force landscape layout */
+    @media (max-width:700px){
+      #art-detail-overlay { padding:.4rem; }
+      #art-detail-box { grid-template-columns:1fr 1fr; width:99vw; height:min(420px,94vw); border-radius:4px; }
+      .art-det-side { height:100%; }
+      .art-det-side > div:first-child { padding:14px 14px 0; }
+      .art-det-side > div:last-child { padding:10px 14px 14px; }
+      #art-detail-name { font-size:14px !important; }
+      #art-detail-desc { font-size:11px !important; margin-bottom:10px !important; }
+      #art-detail-masat,#art-detail-ngjyrat,#art-detail-perberja { margin-bottom:10px !important; }
+    }
+  </style>
+  <div id="art-detail-overlay">
+    <div id="art-detail-box">
+      <!-- LEFT: photos -->
+      <div id="art-detail-photos">
+        <!-- art-nav-bar, main img, arrows, thumbs injected by JS -->
+      </div>
+      <!-- RIGHT: details -->
+      <div class="art-det-side">
+        <div style="padding:28px 28px 0;flex:1;position:relative;">
+          <button onclick="closeArtDetail()" style="position:absolute;top:12px;right:12px;background:#f0f0f0;border:none;border-radius:50%;width:30px;height:30px;cursor:pointer;font-size:15px;z-index:5;">&#10005;</button>
+          <p id="art-detail-kat" style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;"></p>
+          <h2 id="art-detail-name" style="font-size:clamp(16px,2vw,24px);font-weight:500;letter-spacing:-0.3px;margin-bottom:5px;"></h2>
+          <p id="art-detail-code" style="font-size:11px;color:var(--muted);letter-spacing:1px;margin-bottom:14px;"></p>
+          <p id="art-detail-desc" style="font-size:13px;line-height:1.7;color:#555;margin-bottom:16px;"></p>
+          <div id="art-detail-masat" style="margin-bottom:14px;"></div>
+          <div id="art-detail-ngjyrat" style="margin-bottom:14px;"></div>
+          <div id="art-detail-perberja" style="margin-bottom:14px;"></div>
+        </div>
+        <div style="padding:16px 28px 24px;">
+          <button onclick="document.getElementById('kontakt')&&document.getElementById('kontakt').scrollIntoView({behavior:'smooth'});closeArtDetail();closeArtOverlay();" style="width:100%;background:var(--black);color:#fff;border:none;padding:12px;font-size:11px;font-weight:500;letter-spacing:1px;text-transform:uppercase;cursor:pointer;">Na Kontaktoni</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── About Us ──────────────────────────────────────────────── -->
+  <section class="about-section">
+    <div class="about-inner">
+      <div class="about-left">
+        <p class="about-eyebrow">Rreth Nesh</p>
+        <h2 class="about-heading">Intal — Prodhim Shqiptar i Brendëshmes</h2>
+        <p class="about-body">Në Intal, jemi të dedicuar për të ofruar të brendëshme premium që kombinon rehati, cilësi dhe stil. Çdo produkt prodhohet me kujdes nga materialet më të mira, për të siguruar kënaqësinë tuaj të përditshme.</p>
+        <a href="#kontakt" class="about-btn">Na Kontaktoni</a>
+      </div>
+      <div class="about-right">
+        <div class="about-stat">
+          <span class="about-stat-num">15+</span>
+          <span class="about-stat-label">Vite Eksperiencë</span>
+        </div>
+        <div class="about-stat">
+          <span class="about-stat-num">100%</span>
+          <span class="about-stat-label">Prodhim Vendor</span>
+        </div>
+        <div class="about-stat">
+          <span class="about-stat-num">500+</span>
+          <span class="about-stat-label">Partnerë Biznesi</span>
+        </div>
+        <div class="about-columns">
+          <div class="about-col">
+            <p class="about-col-title">Vizioni Ynë</p>
+            <p class="about-col-text">Të bëhemi referencë kryesore e brendëshmes premium në rajon, me fokus në cilësi dhe inovacion.</p>
+          </div>
+          <div class="about-col">
+            <p class="about-col-title">Misioni Ynë</p>
+            <p class="about-col-text">Ofrojmë produkte me cilësi të lartë, çmime konkurruese dhe shërbim të shkëlqyer ndaj çdo klienti.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Services ──────────────────────────────────────────────── -->
+  <section class="services-section">
+    <div class="services-header">
+      <p class="services-eyebrow">2025</p>
+      <h2 class="services-heading">Shërbimet Tona</h2>
+    </div>
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="service-img-wrap">
+          <img src="IMAGE/1774343595199-k9hsd0cj2ip.png" alt="Prodhim">
+        </div>
+        <p class="service-title">Prodhim Brendëshëm</p>
+        <p class="service-desc">Prodhojmë brendëshme premium me materialet më të mira — pambuk natyral, vikson dhe ribana — sipas standardeve të larta të cilësisë.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-img-wrap">
+          <img src="IMAGE/1774343722694-bxdwh1x49yj.png" alt="Shumice">
+        </div>
+        <p class="service-title">Shitje me Shumicë</p>
+        <p class="service-desc">Ofrojmë çmime konkurruese për porosi me shumicë. Partnerë idealë për dyqane, biznese dhe distributorë në të gjithë rajonin.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-img-wrap">
+          <img src="IMAGE/1774343833817-c5xm15618f.png" alt="Personalizim">
+        </div>
+        <p class="service-title">Personalizim</p>
+        <p class="service-desc">Prodhim me etiketë private dhe personalizim sipas kërkesës së klientit — ngjyra, madhësi dhe dizajne ekskluzive.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Contact Section ──────────────────────────────────────── -->
+  <section class="contact-section" id="kontakt">
+    <div class="contact-inner">
+
+      <!-- Left: info -->
+      <div class="contact-left">
+        <p class="contact-eyebrow">NA KONTAKTONI</p>
+        <h2 class="contact-heading">Porositni<br>Tani</h2>
+        <p class="contact-sub">Na kontaktoni për porosi me shumicë.</p>
+
+        <div class="contact-items">
+          <a class="contact-item" href="tel:+355692776636">
+            <div class="contact-icon"><i class="ri-phone-line"></i></div>
+            <div>
+              <span class="contact-item-label">Telefon / WhatsApp</span>
+              <span class="contact-item-value">+355 692 776 636</span>
+            </div>
+          </a>
+          <a class="contact-item" href="mailto:info@intal.com">
+            <div class="contact-icon"><i class="ri-mail-line"></i></div>
+            <div>
+              <span class="contact-item-label">Email</span>
+              <span class="contact-item-value">info@intal.com</span>
+            </div>
+          </a>
+          <div class="contact-item">
+            <div class="contact-icon"><i class="ri-map-pin-line"></i></div>
+            <div>
+              <span class="contact-item-label">Adresa</span>
+              <span class="contact-item-value">Tiranë, Shqipëri</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right: form -->
+      <div class="contact-right">
+        <p class="contact-form-title">Dërgoni një Mesazh</p>
+        <form class="contact-form" onsubmit="return false">
+          <div class="cf-row">
+            <div class="cf-field">
+              <label class="cf-label">EMRI <span class="cf-opt">(opsional)</span></label>
+              <input class="cf-input" type="text" placeholder="Emri juaj">
+            </div>
+            <div class="cf-field">
+              <label class="cf-label">TELEFON</label>
+              <input class="cf-input" type="tel" placeholder="Nr. i telefonit">
+            </div>
+          </div>
+          <div class="cf-field">
+            <label class="cf-label">PRODUKTET <span class="cf-opt">(zgjidhni një ose më shumë)</span></label>
+            <div class="cf-multiselect" id="cfMultiselect">
+              <div class="cf-tags" id="cfTags">
+                <span class="cf-placeholder" id="cfPlaceholder">+ Shto produkt...</span>
+              </div>
+              <div class="cf-dropdown" id="cfDropdown">
+                <div class="cf-dropdown-group">Artikuj</div>
+                <div class="cf-option" data-val="Bluze CRZ">Bluze CRZ</div>
+                <div class="cf-option" data-val="Fanella Basic">Fanella Basic</div>
+                <div class="cf-option" data-val="Kanatjere Premium">Kanatjere Premium</div>
+                <div class="cf-option" data-val="Mbathje Classic">Mbathje Classic</div>
+                <div class="cf-option" data-val="Bluze Sport">Bluze Sport</div>
+                <div class="cf-option" data-val="Fanella Termo">Fanella Termo</div>
+                <div class="cf-option" data-val="Mbathje Slim">Mbathje Slim</div>
+                <div class="cf-dropdown-group">Pelhura</div>
+                <div class="cf-option" data-val="Pelhure Ribana e Bardhë">Pelhure Ribana e Bardhë</div>
+                <div class="cf-option" data-val="Pelhure Vikson Gri">Pelhure Vikson Gri</div>
+                <div class="cf-option" data-val="Pelhure Ribana Blu">Pelhure Ribana Blu</div>
+                <div class="cf-option" data-val="Pelhure Cotton e Zezë">Pelhure Cotton e Zezë</div>
+                <div class="cf-option" data-val="Pelhure Premium Mix">Pelhure Premium Mix</div>
+              </div>
+            </div>
+          </div>
+          <div class="cf-field">
+            <label class="cf-label">MESAZHI</label>
+            <textarea class="cf-input cf-textarea" placeholder="Sasia, specifikimet..."></textarea>
+          </div>
+          <button class="cf-submit" type="submit">DËRGO KËRKESËN</button>
+        </form>
+      </div>
+
+    </div>
+
+    <!-- Locations full-width -->
+    <div class="contact-locations">
+      <div class="contact-loc">
+        <p class="contact-loc-name">Selia Kryesore</p>
+        <p class="contact-loc-addr">Rrobaqepësi INTAL, Rruga Arbanes, Vaqarr, Tiranë 1035</p>
+      </div>
+      <div class="contact-loc">
+        <p class="contact-loc-name">Dyqani</p>
+        <p class="contact-loc-addr">Intal, Rruga 5 Maji 67/1, Tiranë 1032</p>
+      </div>
+    </div>
+
+    <!-- Footer strip -->
+    <div class="contact-footer">
+      <span class="contact-brand">Intal <strong>UNDERWEAR</strong></span>
+      <span class="contact-copy">© 2025 Intal Albania</span>
+      <button onclick="document.getElementById('admin-login-modal').style.display='flex'" style="display:block;width:100%;height:28px;background:#0a0a0a;border:none;cursor:pointer;margin-top:4px;outline:none;"></button>
+    </div>
+  </section>
+
+  <!-- Admin Login Modal -->
+  <div id="admin-login-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;align-items:center;justify-content:center;backdrop-filter:blur(6px);">
+    <div style="background:#fff;border-radius:14px;padding:2rem;width:90%;max-width:320px;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,.4);">
+      <div style="background:#C8003E;padding:6px 14px;border-radius:6px;display:inline-block;margin-bottom:1.2rem;">
+        <div style="font-family:'Montserrat',sans-serif;font-weight:900;font-size:18px;color:#fff;letter-spacing:-1px;line-height:1;">intal</div>
+        <div style="font-family:'Montserrat',sans-serif;font-size:7px;letter-spacing:4px;color:#fff;margin-top:-2px;font-weight:700;">ADMIN</div>
+      </div>
+      <h2 style="font-family:'Montserrat',sans-serif;font-size:16px;font-weight:700;margin-bottom:4px;">Hyrja në Panel</h2>
+      <p style="font-size:12px;color:#888;margin-bottom:1.2rem;">Vendosni kredencialet e administratorit</p>
+      <input type="text" id="al-user" placeholder="Përdoruesi" autocomplete="off" style="width:100%;background:#f8f8f8;border:1px solid #e2e8f0;border-radius:7px;padding:9px 13px;font-size:13px;margin-bottom:8px;box-sizing:border-box;outline:none;" onkeydown="if(event.key==='Enter')adminLogin()">
+      <input type="password" id="al-pass" placeholder="Fjalëkalimi" style="width:100%;background:#f8f8f8;border:1px solid #e2e8f0;border-radius:7px;padding:9px 13px;font-size:13px;margin-bottom:8px;box-sizing:border-box;outline:none;" onkeydown="if(event.key==='Enter')adminLogin()">
+      <div id="al-err" style="display:none;color:#C53030;font-size:11px;margin-bottom:8px;">Kredenciale të gabuara!</div>
+      <button onclick="adminLogin()" style="width:100%;background:#C8003E;color:#fff;border:none;border-radius:7px;padding:11px;font-family:'Montserrat',sans-serif;font-weight:700;font-size:13px;cursor:pointer;margin-bottom:8px;">Hyr</button>
+      <button onclick="document.getElementById('admin-login-modal').style.display='none'" style="width:100%;background:transparent;border:none;color:#aaa;font-size:12px;cursor:pointer;padding:4px;">Anulo</button>
+    </div>
+  </div>
+  <script>
+    function adminLogin(){
+      var sb = localStorage;
+      var u = (sb.getItem('intal_user')||'intalalbania');
+      var p = (sb.getItem('intal_pass')||'arditiintal');
+      var eu = document.getElementById('al-user').value.trim();
+      var ep = document.getElementById('al-pass').value;
+      if(eu===u && ep===p){
+        sessionStorage.setItem('intal_logged','1');
+        window.location.href='panel-dashboard.html';
+      } else {
+        document.getElementById('al-err').style.display='block';
+      }
+    }
+  </script>
+
+  <!-- ── Menu left drawer ──────────────────────────────────── -->
+  <div class="menu-backdrop" id="menuBackdrop" onclick="closeMenuDrawer()"></div>
+  <aside class="menu-drawer" id="menuDrawer" aria-label="Meniu">
+    <div class="menu-drawer-header">
+      <span class="menu-drawer-brand">Intal <strong>Underwear</strong></span>
+      <button class="menu-drawer-close" onclick="closeMenuDrawer()" aria-label="Mbyll">
+        <i class="ri-close-line"></i>
+      </button>
+    </div>
+    <div class="menu-drawer-body">
+      <nav class="menu-drawer-nav">
+        <a href="index.html" class="menu-drawer-link" onclick="closeMenuDrawer()">Home</a>
+        <a href="artikujt.html" class="menu-drawer-link" onclick="closeMenuDrawer()">Artikujt</a>
+        <a href="pelhura.html" class="menu-drawer-link" onclick="closeMenuDrawer()">Pelhura</a>
+        <a href="rreth-nesh.html" class="menu-drawer-link" onclick="closeMenuDrawer()">Rreth Nesh</a>
+        <a href="#kontakt" class="menu-drawer-link" onclick="closeMenuDrawer()">Kontakt</a>
+      </nav>
+
+      <div class="menu-drawer-divider"></div>
+
+      <p class="menu-drawer-eyebrow">NA KONTAKTONI</p>
+
+      <div class="menu-drawer-contacts">
+        <a class="menu-drawer-contact-item" href="tel:+355692776636">
+          <div class="menu-drawer-icon"><i class="ri-phone-line"></i></div>
+          <div>
+            <span class="menu-drawer-label">Telefon / WhatsApp</span>
+            <span class="menu-drawer-value">+355 692 776 636</span>
+          </div>
+        </a>
+        <a class="menu-drawer-contact-item" href="mailto:info@intal.com">
+          <div class="menu-drawer-icon"><i class="ri-mail-line"></i></div>
+          <div>
+            <span class="menu-drawer-label">Email</span>
+            <span class="menu-drawer-value">info@intal.com</span>
+          </div>
+        </a>
+        <div class="menu-drawer-contact-item">
+          <div class="menu-drawer-icon"><i class="ri-map-pin-line"></i></div>
+          <div>
+            <span class="menu-drawer-label">Adresa</span>
+            <span class="menu-drawer-value">Tiranë, Shqipëri</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="menu-drawer-divider"></div>
+
+      <div class="menu-drawer-locations">
+        <div class="menu-drawer-loc">
+          <p class="menu-drawer-loc-name">Selia Kryesore</p>
+          <p class="menu-drawer-loc-addr">Rrobaqepësi INTAL, Rruga Arbanes, Vaqarr, Tiranë 1035</p>
+        </div>
+        <div class="menu-drawer-loc">
+          <p class="menu-drawer-loc-name">Dyqani</p>
+          <p class="menu-drawer-loc-addr">Intal, Rruga 5 Maji 67/1, Tiranë 1032</p>
+        </div>
+      </div>
+
+    </div>
+    <div class="menu-drawer-footer">
+      <span class="menu-drawer-copy">© 2025 Intal Albania</span>
+    </div>
+  </aside>
+
+  <!-- Scripts -->
+  <script src="js/main.js"></script>
+
+  <script>
+    /* ── Multi-select product picker ────────────────────────── */
+    (function () {
+      const tags     = document.getElementById('cfTags');
+      const dropdown = document.getElementById('cfDropdown');
+      const ph       = document.getElementById('cfPlaceholder');
+      if (!tags) return;
+
+      const selected = new Set();
+
+      tags.addEventListener('click', () => {
+        dropdown.classList.toggle('open');
+        tags.classList.toggle('open');
+      });
+
+      dropdown.querySelectorAll('.cf-option').forEach(opt => {
+        opt.addEventListener('click', e => {
+          e.stopPropagation();
+          const val = opt.dataset.val;
+          if (selected.has(val)) return;
+          selected.add(val);
+          opt.classList.add('selected');
+
+          const chip = document.createElement('span');
+          chip.className = 'cf-tag';
+          chip.innerHTML = `${val}<span class="cf-tag-remove" data-val="${val}">×</span>`;
+          tags.insertBefore(chip, ph);
+
+          ph.style.display = selected.size ? 'none' : '';
+          dropdown.classList.remove('open');
+          tags.classList.remove('open');
+        });
+      });
+
+      tags.addEventListener('click', e => {
+        if (e.target.classList.contains('cf-tag-remove')) {
+          e.stopPropagation();
+          const val = e.target.dataset.val;
+          selected.delete(val);
+          e.target.parentElement.remove();
+          dropdown.querySelector(`[data-val="${val}"]`)?.classList.remove('selected');
+          ph.style.display = selected.size ? 'none' : '';
+        }
+      });
+
+      document.addEventListener('click', e => {
+        if (!document.getElementById('cfMultiselect').contains(e.target)) {
+          dropdown.classList.remove('open');
+          tags.classList.remove('open');
+        }
+      });
+    })();
+  </script>
+
+  <!-- GSAP + ScrollTrigger -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script>
+    (() => {
+      gsap.registerPlugin(ScrollTrigger);
+      const ease = 'power3.out';
+
+      function revealUp(targets, options = {}) {
+        gsap.fromTo(targets, {
+          opacity: 0,
+          y: options.y ?? 32,
+        }, {
+          opacity: 1,
+          y: 0,
+          duration: options.duration ?? 0.9,
+          ease,
+          stagger: options.stagger ?? 0,
+          delay: options.delay ?? 0,
+          scrollTrigger: options.trigger ? {
+            trigger: options.trigger,
+            start: 'top 88%',
+            toggleActions: 'play none none none',
+          } : undefined,
+        });
+      }
+
+      /* Hero */
+      const heroEyebrow = document.querySelector('.hero-eyebrow');
+      const heroHeading = document.querySelector('.hero-heading');
+      const heroButtons = document.querySelectorAll('.hero-buttons .btn-primary, .hero-buttons .btn-outline');
+
+      gsap.set([heroEyebrow, heroHeading, ...heroButtons], { opacity: 0, y: 24 });
+
+      gsap.timeline({ delay: 0.15 })
+        .to(heroEyebrow, { opacity: 1, y: 0, duration: 0.8, ease })
+        .to(heroHeading, { opacity: 1, y: 0, duration: 1, ease }, '-=0.55')
+        .to(heroButtons, { opacity: 1, y: 0, duration: 0.7, ease, stagger: 0.1 }, '-=0.6');
+
+      /* Showcase */
+      revealUp('.showcase-header', { trigger: '.showcase-section', y: 24, duration: 0.8 });
+      gsap.fromTo('.showcase-card', { opacity: 0, y: 40 }, {
+        opacity: 1, y: 0, duration: 0.8, ease, stagger: 0.12,
+        scrollTrigger: { trigger: '.showcase-grid', start: 'top 85%', toggleActions: 'play none none none' }
+      });
+
+      /* About */
+      revealUp('.about-left', { trigger: '.about-section', y: 40, duration: 1 });
+      revealUp('.about-right', { trigger: '.about-section', y: 40, duration: 1, delay: 0.15 });
+
+      /* Services */
+      gsap.fromTo('.service-card', { opacity: 0, y: 40 }, {
+        opacity: 1, y: 0, duration: 0.75, ease, stagger: 0.1,
+        scrollTrigger: { trigger: '.services-grid', start: 'top 85%', toggleActions: 'play none none none' }
+      });
+
+      /* Contact */
+      const contactLeft = document.querySelector('.contact-left');
+      const contactRight = document.querySelector('.contact-right');
+      if (contactLeft) revealUp(contactLeft, { trigger: contactLeft, y: 40, duration: 1 });
+      if (contactRight) revealUp(contactRight, { trigger: contactRight, y: 40, duration: 1, delay: 0.15 });
+
+      const contactItems = document.querySelectorAll('.contact-item');
+      if (contactItems.length) {
+        gsap.fromTo(contactItems, { opacity: 0, x: -16 }, {
+          opacity: 1, x: 0, duration: 0.6, ease, stagger: 0.1,
+          scrollTrigger: { trigger: contactItems[0], start: 'top 85%', toggleActions: 'play none none none' },
+        });
+      }
+
+      const locs = document.querySelectorAll('.contact-loc');
+      if (locs.length) {
+        gsap.fromTo(locs, { opacity: 0, y: 20 }, {
+          opacity: 1, y: 0, duration: 0.7, ease, stagger: 0.12,
+          scrollTrigger: { trigger: locs[0], start: 'top 90%', toggleActions: 'play none none none' },
+        });
+      }
+    })();
+  </script>
+
+  <script>
+  // ── Dynamic Showcase & Articles from Admin Data ──────────────
+  (function(){
+    var FALLBACK_IMGS = [
+      'IMAGE/1774083384453-vcyg8ikkkda.png',
+      'IMAGE/1774083649164-1jsqizwsh0v.png',
+      'IMAGE/1774265681650-c9sihellvkk.png'
+    ];
+
+    function loadData(){
+      try {
+        var raw = localStorage.getItem('intal_cache_v1');
+        if(raw) return JSON.parse(raw);
+      } catch(e){}
+      return null;
+    }
+
+    function artMatchesCat(a, cat){
+      var sub = a.sub;
+      if(!sub) return false;
+      if(Array.isArray(sub)) return sub.some(function(s){ return (s||'').toLowerCase()===cat.toLowerCase(); });
+      return (sub+'').toLowerCase()===cat.toLowerCase();
+    }
+
+    function getPhotoSrc(p){
+      if(!p) return '';
+      if(typeof p === 'string') return p;
+      return p.src || p.url || '';
+    }
+
+    function firstPhotoOfCat(artikujt, cat){
+      for(var i=0;i<artikujt.length;i++){
+        var a = artikujt[i];
+        if(artMatchesCat(a, cat) && a.photos && a.photos.length)
+          return getPhotoSrc(a.photos[0]);
+      }
+      return null;
+    }
+
+    function renderShowcase(){
+      var data = loadData();
+      var grid = document.getElementById('showcase-grid');
+      if(!grid) return;
+
+      var kats = ['Meshkuj','Femra','Femije'];
+      var kryesoreFoto = {};
+      var artikujt = [];
+
+      if(data){
+        if(data.kategoriSettings && data.kategoriSettings.kryesore)
+          kats = data.kategoriSettings.kryesore;
+        if(data.kategoriSettings && data.kategoriSettings.kryesoreFoto)
+          kryesoreFoto = data.kategoriSettings.kryesoreFoto;
+        if(data.artikujt) artikujt = data.artikujt;
+      }
+
+      kats = kats.filter(function(k){ return k.toLowerCase() !== 'pelhura'; });
+      var html = '';
+      kats.forEach(function(kat, i){
+        var img = kryesoreFoto[kat] || firstPhotoOfCat(artikujt, kat) || FALLBACK_IMGS[i % FALLBACK_IMGS.length];
+        var large = (i===1 || (kats.length===2 && i===0)) ? ' showcase-card--large' : '';
+        var href = kat.toLowerCase()==='pelhura' ? 'pelhura.html' : 'artikujt.html#'+encodeURIComponent(kat.toLowerCase());
+        var desc = data && data.kategoriSettings && data.kategoriSettings.kryesoreDesc && data.kategoriSettings.kryesoreDesc[kat]
+          ? data.kategoriSettings.kryesoreDesc[kat]
+          : 'Zbulo koleksionin e plotë të ' + kat.toLowerCase() + ' me cilësi të lartë prodhimi shqiptar.';
+        html += '<div class="showcase-card" onclick="location.href=\''+href+'\'">'
+          +'<div class="showcase-img-wrap">'
+          +(img ? '<img src="'+img+'" alt="'+kat+'" loading="lazy">' : '<div style="width:100%;height:100%;background:#e8e8e8;"></div>')
+          +'<div class="showcase-cat-label">'+kat+'</div>'
+          +'</div>'
+          +'<div class="showcase-body">'
+          +'<p class="showcase-body-name">'+kat+'</p>'
+          +'<p class="showcase-body-desc">'+desc+'</p>'
+          +'<span class="showcase-body-cta">Zbulo Koleksionin</span>'
+          +'</div>'
+          +'</div>';
+      });
+      grid.innerHTML = html || '<p style="color:var(--muted);font-size:13px;">Nuk ka kategori. Shto nga paneli admin.</p>';
+    }
+
+    var _overlayState = { kat:'', activeFilter:'te-gjitha', artikujt:[] };
+
+    function renderArtGrid(list, activeFilter){
+      var show = activeFilter==='te-gjitha' ? list : list.filter(function(a){ return (a.kat||'').toLowerCase()===activeFilter.toLowerCase(); });
+      document.getElementById('art-overlay-count').textContent = show.length + ' ARTIKUJ';
+      var grid = document.getElementById('art-overlay-grid');
+      if(!show.length){
+        grid.innerHTML='<div style="grid-column:1/-1;padding:60px;text-align:center;color:var(--muted);font-size:13px;">Nuk ka artikuj për këtë filtër.</div>';
+        return;
+      }
+      grid.innerHTML = show.map(function(a){
+        var photos = (a.photos||[]).map(getPhotoSrc).filter(Boolean);
+        var img0 = photos[0]||'';
+        var hasMulti = photos.length > 1;
+        var photosJson = hasMulti ? ' data-photos=\''+JSON.stringify(photos).replace(/'/g,'&#39;')+'\'' : '';
+        var imgEl = img0
+          ? '<img src="'+img0+'" data-idx="0" style="width:100%;height:100%;object-fit:cover;display:block;">'
+          : '<div style="width:100%;height:100%;background:#e0e0e0;display:flex;align-items:center;justify-content:center;font-size:40px;">&#128085;</div>';
+        var hoverAttr = hasMulti ? ' onmouseenter="hoverEnter(this)" onmouseleave="hoverLeave(this)"' : '';
+        var arrows = hasMulti
+          ? '<button class="art-card-arr l" onclick="cardStep(event,this,-1)">&#8592;</button>'
+            +'<button class="art-card-arr r" onclick="cardStep(event,this,1)">&#8594;</button>'
+          : '';
+        return '<div class="art-card" onclick="openArtDetail(\''+a.id+'\')">'
+          +'<div class="art-card-img-wrap"'+photosJson+hoverAttr+'>'+imgEl+arrows+'</div>'
+          +'<div style="padding:14px 16px 18px;">'
+          +'<p style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;">'+(a.kat||'')+'</p>'
+          +'<p style="font-size:14px;font-weight:500;letter-spacing:-0.2px;color:var(--black);">'+a.name+'</p>'
+          +(a.code?'<p style="font-size:11px;color:var(--muted);margin-top:3px;">'+a.code+'</p>':'')
+          +'</div></div>';
+      }).join('');
+    }
+
+    window.hoverEnter = function(wrap){
+      var ps = JSON.parse(wrap.dataset.photos||'[]'); if(ps.length<2) return;
+      var img = wrap.querySelector('img'); if(!img) return;
+      img.dataset.idx = 1; img.src = ps[1];
+    };
+    window.hoverLeave = function(wrap){
+      var ps = JSON.parse(wrap.dataset.photos||'[]'); if(!ps.length) return;
+      var img = wrap.querySelector('img'); if(!img) return;
+      img.dataset.idx = 0; img.src = ps[0];
+    };
+    window.cardStep = function(e, btn, dir){
+      e.stopPropagation();
+      var wrap = btn.parentElement;
+      var ps = JSON.parse(wrap.dataset.photos||'[]'); if(!ps.length) return;
+      var img = wrap.querySelector('img');
+      var idx = ((parseInt(img.dataset.idx||'0')+dir)+ps.length)%ps.length;
+      img.dataset.idx = idx; img.src = ps[idx];
+    };
+
+    function renderFilterBar(list, active){
+      var kats = [];
+      list.forEach(function(a){ var k=a.kat||''; if(k && !kats.includes(k)) kats.push(k); });
+      var bar = document.getElementById('art-filter-bar');
+      if(!kats.length){ bar.style.display='none'; return; }
+      bar.style.display='flex';
+      bar.innerHTML = ['te-gjitha'].concat(kats).map(function(k){
+        var lbl = k==='te-gjitha' ? 'Të Gjitha' : k;
+        return '<button class="art-filter-chip'+(active===k?' active':'')+'" onclick="applyArtFilter(\''+k.replace(/'/g,"\\'")+'\')">'+lbl+'</button>';
+      }).join('');
+    }
+
+    function renderBreadcrumb(kat, filter){
+      var sep = '<span style="color:var(--muted);margin:0 2px;">/</span>';
+      var homeBtn = '<button onclick="closeArtOverlay()" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:12px;font-weight:500;letter-spacing:0.5px;padding:0;text-transform:uppercase;">Home</button>';
+      var katBtn = filter && filter!=='te-gjitha'
+        ? '<button onclick="applyArtFilter(\'te-gjitha\')" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:12px;font-weight:500;letter-spacing:0.5px;padding:0;text-transform:uppercase;">'+kat+'</button>'
+        : '<span style="color:var(--black);font-size:12px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;">'+kat+'</span>';
+      var filterPart = (filter && filter!=='te-gjitha')
+        ? sep+'<span style="color:var(--black);font-size:12px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;">'+filter+'</span>'
+        : '';
+      document.getElementById('art-breadcrumb').innerHTML = homeBtn+sep+katBtn+filterPart;
+    }
+
+    function updateHash(kat, filter){
+      var hash = '#'+encodeURIComponent(kat.toLowerCase());
+      if(filter && filter!=='te-gjitha') hash += '/'+encodeURIComponent(filter.toLowerCase());
+      history.replaceState(null,'',hash);
+    }
+
+    window.applyArtFilter = function(filter){
+      _overlayState.activeFilter = filter;
+      renderFilterBar(_overlayState.artikujt, filter);
+      renderArtGrid(_overlayState.artikujt, filter);
+      renderBreadcrumb(_overlayState.kat, filter);
+      updateHash(_overlayState.kat, filter);
+      document.getElementById('art-overlay').scrollTop = 0;
+    };
+
+    function _openOverlayInternal(kat, filter){
+      var data = loadData();
+      var all = data && data.artikujt ? data.artikujt : [];
+      var forKat = all.filter(function(a){
+        var s=a.sub; if(!s) return false;
+        if(Array.isArray(s)) return s.some(function(x){return (x||'').toLowerCase()===kat.toLowerCase();});
+        return (s+'').toLowerCase()===kat.toLowerCase();
+      });
+
+      _overlayState.kat = kat;
+      _overlayState.activeFilter = filter||'te-gjitha';
+      _overlayState.artikujt = forKat;
+
+      renderBreadcrumb(kat, filter||'te-gjitha');
+      renderFilterBar(forKat, filter||'te-gjitha');
+      renderArtGrid(forKat, filter||'te-gjitha');
+
+      var ov = document.getElementById('art-overlay');
+      ov.style.display = 'block';
+      ov.scrollTop = 0;
+      document.body.style.overflow = 'hidden';
+    }
+
+    window.openArtOverlay = function(kat, filter){
+      _openOverlayInternal(kat, filter||'te-gjitha');
+      updateHash(kat, filter||'te-gjitha');
+    };
+
+    window.closeArtOverlay = function(){
+      document.getElementById('art-overlay').style.display = 'none';
+      document.body.style.overflow = '';
+      history.replaceState(null,'',window.location.pathname+window.location.search);
+    };
+
+    // Restore state from URL hash on load
+    function restoreFromHash(){
+      var hash = decodeURIComponent(window.location.hash.replace('#',''));
+      if(!hash) return;
+      var parts = hash.split('/');
+      var kat = parts[0];
+      var filter = parts[1]||'te-gjitha';
+      // Find matching kat (case-insensitive)
+      var data = loadData();
+      var kats = data && data.kategoriSettings && data.kategoriSettings.kryesore ? data.kategoriSettings.kryesore : [];
+      var match = kats.find(function(k){ return k.toLowerCase()===kat.toLowerCase(); });
+      if(match) _openOverlayInternal(match, filter);
+    }
+
+    window.addEventListener('hashchange', function(){
+      var hash = decodeURIComponent(window.location.hash.replace('#',''));
+      if(!hash){ closeArtOverlay(); return; }
+      var parts = hash.split('/');
+      var kat = parts[0]; var filter = parts[1]||'te-gjitha';
+      var data = loadData();
+      var kats = data && data.kategoriSettings && data.kategoriSettings.kryesore ? data.kategoriSettings.kryesore : [];
+      var match = kats.find(function(k){ return k.toLowerCase()===kat.toLowerCase(); });
+      if(match) _openOverlayInternal(match, filter);
+    });
+
+    restoreFromHash();
+
+    var _detailState = { artIdx: 0, photoIdx: 0, articles: [] };
+
+    function _renderDetailPhotos(){
+      var a = _detailState.articles[_detailState.artIdx];
+      var photos = (a.photos || []).map(getPhotoSrc).filter(Boolean);
+      var idx = _detailState.photoIdx;
+      if(idx >= photos.length) idx = 0;
+      if(idx < 0) idx = photos.length - 1;
+      _detailState.photoIdx = idx;
+
+      var artIdx = _detailState.artIdx;
+      var total = _detailState.articles.length;
+      var hasPrev = artIdx > 0;
+      var hasNext = artIdx < total - 1;
+
+      // Nav buttons injected into overlay (outside box)
+      var ov = document.getElementById('art-detail-overlay');
+      var prevBtn = ov.querySelector('.art-nav-btn.prev');
+      if(!prevBtn){
+        prevBtn = document.createElement('button');
+        prevBtn.className = 'art-nav-btn prev';
+        prevBtn.onclick = function(){ window.prevArtDetail(); };
+        ov.appendChild(prevBtn);
+      }
+      var nextBtn = ov.querySelector('.art-nav-btn.next');
+      if(!nextBtn){
+        nextBtn = document.createElement('button');
+        nextBtn.className = 'art-nav-btn next';
+        nextBtn.onclick = function(){ window.nextArtDetail(); };
+        ov.appendChild(nextBtn);
+      }
+      prevBtn.innerHTML = '&#8592;';
+      prevBtn.disabled = !hasPrev;
+      nextBtn.innerHTML = '&#8594;';
+      nextBtn.disabled = !hasNext;
+
+      var mainImg = photos.length
+        ? '<img src="'+photos[idx]+'" style="width:100%;height:100%;object-fit:cover;display:block;cursor:pointer;" onclick="window.setPhotoIdx('+(idx+1)+')">'
+        : '<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:60px;background:#f0f0f0;">&#128085;</div>';
+
+      var thumbs = '';
+      if(photos.length > 1){
+        thumbs = '<div id="art-det-thumbs">';
+        photos.forEach(function(ph, i){
+          thumbs += '<img src="'+ph+'" class="det-th'+(i===idx?' active':'')+'" onclick="window.setPhotoIdx('+i+')">';
+        });
+        thumbs += '</div>';
+      }
+
+      var photosEl = document.getElementById('art-detail-photos');
+      photosEl.innerHTML = '<div style="position:relative;flex:1;overflow:hidden;min-height:0;">' + mainImg + '</div>' + thumbs;
+    }
+
+    function _renderDetailInfo(){
+      var a = _detailState.articles[_detailState.artIdx];
+      var subText = Array.isArray(a.sub) ? a.sub.join(', ') : (a.sub||'');
+      document.getElementById('art-detail-kat').textContent = (a.kat||'')+(subText?' · '+subText:'');
+      document.getElementById('art-detail-name').textContent = a.name||'';
+      document.getElementById('art-detail-code').textContent = a.code ? 'KOD: '+a.code : '';
+      document.getElementById('art-detail-desc').textContent = a.desc||'';
+
+      var masatEl = document.getElementById('art-detail-masat');
+      if(a.masat && a.masat.length){
+        masatEl.innerHTML = '<p style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">MASAT</p>'
+          +'<div style="display:flex;flex-wrap:wrap;gap:6px;">'
+          +a.masat.map(function(m){ return '<span style="border:0.5px solid var(--border);padding:5px 12px;font-size:12px;font-weight:500;">'+m+'</span>'; }).join('')
+          +'</div>';
+      } else masatEl.innerHTML='';
+
+      var ngjEl = document.getElementById('art-detail-ngjyrat');
+      if(a.ngjyrat && a.ngjyrat.length){
+        ngjEl.innerHTML = '<p style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">NGJYRAT</p>'
+          +'<div style="display:flex;flex-wrap:wrap;gap:8px;">'
+          +a.ngjyrat.map(function(n){ return '<div style="display:flex;flex-direction:column;align-items:center;gap:4px;"><div style="width:26px;height:26px;border-radius:50%;background:'+(n.hex||'#ccc')+';border:0.5px solid var(--border);"></div><span style="font-size:9px;color:var(--muted);">'+(n.name||'')+'</span></div>'; }).join('')
+          +'</div>';
+      } else ngjEl.innerHTML='';
+
+      var perbEl = document.getElementById('art-detail-perberja');
+      if(a.perberja && a.perberja.length){
+        perbEl.innerHTML = '<p style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">PËRBËRJA</p>'
+          +'<div style="display:flex;flex-direction:column;gap:4px;">'
+          +a.perberja.map(function(p){ return '<div style="display:flex;justify-content:space-between;font-size:12px;padding:5px 0;border-bottom:0.5px solid var(--border);"><span>'+p.name+'</span><span style="font-weight:500;">'+p.pct+'%</span></div>'; }).join('')
+          +'</div>';
+      } else perbEl.innerHTML='';
+    }
+
+    window.setPhotoIdx = function(i){
+      var photos = (_detailState.articles[_detailState.artIdx].photos || []).map(getPhotoSrc).filter(Boolean);
+      if(!photos.length) return;
+      _detailState.photoIdx = ((i % photos.length) + photos.length) % photos.length;
+      _renderDetailPhotos();
+    };
+
+    window.prevArtDetail = function(){
+      if(_detailState.artIdx <= 0) return;
+      _detailState.artIdx--;
+      _detailState.photoIdx = 0;
+      _renderDetailPhotos();
+      _renderDetailInfo();
+    };
+
+    window.nextArtDetail = function(){
+      if(_detailState.artIdx >= _detailState.articles.length - 1) return;
+      _detailState.artIdx++;
+      _detailState.photoIdx = 0;
+      _renderDetailPhotos();
+      _renderDetailInfo();
+    };
+
+    window.openArtDetail = function(id){
+      var articles = _overlayState.artikujt;
+      var idx = articles.findIndex(function(x){ return x.id===id; });
+      if(idx < 0) return;
+
+      _detailState.articles = articles;
+      _detailState.artIdx = idx;
+      _detailState.photoIdx = 0;
+
+      _renderDetailPhotos();
+      _renderDetailInfo();
+
+      var ov = document.getElementById('art-detail-overlay');
+      ov.style.display = 'flex';
+    };
+
+    window.closeArtDetail = function(){
+      var ov = document.getElementById('art-detail-overlay');
+      ov.style.display = 'none';
+      ov.querySelectorAll('.art-nav-btn').forEach(function(b){ b.remove(); });
+    };
+
+    // Close detail on overlay click
+    document.getElementById('art-detail-overlay').addEventListener('click', function(e){
+      if(e.target===this) closeArtDetail();
+    });
+
+    // Escape key
+    document.addEventListener('keydown', function(e){
+      if(e.key==='Escape'){
+        closeArtDetail();
+        closeArtOverlay();
+      }
+    });
+
+    renderShowcase();
+  })();
+  </script>
+
+  <script>
+  (function(){
+    var KEY='intal_home_v1';
+    function get(id){return document.querySelector(id);}
+    function setText(sel,val){var el=document.querySelector(sel);if(el&&val!==undefined&&val!=='')el.textContent=val;}
+    try{
+      var raw=localStorage.getItem(KEY);
+      if(!raw)return;
+      var d=JSON.parse(raw);
+      if(!d._saved)return;
+      // Hero
+      if(d.hero){
+        if(d.hero.bgImage){
+          var hero=document.querySelector('.hero');
+          if(hero)hero.style.backgroundImage='url("'+d.hero.bgImage+'")';
+        }
+        setText('.hero-eyebrow',d.hero.eyebrow);
+        setText('.hero-heading',d.hero.heading);
+        var btns=document.querySelectorAll('.hero-buttons a');
+        if(btns[0]&&d.hero.btn1)btns[0].textContent=d.hero.btn1;
+        if(btns[1]&&d.hero.btn2)btns[1].textContent=d.hero.btn2;
+      }
+      // About
+      if(d.about){
+        setText('.about-eyebrow',d.about.eyebrow);
+        setText('.about-heading',d.about.heading);
+        setText('.about-body',d.about.body);
+        var statNums=document.querySelectorAll('.about-stat-num');
+        var statLbls=document.querySelectorAll('.about-stat-label');
+        (d.about.stats||[]).forEach(function(s,i){
+          if(statNums[i]&&s.num)statNums[i].textContent=s.num;
+          if(statLbls[i]&&s.lbl)statLbls[i].textContent=s.lbl;
+        });
+        var colTitles=document.querySelectorAll('.about-col-title');
+        var colTexts=document.querySelectorAll('.about-col-text');
+        (d.about.cols||[]).forEach(function(c,i){
+          if(colTitles[i]&&c.title)colTitles[i].textContent=c.title;
+          if(colTexts[i]&&c.text)colTexts[i].textContent=c.text;
+        });
+      }
+      // Services
+      if(d.services){
+        setText('.services-eyebrow',d.services.eyebrow);
+        setText('.services-heading',d.services.heading);
+        var svcTitles=document.querySelectorAll('.service-title');
+        var svcDescs=document.querySelectorAll('.service-desc');
+        var svcImgs=document.querySelectorAll('.service-img-wrap img');
+        (d.services.cards||[]).forEach(function(c,i){
+          if(svcTitles[i]&&c.title)svcTitles[i].textContent=c.title;
+          if(svcDescs[i]&&c.desc)svcDescs[i].textContent=c.desc;
+          if(svcImgs[i]&&c.img)svcImgs[i].src=c.img;
+        });
+      }
+      // Contact
+      if(d.contact){
+        setText('.contact-eyebrow',d.contact.eyebrow);
+        var ch=document.querySelector('.contact-heading');
+        if(ch&&d.contact.heading)ch.innerHTML=d.contact.heading.replace(/\n/g,'<br>');
+        setText('.contact-sub',d.contact.sub);
+        var phones=document.querySelectorAll('.contact-item-value');
+        if(phones[0]&&d.contact.phone)phones[0].textContent=d.contact.phone;
+        if(phones[1]&&d.contact.email)phones[1].textContent=d.contact.email;
+      }
+    }catch(e){}
+  })();
+  </script>
+
+</body>
+</html>

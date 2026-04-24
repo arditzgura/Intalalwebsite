@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pelhura — Intal Underwear</title>
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+  <style>
+    .pg-header { padding:clamp(20px,2.5vw,36px) var(--side) clamp(12px,1.5vw,20px); border-bottom:.5px solid var(--border); display:flex; align-items:baseline; justify-content:space-between; gap:12px; }
+    .pg-breadcrumb { display:flex; align-items:center; gap:6px; font-size:12px; font-weight:500; letter-spacing:.5px; }
+    .pg-breadcrumb a { color:var(--muted); text-decoration:none; text-transform:uppercase; transition:color .15s; }
+    .pg-breadcrumb a:hover { color:var(--black); }
+    .pg-breadcrumb .sep { color:var(--border); }
+    .pg-breadcrumb .cur { color:var(--black); text-transform:uppercase; }
+    #pg-count { font-size:11px; color:var(--muted); letter-spacing:1px; white-space:nowrap; }
+    /* Page Hero Banner */
+    .art-page-hero { display:none; position:relative; min-height:220px; background:#111; overflow:hidden; align-items:flex-end; }
+    .art-page-hero.visible { display:flex; }
+    .art-page-hero-bg { position:absolute; inset:0; background-size:cover; background-position:center; }
+    .art-page-hero-bg::after { content:''; position:absolute; inset:0; background:linear-gradient(to bottom,rgba(0,0,0,.15) 0%,rgba(0,0,0,.55) 100%); }
+    .art-page-hero-content { position:relative; z-index:1; padding:clamp(30px,4vw,60px) var(--side) clamp(24px,3vw,44px); display:flex; flex-direction:column; gap:8px; width:100%; }
+    .art-page-hero-eyebrow { font-size:10px; font-weight:600; letter-spacing:3px; text-transform:uppercase; color:rgba(255,255,255,.7); }
+    .art-page-hero-heading { font-size:clamp(26px,3.5vw,48px); font-weight:700; color:#fff; letter-spacing:-0.5px; line-height:1.1; }
+    .art-page-hero-sub { font-size:13px; color:rgba(255,255,255,.75); max-width:480px; line-height:1.6; margin-top:2px; }
+    :root { --art-side: 180px; }
+    @media(max-width:900px){ :root { --art-side: 60px; } }
+    @media(max-width:600px){ :root { --art-side: 20px; } }
+    #dyn-filter-bar { padding:10px var(--art-side); border-bottom:.5px solid var(--border); display:none; flex-wrap:wrap; gap:8px; }
+    .dfc { padding:5px 16px; border:.5px solid var(--border); background:#fff; font-size:11px; font-weight:500; letter-spacing:1px; text-transform:uppercase; cursor:pointer; transition:all .15s; }
+    .dfc:hover { border-color:var(--black); }
+    .dfc.active { background:var(--black); color:#fff; border-color:var(--black); }
+    #dyn-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; padding:24px var(--art-side) 60px; }
+    @media(max-width:900px){ #dyn-grid { grid-template-columns:repeat(3,1fr); } }
+    @media(max-width:600px){ #dyn-grid { grid-template-columns:repeat(2,1fr); gap:10px; padding:14px 14px 50px; } #dyn-filter-bar { padding:10px 14px; } }
+    .art-card { cursor:pointer; position:relative; }
+    .art-card-img-wrap { aspect-ratio:3/4; overflow:hidden; background:#f0f0f0; position:relative; }
+    .art-card-img-wrap img { width:100%; height:100%; object-fit:cover; display:block; }
+    .art-card-arr { position:absolute; top:50%; transform:translateY(-50%); background:rgba(255,255,255,.88); border:none; border-radius:50%; width:30px; height:30px; cursor:pointer; font-size:14px; display:flex; align-items:center; justify-content:center; z-index:5; box-shadow:0 1px 6px rgba(0,0,0,.2); opacity:0; transition:opacity .15s; pointer-events:none; }
+    .art-card:hover .art-card-arr { opacity:1; pointer-events:auto; }
+    .art-card-arr.l { left:7px; } .art-card-arr.r { right:7px; }
+    #art-detail-overlay { display:none; position:fixed; inset:0; z-index:9000; background:rgba(0,0,0,.75); backdrop-filter:blur(6px); align-items:center; justify-content:center; padding:1rem; }
+    #art-detail-box { background:#fff; border-radius:4px; width:min(980px,96vw); height:min(560px,88vh); display:grid; grid-template-columns:1fr 1fr; overflow:hidden; flex-shrink:0; }
+    #art-detail-photos { background:#f5f5f5; overflow:hidden; display:flex; flex-direction:column; }
+    .art-det-side { display:flex; flex-direction:column; overflow-y:auto; height:100%; }
+    .ph-arr { position:absolute; top:50%; transform:translateY(-50%); background:rgba(255,255,255,.88); border:none; border-radius:50%; width:36px; height:36px; cursor:pointer; font-size:17px; display:flex; align-items:center; justify-content:center; z-index:5; box-shadow:0 2px 8px rgba(0,0,0,.18); }
+    .ph-arr.l { left:10px; } .ph-arr.r { right:10px; }
+    #art-nav-bar { display:flex; align-items:center; justify-content:space-between; padding:8px 12px; background:#111; flex-shrink:0; }
+    .art-nav-btn { background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.25); color:#fff; border-radius:3px; padding:4px 11px; font-size:11px; font-weight:600; cursor:pointer; transition:background .15s; }
+    .art-nav-btn:hover:not(:disabled) { background:rgba(255,255,255,.25); }
+    .art-nav-btn:disabled { opacity:.25; cursor:default; }
+    #art-det-thumbs { display:flex; gap:5px; padding:8px 12px; background:rgba(0,0,0,.4); overflow-x:auto; flex-shrink:0; }
+    .det-th { width:46px; height:46px; border-radius:3px; object-fit:cover; border:2px solid transparent; cursor:pointer; flex-shrink:0; transition:border-color .15s; display:block; }
+    .det-th.active { border-color:#fff; }
+    @media(max-width:700px){
+      #art-detail-overlay { padding:.4rem; }
+      #art-detail-box { grid-template-columns:1fr 1fr; width:99vw; height:min(420px,94vw); }
+      .art-det-side > div:first-child { padding:14px !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Navbar ──────────────────────────────────────────────── -->
+  <nav class="navbar" role="navigation" aria-label="Navigimi kryesor">
+    <div class="navbar-inner">
+      <div class="navbar-left">
+        <button class="nav-hamburger" aria-label="Menu" onclick="openMenuDrawer()">
+          <i class="ri-menu-line"></i>
+        </button>
+        <div class="nav-links">
+          <a href="index.html" class="nav-link">Home</a>
+          <a href="artikujt.html" class="nav-link">Artikujt</a>
+          <a href="pelhura.html" class="nav-link active">Pelhura</a>
+          <a href="rreth-nesh.html" class="nav-link">Rreth Nesh</a>
+        </div>
+      </div>
+
+      <a href="index.html" class="navbar-brand">Intal Underwear</a>
+
+      <div class="navbar-right">
+        <button class="search-btn" aria-label="Kërko">
+          <i class="ri-search-line"></i>
+        </button>
+        <a href="index.html#kontakt" class="btn-order">Porosit</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Hero Banner -->
+  <div class="art-page-hero" id="art-page-hero">
+    <div class="art-page-hero-bg" id="art-page-hero-bg"></div>
+    <div class="art-page-hero-content">
+      <p class="art-page-hero-eyebrow" id="art-page-hero-eyebrow"></p>
+      <h1 class="art-page-hero-heading" id="art-page-hero-heading"></h1>
+      <p class="art-page-hero-sub" id="art-page-hero-sub"></p>
+    </div>
+  </div>
+
+  <!-- Page header -->
+  <div class="pg-header">
+    <div class="pg-breadcrumb" id="pg-breadcrumb">
+      <a href="index.html">Home</a><span class="sep">/</span><span class="cur">Pelhura</span>
+    </div>
+    <span id="pg-count"></span>
+  </div>
+
+  <!-- Filter bar -->
+  <div id="dyn-filter-bar"></div>
+
+  <!-- Grid -->
+  <div id="dyn-grid"></div>
+
+  <!-- Detail popup -->
+  <div id="art-detail-overlay">
+    <div id="art-detail-box">
+      <div id="art-detail-photos"></div>
+      <div class="art-det-side">
+        <div style="padding:28px 28px 0;flex:1;position:relative;overflow-y:auto;">
+          <button onclick="closeArtDetail()" style="position:absolute;top:12px;right:12px;background:#f0f0f0;border:none;border-radius:50%;width:30px;height:30px;cursor:pointer;font-size:15px;z-index:5;">&#10005;</button>
+          <p id="art-detail-kat" style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;"></p>
+          <h2 id="art-detail-name" style="font-size:clamp(16px,2vw,24px);font-weight:500;letter-spacing:-0.3px;margin-bottom:5px;"></h2>
+          <p id="art-detail-code" style="font-size:11px;color:var(--muted);letter-spacing:1px;margin-bottom:14px;"></p>
+          <p id="art-detail-desc" style="font-size:13px;line-height:1.7;color:#555;margin-bottom:16px;"></p>
+          <div id="art-detail-ngjyrat" style="margin-bottom:14px;"></div>
+          <div id="art-detail-perberja" style="margin-bottom:14px;"></div>
+        </div>
+        <div style="padding:16px 28px 24px;flex-shrink:0;">
+          <a href="index.html#kontakt" style="display:block;width:100%;background:var(--black);color:#fff;border:none;padding:12px;font-size:11px;font-weight:500;letter-spacing:1px;text-transform:uppercase;cursor:pointer;text-align:center;text-decoration:none;">Na Kontaktoni</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Footer ──────────────────────────────────────────────── -->
+  <div class="simple-footer">
+    <div class="contact-locations">
+      <div class="contact-loc">
+        <p class="contact-loc-name">Selia Kryesore</p>
+        <p class="contact-loc-addr">Rrobaqepësi INTAL, Rruga Arbanes, Vaqarr, Tiranë 1035</p>
+      </div>
+      <div class="contact-loc">
+        <p class="contact-loc-name">Dyqani</p>
+        <p class="contact-loc-addr">Intal, Rruga 5 Maji 67/1, Tiranë 1032</p>
+      </div>
+    </div>
+    <div class="contact-footer">
+      <span class="contact-brand">Intal <strong>UNDERWEAR</strong></span>
+      <span class="contact-copy">© 2025 Intal Albania</span>
+    </div>
+  </div>
+
+  <!-- ── Menu left drawer ──────────────────────────────────── -->
+  <div class="menu-backdrop" id="menuBackdrop" onclick="closeMenuDrawer()"></div>
+  <aside class="menu-drawer" id="menuDrawer" aria-label="Meniu">
+    <div class="menu-drawer-header">
+      <span class="menu-drawer-brand">Intal <strong>Underwear</strong></span>
+      <button class="menu-drawer-close" onclick="closeMenuDrawer()" aria-label="Mbyll">
+        <i class="ri-close-line"></i>
+      </button>
+    </div>
+    <div class="menu-drawer-body">
+      <nav class="menu-drawer-nav">
+        <a href="index.html" class="menu-drawer-link" onclick="closeMenuDrawer()">Home</a>
+        <a href="artikujt.html" class="menu-drawer-link" onclick="closeMenuDrawer()">Artikujt</a>
+        <a href="pelhura.html" class="menu-drawer-link" onclick="closeMenuDrawer()">Pelhura</a>
+        <a href="rreth-nesh.html" class="menu-drawer-link" onclick="closeMenuDrawer()">Rreth Nesh</a>
+        <a href="index.html#kontakt" class="menu-drawer-link" onclick="closeMenuDrawer()">Kontakt</a>
+      </nav>
+
+      <div class="menu-drawer-divider"></div>
+
+      <p class="menu-drawer-eyebrow">NA KONTAKTONI</p>
+
+      <div class="menu-drawer-contacts">
+        <a class="menu-drawer-contact-item" href="tel:+355692776636">
+          <div class="menu-drawer-icon"><i class="ri-phone-line"></i></div>
+          <div>
+            <span class="menu-drawer-label">Telefon / WhatsApp</span>
+            <span class="menu-drawer-value">+355 692 776 636</span>
+          </div>
+        </a>
+        <a class="menu-drawer-contact-item" href="mailto:info@intal.com">
+          <div class="menu-drawer-icon"><i class="ri-mail-line"></i></div>
+          <div>
+            <span class="menu-drawer-label">Email</span>
+            <span class="menu-drawer-value">info@intal.com</span>
+          </div>
+        </a>
+        <div class="menu-drawer-contact-item">
+          <div class="menu-drawer-icon"><i class="ri-map-pin-line"></i></div>
+          <div>
+            <span class="menu-drawer-label">Adresa</span>
+            <span class="menu-drawer-value">Tiranë, Shqipëri</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="menu-drawer-divider"></div>
+
+      <div class="menu-drawer-locations">
+        <div class="menu-drawer-loc">
+          <p class="menu-drawer-loc-name">Selia Kryesore</p>
+          <p class="menu-drawer-loc-addr">Rrobaqepësi INTAL, Rruga Arbanes, Vaqarr, Tiranë 1035</p>
+        </div>
+        <div class="menu-drawer-loc">
+          <p class="menu-drawer-loc-name">Dyqani</p>
+          <p class="menu-drawer-loc-addr">Intal, Rruga 5 Maji 67/1, Tiranë 1032</p>
+        </div>
+      </div>
+
+    </div>
+    <div class="menu-drawer-footer">
+      <span class="menu-drawer-copy">© 2025 Intal Albania</span>
+    </div>
+  </aside>
+
+
+  <script src="js/main.js"></script>
+  <script>
+  (function(){
+    function loadData(){ try{ var r=localStorage.getItem('intal_cache_v1'); if(r) return JSON.parse(r); }catch(e){} return null; }
+    function getPhotoSrc(p){ if(!p) return ''; if(typeof p==='string') return p; return p.src||p.url||''; }
+
+    var _all=[], _filter='te-gjitha';
+    var _det={artIdx:0,photoIdx:0,articles:[]};
+
+    function renderFilterBar(list,active){
+      var bar=document.getElementById('dyn-filter-bar');
+      var kats=[];
+      list.forEach(function(a){ var k=a.kat||''; if(k&&!kats.includes(k)) kats.push(k); });
+      if(!kats.length){ bar.style.display='none'; return; }
+      bar.style.display='flex';
+      bar.innerHTML=['te-gjitha'].concat(kats).map(function(k){
+        var lbl=k==='te-gjitha'?'Të Gjitha':k;
+        return '<button class="dfc'+(active===k?' active':'')+'" onclick="applyFilter(\''+k.replace(/'/g,"\\'")+'\')">'+lbl+'</button>';
+      }).join('');
+    }
+
+    function renderGrid(list,filter){
+      var show=filter==='te-gjitha'?list:list.filter(function(a){ return (a.kat||'').toLowerCase()===filter.toLowerCase(); });
+      document.getElementById('pg-count').textContent=show.length+' PELHURA';
+      var grid=document.getElementById('dyn-grid');
+      if(!show.length){ grid.innerHTML='<div style="grid-column:1/-1;padding:80px 0;text-align:center;color:var(--muted);font-size:13px;">Nuk ka pelhura për këtë filtër.</div>'; return; }
+      grid.innerHTML=show.map(function(a){
+        var photos=(a.photos||[]).map(getPhotoSrc).filter(Boolean);
+        var img0=photos[0]||'';
+        var hasM=photos.length>1;
+        var pa=hasM?' data-photos=\''+JSON.stringify(photos).replace(/'/g,'&#39;')+'\'':'';
+        var imgEl=img0?'<img src="'+img0+'" data-idx="0" style="width:100%;height:100%;object-fit:cover;display:block;">'
+          :'<div style="width:100%;height:100%;background:#e0e0e0;display:flex;align-items:center;justify-content:center;font-size:40px;">&#129525;</div>';
+        var arr=hasM?'<button class="art-card-arr l" onclick="cardStep(event,this,-1)">&#8592;</button><button class="art-card-arr r" onclick="cardStep(event,this,1)">&#8594;</button>':'';
+        return '<div class="art-card" onclick="openDet(\''+a.id+'\')">'
+          +'<div class="art-card-img-wrap"'+pa+'>'+imgEl+arr+'</div>'
+          +'<div style="padding:12px 14px 16px;">'
+          +'<p style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:3px;">'+(a.kat||'')+'</p>'
+          +'<p style="font-size:14px;font-weight:500;letter-spacing:-0.2px;color:var(--black);">'+a.name+'</p>'
+          +(a.desc?'<p style="font-size:11px;color:var(--muted);margin-top:2px;">'+a.desc.slice(0,60)+'</p>':'')
+          +'</div></div>';
+      }).join('');
+    }
+
+    window.applyFilter=function(f){
+      _filter=f; renderFilterBar(_all,f); renderGrid(_all,f); window.scrollTo(0,0);
+    };
+
+    window.cardStep=function(e,btn,dir){
+      e.stopPropagation();
+      var w=btn.parentElement; var ps=JSON.parse(w.dataset.photos||'[]'); if(!ps.length) return;
+      var img=w.querySelector('img'); var idx=((parseInt(img.dataset.idx||'0')+dir)+ps.length)%ps.length;
+      img.dataset.idx=idx; img.src=ps[idx];
+    };
+
+    // Detail popup
+    function renderDetPhotos(){
+      var a=_det.articles[_det.artIdx];
+      var photos=(a.photos||[]).map(getPhotoSrc).filter(Boolean);
+      var idx=((_det.photoIdx%Math.max(photos.length,1))+photos.length)%Math.max(photos.length,1);
+      _det.photoIdx=idx;
+      var total=_det.articles.length, ai=_det.artIdx;
+      var nav='<div id="art-nav-bar">'
+        +'<button class="art-nav-btn" onclick="prevDet()" '+(ai>0?'':'disabled')+'>&#8592; Para</button>'
+        +'<span style="font-size:11px;color:rgba(255,255,255,.5);letter-spacing:1px;">'+(ai+1)+' / '+total+'</span>'
+        +'<button class="art-nav-btn" onclick="nextDet()" '+(ai<total-1?'':'disabled')+'>Pas &#8594;</button>'
+        +'</div>';
+      var mi=photos.length?'<img src="'+photos[idx]+'" style="width:100%;height:100%;object-fit:cover;display:block;cursor:pointer;" onclick="setPI('+(idx+1)+')">':'<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:60px;background:#f0f0f0;">&#129525;</div>';
+      var aL=photos.length>1?'<button class="ph-arr l" onclick="setPI('+(idx-1)+')">&#8592;</button>':'';
+      var aR=photos.length>1?'<button class="ph-arr r" onclick="setPI('+(idx+1)+')">&#8594;</button>':'';
+      var th='';
+      if(photos.length>1){ th='<div id="art-det-thumbs">'; photos.forEach(function(ph,i){ th+='<img src="'+ph+'" class="det-th'+(i===idx?' active':'')+'" onclick="setPI('+i+')" alt="">'; }); th+='</div>'; }
+      document.getElementById('art-detail-photos').innerHTML=nav+'<div style="position:relative;flex:1;overflow:hidden;min-height:0;">'+mi+aL+aR+'</div>'+th;
+    }
+
+    function renderDetInfo(){
+      var a=_det.articles[_det.artIdx];
+      document.getElementById('art-detail-kat').textContent=a.kat||'';
+      document.getElementById('art-detail-name').textContent=a.name||'';
+      document.getElementById('art-detail-code').textContent='';
+      document.getElementById('art-detail-desc').textContent=a.desc||'';
+      var nEl=document.getElementById('art-detail-ngjyrat');
+      nEl.innerHTML=a.ngjyrat&&a.ngjyrat.length?'<p style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">NGJYRAT</p><div style="display:flex;flex-wrap:wrap;gap:8px;">'+a.ngjyrat.map(function(n){ return '<div style="display:flex;flex-direction:column;align-items:center;gap:4px;"><div style="width:26px;height:26px;border-radius:50%;background:'+(n.hex==='multi'?'conic-gradient(red,yellow,green,blue,red)':(n.hex||'#ccc'))+';border:.5px solid var(--border);"></div><span style="font-size:9px;color:var(--muted);">'+(n.name||'')+'</span></div>'; }).join('')+'</div>':'';
+      var pEl=document.getElementById('art-detail-perberja');
+      if(a.perberja&&a.perberja.length){
+        pEl.innerHTML='<p style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">PËRBËRJA</p><div style="display:flex;flex-direction:column;gap:4px;">'
+          +a.perberja.map(function(p){ var mat=p.material||p.name||''; var pct=p.perqindje||p.pct||''; return '<div style="display:flex;justify-content:space-between;font-size:12px;padding:5px 0;border-bottom:.5px solid var(--border);"><span>'+mat+'</span>'+(pct?'<span style="font-weight:500;">'+pct+'</span>':'')+'</div>'; }).join('')+'</div>';
+      } else pEl.innerHTML='';
+    }
+
+    window.setPI=function(i){ var ps=(_det.articles[_det.artIdx].photos||[]).map(getPhotoSrc).filter(Boolean); if(!ps.length) return; _det.photoIdx=((i%ps.length)+ps.length)%ps.length; renderDetPhotos(); };
+    window.prevDet=function(){ if(_det.artIdx<=0) return; _det.artIdx--; _det.photoIdx=0; renderDetPhotos(); renderDetInfo(); };
+    window.nextDet=function(){ if(_det.artIdx>=_det.articles.length-1) return; _det.artIdx++; _det.photoIdx=0; renderDetPhotos(); renderDetInfo(); };
+
+    window.openDet=function(id){
+      var idx=_all.findIndex(function(x){ return x.id===id; }); if(idx<0) return;
+      _det.articles=_all; _det.artIdx=idx; _det.photoIdx=0;
+      renderDetPhotos(); renderDetInfo();
+      document.getElementById('art-detail-overlay').style.display='flex';
+    };
+    window.closeArtDetail=function(){ document.getElementById('art-detail-overlay').style.display='none'; };
+    document.getElementById('art-detail-overlay').addEventListener('click',function(e){ if(e.target===this) closeArtDetail(); });
+    document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeArtDetail(); });
+
+    // Init
+    var data=loadData();
+    _all=data&&data.pelhurat?data.pelhurat:[];
+    renderFilterBar(_all,'te-gjitha');
+    renderGrid(_all,'te-gjitha');
+  })();
+  </script>
+
+  <script>
+  (function(){
+    try{
+      var d=JSON.parse(localStorage.getItem('intal_pel_page_v1')||'{}');
+      if(!d._saved) return;
+      var hero=document.getElementById('art-page-hero');
+      if(d.hero){
+        var hasHero=(d.hero.heading||d.hero.eyebrow||d.hero.sub||d.hero.bgImage);
+        if(hasHero){
+          hero.classList.add('visible');
+          if(d.hero.bgImage) document.getElementById('art-page-hero-bg').style.backgroundImage='url("'+d.hero.bgImage+'")';
+          if(d.hero.eyebrow) document.getElementById('art-page-hero-eyebrow').textContent=d.hero.eyebrow;
+          if(d.hero.heading) document.getElementById('art-page-hero-heading').textContent=d.hero.heading;
+          if(d.hero.sub) document.getElementById('art-page-hero-sub').textContent=d.hero.sub;
+        }
+      }
+      if(d.footer){
+        var locs=document.querySelectorAll('.contact-loc');
+        if(locs[0]){
+          if(d.footer.loc0name){var n=locs[0].querySelector('.contact-loc-name');if(n)n.textContent=d.footer.loc0name;}
+          if(d.footer.loc0addr){var a=locs[0].querySelector('.contact-loc-addr');if(a)a.textContent=d.footer.loc0addr;}
+        }
+        if(locs[1]){
+          if(d.footer.loc1name){var n2=locs[1].querySelector('.contact-loc-name');if(n2)n2.textContent=d.footer.loc1name;}
+          if(d.footer.loc1addr){var a2=locs[1].querySelector('.contact-loc-addr');if(a2)a2.textContent=d.footer.loc1addr;}
+        }
+      }
+    }catch(e){}
+  })();
+  </script>
+
+</body>
+</html>

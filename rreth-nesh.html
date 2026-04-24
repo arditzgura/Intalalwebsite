@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rreth Nesh — Intal Underwear</title>
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+  <style>
+    /* ── Rreth Nesh Hero ───────────────────────────────────────── */
+    .rn-hero {
+      background: var(--black);
+      padding: clamp(80px, 12vw, 160px) var(--side) clamp(60px, 9vw, 120px);
+      position: relative;
+      overflow: hidden;
+    }
+    .rn-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: var(--rn-bg, url('IMAGE/Page (3).png'));
+      background-size: cover;
+      background-position: center top;
+      opacity: 0.12;
+    }
+    .rn-hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 700px;
+    }
+    .rn-hero-eyebrow {
+      font-size: 10px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+      margin-bottom: 20px;
+    }
+    .rn-hero-heading {
+      font-size: clamp(36px, 7vw, 96px);
+      font-weight: 500;
+      letter-spacing: clamp(-1px, -0.2vw, -3px);
+      line-height: 1.02;
+      color: var(--off-white);
+    }
+
+    /* ── Section rhythm ─────────────────────────────────────────── */
+    .rn-section {
+      padding: clamp(60px, 8vw, 100px) var(--side);
+    }
+
+    /* ── Company Overview ───────────────────────────────────────── */
+    .rn-overview {
+      background: var(--white);
+      border-top: 0.5px solid var(--border);
+    }
+    .rn-overview-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(40px, 6vw, 100px);
+      align-items: start;
+    }
+    @media (max-width: 768px) {
+      .rn-overview-grid { grid-template-columns: 1fr; }
+    }
+    .rn-overview-heading {
+      font-size: clamp(24px, 3.5vw, 48px);
+      font-weight: 500;
+      letter-spacing: clamp(-0.5px, -0.1vw, -1.5px);
+      line-height: 1.1;
+      color: var(--black);
+    }
+    .rn-overview-eyebrow {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+    .rn-overview-body {
+      font-size: 14px;
+      line-height: 1.75;
+      color: var(--muted);
+      margin-bottom: 40px;
+    }
+    .rn-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      padding-top: 32px;
+      border-top: 0.5px solid var(--border);
+    }
+    @media (max-width: 480px) {
+      .rn-stats { grid-template-columns: 1fr; }
+    }
+    .rn-stat-num {
+      font-size: clamp(26px, 3.5vw, 44px);
+      font-weight: 500;
+      letter-spacing: -1px;
+      color: var(--black);
+      line-height: 1;
+      display: block;
+    }
+    .rn-stat-label {
+      font-size: 10px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--muted);
+      display: block;
+      margin-top: 6px;
+    }
+
+    /* ── Mission & Vision ───────────────────────────────────────── */
+    .rn-mv {
+      background: var(--black);
+    }
+    .rn-mv-eyebrow {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      margin-bottom: 40px;
+    }
+    .rn-mv-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(1px, 0.5px, 1px);
+    }
+    @media (max-width: 600px) {
+      .rn-mv-grid { grid-template-columns: 1fr; }
+    }
+    .rn-mv-card {
+      padding: clamp(32px, 4vw, 56px);
+      border: 0.5px solid rgba(255,255,255,0.1);
+    }
+    .rn-mv-card:first-child {
+      border-right: none;
+    }
+    @media (max-width: 600px) {
+      .rn-mv-card:first-child { border-right: 0.5px solid rgba(255,255,255,0.1); border-bottom: none; }
+    }
+    .rn-mv-icon {
+      width: 40px;
+      height: 40px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--off-white);
+      font-size: 18px;
+      margin-bottom: 24px;
+    }
+    .rn-mv-title {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 14px;
+    }
+    .rn-mv-text {
+      font-size: clamp(16px, 2vw, 22px);
+      font-weight: 500;
+      letter-spacing: -0.3px;
+      line-height: 1.4;
+      color: var(--off-white);
+    }
+
+    /* ── Values ─────────────────────────────────────────────────── */
+    .rn-values {
+      background: var(--surface-gray);
+      border-top: 0.5px solid var(--border);
+    }
+    .rn-values-header {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      margin-bottom: clamp(32px, 5vw, 60px);
+    }
+    .rn-values-eyebrow {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .rn-values-heading {
+      font-size: clamp(18px, 2vw, 26px);
+      font-weight: 500;
+      letter-spacing: -0.3px;
+      color: var(--black);
+    }
+    .rn-values-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: clamp(16px, 2.5vw, 32px);
+    }
+    @media (max-width: 700px) {
+      .rn-values-grid { grid-template-columns: 1fr; }
+    }
+    .rn-value-card {
+      background: var(--white);
+      border: 0.5px solid var(--border);
+      padding: clamp(24px, 3vw, 40px);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .rn-value-icon {
+      width: 44px;
+      height: 44px;
+      background: var(--black);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    .rn-value-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--black);
+    }
+    .rn-value-text {
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--muted);
+    }
+
+    /* ── Partners ───────────────────────────────────────────────── */
+    .rn-partners {
+      background: var(--white);
+      border-top: 0.5px solid var(--border);
+    }
+    .rn-partners-header {
+      text-align: center;
+      margin-bottom: clamp(40px, 6vw, 72px);
+    }
+    .rn-partners-eyebrow {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+    .rn-partners-heading {
+      font-size: clamp(18px, 2.5vw, 30px);
+      font-weight: 500;
+      letter-spacing: -0.4px;
+      color: var(--black);
+    }
+    .rn-partners-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: clamp(12px, 2vw, 24px);
+    }
+    @media (max-width: 900px) {
+      .rn-partners-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 500px) {
+      .rn-partners-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    .rn-partner-logo {
+      aspect-ratio: 2 / 1;
+      background: var(--surface-gray);
+      border: 0.5px solid var(--border);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .rn-partner-logo span {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--border);
+    }
+
+    /* ── Contact CTA ────────────────────────────────────────────── */
+    .rn-cta {
+      background: var(--black);
+      text-align: center;
+    }
+    .rn-cta-eyebrow {
+      font-size: 10px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      margin-bottom: 20px;
+    }
+    .rn-cta-heading {
+      font-size: clamp(28px, 5vw, 64px);
+      font-weight: 500;
+      letter-spacing: clamp(-0.5px, -0.15vw, -2px);
+      line-height: 1.05;
+      color: var(--off-white);
+      margin-bottom: 36px;
+    }
+    .rn-cta-btn {
+      display: inline-block;
+      background: var(--red);
+      color: var(--off-white);
+      font-family: 'Switzer', sans-serif;
+      font-weight: 500;
+      font-size: clamp(12px, 0.95vw, 14px);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      padding: clamp(14px, 1.2vw, 18px) clamp(28px, 3vw, 48px);
+      border-radius: 4px;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .rn-cta-btn:hover { opacity: 0.9; }
+  </style>
+</head>
+<body>
+
+  <!-- ── Navbar ──────────────────────────────────────────────── -->
+  <nav class="navbar" role="navigation" aria-label="Navigimi kryesor">
+    <div class="navbar-inner">
+      <div class="navbar-left">
+        <button class="nav-hamburger" aria-label="Menu" onclick="openMenuDrawer()">
+          <i class="ri-menu-line"></i>
+        </button>
+        <div class="nav-links">
+          <a href="index.html" class="nav-link">Home</a>
+          <a href="artikujt.html" class="nav-link">Artikujt</a>
+          <a href="pelhura.html" class="nav-link">Pelhura</a>
+          <a href="rreth-nesh.html" class="nav-link active">Rreth Nesh</a>
+        </div>
+      </div>
+
+      <a href="index.html" class="navbar-brand">Intal Underwear</a>
+
+      <div class="navbar-right">
+        <button class="search-btn" aria-label="Kërko">
+          <i class="ri-search-line"></i>
+        </button>
+        <a href="index.html#kontakt" class="btn-order">Porosit</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── Hero ─────────────────────────────────────────────────── -->
+  <section class="rn-hero" aria-label="Rreth Nesh Hero">
+    <div class="rn-hero-content">
+      <p class="rn-hero-eyebrow" id="rn-hero-eyebrow">Na Njihni</p>
+      <h1 class="rn-hero-heading" id="rn-hero-heading">Rreth Intal</h1>
+    </div>
+  </section>
+
+  <!-- ── Company Overview ─────────────────────────────────────── -->
+  <section class="rn-overview rn-section">
+    <div class="rn-overview-grid">
+      <div class="rn-overview-left">
+        <p class="rn-overview-eyebrow" id="rn-ov-eyebrow">Kompania</p>
+        <h2 class="rn-overview-heading" id="rn-ov-heading">Prodhues Shqiptar i Brendëshmes Premium</h2>
+      </div>
+      <div class="rn-overview-right">
+        <p class="rn-overview-body" id="rn-ov-body">Intal është një nga prodhuesit kryesorë të brendëshmes në Shqipëri, me mbi 15 vite eksperiencë në industrinë e tekstilit. Kompania jonë është e dedikuar për prodhimin e brendëshmes premium duke përdorur materialet më të mira vendase dhe ndërkombëtare. Nga materiali deri te produkti final, çdo hap i prodhimit kryhet me standarde të larta cilësie, duke garantuar rehati dhe qëndrueshmëri afatgjatë. Ne bashkëpunojmë me mbi 500 partnerë biznesi në të gjithë rajonin, duke ofruar zgjidhje të personalizuara për çdo nevojë.</p>
+        <div class="rn-stats">
+          <div class="rn-stat">
+            <span class="rn-stat-num" id="rn-stat-0-num">15+</span>
+            <span class="rn-stat-label" id="rn-stat-0-lbl">Vite Eksperiencë</span>
+          </div>
+          <div class="rn-stat">
+            <span class="rn-stat-num" id="rn-stat-1-num">100%</span>
+            <span class="rn-stat-label" id="rn-stat-1-lbl">Prodhim Vendor</span>
+          </div>
+          <div class="rn-stat">
+            <span class="rn-stat-num" id="rn-stat-2-num">500+</span>
+            <span class="rn-stat-label" id="rn-stat-2-lbl">Partnerë</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Mission & Vision ─────────────────────────────────────── -->
+  <section class="rn-mv rn-section">
+    <p class="rn-mv-eyebrow">Drejtimi Ynë</p>
+    <div class="rn-mv-grid">
+      <div class="rn-mv-card">
+        <div class="rn-mv-icon"><i class="ri-eye-line"></i></div>
+        <p class="rn-mv-title" id="rn-mv-0-title">Vizioni Ynë</p>
+        <p class="rn-mv-text" id="rn-mv-0-text">Të bëhemi referencë kryesore e brendëshmes premium në rajon, duke udhëhequr me cilësi, inovacion dhe vlera shqiptare.</p>
+      </div>
+      <div class="rn-mv-card">
+        <div class="rn-mv-icon"><i class="ri-rocket-line"></i></div>
+        <p class="rn-mv-title" id="rn-mv-1-title">Misioni Ynë</p>
+        <p class="rn-mv-text" id="rn-mv-1-text">Ofrojmë produkte me cilësi të lartë, çmime konkurruese dhe shërbim të shkëlqyer ndaj çdo klienti, duke forcuar industrinë vendase.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Values ───────────────────────────────────────────────── -->
+  <section class="rn-values rn-section">
+    <div class="rn-values-header">
+      <p class="rn-values-eyebrow">Parimet</p>
+      <h2 class="rn-values-heading">Vlerat Tona</h2>
+    </div>
+    <div class="rn-values-grid">
+      <div class="rn-value-card">
+        <div class="rn-value-icon"><i class="ri-award-line"></i></div>
+        <p class="rn-value-title" id="rn-val-0-title">Cilësi</p>
+        <p class="rn-value-text" id="rn-val-0-text">Çdo produkt i Intal kalon kontrolle rigoroze të cilësisë. Përdorim vetëm materialet më të mira për të garantuar produkte që zgjasin dhe kënaqin.</p>
+      </div>
+      <div class="rn-value-card">
+        <div class="rn-value-icon"><i class="ri-heart-pulse-line"></i></div>
+        <p class="rn-value-title" id="rn-val-1-title">Rehati</p>
+        <p class="rn-value-text" id="rn-val-1-text">Dizajnimi ynë ka rehatin si prioritet kryesor. Çdo prerje dhe material zgjidhet me kujdes për të ofruar ndjenjën e komfortit gjatë gjithë ditës.</p>
+      </div>
+      <div class="rn-value-card">
+        <div class="rn-value-icon"><i class="ri-shield-check-line"></i></div>
+        <p class="rn-value-title" id="rn-val-2-title">Besueshmëri</p>
+        <p class="rn-value-text" id="rn-val-2-text">Mbi 500 partnerë biznesi zgjedhin Intal çdo ditë. Besimi i tyre ndaj nesh është pasqyrë e qëndrueshmërisë dhe profesionalizmit tonë.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Partners ─────────────────────────────────────────────── -->
+  <section class="rn-partners rn-section" id="rn-partners-section">
+    <div class="rn-partners-header">
+      <p class="rn-partners-eyebrow" id="rn-pt-eyebrow">Bashkëpunimi</p>
+      <h2 class="rn-partners-heading" id="rn-pt-heading">Partnerë të besuar në gjithë rajonin</h2>
+    </div>
+    <div class="rn-partners-grid" id="rn-partners-grid">
+      <div class="rn-partner-logo"><span>Partner</span></div>
+      <div class="rn-partner-logo"><span>Partner</span></div>
+      <div class="rn-partner-logo"><span>Partner</span></div>
+      <div class="rn-partner-logo"><span>Partner</span></div>
+      <div class="rn-partner-logo"><span>Partner</span></div>
+    </div>
+  </section>
+
+  <!-- ── Contact CTA ──────────────────────────────────────────── -->
+  <section class="rn-cta rn-section">
+    <p class="rn-cta-eyebrow" id="rn-cta-eyebrow">Kontakt</p>
+    <h2 class="rn-cta-heading" id="rn-cta-heading">Bashkohuni me ne</h2>
+    <a href="index.html#kontakt" class="rn-cta-btn">Na Kontaktoni</a>
+  </section>
+
+  <!-- ── Footer ──────────────────────────────────────────────── -->
+  <div class="simple-footer">
+    <div class="contact-locations">
+      <div class="contact-loc">
+        <p class="contact-loc-name">Selia Kryesore</p>
+        <p class="contact-loc-addr">Rrobaqepësi INTAL, Rruga Arbanes, Vaqarr, Tiranë 1035</p>
+      </div>
+      <div class="contact-loc">
+        <p class="contact-loc-name">Dyqani</p>
+        <p class="contact-loc-addr">Intal, Rruga 5 Maji 67/1, Tiranë 1032</p>
+      </div>
+    </div>
+    <div class="contact-footer">
+      <span class="contact-brand">Intal <strong>UNDERWEAR</strong></span>
+      <span class="contact-copy">© 2025 Intal Albania</span>
+    </div>
+  </div>
+
+  <!-- ── Menu left drawer ──────────────────────────────────── -->
+  <div class="menu-backdrop" id="menuBackdrop" onclick="closeMenuDrawer()"></div>
+  <aside class="menu-drawer" id="menuDrawer" aria-label="Meniu">
+    <div class="menu-drawer-header">
+      <span class="menu-drawer-brand">Intal <strong>Underwear</strong></span>
+      <button class="menu-drawer-close" onclick="closeMenuDrawer()" aria-label="Mbyll">
+        <i class="ri-close-line"></i>
+      </button>
+    </div>
+    <div class="menu-drawer-body">
+      <nav class="menu-drawer-nav">
+        <a href="index.html" class="menu-drawer-link" onclick="closeMenuDrawer()">Home</a>
+        <a href="artikujt.html" class="menu-drawer-link" onclick="closeMenuDrawer()">Artikujt</a>
+        <a href="pelhura.html" class="menu-drawer-link" onclick="closeMenuDrawer()">Pelhura</a>
+        <a href="rreth-nesh.html" class="menu-drawer-link" onclick="closeMenuDrawer()">Rreth Nesh</a>
+        <a href="index.html#kontakt" class="menu-drawer-link" onclick="closeMenuDrawer()">Kontakt</a>
+      </nav>
+
+      <div class="menu-drawer-divider"></div>
+
+      <p class="menu-drawer-eyebrow">NA KONTAKTONI</p>
+
+      <div class="menu-drawer-contacts">
+        <a class="menu-drawer-contact-item" href="tel:+355692776636">
+          <div class="menu-drawer-icon"><i class="ri-phone-line"></i></div>
+          <div>
+            <span class="menu-drawer-label">Telefon / WhatsApp</span>
+            <span class="menu-drawer-value">+355 692 776 636</span>
+          </div>
+        </a>
+        <a class="menu-drawer-contact-item" href="mailto:info@intal.com">
+          <div class="menu-drawer-icon"><i class="ri-mail-line"></i></div>
+          <div>
+            <span class="menu-drawer-label">Email</span>
+            <span class="menu-drawer-value">info@intal.com</span>
+          </div>
+        </a>
+        <div class="menu-drawer-contact-item">
+          <div class="menu-drawer-icon"><i class="ri-map-pin-line"></i></div>
+          <div>
+            <span class="menu-drawer-label">Adresa</span>
+            <span class="menu-drawer-value">Tiranë, Shqipëri</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="menu-drawer-divider"></div>
+
+      <div class="menu-drawer-locations">
+        <div class="menu-drawer-loc">
+          <p class="menu-drawer-loc-name">Selia Kryesore</p>
+          <p class="menu-drawer-loc-addr">Rrobaqepësi INTAL, Rruga Arbanes, Vaqarr, Tiranë 1035</p>
+        </div>
+        <div class="menu-drawer-loc">
+          <p class="menu-drawer-loc-name">Dyqani</p>
+          <p class="menu-drawer-loc-addr">Intal, Rruga 5 Maji 67/1, Tiranë 1032</p>
+        </div>
+      </div>
+
+    </div>
+    <div class="menu-drawer-footer">
+      <span class="menu-drawer-copy">© 2025 Intal Albania</span>
+    </div>
+  </aside>
+
+  <!-- Scripts -->
+  <script src="js/main.js"></script>
+  <script>
+  (function(){
+    var DEFAULTS = {
+      hero:{ eyebrow:'Na Njihni', heading:'Rreth Intal', bgImage:'' },
+      overview:{
+        eyebrow:'Kompania', heading:'Prodhues Shqiptar i Brendëshmes Premium',
+        body:'Intal është një nga prodhuesit kryesorë të brendëshmes në Shqipëri, me mbi 15 vite eksperiencë në industrinë e tekstilit. Kompania jonë është e dedikuar për prodhimin e brendëshmes premium duke përdorur materialet më të mira vendase dhe ndërkombëtare. Nga materiali deri te produkti final, çdo hap i prodhimit kryhet me standarde të larta cilësie, duke garantuar rehati dhe qëndrueshmëri afatgjatë. Ne bashkëpunojmë me mbi 500 partnerë biznesi në të gjithë rajonin, duke ofruar zgjidhje të personalizuara për çdo nevojë.',
+        stats:[{num:'15+',lbl:'Vite Eksperiencë'},{num:'100%',lbl:'Prodhim Vendor'},{num:'500+',lbl:'Partnerë'}]
+      },
+      mv:[
+        {title:'Vizioni Ynë', text:'Të bëhemi referencë kryesore e brendëshmes premium në rajon, duke udhëhequr me cilësi, inovacion dhe vlera shqiptare.'},
+        {title:'Misioni Ynë', text:'Ofrojmë produkte me cilësi të lartë, çmime konkurruese dhe shërbim të shkëlqyer ndaj çdo klienti, duke forcuar industrinë vendase.'}
+      ],
+      values:[
+        {title:'Cilësi', text:'Çdo produkt i Intal kalon kontrolle rigoroze të cilësisë. Përdorim vetëm materialet më të mira për të garantuar produkte që zgjasin dhe kënaqin.'},
+        {title:'Rehati', text:'Dizajnimi ynë ka rehatin si prioritet kryesor. Çdo prerje dhe material zgjidhet me kujdes për të ofruar ndjenjën e komfortit gjatë gjithë ditës.'},
+        {title:'Besueshmëri', text:'Mbi 500 partnerë biznesi zgjedhin Intal çdo ditë. Besimi i tyre ndaj nesh është pasqyrë e qëndrueshmërisë dhe profesionalizmit tonë.'}
+      ],
+      cta:{ eyebrow:'Kontakt', heading:'Bashkohuni me ne', btn:'Na Kontaktoni' }
+    };
+
+    function loadData(){
+      try{ var r=localStorage.getItem('intal_rn_v1'); if(r) return JSON.parse(r); }catch(e){}
+      return JSON.parse(JSON.stringify(DEFAULTS));
+    }
+
+    function set(id, txt){ var el=document.getElementById(id); if(el && txt!==undefined && txt!==null) el.textContent=txt; }
+
+    var d = loadData();
+
+    // Apliko imazhin e sfondit gjithmonë nëse ekziston
+    if(d.hero && d.hero.bgImage){
+      var hero = document.querySelector('.rn-hero');
+      if(hero) hero.style.setProperty('--rn-bg', 'url("'+d.hero.bgImage+'")');
+    }
+
+    // Apliko tekste dhe partnerë vetëm nëse user ka ruajtur nga paneli
+    if(!d._saved) return;
+
+    try {
+      // Hero
+      set('rn-hero-eyebrow', d.hero.eyebrow);
+      set('rn-hero-heading',  d.hero.heading);
+
+      // Overview
+      set('rn-ov-eyebrow', d.overview.eyebrow);
+      set('rn-ov-heading',  d.overview.heading);
+      set('rn-ov-body',     d.overview.body);
+      (d.overview.stats||[]).forEach(function(s,i){
+        set('rn-stat-'+i+'-num', s.num);
+        set('rn-stat-'+i+'-lbl', s.lbl);
+      });
+
+      // Mission & Vision
+      (d.mv||[]).forEach(function(m,i){
+        set('rn-mv-'+i+'-title', m.title);
+        set('rn-mv-'+i+'-text',  m.text);
+      });
+
+      // Values
+      (d.values||[]).forEach(function(v,i){
+        set('rn-val-'+i+'-title', v.title);
+        set('rn-val-'+i+'-text',  v.text);
+      });
+
+      // CTA
+      set('rn-cta-eyebrow', d.cta.eyebrow);
+      set('rn-cta-heading',  d.cta.heading);
+      var ctaBtn = document.querySelector('.rn-cta-btn');
+      if(ctaBtn && d.cta.btn) ctaBtn.textContent = d.cta.btn;
+
+      // Partners
+      var pt = d.partners||{};
+      set('rn-pt-eyebrow', pt.eyebrow);
+      set('rn-pt-heading',  pt.heading);
+      var grid = document.getElementById('rn-partners-grid');
+      var section = document.getElementById('rn-partners-section');
+      if(grid && pt.items && pt.items.length){
+        grid.innerHTML = pt.items.map(function(p){
+          if(p.img){
+            return '<div class="rn-partner-logo" style="padding:10px;">'
+              +'<img src="'+p.img+'" alt="'+(p.name||'')+'" style="max-width:100%;max-height:100%;object-fit:contain;">'
+              +'</div>';
+          }
+          return '<div class="rn-partner-logo"><span>'+(p.name||'Partner')+'</span></div>';
+        }).join('');
+      } else if(grid && (!pt.items || !pt.items.length)){
+        if(section) section.style.display='none';
+      }
+    } catch(e){ console.warn('Rreth Nesh render error:', e); }
+  })();
+  </script>
+
+  <!-- GSAP + ScrollTrigger -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script>
+    (() => {
+      gsap.registerPlugin(ScrollTrigger);
+      const ease = 'power3.out';
+
+      function revealUp(targets, options = {}) {
+        const els = typeof targets === 'string' ? document.querySelectorAll(targets) : targets;
+        if (!els || (els.length !== undefined && els.length === 0)) return;
+        gsap.fromTo(els, {
+          opacity: 0,
+          y: options.y ?? 32,
+        }, {
+          opacity: 1,
+          y: 0,
+          duration: options.duration ?? 0.9,
+          ease,
+          stagger: options.stagger ?? 0,
+          delay: options.delay ?? 0,
+          scrollTrigger: options.trigger ? {
+            trigger: options.trigger,
+            start: 'top 88%',
+            toggleActions: 'play none none none',
+          } : undefined,
+        });
+      }
+
+      /* Hero */
+      const heroContent = document.querySelector('.rn-hero-content');
+      if (heroContent) {
+        gsap.fromTo(heroContent.children, { opacity: 0, y: 28 }, {
+          opacity: 1, y: 0, duration: 0.9, ease, stagger: 0.14, delay: 0.1
+        });
+      }
+
+      /* Overview */
+      revealUp('.rn-overview-left', { trigger: '.rn-overview', y: 40, duration: 1 });
+      revealUp('.rn-overview-right', { trigger: '.rn-overview', y: 40, duration: 1, delay: 0.15 });
+
+      const stats = document.querySelectorAll('.rn-stat');
+      if (stats.length) {
+        gsap.fromTo(stats, { opacity: 0, y: 20 }, {
+          opacity: 1, y: 0, duration: 0.6, ease, stagger: 0.1,
+          scrollTrigger: { trigger: '.rn-stats', start: 'top 85%', toggleActions: 'play none none none' }
+        });
+      }
+
+      /* Mission & Vision */
+      const mvCards = document.querySelectorAll('.rn-mv-card');
+      if (mvCards.length) {
+        gsap.fromTo(mvCards, { opacity: 0, y: 40 }, {
+          opacity: 1, y: 0, duration: 0.8, ease, stagger: 0.12,
+          scrollTrigger: { trigger: '.rn-mv-grid', start: 'top 85%', toggleActions: 'play none none none' }
+        });
+      }
+
+      /* Values */
+      const valueCards = document.querySelectorAll('.rn-value-card');
+      if (valueCards.length) {
+        gsap.fromTo(valueCards, { opacity: 0, y: 40 }, {
+          opacity: 1, y: 0, duration: 0.75, ease, stagger: 0.1,
+          scrollTrigger: { trigger: '.rn-values-grid', start: 'top 85%', toggleActions: 'play none none none' }
+        });
+      }
+
+      /* Partners */
+      const partnerLogos = document.querySelectorAll('.rn-partner-logo');
+      if (partnerLogos.length) {
+        gsap.fromTo(partnerLogos, { opacity: 0, y: 20 }, {
+          opacity: 1, y: 0, duration: 0.5, ease, stagger: 0.05,
+          scrollTrigger: { trigger: '.rn-partners-grid', start: 'top 85%', toggleActions: 'play none none none' }
+        });
+      }
+
+      /* CTA */
+      revealUp('.rn-cta-eyebrow, .rn-cta-heading, .rn-cta-btn', { trigger: '.rn-cta', y: 32, duration: 0.9, stagger: 0.12 });
+    })();
+  </script>
+
+</body>
+</html>

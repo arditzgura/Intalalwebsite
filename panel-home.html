@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Panel Home — Intal</title>
+<link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--accent:#C8003E;--black:#111;--white:#fff;--bg:#f4f4f4;--border:#e2e2e2;--muted:#888;}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);height:100vh;display:flex;flex-direction:column;overflow:hidden;}
+
+.top-bar{background:var(--black);padding:0 24px;height:48px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:12px;}
+.top-bar .logo{background:var(--accent);padding:3px 10px;border-radius:4px;font-weight:900;font-size:13px;color:#fff;letter-spacing:-.5px;}
+.top-bar .title{font-size:12px;color:#888;letter-spacing:.5px;flex:1;text-align:center;}
+.top-bar .actions{display:flex;align-items:center;gap:8px;}
+.btn-save{background:var(--accent);color:#fff;border:none;padding:6px 16px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:.5px;cursor:pointer;text-transform:uppercase;}
+.btn-save:hover{opacity:.85;}
+.btn-back{font-size:11px;color:#aaa;text-decoration:none;border:1px solid #444;padding:5px 12px;border-radius:4px;letter-spacing:.5px;}
+.btn-back:hover{color:#fff;border-color:#fff;}
+
+.split{display:flex;flex:1;overflow:hidden;}
+
+/* LEFT PANEL */
+.left-panel{width:380px;flex-shrink:0;background:var(--white);border-right:.5px solid var(--border);display:flex;flex-direction:column;overflow:hidden;}
+.tabs{display:flex;border-bottom:.5px solid var(--border);flex-shrink:0;}
+.tab{flex:1;padding:10px 6px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);background:none;border:none;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;}
+.tab.active{color:var(--black);border-bottom-color:var(--black);}
+.tab-content{display:none;overflow-y:auto;flex:1;padding:20px;}
+.tab-content.active{display:block;}
+
+.field{margin-bottom:16px;}
+.field label{display:block;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+.field input,.field textarea{width:100%;border:.5px solid var(--border);border-radius:4px;padding:8px 10px;font-size:13px;font-family:inherit;background:#fafafa;color:var(--black);outline:none;transition:border-color .15s;}
+.field input:focus,.field textarea:focus{border-color:var(--black);background:#fff;}
+.field textarea{resize:vertical;min-height:72px;line-height:1.5;}
+.section-title{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--black);margin:20px 0 12px;padding-bottom:6px;border-bottom:.5px solid var(--border);}
+.section-title:first-child{margin-top:0;}
+.img-upload-wrap{position:relative;background:#f0f0f0;border:.5px solid var(--border);border-radius:4px;overflow:hidden;cursor:pointer;height:100px;display:flex;align-items:center;justify-content:center;}
+.img-upload-wrap img{width:100%;height:100%;object-fit:cover;display:block;}
+.img-upload-wrap .upload-hint{font-size:11px;color:var(--muted);text-align:center;pointer-events:none;}
+.img-upload-wrap input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;}
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.cols-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.svc-card-edit{border:.5px solid var(--border);border-radius:4px;padding:12px;margin-bottom:10px;background:#fafafa;}
+.svc-card-edit .svc-num{font-size:10px;font-weight:700;letter-spacing:2px;color:var(--muted);margin-bottom:8px;}
+
+/* RIGHT PREVIEW */
+.right-preview{flex:1;background:#e0e0e0;position:relative;overflow:hidden;}
+.right-preview iframe{width:100%;height:100%;border:none;pointer-events:none;}
+.preview-label{position:absolute;bottom:12px;right:12px;background:rgba(0,0,0,.6);color:#fff;font-size:10px;letter-spacing:1px;padding:4px 10px;border-radius:20px;}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="logo">intal</div>
+  <span class="title">HOME — Editor</span>
+  <div class="actions">
+    <a class="btn-back" href="panel-dashboard.html" onclick="sessionStorage.setItem('intal_logged','1')">← Dashboard</a>
+    <button class="btn-save" onclick="saveAll()">Ruaj &amp; Refresh</button>
+  </div>
+</div>
+
+<div class="split">
+  <!-- LEFT PANEL -->
+  <div class="left-panel">
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('hero',this)">Hero</button>
+      <button class="tab" onclick="switchTab('about',this)">About</button>
+      <button class="tab" onclick="switchTab('services',this)">Shërbimet</button>
+      <button class="tab" onclick="switchTab('contact',this)">Kontakt</button>
+    </div>
+
+    <!-- TAB: HERO -->
+    <div class="tab-content active" id="tab-hero">
+      <p class="section-title">Imazhi Hero</p>
+      <div class="field">
+        <label>Imazhi Background</label>
+        <div class="img-upload-wrap" id="hero-bg-wrap">
+          <div class="upload-hint"><i class="ri-image-line" style="font-size:22px;display:block;margin-bottom:4px;"></i>Kliko për të ngarkuar</div>
+          <input type="file" accept="image/*" onchange="uploadImg(this,'hero','bgImage','hero-bg-wrap')">
+        </div>
+      </div>
+      <p class="section-title">Teksti Hero</p>
+      <div class="field"><label>Eyebrow (tekst i vogël)</label><input type="text" id="hero-eyebrow" oninput="liveUpdate()"></div>
+      <div class="field"><label>Titulli Kryesor (H1)</label><input type="text" id="hero-heading" oninput="liveUpdate()"></div>
+      <div class="field"><label>Butoni 1 (tekst)</label><input type="text" id="hero-btn1" oninput="liveUpdate()"></div>
+      <div class="field"><label>Butoni 2 (tekst)</label><input type="text" id="hero-btn2" oninput="liveUpdate()"></div>
+    </div>
+
+    <!-- TAB: ABOUT -->
+    <div class="tab-content" id="tab-about">
+      <p class="section-title">Teksti About</p>
+      <div class="field"><label>Eyebrow</label><input type="text" id="about-eyebrow" oninput="liveUpdate()"></div>
+      <div class="field"><label>Titulli</label><input type="text" id="about-heading" oninput="liveUpdate()"></div>
+      <div class="field"><label>Përshkrimi</label><textarea id="about-body" oninput="liveUpdate()"></textarea></div>
+      <p class="section-title">Statistikat (3)</p>
+      <div class="stats-row">
+        <div>
+          <div class="field"><label>Nr. 1</label><input type="text" id="about-stat0-num" oninput="liveUpdate()"></div>
+          <div class="field"><label>Etiketa 1</label><input type="text" id="about-stat0-lbl" oninput="liveUpdate()"></div>
+        </div>
+        <div>
+          <div class="field"><label>Nr. 2</label><input type="text" id="about-stat1-num" oninput="liveUpdate()"></div>
+          <div class="field"><label>Etiketa 2</label><input type="text" id="about-stat1-lbl" oninput="liveUpdate()"></div>
+        </div>
+        <div>
+          <div class="field"><label>Nr. 3</label><input type="text" id="about-stat2-num" oninput="liveUpdate()"></div>
+          <div class="field"><label>Etiketa 3</label><input type="text" id="about-stat2-lbl" oninput="liveUpdate()"></div>
+        </div>
+      </div>
+      <p class="section-title">Kolonat (2)</p>
+      <div class="cols-row">
+        <div>
+          <div class="field"><label>Titulli 1</label><input type="text" id="about-col0-title" oninput="liveUpdate()"></div>
+          <div class="field"><label>Teksti 1</label><textarea id="about-col0-text" oninput="liveUpdate()" style="min-height:60px;"></textarea></div>
+        </div>
+        <div>
+          <div class="field"><label>Titulli 2</label><input type="text" id="about-col1-title" oninput="liveUpdate()"></div>
+          <div class="field"><label>Teksti 2</label><textarea id="about-col1-text" oninput="liveUpdate()" style="min-height:60px;"></textarea></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: SERVICES -->
+    <div class="tab-content" id="tab-services">
+      <p class="section-title">Titulli Seksionit</p>
+      <div class="field"><label>Eyebrow</label><input type="text" id="svc-eyebrow" oninput="liveUpdate()"></div>
+      <div class="field"><label>Titulli</label><input type="text" id="svc-heading" oninput="liveUpdate()"></div>
+      <p class="section-title">Shërbimet (3 karta)</p>
+      <div id="svc-cards-wrap"></div>
+    </div>
+
+    <!-- TAB: CONTACT -->
+    <div class="tab-content" id="tab-contact">
+      <p class="section-title">Seksioni Kontakt</p>
+      <div class="field"><label>Eyebrow</label><input type="text" id="ct-eyebrow" oninput="liveUpdate()"></div>
+      <div class="field"><label>Titulli</label><input type="text" id="ct-heading" oninput="liveUpdate()"></div>
+      <div class="field"><label>Nënshkrimi</label><input type="text" id="ct-sub" oninput="liveUpdate()"></div>
+      <div class="field"><label>Telefon / WhatsApp</label><input type="text" id="ct-phone" oninput="liveUpdate()"></div>
+      <div class="field"><label>Email</label><input type="text" id="ct-email" oninput="liveUpdate()"></div>
+    </div>
+  </div>
+
+  <!-- RIGHT PREVIEW -->
+  <div class="right-preview">
+    <iframe id="preview-frame" src="index.html"></iframe>
+    <div class="preview-label">Pamja Live</div>
+  </div>
+</div>
+
+<script>
+if(!sessionStorage.getItem('intal_logged')) location.href='index.html';
+
+var KEY = 'intal_home_v1';
+var _debounce = null;
+
+var DEFAULTS = {
+  _saved: false,
+  hero: {
+    eyebrow: 'Prodhim Shqiptar',
+    heading: 'Fabrike Prodhimi të Brëndshem',
+    btn1: 'Shiko Artikujt',
+    btn2: 'Na Kontakto',
+    bgImage: ''
+  },
+  about: {
+    eyebrow: 'Rreth Nesh',
+    heading: 'Intal — Prodhim Shqiptar i Brendëshmes',
+    body: 'Në Intal, jemi të dedicuar për të ofruar të brendëshme premium që kombinon rehati, cilësi dhe stil.',
+    stats: [
+      {num:'15+', lbl:'Vite Eksperiencë'},
+      {num:'100%', lbl:'Prodhim Vendor'},
+      {num:'500+', lbl:'Partnerë Biznesi'}
+    ],
+    cols: [
+      {title:'Vizioni Ynë', text:'Të bëhemi referencë kryesore e brendëshmes premium në rajon, me fokus në cilësi dhe inovacion.'},
+      {title:'Misioni Ynë', text:'Ofrojmë produkte me cilësi të lartë, çmime konkurruese dhe shërbim të shkëlqyer ndaj çdo klienti.'}
+    ]
+  },
+  services: {
+    eyebrow: '2025',
+    heading: 'Shërbimet Tona',
+    cards: [
+      {title:'Prodhim Brendëshëm', desc:'Prodhojmë brendëshme premium me materialet më të mira — pambuk natyral, vikson dhe ribana — sipas standardeve të larta të cilësisë.', img:''},
+      {title:'Shitje me Shumicë', desc:'Ofrojmë çmime konkurruese për porosi me shumicë. Partnerë idealë për dyqane, biznese dhe distributorë në të gjithë rajonin.', img:''},
+      {title:'Personalizim', desc:'Prodhim me etiketë private dhe personalizim sipas kërkesës së klientit — ngjyra, madhësi dhe dizajne ekskluzive.', img:''}
+    ]
+  },
+  contact: {
+    eyebrow: 'NA KONTAKTONI',
+    heading: 'Porositni\nTani',
+    sub: 'Na kontaktoni për porosi me shumicë.',
+    phone: '+355 692 776 636',
+    email: 'info@intal.com'
+  }
+};
+
+function loadData(){
+  try{ var r=localStorage.getItem(KEY); if(r) return JSON.parse(r); }catch(e){}
+  return JSON.parse(JSON.stringify(DEFAULTS));
+}
+
+function getData(){
+  var d = loadData();
+  if(!d.hero) d.hero = JSON.parse(JSON.stringify(DEFAULTS.hero));
+  if(!d.about) d.about = JSON.parse(JSON.stringify(DEFAULTS.about));
+  if(!d.services) d.services = JSON.parse(JSON.stringify(DEFAULTS.services));
+  if(!d.contact) d.contact = JSON.parse(JSON.stringify(DEFAULTS.contact));
+  if(!d.about.stats) d.about.stats = JSON.parse(JSON.stringify(DEFAULTS.about.stats));
+  if(!d.about.cols) d.about.cols = JSON.parse(JSON.stringify(DEFAULTS.about.cols));
+  if(!d.services.cards) d.services.cards = JSON.parse(JSON.stringify(DEFAULTS.services.cards));
+  return d;
+}
+
+function val(id){ return document.getElementById(id) ? document.getElementById(id).value : ''; }
+
+function buildSvcCards(){
+  var wrap = document.getElementById('svc-cards-wrap');
+  if(!wrap) return;
+  var d = getData();
+  var cards = d.services.cards;
+  wrap.innerHTML = '';
+  cards.forEach(function(card, i){
+    var div = document.createElement('div');
+    div.className = 'svc-card-edit';
+    div.innerHTML = '<div class="svc-num">Shërbimi ' + (i+1) + '</div>'
+      + '<div class="field"><label>Titulli</label><input type="text" id="svc-card'+i+'-title" value="'+escH(card.title||'')+'" oninput="liveUpdate()"></div>'
+      + '<div class="field"><label>Përshkrimi</label><textarea id="svc-card'+i+'-desc" oninput="liveUpdate()" style="min-height:60px;">'+escH(card.desc||'')+'</textarea></div>'
+      + '<div class="field"><label>Imazhi</label>'
+        + '<div class="img-upload-wrap" id="svc-card'+i+'-img-wrap" style="height:70px;">'
+          + (card.img ? '<img src="'+card.img+'" style="width:100%;height:100%;object-fit:cover;">' : '<div class="upload-hint"><i class="ri-image-line"></i></div>')
+          + '<input type="file" accept="image/*" data-svc-idx="'+i+'" onchange="uploadSvcImg(this,'+i+')">'
+        + '</div>'
+      + '</div>';
+    wrap.appendChild(div);
+  });
+}
+
+function escH(s){ return (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+
+function fillForm(){
+  var d = getData();
+  var h = d.hero, a = d.about, s = d.services, c = d.contact;
+
+  document.getElementById('hero-eyebrow').value = h.eyebrow || '';
+  document.getElementById('hero-heading').value = h.heading || '';
+  document.getElementById('hero-btn1').value = h.btn1 || '';
+  document.getElementById('hero-btn2').value = h.btn2 || '';
+  if(h.bgImage){
+    var wrap = document.getElementById('hero-bg-wrap');
+    wrap.innerHTML = '<img src="'+h.bgImage+'" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;"><input type="file" accept="image/*" onchange="uploadImg(this,\'hero\',\'bgImage\',\'hero-bg-wrap\')" style="position:absolute;inset:0;opacity:0;cursor:pointer;">';
+  }
+
+  document.getElementById('about-eyebrow').value = a.eyebrow || '';
+  document.getElementById('about-heading').value = a.heading || '';
+  document.getElementById('about-body').value = a.body || '';
+  (a.stats||[]).forEach(function(st,i){
+    var ne = document.getElementById('about-stat'+i+'-num'); if(ne) ne.value = st.num||'';
+    var le = document.getElementById('about-stat'+i+'-lbl'); if(le) le.value = st.lbl||'';
+  });
+  (a.cols||[]).forEach(function(col,i){
+    var te = document.getElementById('about-col'+i+'-title'); if(te) te.value = col.title||'';
+    var xe = document.getElementById('about-col'+i+'-text'); if(xe) xe.value = col.text||'';
+  });
+
+  document.getElementById('svc-eyebrow').value = s.eyebrow || '';
+  document.getElementById('svc-heading').value = s.heading || '';
+  buildSvcCards();
+
+  document.getElementById('ct-eyebrow').value = c.eyebrow || '';
+  document.getElementById('ct-heading').value = (c.heading||'').replace(/\\n/g,'\n').replace(/<br\s*\/?>/gi,'\n');
+  document.getElementById('ct-sub').value = c.sub || '';
+  document.getElementById('ct-phone').value = c.phone || '';
+  document.getElementById('ct-email').value = c.email || '';
+}
+
+function collectData(){
+  var d = getData();
+  d._saved = true;
+
+  d.hero.eyebrow = val('hero-eyebrow');
+  d.hero.heading = val('hero-heading');
+  d.hero.btn1 = val('hero-btn1');
+  d.hero.btn2 = val('hero-btn2');
+
+  d.about.eyebrow = val('about-eyebrow');
+  d.about.heading = val('about-heading');
+  d.about.body = val('about-body');
+  [0,1,2].forEach(function(i){
+    if(!d.about.stats[i]) d.about.stats[i]={};
+    d.about.stats[i].num = val('about-stat'+i+'-num');
+    d.about.stats[i].lbl = val('about-stat'+i+'-lbl');
+  });
+  [0,1].forEach(function(i){
+    if(!d.about.cols[i]) d.about.cols[i]={};
+    d.about.cols[i].title = val('about-col'+i+'-title');
+    d.about.cols[i].text = val('about-col'+i+'-text');
+  });
+
+  d.services.eyebrow = val('svc-eyebrow');
+  d.services.heading = val('svc-heading');
+  d.services.cards.forEach(function(card,i){
+    card.title = val('svc-card'+i+'-title');
+    card.desc = val('svc-card'+i+'-desc');
+  });
+
+  d.contact.eyebrow = val('ct-eyebrow');
+  d.contact.heading = val('ct-heading');
+  d.contact.sub = val('ct-sub');
+  d.contact.phone = val('ct-phone');
+  d.contact.email = val('ct-email');
+
+  return d;
+}
+
+function liveUpdate(){
+  clearTimeout(_debounce);
+  _debounce = setTimeout(function(){
+    var d = collectData();
+    localStorage.setItem(KEY, JSON.stringify(d));
+    refreshPreview();
+  }, 600);
+}
+
+function saveAll(){
+  var d = collectData();
+  d._saved = true;
+  localStorage.setItem(KEY, JSON.stringify(d));
+  refreshPreview();
+  var btn = document.querySelector('.btn-save');
+  btn.textContent = '✓ Ruajtur';
+  setTimeout(function(){ btn.textContent = 'Ruaj & Refresh'; }, 1800);
+}
+
+function refreshPreview(){
+  var fr = document.getElementById('preview-frame');
+  fr.src = 'index.html?v=' + Date.now();
+}
+
+function uploadImg(input, section, field, wrapId){
+  var file = input.files[0];
+  if(!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e){
+    var src = e.target.result;
+    var d = getData();
+    if(!d[section]) d[section] = {};
+    d[section][field] = src;
+    d._saved = true;
+    localStorage.setItem(KEY, JSON.stringify(d));
+    var wrap = document.getElementById(wrapId);
+    wrap.innerHTML = '<img src="'+src+'" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;"><input type="file" accept="image/*" onchange="uploadImg(this,\''+section+'\',\''+field+'\',\''+wrapId+'\')" style="position:absolute;inset:0;opacity:0;cursor:pointer;">';
+    refreshPreview();
+  };
+  reader.readAsDataURL(file);
+}
+
+function uploadSvcImg(input, idx){
+  var file = input.files[0];
+  if(!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e){
+    var src = e.target.result;
+    var d = getData();
+    if(d.services.cards[idx]) d.services.cards[idx].img = src;
+    d._saved = true;
+    localStorage.setItem(KEY, JSON.stringify(d));
+    var wrap = document.getElementById('svc-card'+idx+'-img-wrap');
+    if(wrap) wrap.innerHTML = '<img src="'+src+'" style="width:100%;height:100%;object-fit:cover;"><input type="file" accept="image/*" data-svc-idx="'+idx+'" onchange="uploadSvcImg(this,'+idx+')" style="position:absolute;inset:0;opacity:0;cursor:pointer;">';
+    refreshPreview();
+  };
+  reader.readAsDataURL(file);
+}
+
+function switchTab(id, btn){
+  document.querySelectorAll('.tab').forEach(function(b){b.classList.remove('active');});
+  document.querySelectorAll('.tab-content').forEach(function(t){t.classList.remove('active');});
+  btn.classList.add('active');
+  document.getElementById('tab-'+id).classList.add('active');
+}
+
+fillForm();
+</script>
+</body>
+</html>
