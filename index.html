@@ -1317,5 +1317,15 @@
   })();
   </script>
 
+  <script>
+  if(window.location.search.indexOf('goto=kontakt')!==-1){
+    window.addEventListener('load', function(){
+      setTimeout(function(){
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+      }, 200);
+    });
+  }
+  </script>
+
 </body>
 </html>
