@@ -235,7 +235,36 @@
     var _det = { artIdx:0, photoIdx:0, articles:[] };
 
     function getHash(){ var h=decodeURIComponent(window.location.hash.replace('#','')); if(!h) return {cat:'',filter:'te-gjitha'}; var p=h.split('/'); return {cat:p[0]||'',filter:p[1]||'te-gjitha'}; }
-    function setHash(cat,filter){ var h='#'+encodeURIComponent(cat.toLowerCase()); if(filter&&filter!=='te-gjitha') h+='/'+encodeURIComponent(filter.toLowerCase()); history.replaceState(null,'',h); }
+    function setHash(cat,filter,push){
+      var h=cat?'#'+encodeURIComponent(cat.toLowerCase()):'';
+      if(h&&filter&&filter!=='te-gjitha') h+='/'+encodeURIComponent(filter.toLowerCase());
+      if(push) history.pushState(null,'',h||window.location.pathname.split('#')[0]);
+      else history.replaceState(null,'',h||window.location.pathname.split('#')[0]);
+    }
+
+    function isSub(cat,data){
+      var arts=data&&data.artikujt?data.artikujt:[];
+      return arts.some(function(a){
+        var s=a.sub; if(!s) return false;
+        var arr=Array.isArray(s)?s:[s];
+        return arr.some(function(v){ return (v||'').toLowerCase()===cat.toLowerCase(); });
+      });
+    }
+
+    function showAllWithFilters(data,activeSub,activeKat){
+      var artikujt=data&&data.artikujt?data.artikujt:[];
+      var artKats=artikujt.filter(function(a){
+        var s=a.sub; if(!s) return true;
+        var arr=Array.isArray(s)?s:[s];
+        return !arr.some(function(x){ return (x||'').toLowerCase()==='pelhura'; });
+      });
+      _state.cat=''; _state.activeSub=activeSub; _state.activeKat=activeKat||'te-gjitha';
+      _state.articles=artKats; _state.allArticles=artKats;
+      document.getElementById('dyn-grid').style.display='grid';
+      renderBreadcrumb('','');
+      renderFilterBarAll(artKats,activeSub,activeKat||'te-gjitha');
+      renderGridAll(artKats,activeSub,activeKat||'te-gjitha');
+    }
 
     function renderBreadcrumb(cat,filter){
       var el=document.getElementById('pg-breadcrumb');
@@ -365,6 +394,9 @@
       var data=loadData(); var h=getHash();
       if(!h.cat){ showAll(data); }
       else if(h.cat==='pelhura'){ location.href='pelhura.html'; }
+      else if(isSub(h.cat,data)){
+        showAllWithFilters(data,h.cat,h.filter&&h.filter!=='te-gjitha'?h.filter:'te-gjitha');
+      }
       else {
         var kats=data&&data.kategoriSettings&&data.kategoriSettings.kryesore?data.kategoriSettings.kryesore:[];
         var match=kats.find(function(k){ return k.toLowerCase()===h.cat.toLowerCase(); })||h.cat;
@@ -386,6 +418,7 @@
     window.applySubFilter=function(sub){
       var newSub = (_state.activeSub===sub) ? 'te-gjitha' : sub;
       _state.activeSub=newSub; _state.activeKat='te-gjitha';
+      setHash(newSub==='te-gjitha'?'':newSub,'te-gjitha',true);
       renderFilterBarAll(_state.allArticles,newSub,'te-gjitha');
       renderGridAll(_state.allArticles,newSub,'te-gjitha');
       window.scrollTo(0,0);
@@ -394,6 +427,7 @@
     // Level-2 filter: kat (Mbathje, Kanatjere...)
     window.applyKatFilter=function(kat){
       _state.activeKat=kat;
+      setHash(_state.activeSub==='te-gjitha'?'':_state.activeSub,kat,true);
       renderFilterBarAll(_state.allArticles,_state.activeSub,kat);
       renderGridAll(_state.allArticles,_state.activeSub,kat);
       window.scrollTo(0,0);
@@ -486,6 +520,7 @@
     document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeArtDetail(); });
 
     window.addEventListener('hashchange',route);
+    window.addEventListener('popstate',route);
     /* Supabase sync: load cache if empty, then route */
     (async function(){
       var refreshed = await sbSyncCache();
