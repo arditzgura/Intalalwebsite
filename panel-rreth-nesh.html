@@ -385,15 +385,28 @@
   // Image upload
   document.getElementById('hero-img-input').addEventListener('change', function(e){
     var file = e.target.files[0]; if(!file) return;
-    var reader = new FileReader();
-    reader.onload = function(ev){
-      var src = ev.target.result;
+    var ext = file.name.split('.').pop() || 'jpg';
+    var path = 'page-images/rn-hero.' + ext;
+    sbUploadImg(file, path).then(function(url){
+      var src = url || null;
+      if(!src){
+        // fallback: base64
+        var reader = new FileReader();
+        reader.onload = function(ev){
+          src = ev.target.result;
+          document.getElementById('hero-img-preview').src = src;
+          document.getElementById('hero-img-preview').style.display = 'block';
+          var d = loadData(); d.hero.bgImage = src; d._saved = true; saveData(d);
+          refreshPreview();
+        };
+        reader.readAsDataURL(file);
+        return;
+      }
       document.getElementById('hero-img-preview').src = src;
       document.getElementById('hero-img-preview').style.display = 'block';
       var d = loadData(); d.hero.bgImage = src; d._saved = true; saveData(d);
       refreshPreview();
-    };
-    reader.readAsDataURL(file);
+    });
   });
 
   document.getElementById('hero-img-clear').addEventListener('click', function(){

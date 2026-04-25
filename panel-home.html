@@ -345,36 +345,50 @@ function refreshPreview(){
 function uploadImg(input, section, field, wrapId){
   var file = input.files[0];
   if(!file) return;
-  var reader = new FileReader();
-  reader.onload = function(e){
-    var src = e.target.result;
-    var d = getData();
-    if(!d[section]) d[section] = {};
-    d[section][field] = src;
-    d._saved = true;
-    localStorage.setItem(KEY, JSON.stringify(d));
-    var wrap = document.getElementById(wrapId);
-    wrap.innerHTML = '<img src="'+src+'" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;"><input type="file" accept="image/*" onchange="uploadImg(this,\''+section+'\',\''+field+'\',\''+wrapId+'\')" style="position:absolute;inset:0;opacity:0;cursor:pointer;">';
-    refreshPreview();
-  };
-  reader.readAsDataURL(file);
+  var ext = file.name.split('.').pop() || 'jpg';
+  var path = 'page-images/home-' + section + '-' + field + '.' + ext;
+  sbUploadImg(file, path).then(function(url){
+    var applySrc = function(src){
+      var d = getData();
+      if(!d[section]) d[section] = {};
+      d[section][field] = src;
+      d._saved = true;
+      localStorage.setItem(KEY, JSON.stringify(d));
+      var wrap = document.getElementById(wrapId);
+      wrap.innerHTML = '<img src="'+src+'" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;"><input type="file" accept="image/*" onchange="uploadImg(this,\''+section+'\',\''+field+'\',\''+wrapId+'\')" style="position:absolute;inset:0;opacity:0;cursor:pointer;">';
+      refreshPreview();
+    };
+    if(url){ applySrc(url); }
+    else {
+      var reader = new FileReader();
+      reader.onload = function(e){ applySrc(e.target.result); };
+      reader.readAsDataURL(file);
+    }
+  });
 }
 
 function uploadSvcImg(input, idx){
   var file = input.files[0];
   if(!file) return;
-  var reader = new FileReader();
-  reader.onload = function(e){
-    var src = e.target.result;
-    var d = getData();
-    if(d.services.cards[idx]) d.services.cards[idx].img = src;
-    d._saved = true;
-    localStorage.setItem(KEY, JSON.stringify(d));
-    var wrap = document.getElementById('svc-card'+idx+'-img-wrap');
-    if(wrap) wrap.innerHTML = '<img src="'+src+'" style="width:100%;height:100%;object-fit:cover;"><input type="file" accept="image/*" data-svc-idx="'+idx+'" onchange="uploadSvcImg(this,'+idx+')" style="position:absolute;inset:0;opacity:0;cursor:pointer;">';
-    refreshPreview();
-  };
-  reader.readAsDataURL(file);
+  var ext = file.name.split('.').pop() || 'jpg';
+  var path = 'page-images/home-svc-' + idx + '.' + ext;
+  sbUploadImg(file, path).then(function(url){
+    var applySrc = function(src){
+      var d = getData();
+      if(d.services.cards[idx]) d.services.cards[idx].img = src;
+      d._saved = true;
+      localStorage.setItem(KEY, JSON.stringify(d));
+      var wrap = document.getElementById('svc-card'+idx+'-img-wrap');
+      if(wrap) wrap.innerHTML = '<img src="'+src+'" style="width:100%;height:100%;object-fit:cover;"><input type="file" accept="image/*" data-svc-idx="'+idx+'" onchange="uploadSvcImg(this,'+idx+')" style="position:absolute;inset:0;opacity:0;cursor:pointer;">';
+      refreshPreview();
+    };
+    if(url){ applySrc(url); }
+    else {
+      var reader = new FileReader();
+      reader.onload = function(e){ applySrc(e.target.result); };
+      reader.readAsDataURL(file);
+    }
+  });
 }
 
 function switchTab(id, btn){

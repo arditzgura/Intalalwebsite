@@ -1,4 +1,22 @@
 /* Supabase helpers — shared across all pages */
+
+async function sbUploadImg(file, path) {
+  try {
+    var bucket = 'foto-artikujt';
+    var r = await fetch(_SB_URL + '/storage/v1/object/' + bucket + '/' + encodeURIComponent(path), {
+      method: 'POST',
+      headers: {
+        'apikey': _SB_KEY,
+        'Authorization': 'Bearer ' + _SB_KEY,
+        'Content-Type': file.type,
+        'x-upsert': 'true'
+      },
+      body: file
+    });
+    if (!r.ok) return null;
+    return _SB_URL + '/storage/v1/object/public/' + bucket + '/' + encodeURIComponent(path);
+  } catch(e) { return null; }
+}
 var _SB_URL = 'https://qucwmmizqxudxvolfwkx.supabase.co';
 var _SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF1Y3dtbWl6cXh1ZHh2b2xmd2t4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQwNjIxODIsImV4cCI6MjA4OTYzODE4Mn0.xp5e-4X2IzgizknjYKmai8qOOrwM-_BO80v_QTI4viw';
 
