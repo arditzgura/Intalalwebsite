@@ -114,6 +114,12 @@
         </div>
         <button class="img-clear" id="hero-img-clear">✕ Hiq imazhin</button>
       </div>
+      <div class="pfield" id="hero-pos-controls" style="display:none;">
+        <label style="display:flex;justify-content:space-between;"><span>Pozicioni Horizontal</span><span id="hero-pos-x-val" style="color:#111;font-weight:700;">50%</span></label>
+        <input type="range" id="hero-pos-x" min="0" max="100" value="50" style="width:100%;margin:6px 0 12px;" oninput="document.getElementById('hero-pos-x-val').textContent=this.value+'%'">
+        <label style="display:flex;justify-content:space-between;"><span>Pozicioni Vertikal</span><span id="hero-pos-y-val" style="color:#111;font-weight:700;">50%</span></label>
+        <input type="range" id="hero-pos-y" min="0" max="100" value="50" style="width:100%;margin:6px 0 0;" oninput="document.getElementById('hero-pos-y-val').textContent=this.value+'%'">
+      </div>
       <div class="pfield"><label>Teksti i Vogël (eyebrow)</label><input type="text" id="hero-eyebrow"></div>
       <div class="pfield"><label>Titulli Kryesor</label><input type="text" id="hero-heading"></div>
     </div>
@@ -255,6 +261,8 @@
     var d = loadData();
     d.hero.eyebrow = document.getElementById('hero-eyebrow').value;
     d.hero.heading  = document.getElementById('hero-heading').value;
+    d.hero.bgX = parseInt(document.getElementById('hero-pos-x').value)||50;
+    d.hero.bgY = parseInt(document.getElementById('hero-pos-y').value)||50;
     // bgImage handled by image upload, keep existing
     d.overview.eyebrow = document.getElementById('ov-eyebrow').value;
     d.overview.heading = document.getElementById('ov-heading').value;
@@ -299,6 +307,11 @@
     if(d.hero.bgImage){
       document.getElementById('hero-img-preview').src = d.hero.bgImage;
       document.getElementById('hero-img-preview').style.display = 'block';
+      document.getElementById('hero-pos-controls').style.display='block';
+      document.getElementById('hero-pos-x').value=d.hero.bgX!==undefined?d.hero.bgX:50;
+      document.getElementById('hero-pos-y').value=d.hero.bgY!==undefined?d.hero.bgY:50;
+      document.getElementById('hero-pos-x-val').textContent=(d.hero.bgX!==undefined?d.hero.bgX:50)+'%';
+      document.getElementById('hero-pos-y-val').textContent=(d.hero.bgY!==undefined?d.hero.bgY:50)+'%';
     }
     document.getElementById('ov-eyebrow').value = d.overview.eyebrow||'';
     document.getElementById('ov-heading').value = d.overview.heading||'';
@@ -396,6 +409,7 @@
           src = ev.target.result;
           document.getElementById('hero-img-preview').src = src;
           document.getElementById('hero-img-preview').style.display = 'block';
+          document.getElementById('hero-pos-controls').style.display='block';
           var d = loadData(); d.hero.bgImage = src; d._saved = true; saveData(d);
           refreshPreview();
         };
@@ -404,6 +418,7 @@
       }
       document.getElementById('hero-img-preview').src = src;
       document.getElementById('hero-img-preview').style.display = 'block';
+      document.getElementById('hero-pos-controls').style.display='block';
       var d = loadData(); d.hero.bgImage = src; d._saved = true; saveData(d);
       refreshPreview();
     });

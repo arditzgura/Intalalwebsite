@@ -83,6 +83,12 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);height:100vh;
           <input type="file" accept="image/*" onchange="uploadImg(this,'hero','bgImage','hero-bg-wrap')">
         </div>
       </div>
+      <div class="field" id="hero-pos-controls" style="display:none;">
+        <label style="display:flex;justify-content:space-between;"><span>Pozicioni Horizontal</span><span id="hero-pos-x-val" style="color:#111;font-weight:700;">50%</span></label>
+        <input type="range" id="hero-pos-x" min="0" max="100" value="50" style="width:100%;margin:6px 0 12px;" oninput="document.getElementById('hero-pos-x-val').textContent=this.value+'%';liveUpdate()">
+        <label style="display:flex;justify-content:space-between;"><span>Pozicioni Vertikal</span><span id="hero-pos-y-val" style="color:#111;font-weight:700;">50%</span></label>
+        <input type="range" id="hero-pos-y" min="0" max="100" value="50" style="width:100%;margin:6px 0 0;" oninput="document.getElementById('hero-pos-y-val').textContent=this.value+'%';liveUpdate()">
+      </div>
       <p class="section-title">Teksti Hero</p>
       <div class="field"><label>Eyebrow (tekst i vogël)</label><input type="text" id="hero-eyebrow" oninput="liveUpdate()"></div>
       <div class="field"><label>Titulli Kryesor (H1)</label><input type="text" id="hero-heading" oninput="liveUpdate()"></div>
@@ -252,6 +258,11 @@ function fillForm(){
   if(h.bgImage){
     var wrap = document.getElementById('hero-bg-wrap');
     wrap.innerHTML = '<img src="'+h.bgImage+'" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;"><input type="file" accept="image/*" onchange="uploadImg(this,\'hero\',\'bgImage\',\'hero-bg-wrap\')" style="position:absolute;inset:0;opacity:0;cursor:pointer;">';
+    document.getElementById('hero-pos-controls').style.display='block';
+    document.getElementById('hero-pos-x').value=h.bgX!==undefined?h.bgX:50;
+    document.getElementById('hero-pos-y').value=h.bgY!==undefined?h.bgY:50;
+    document.getElementById('hero-pos-x-val').textContent=(h.bgX!==undefined?h.bgX:50)+'%';
+    document.getElementById('hero-pos-y-val').textContent=(h.bgY!==undefined?h.bgY:50)+'%';
   }
 
   document.getElementById('about-eyebrow').value = a.eyebrow || '';
@@ -285,6 +296,8 @@ function collectData(){
   d.hero.heading = val('hero-heading');
   d.hero.btn1 = val('hero-btn1');
   d.hero.btn2 = val('hero-btn2');
+  d.hero.bgX = parseInt(document.getElementById('hero-pos-x').value)||50;
+  d.hero.bgY = parseInt(document.getElementById('hero-pos-y').value)||50;
 
   d.about.eyebrow = val('about-eyebrow');
   d.about.heading = val('about-heading');
@@ -356,6 +369,7 @@ function uploadImg(input, section, field, wrapId){
       localStorage.setItem(KEY, JSON.stringify(d));
       var wrap = document.getElementById(wrapId);
       wrap.innerHTML = '<img src="'+src+'" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;"><input type="file" accept="image/*" onchange="uploadImg(this,\''+section+'\',\''+field+'\',\''+wrapId+'\')" style="position:absolute;inset:0;opacity:0;cursor:pointer;">';
+      if(section==='hero'&&field==='bgImage'){ document.getElementById('hero-pos-controls').style.display='block'; }
       refreshPreview();
     };
     if(url){ applySrc(url); }

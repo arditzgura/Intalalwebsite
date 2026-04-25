@@ -568,7 +568,12 @@
     // Apliko imazhin e sfondit gjithmonë nëse ekziston
     if(d.hero && d.hero.bgImage){
       var hero = document.querySelector('.rn-hero');
-      if(hero) hero.style.setProperty('--rn-bg', 'url("'+d.hero.bgImage+'")');
+      if(hero){
+        hero.style.setProperty('--rn-bg', 'url("'+d.hero.bgImage+'")');
+        if(d.hero.bgX!==undefined||d.hero.bgY!==undefined){
+          hero.style.backgroundPosition=(d.hero.bgX||50)+'% '+(d.hero.bgY||50)+'%';
+        }
+      }
     }
 
     // Apliko tekste dhe partnerë vetëm nëse user ka ruajtur nga paneli

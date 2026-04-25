@@ -345,6 +345,9 @@
         if(hasHero){
           hero.classList.add('visible');
           if(d.hero.bgImage) document.getElementById('art-page-hero-bg').style.backgroundImage='url("'+d.hero.bgImage+'")';
+          if(d.hero.bgX!==undefined||d.hero.bgY!==undefined){
+            document.getElementById('art-page-hero-bg').style.backgroundPosition=(d.hero.bgX||50)+'% '+(d.hero.bgY||50)+'%';
+          }
           if(d.hero.eyebrow) document.getElementById('art-page-hero-eyebrow').textContent=d.hero.eyebrow;
           if(d.hero.heading) document.getElementById('art-page-hero-heading').textContent=d.hero.heading;
           if(d.hero.sub) document.getElementById('art-page-hero-sub').textContent=d.hero.sub;
