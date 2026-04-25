@@ -535,12 +535,41 @@
       document.getElementById('art-detail-name').textContent=a.name||'';
       document.getElementById('art-detail-code').textContent=a.code?'KOD: '+a.code:'';
       document.getElementById('art-detail-desc').textContent=a.desc||'';
+
+      /* MASAT — paneli ruan si "sizes" (array stringash) */
+      var masat=a.masat||a.sizes||[];
       var mEl=document.getElementById('art-detail-masat');
-      mEl.innerHTML=a.masat&&a.masat.length?'<p style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">MASAT</p><div style="display:flex;flex-wrap:wrap;gap:6px;">'+a.masat.map(function(m){ return '<span style="border:.5px solid var(--border);padding:5px 12px;font-size:12px;font-weight:500;">'+m+'</span>'; }).join('')+'</div>':'';
+      mEl.innerHTML=masat.length
+        ?'<p style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">MASAT</p>'
+         +'<div style="display:flex;flex-wrap:wrap;gap:6px;">'
+         +masat.map(function(m){ return '<span style="border:.5px solid var(--border);padding:5px 12px;font-size:12px;font-weight:500;">'+m+'</span>'; }).join('')
+         +'</div>':'';
+
+      /* NGJYRAT — {name, hex} */
       var nEl=document.getElementById('art-detail-ngjyrat');
-      nEl.innerHTML=a.ngjyrat&&a.ngjyrat.length?'<p style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">NGJYRAT</p><div style="display:flex;flex-wrap:wrap;gap:8px;">'+a.ngjyrat.map(function(n){ return '<div style="display:flex;flex-direction:column;align-items:center;gap:4px;"><div style="width:26px;height:26px;border-radius:50%;background:'+(n.hex||'#ccc')+';border:.5px solid var(--border);"></div><span style="font-size:9px;color:var(--muted);">'+(n.name||'')+'</span></div>'; }).join('')+'</div>':'';
+      var ngjyrat=a.ngjyrat||[];
+      nEl.innerHTML=ngjyrat.length
+        ?'<p style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">NGJYRAT</p>'
+         +'<div style="display:flex;flex-wrap:wrap;gap:8px;">'
+         +ngjyrat.map(function(n){
+           return '<div style="display:flex;flex-direction:column;align-items:center;gap:4px;">'
+             +'<div style="width:26px;height:26px;border-radius:50%;background:'+(n.hex||n.color||'#ccc')+';border:.5px solid var(--border);"></div>'
+             +'<span style="font-size:9px;color:var(--muted);">'+(n.name||n.label||'')+'</span>'
+             +'</div>';
+         }).join('')+'</div>':'';
+
+      /* PËRBËRJA — paneli ruan si {material, perqindje} ose {name, pct} */
+      var perberja=a.perberja||[];
       var pEl=document.getElementById('art-detail-perberja');
-      pEl.innerHTML=a.perberja&&a.perberja.length?'<p style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">PËRBËRJA</p><div style="display:flex;flex-direction:column;gap:4px;">'+a.perberja.map(function(p){ return '<div style="display:flex;justify-content:space-between;font-size:12px;padding:5px 0;border-bottom:.5px solid var(--border);"><span>'+p.name+'</span><span style="font-weight:500;">'+p.pct+'%</span></div>'; }).join('')+'</div>':'';
+      pEl.innerHTML=perberja.length
+        ?'<p style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">PËRBËRJA</p>'
+         +'<div style="display:flex;flex-direction:column;gap:4px;">'
+         +perberja.map(function(p){
+           var emri=p.material||p.name||'';
+           var pct=p.perqindje||p.pct||'';
+           return '<div style="display:flex;justify-content:space-between;font-size:12px;padding:5px 0;border-bottom:.5px solid var(--border);">'
+             +'<span>'+emri+'</span><span style="font-weight:500;">'+(pct?pct+'%':'')+'</span></div>';
+         }).join('')+'</div>':'';
     }
 
     window.setPI=function(i){ var ps=(_det.articles[_det.artIdx].photos||[]).map(getPhotoSrc).filter(Boolean); if(!ps.length) return; _det.photoIdx=((i%ps.length)+ps.length)%ps.length; renderDetPhotos(); };
