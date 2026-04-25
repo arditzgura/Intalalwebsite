@@ -1318,6 +1318,27 @@
   </script>
 
   <script>
+  /* Auto-add article to contact form if coming from article detail */
+  (function(){
+    var artVal = sessionStorage.getItem('intal_art_order');
+    if(!artVal) return;
+    sessionStorage.removeItem('intal_art_order');
+    function addTag(val){
+      var tags = document.getElementById('cfTags');
+      var ph   = document.getElementById('cfPlaceholder');
+      if(!tags) return;
+      /* check not already added */
+      var existing = tags.querySelectorAll('.cf-tag');
+      for(var i=0;i<existing.length;i++){ if(existing[i].dataset.val===val) return; }
+      var chip = document.createElement('span');
+      chip.className='cf-tag'; chip.dataset.val=val;
+      chip.innerHTML=val+'<span class="cf-tag-remove" data-val="'+val+'">×</span>';
+      tags.insertBefore(chip, ph);
+      if(ph) ph.style.display='none';
+    }
+    window.addEventListener('load', function(){ setTimeout(function(){ addTag(artVal); }, 400); });
+  })();
+
   if(window.location.search.indexOf('goto=kontakt')!==-1){
     /* jump instantly — before paint so user never sees top of page */
     document.documentElement.style.scrollBehavior = 'auto';

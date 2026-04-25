@@ -135,8 +135,8 @@
           <div id="art-detail-perberja" style="margin-bottom:14px;"></div>
         </div>
         <div style="padding:16px 28px 24px;flex-shrink:0;display:flex;flex-direction:column;gap:8px;">
-          <a href="index.html#kontakt" style="display:block;width:100%;background:var(--black);color:#fff;border:none;padding:12px;font-size:11px;font-weight:500;letter-spacing:1px;text-transform:uppercase;cursor:pointer;text-align:center;text-decoration:none;">Na Kontaktoni</a>
-          <button onclick="shareUrl(window.location.href,'Intal Underwear — '+(_det.articles[_det.artIdx]?_det.articles[_det.artIdx].name:'Artikull'))" style="display:flex;align-items:center;justify-content:center;gap:6px;width:100%;background:none;border:.5px solid var(--border);padding:10px;font-size:10px;font-weight:500;letter-spacing:1px;text-transform:uppercase;cursor:pointer;color:var(--muted);transition:all .15s;" onmouseover="this.style.borderColor='#111';this.style.color='#111'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'"><i class="ri-share-line" style="font-size:14px;"></i> Share Artikullin</button>
+          <button onclick="goKontaktArt()" style="display:block;width:100%;background:var(--black);color:#fff;border:none;padding:12px;font-size:11px;font-weight:500;letter-spacing:1px;text-transform:uppercase;cursor:pointer;text-align:center;">Na Kontaktoni</button>
+          <button onclick="shareArtUrl()" style="display:flex;align-items:center;justify-content:center;gap:6px;width:100%;background:none;border:.5px solid var(--border);padding:10px;font-size:10px;font-weight:500;letter-spacing:1px;text-transform:uppercase;cursor:pointer;color:var(--muted);transition:all .15s;" onmouseover="this.style.borderColor='#111';this.style.color='#111'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'"><i class="ri-share-line" style="font-size:14px;"></i> Share Artikullin</button>
         </div>
       </div>
     </div>
@@ -544,6 +544,14 @@
     }
 
     window.setPI=function(i){ var ps=(_det.articles[_det.artIdx].photos||[]).map(getPhotoSrc).filter(Boolean); if(!ps.length) return; _det.photoIdx=((i%ps.length)+ps.length)%ps.length; renderDetPhotos(); };
+    window.shareArtUrl=function(){ var a=_det.articles[_det.artIdx]; window.shareUrl(window.location.href,'Intal Underwear — '+(a?a.name:'Artikull')); };
+    window.goKontaktArt=function(){
+      var a=_det.articles[_det.artIdx]; if(!a) return;
+      var val=a.name+(a.code?' ('+a.code+')':'');
+      sessionStorage.setItem('intal_art_order', val);
+      document.getElementById('art-detail-overlay').style.display='none';
+      window.location.href='index.html?goto=kontakt';
+    };
     window.prevDet=function(){ if(_det.artIdx<=0) return; _det.artIdx--; _det.photoIdx=0; setArtHash(_det.articles[_det.artIdx].id); renderDetPhotos(); renderDetInfo(); };
     window.nextDet=function(){ if(_det.artIdx>=_det.articles.length-1) return; _det.artIdx++; _det.photoIdx=0; setArtHash(_det.articles[_det.artIdx].id); renderDetPhotos(); renderDetInfo(); };
 
