@@ -52,11 +52,11 @@
     .det-th { width:46px; height:46px; border-radius:3px; object-fit:cover; border:2px solid transparent; cursor:pointer; flex-shrink:0; transition:border-color .15s; display:block; }
     .det-th.active { border-color:#fff; }
     /* Page Hero Banner */
-    .art-page-hero { display:none; position:relative; min-height:220px; background:#111; overflow:hidden; align-items:flex-end; }
+    .art-page-hero { display:none; position:relative; min-height:420px; background:#111; overflow:hidden; align-items:flex-end; }
     .art-page-hero.visible { display:flex; }
-    .art-page-hero-bg { position:absolute; inset:0; background-size:cover; background-position:center; }
+    .art-page-hero-bg { position:absolute; inset:0; background-size:cover; background-position:center top; }
     .art-page-hero-bg::after { content:''; position:absolute; inset:0; background:linear-gradient(to bottom,rgba(0,0,0,.15) 0%,rgba(0,0,0,.55) 100%); }
-    .art-page-hero-content { position:relative; z-index:1; padding:clamp(30px,4vw,60px) var(--side) clamp(24px,3vw,44px); display:flex; flex-direction:column; gap:8px; width:100%; }
+    .art-page-hero-content { position:relative; z-index:1; padding:clamp(80px,12vw,160px) var(--side) clamp(60px,9vw,120px); display:flex; flex-direction:column; gap:8px; width:100%; max-width:700px; }
     .art-page-hero-eyebrow { font-size:10px; font-weight:600; letter-spacing:3px; text-transform:uppercase; color:rgba(255,255,255,.7); }
     .art-page-hero-heading { font-size:clamp(26px,3.5vw,48px); font-weight:700; color:#fff; letter-spacing:-0.5px; line-height:1.1; }
     .art-page-hero-sub { font-size:13px; color:rgba(255,255,255,.75); max-width:480px; line-height:1.6; margin-top:2px; }
