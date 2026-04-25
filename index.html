@@ -1319,16 +1319,17 @@
 
   <script>
   if(window.location.search.indexOf('goto=kontakt')!==-1){
-    window.addEventListener('load', function(){
-      setTimeout(function(){
-        var el = document.getElementById('kontakt');
-        if(el){
-          var navH = document.querySelector('.navbar') ? document.querySelector('.navbar').offsetHeight : 0;
-          var top = el.getBoundingClientRect().top + window.pageYOffset - navH;
-          window.scrollTo({ top: top, behavior: 'smooth' });
-        }
-      }, 300);
-    });
+    /* jump instantly — before paint so user never sees top of page */
+    document.documentElement.style.scrollBehavior = 'auto';
+    var _jumpKontakt = function(){
+      var el = document.getElementById('kontakt');
+      if(!el) return;
+      var navH = document.querySelector('.navbar') ? document.querySelector('.navbar').offsetHeight : 0;
+      var top = el.getBoundingClientRect().top + window.pageYOffset - navH;
+      window.scrollTo(0, top);
+    };
+    document.addEventListener('DOMContentLoaded', _jumpKontakt);
+    window.addEventListener('load', _jumpKontakt);
   }
   </script>
 

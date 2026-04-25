@@ -46,14 +46,12 @@ function closeMenuDrawer() {
 
 function goKontakt() {
   closeMenuDrawer();
-  setTimeout(function(){
-    var el = document.getElementById('kontakt');
-    if (el) {
-      var navH = document.querySelector('.navbar') ? document.querySelector('.navbar').offsetHeight : 0;
-      var top = el.getBoundingClientRect().top + window.pageYOffset - navH;
-      window.scrollTo({ top: top, behavior: 'smooth' });
-    } else {
-      window.location.href = 'index.html?goto=kontakt';
-    }
-  }, 320);
+  var el = document.getElementById('kontakt');
+  if (el) {
+    var navH = document.querySelector('.navbar') ? document.querySelector('.navbar').offsetHeight : 0;
+    var top = el.getBoundingClientRect().top + window.pageYOffset - navH;
+    window.scrollTo({ top: top, behavior: 'instant' });
+  } else {
+    window.location.href = 'index.html?goto=kontakt';
+  }
 }
