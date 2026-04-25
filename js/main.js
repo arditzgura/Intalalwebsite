@@ -48,9 +48,8 @@ function goKontakt() {
   closeMenuDrawer();
   var el = document.getElementById('kontakt');
   if (el) {
-    var navH = document.querySelector('.navbar') ? document.querySelector('.navbar').offsetHeight : 0;
-    var top = el.getBoundingClientRect().top + window.pageYOffset - navH;
-    window.scrollTo({ top: top, behavior: 'instant' });
+    document.documentElement.style.scrollBehavior = 'auto';
+    window.scrollTo(0, document.body.scrollHeight);
   } else {
     window.location.href = 'index.html?goto=kontakt';
   }

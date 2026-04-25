@@ -357,7 +357,7 @@
       <h1 class="hero-heading">Fabrike Prodhimi të Brëndshem</h1>
       <div class="hero-buttons">
         <a href="artikujt.html" class="btn-primary">Shiko Artikujt</a>
-        <a href="#kontakt" class="btn-outline">Na Kontakto</a>
+        <a href="index.html?goto=kontakt" class="btn-outline">Na Kontakto</a>
       </div>
     </div>
   </section>
@@ -452,7 +452,7 @@
           <div id="art-detail-perberja" style="margin-bottom:14px;"></div>
         </div>
         <div style="padding:16px 28px 24px;">
-          <button onclick="document.getElementById('kontakt')&&document.getElementById('kontakt').scrollIntoView({behavior:'smooth'});closeArtDetail();closeArtOverlay();" style="width:100%;background:var(--black);color:#fff;border:none;padding:12px;font-size:11px;font-weight:500;letter-spacing:1px;text-transform:uppercase;cursor:pointer;">Na Kontaktoni</button>
+          <button onclick="closeArtDetail&&closeArtDetail();closeArtOverlay&&closeArtOverlay();window.location.href='index.html?goto=kontakt';" style="width:100%;background:var(--black);color:#fff;border:none;padding:12px;font-size:11px;font-weight:500;letter-spacing:1px;text-transform:uppercase;cursor:pointer;">Na Kontaktoni</button>
         </div>
       </div>
     </div>
@@ -465,7 +465,7 @@
         <p class="about-eyebrow">Rreth Nesh</p>
         <h2 class="about-heading">Intal — Prodhim Shqiptar i Brendëshmes</h2>
         <p class="about-body">Në Intal, jemi të dedicuar për të ofruar të brendëshme premium që kombinon rehati, cilësi dhe stil. Çdo produkt prodhohet me kujdes nga materialet më të mira, për të siguruar kënaqësinë tuaj të përditshme.</p>
-        <a href="#kontakt" class="about-btn">Na Kontaktoni</a>
+        <a href="index.html?goto=kontakt" class="about-btn">Na Kontaktoni</a>
       </div>
       <div class="about-right">
         <div class="about-stat">
@@ -1340,14 +1340,9 @@
   })();
 
   if(window.location.search.indexOf('goto=kontakt')!==-1){
-    /* jump instantly — before paint so user never sees top of page */
     document.documentElement.style.scrollBehavior = 'auto';
     var _jumpKontakt = function(){
-      var el = document.getElementById('kontakt');
-      if(!el) return;
-      var navH = document.querySelector('.navbar') ? document.querySelector('.navbar').offsetHeight : 0;
-      var top = el.getBoundingClientRect().top + window.pageYOffset - navH;
-      window.scrollTo(0, top);
+      window.scrollTo(0, document.body.scrollHeight);
     };
     document.addEventListener('DOMContentLoaded', _jumpKontakt);
     window.addEventListener('load', _jumpKontakt);
