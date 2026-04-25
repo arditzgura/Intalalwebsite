@@ -43,3 +43,12 @@ function closeMenuDrawer() {
   document.getElementById('menuBackdrop').classList.remove('open');
   document.body.style.overflow = '';
 }
+
+function goKontakt() {
+  closeMenuDrawer();
+  setTimeout(function(){
+    var el = document.getElementById('kontakt');
+    if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    else { window.location.href = 'index.html#kontakt'; }
+  }, 320);
+}
