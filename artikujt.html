@@ -18,8 +18,11 @@
     .pg-breadcrumb .cur { color:var(--black); text-transform:uppercase; }
     #pg-count { font-size:11px; color:var(--muted); letter-spacing:1px; white-space:nowrap; }
     #dyn-filter-bar { padding:0 var(--art-side); border-bottom:.5px solid var(--border); display:none; flex-direction:column; }
-    .dfc-row { display:flex; flex-wrap:wrap; gap:8px; padding:10px 0; }
-    .dfc-row-sub { border-top:.5px solid var(--border); gap:4px; }
+    .dfc-row { display:flex; flex-wrap:wrap; gap:8px; padding:10px 0; align-items:center; }
+    .dfc-row-sub { gap:4px; }
+    .dfc-share { margin-left:auto; display:flex; align-items:center; gap:5px; background:none; border:none; cursor:pointer; font-size:10px; font-weight:500; letter-spacing:1px; text-transform:uppercase; color:var(--muted); padding:4px 0; flex-shrink:0; transition:color .15s; }
+    .dfc-share:hover { color:var(--black); }
+    .dfc-share i { font-size:14px; }
     .dfc-sub { background:none; border:none; padding:4px 10px; font-size:10px; font-weight:500; letter-spacing:1px; text-transform:uppercase; cursor:pointer; color:var(--muted); transition:color .15s; }
     .dfc-sub:hover { color:var(--black); }
     .dfc-sub.active { color:var(--black); text-decoration:underline; text-underline-offset:3px; }
@@ -131,8 +134,9 @@
           <div id="art-detail-ngjyrat" style="margin-bottom:14px;"></div>
           <div id="art-detail-perberja" style="margin-bottom:14px;"></div>
         </div>
-        <div style="padding:16px 28px 24px;flex-shrink:0;">
+        <div style="padding:16px 28px 24px;flex-shrink:0;display:flex;flex-direction:column;gap:8px;">
           <a href="index.html#kontakt" style="display:block;width:100%;background:var(--black);color:#fff;border:none;padding:12px;font-size:11px;font-weight:500;letter-spacing:1px;text-transform:uppercase;cursor:pointer;text-align:center;text-decoration:none;">Na Kontaktoni</a>
+          <button onclick="shareUrl(window.location.href,'Intal Underwear — '+(_det.articles[_det.artIdx]?_det.articles[_det.artIdx].name:'Artikull'))" style="display:flex;align-items:center;justify-content:center;gap:6px;width:100%;background:none;border:.5px solid var(--border);padding:10px;font-size:10px;font-weight:500;letter-spacing:1px;text-transform:uppercase;cursor:pointer;color:var(--muted);transition:all .15s;" onmouseover="this.style.borderColor='#111';this.style.color='#111'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'"><i class="ri-share-line" style="font-size:14px;"></i> Share Artikullin</button>
         </div>
       </div>
     </div>
@@ -234,12 +238,41 @@
     var _state = { cat:'', filter:'te-gjitha', filterMode:'', articles:[], allArticles:[] };
     var _det = { artIdx:0, photoIdx:0, articles:[] };
 
-    function getHash(){ var h=decodeURIComponent(window.location.hash.replace('#','')); if(!h) return {cat:'',filter:'te-gjitha'}; var p=h.split('/'); return {cat:p[0]||'',filter:p[1]||'te-gjitha'}; }
+    function getHash(){
+      var h=decodeURIComponent(window.location.hash.replace('#',''));
+      if(!h) return {cat:'',filter:'te-gjitha',artId:''};
+      var p=h.split('/');
+      var artId='';
+      if(p.length>0 && p[p.length-1].charAt(0)==='~'){ artId=p.pop().slice(1); }
+      return {cat:p[0]||'',filter:p[1]||'te-gjitha',artId:artId};
+    }
     function setHash(cat,filter,push){
       var h=cat?'#'+encodeURIComponent(cat.toLowerCase()):'';
       if(h&&filter&&filter!=='te-gjitha') h+='/'+encodeURIComponent(filter.toLowerCase());
       if(push) history.pushState(null,'',h||window.location.pathname.split('#')[0]);
       else history.replaceState(null,'',h||window.location.pathname.split('#')[0]);
+    }
+    function setArtHash(artId){
+      var base=window.location.hash.replace(/\/~[^/]*$|^#~[^/]*$/,'');
+      var newHash=base?base+'/~'+encodeURIComponent(artId):'#~'+encodeURIComponent(artId);
+      history.pushState(null,'',newHash);
+    }
+    function clearArtHash(){
+      var h=window.location.hash.replace(/\/~[^/]*$|^#~[^/]*$/,'');
+      history.replaceState(null,'',h||window.location.pathname.split('#')[0]);
+    }
+    function shareUrl(url,title){
+      if(navigator.share){ navigator.share({url:url,title:title||'Intal Underwear'}); }
+      else{
+        navigator.clipboard.writeText(url).then(function(){
+          var t=document.getElementById('share-toast');
+          if(!t){ t=document.createElement('div'); t.id='share-toast';
+            t.style.cssText='position:fixed;bottom:32px;left:50%;transform:translateX(-50%);background:#111;color:#fff;padding:8px 20px;border-radius:20px;font-size:11px;letter-spacing:1px;z-index:99999;pointer-events:none;';
+            document.body.appendChild(t); }
+          t.textContent='Linku u kopjua ✓'; t.style.opacity='1';
+          setTimeout(function(){ t.style.opacity='0'; },2000);
+        }).catch(function(){ window.prompt('Kopjo linkun:',url); });
+      }
     }
 
     function isSub(cat,data){
@@ -286,10 +319,11 @@
       list.forEach(function(a){ var k=a.kat||''; if(k&&!kats.includes(k)) kats.push(k); });
       if(!kats.length){ bar.style.display='none'; return; }
       bar.style.display='flex';
-      bar.innerHTML=['te-gjitha'].concat(kats).map(function(k){
+      var btns=['te-gjitha'].concat(kats).map(function(k){
         var lbl=k==='te-gjitha'?'Të Gjitha':k;
         return '<button class="dfc'+(active===k?' active':'')+'" onclick="applyFilter(\''+k.replace(/'/g,"\\'")+'\')">'+lbl+'</button>';
       }).join('');
+      bar.innerHTML='<div class="dfc-row">'+btns+'<button class="dfc-share" onclick="shareUrl(window.location.href,\'Intal Underwear — Artikujt\')"><i class="ri-share-line"></i> Share</button></div>';
     }
 
     // Two-row filter bar for "show all" view
@@ -309,6 +343,7 @@
       subs.forEach(function(s){
         row1+='<button class="dfc'+(activeSub===s?' active':'')+'" onclick="applySubFilter(\''+s.replace(/'/g,"\\'")+'\')">'+s+'</button>';
       });
+      row1+='<button class="dfc-share" onclick="shareUrl(window.location.href,\'Intal Underwear — Artikujt\')"><i class="ri-share-line"></i> Share</button>';
       row1+='</div>';
       // row 2: kat values (borderless, smaller, no "Të Gjitha")
       var row2='';
@@ -392,6 +427,8 @@
 
     function route(){
       var data=loadData(); var h=getHash();
+      // close overlay if open and no artId in hash
+      if(!h.artId){ var ov=document.getElementById('art-detail-overlay'); if(ov&&ov.style.display==='flex'){ ov.style.display='none'; ov.querySelectorAll('.art-nav-btn').forEach(function(b){b.remove();}); } }
       if(!h.cat){ showAll(data); }
       else if(h.cat==='pelhura'){ location.href='pelhura.html'; }
       else if(isSub(h.cat,data)){
@@ -401,6 +438,17 @@
         var kats=data&&data.kategoriSettings&&data.kategoriSettings.kryesore?data.kategoriSettings.kryesore:[];
         var match=kats.find(function(k){ return k.toLowerCase()===h.cat.toLowerCase(); })||h.cat;
         showCat(match,h.filter,data);
+      }
+      // open article if artId present in hash
+      if(h.artId){
+        setTimeout(function(){
+          var arts=data&&data.artikujt?data.artikujt:[];
+          var art=arts.find(function(a){ return a.id===h.artId; });
+          if(!art) return;
+          // try openDetAll first (works in "all" view), fallback to openDet
+          if(_state.allArticles&&_state.allArticles.length){ window.openDetAll(h.artId,true); }
+          else { window.openDet(h.artId,true); }
+        },100);
       }
     }
 
@@ -491,31 +539,32 @@
     }
 
     window.setPI=function(i){ var ps=(_det.articles[_det.artIdx].photos||[]).map(getPhotoSrc).filter(Boolean); if(!ps.length) return; _det.photoIdx=((i%ps.length)+ps.length)%ps.length; renderDetPhotos(); };
-    window.prevDet=function(){ if(_det.artIdx<=0) return; _det.artIdx--; _det.photoIdx=0; renderDetPhotos(); renderDetInfo(); };
-    window.nextDet=function(){ if(_det.artIdx>=_det.articles.length-1) return; _det.artIdx++; _det.photoIdx=0; renderDetPhotos(); renderDetInfo(); };
+    window.prevDet=function(){ if(_det.artIdx<=0) return; _det.artIdx--; _det.photoIdx=0; setArtHash(_det.articles[_det.artIdx].id); renderDetPhotos(); renderDetInfo(); };
+    window.nextDet=function(){ if(_det.artIdx>=_det.articles.length-1) return; _det.artIdx++; _det.photoIdx=0; setArtHash(_det.articles[_det.artIdx].id); renderDetPhotos(); renderDetInfo(); };
 
-    window.openDetAll=function(id){
+    window.openDetAll=function(id,noHash){
       var arts=_state.allArticles&&_state.allArticles.length?_state.allArticles:(loadData()&&loadData().artikujt||[]);
-      // filter to currently visible articles for prev/next navigation
       var visible;
-      if(!_state.filter||_state.filter==='te-gjitha'){ visible=arts; }
-      else if(_state.filterMode==='sub'){ visible=arts.filter(function(a){ return artMatchesCat(a,_state.filter); }); }
-      else if(_state.filterMode==='kat'){ visible=arts.filter(function(a){ return (a.kat||'').toLowerCase()===_state.filter.toLowerCase(); }); }
-      else { visible=arts; }
+      if(_state.activeSub&&_state.activeSub!=='te-gjitha'){
+        visible=arts.filter(function(a){ return artMatchesCat(a,_state.activeSub); });
+        if(_state.activeKat&&_state.activeKat!=='te-gjitha') visible=visible.filter(function(a){ return (a.kat||'').toLowerCase()===_state.activeKat.toLowerCase(); });
+      } else { visible=arts; }
       var idx=visible.findIndex(function(x){ return x.id===id; }); if(idx<0) return;
       _det.articles=visible; _det.artIdx=idx; _det.photoIdx=0;
+      if(!noHash) setArtHash(id);
       renderDetPhotos(); renderDetInfo();
       document.getElementById('art-detail-overlay').style.display='flex';
     };
 
-    window.openDet=function(id){
+    window.openDet=function(id,noHash){
       var arts=_state.articles.length?_state.articles:(loadData()&&loadData().artikujt||[]);
       var idx=arts.findIndex(function(x){ return x.id===id; }); if(idx<0) return;
       _det.articles=arts; _det.artIdx=idx; _det.photoIdx=0;
+      if(!noHash) setArtHash(id);
       renderDetPhotos(); renderDetInfo();
       document.getElementById('art-detail-overlay').style.display='flex';
     };
-    window.closeArtDetail=function(){ var ov=document.getElementById('art-detail-overlay'); ov.style.display='none'; ov.querySelectorAll('.art-nav-btn').forEach(function(b){ b.remove(); }); };
+    window.closeArtDetail=function(){ var ov=document.getElementById('art-detail-overlay'); ov.style.display='none'; ov.querySelectorAll('.art-nav-btn').forEach(function(b){ b.remove(); }); clearArtHash(); };
     document.getElementById('art-detail-overlay').addEventListener('click',function(e){ if(e.target===this) closeArtDetail(); });
     document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeArtDetail(); });
 
