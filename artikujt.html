@@ -17,6 +17,8 @@
     .pg-breadcrumb .sep { color:var(--border); }
     .pg-breadcrumb .cur { color:var(--black); text-transform:uppercase; }
     #pg-count { font-size:11px; color:var(--muted); letter-spacing:1px; white-space:nowrap; }
+    #filter-bar-wrap { position:sticky; top:var(--navbar-h); z-index:99; background:#fff; overflow:hidden; max-height:200px; transition:max-height .32s ease; }
+    #filter-bar-wrap.fb-hidden { max-height:0; }
     #dyn-filter-bar { padding:0 var(--art-side); border-bottom:.5px solid var(--border); display:none; flex-direction:column; }
     .dfc-row { display:flex; flex-wrap:wrap; gap:8px; padding:10px 0; align-items:center; }
     .dfc-row-sub { gap:4px; }
@@ -114,7 +116,7 @@
   </div>
 
   <!-- Filter bar -->
-  <div id="dyn-filter-bar"></div>
+  <div id="filter-bar-wrap"><div id="dyn-filter-bar"></div></div>
 
   <!-- Article grid -->
   <div id="dyn-grid"></div>
@@ -654,6 +656,24 @@
         }
       }
     }catch(e){}
+  })();
+
+  /* Filter bar scroll hide/show — same logic as navbar */
+  (function(){
+    var wrap=document.getElementById('filter-bar-wrap');
+    if(!wrap) return;
+    var lastY=window.scrollY, ticking=false;
+    window.addEventListener('scroll',function(){
+      if(!ticking){
+        requestAnimationFrame(function(){
+          var y=window.scrollY;
+          if(y>lastY && y>80){ wrap.classList.add('fb-hidden'); }
+          else { wrap.classList.remove('fb-hidden'); }
+          lastY=y; ticking=false;
+        });
+        ticking=true;
+      }
+    },{passive:true});
   })();
   </script>
 
