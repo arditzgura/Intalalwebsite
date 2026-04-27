@@ -367,6 +367,7 @@ function uploadImg(input, section, field, wrapId){
       d[section][field] = src;
       d._saved = true;
       localStorage.setItem(KEY, JSON.stringify(d));
+      sbSet('page_home_v1', JSON.stringify(d)).catch(function(){});
       var wrap = document.getElementById(wrapId);
       wrap.innerHTML = '<img src="'+src+'" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;"><input type="file" accept="image/*" onchange="uploadImg(this,\''+section+'\',\''+field+'\',\''+wrapId+'\')" style="position:absolute;inset:0;opacity:0;cursor:pointer;">';
       if(section==='hero'&&field==='bgImage'){ document.getElementById('hero-pos-controls').style.display='block'; }
@@ -392,6 +393,7 @@ function uploadSvcImg(input, idx){
       if(d.services.cards[idx]) d.services.cards[idx].img = src;
       d._saved = true;
       localStorage.setItem(KEY, JSON.stringify(d));
+      sbSet('page_home_v1', JSON.stringify(d)).catch(function(){});
       var wrap = document.getElementById('svc-card'+idx+'-img-wrap');
       if(wrap) wrap.innerHTML = '<img src="'+src+'" style="width:100%;height:100%;object-fit:cover;"><input type="file" accept="image/*" data-svc-idx="'+idx+'" onchange="uploadSvcImg(this,'+idx+')" style="position:absolute;inset:0;opacity:0;cursor:pointer;">';
       refreshPreview();
