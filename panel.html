@@ -769,15 +769,8 @@ tr.drag-over{border-top:2.5px solid var(--pink);}
 
 <div class="psw" id="admin-bar" style="display:none;">
   <span class="sw-lbl">Intal Albania Sistema</span>
-  <div class="sw-btns">
-    <button class="sw-btn active" id="sw-public-btn" onclick="showPage('public',this)">Faqja Publike</button>
-    <button class="sw-btn" id="sw-admin-btn" onclick="showPage('admin',this)">Panel Admin</button>
-  </div>
 </div>
 
-<div class="page" id="page-public" style="position:fixed;inset:44px 0 0 0;z-index:100;">
-  <iframe id="public-iframe" src="index.html" style="width:100%;height:100%;border:none;display:block;"></iframe>
-</div>
 <div style="display:none;" id="page-public-old">
   <nav class="pub-nav">
     <!-- LEFT: hamburger + logo -->
@@ -1094,7 +1087,6 @@ tr.drag-over{border-top:2.5px solid var(--pink);}
       <div class="atabs">
         <button class="atab active" data-tab="art" onclick="swTab('art',this)">Artikuj</button>
         <button class="atab" data-tab="pel" onclick="swTab('pel',this)">Pelhura</button>
-        <button class="atab" data-tab="rreth" onclick="swTab('rreth',this)">Rreth nesh</button>
         <button class="atab" id="atab-analytics" onclick="swTab('analytics',this)">&#128200; Analitika <span id="analytics-badge" style="display:none;background:var(--pink);color:#fff;border-radius:100px;font-size:9px;padding:1px 6px;margin-left:3px;">0</span></button>
         <button class="atab" onclick="swTab('set',this)">Cilesimet</button>
       </div>
@@ -1278,36 +1270,7 @@ tr.drag-over{border-top:2.5px solid var(--pink);}
           <table><thead><tr><th>Foto</th><th>Emri</th><th>Kat.</th><th>Ngjyra</th><th>Veprime</th></tr></thead><tbody id="pel-tbl"></tbody></table>
         </div>
       </div>
-      <div class="tc" id="tc-rreth">
-        <div class="fcard">
-          <h3>&#127968; Rreth Nesh — Teksti dhe Kategori</h3>
-          <div class="info-b">Shtoni tekstin kryesor dhe kategorite me foto. Shfaqen ne seksionin "Rreth nesh" te faqes publike.</div>
-          <!-- Main text -->
-          <div class="fgrid" style="margin-bottom:1.5rem;">
-            <div class="fg full">
-              <label>Teksti Kryesor (pershkrimi i biznesit)</label>
-              <textarea id="rreth-main-text" style="height:140px;font-family:monospace;font-size:12px;" placeholder="Shkruani pershkrimin e biznesit tuaj...&#10;&#10;Formatimi i mbeshtetetur:&#10;## Nentitulli  → titull i kuq&#10;**tekst**      → bold&#10;*tekst*        → italic&#10;- element      → bullet point&#10;Rresht bosh    → paragraf i ri"></textarea>
-              <div style="font-size:10px;color:#aaa;margin-top:4px;line-height:1.8;">
-                <strong>Formatimi:</strong> <code>## Nentitulli</code> = titull i kuq &nbsp;|&nbsp; <code>**bold**</code> = bold &nbsp;|&nbsp; <code>*italic*</code> = italic &nbsp;|&nbsp; <code>- element</code> = bullet
-              </div>
-            </div>
-            <div class="fg full" style="display:flex;justify-content:flex-end;">
-              <button class="btn-save" onclick="saveRrethText()">Ruaj Tekstin</button>
-            </div>
-          </div>
-          <hr style="border:none;border-top:1px solid var(--border);margin-bottom:1.5rem;">
-          <!-- Add category form -->
-          <div style="display:flex;gap:8px;align-items:flex-end;margin-bottom:1.25rem;flex-wrap:wrap;">
-            <div class="fg" style="flex:1;min-width:180px;">
-              <label>Emri i Kategorise</label>
-              <input type="text" id="rreth-cat-name" placeholder="P.sh. Flota, Ambjente...">
-            </div>
-            <button class="btn-save" style="height:36px;padding:0 1.2rem;white-space:nowrap;" onclick="addRrethCat()">+ Shto Kategori</button>
-          </div>
-          <!-- Categories list -->
-          <div id="rreth-cats-list"></div>
-        </div>
-      </div>
+
       <div class="tc" id="tc-analytics">
         <div class="fcard">
           <h3>&#128200; Analitika e Faqes</h3>
@@ -2505,12 +2468,6 @@ function doLogin(){
   document.getElementById('admin-ui').style.display='block';
   document.getElementById('admin-bar').style.display='flex';
   document.body.classList.add('admin-bar-visible');
-  document.querySelectorAll('.page').forEach(function(x){x.classList.remove('active');});
-  document.getElementById('page-admin').classList.add('active');
-  document.getElementById('page-public').style.display='';
-  document.querySelectorAll('.sw-btn').forEach(function(x){x.classList.remove('active');});
-  var ab=document.getElementById('sw-admin-btn');
-  if(ab) ab.classList.add('active');
   initAdmin();
 }
 document.getElementById('l-pass').addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
@@ -2518,14 +2475,8 @@ function doLogout(){
   document.getElementById('admin-ui').style.display='none';
   document.getElementById('login-screen').style.display='flex';
   document.getElementById('l-pass').value='';
-  // Hide admin bar and go back to public page
   document.getElementById('admin-bar').style.display='none';
   document.body.classList.remove('admin-bar-visible');
-  document.querySelectorAll('.page').forEach(function(x){x.classList.remove('active');});
-  document.querySelectorAll('.sw-btn').forEach(function(x){x.classList.remove('active');});
-  document.getElementById('page-public').classList.add('active');
-  var pubBtn=document.getElementById('sw-public-btn');
-  if(pubBtn) pubBtn.classList.add('active');
 }
 function swTab(id,btn){
   document.querySelectorAll('.atab').forEach(function(b){b.classList.remove('active');});
@@ -4709,21 +4660,10 @@ function showToast(msg,err){
 (function(){
   if(sessionStorage.getItem('intal_logged')==='1'){
     sessionStorage.removeItem('intal_logged');
-    document.querySelectorAll('.page').forEach(function(x){x.classList.remove('active');});
-    document.getElementById('page-admin').classList.add('active');
-    document.querySelectorAll('.sw-btn').forEach(function(x){x.classList.remove('active');});
-    var ab=document.getElementById('sw-admin-btn');
-    if(ab) ab.classList.add('active');
     document.getElementById('login-screen').style.display='none';
     document.getElementById('admin-ui').style.display='block';
     document.getElementById('admin-bar').style.display='flex';
     document.body.classList.add('admin-bar-visible');
-    document.querySelectorAll('.page').forEach(function(x){x.classList.remove('active');});
-    document.getElementById('page-admin').classList.add('active');
-    document.getElementById('page-public').style.display='';
-    document.querySelectorAll('.sw-btn').forEach(function(x){x.classList.remove('active');});
-    var ab=document.getElementById('sw-admin-btn');
-    if(ab) ab.classList.add('active');
     initAdmin();
     var pt=sessionStorage.getItem('intal_panel_tab');
     if(pt){ sessionStorage.removeItem('intal_panel_tab'); setTimeout(function(){ var btn=document.querySelector('.atab[data-tab="'+pt+'"]'); if(btn) btn.click(); },300); }
