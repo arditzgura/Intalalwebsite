@@ -189,18 +189,27 @@ function refreshPreview(){
 
 function uploadHeroBg(input){
   var file=input.files[0]; if(!file) return;
-  var reader=new FileReader();
-  reader.onload=function(e){
-    var src=e.target.result;
-    var d=loadData(); if(!d.hero) d.hero={};
-    d.hero.bgImage=src; d._saved=true;
-    localStorage.setItem(KEY,JSON.stringify(d));
-    var w=document.getElementById('hero-bg-wrap');
-    w.innerHTML='<img src="'+src+'"><input type="file" accept="image/*" onchange="uploadHeroBg(this)" style="position:absolute;inset:0;opacity:0;cursor:pointer;z-index:2;">';
-    document.getElementById('hero-pos-controls').style.display='block';
-    refreshPreview();
-  };
-  reader.readAsDataURL(file);
+  var ext=file.name.split('.').pop()||'jpg';
+  var path='page-images/pel-hero.'+ext;
+  sbUploadImg(file, path).then(function(url){
+    var applySrc=function(src){
+      var d=loadData(); if(!d.hero) d.hero={};
+      d.hero.bgImage=src; d._saved=true;
+      var str=JSON.stringify(d);
+      localStorage.setItem(KEY,str);
+      sbSet('page_pel_v1',str).catch(function(){});
+      var w=document.getElementById('hero-bg-wrap');
+      w.innerHTML='<img src="'+src+'"><input type="file" accept="image/*" onchange="uploadHeroBg(this)" style="position:absolute;inset:0;opacity:0;cursor:pointer;z-index:2;">';
+      document.getElementById('hero-pos-controls').style.display='block';
+      refreshPreview();
+    };
+    if(url){ applySrc(url); }
+    else {
+      var reader=new FileReader();
+      reader.onload=function(e){ applySrc(e.target.result); };
+      reader.readAsDataURL(file);
+    }
+  });
 }
 
 function switchTab(id,btn){

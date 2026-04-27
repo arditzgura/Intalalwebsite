@@ -3,18 +3,20 @@
 async function sbUploadImg(file, path) {
   try {
     var bucket = 'foto-artikujt';
-    var r = await fetch(_SB_URL + '/storage/v1/object/' + bucket + '/' + encodeURIComponent(path), {
+    // Encode only each path segment (preserve / separators for folder structure)
+    var encodedPath = path.split('/').map(encodeURIComponent).join('/');
+    var r = await fetch(_SB_URL + '/storage/v1/object/' + bucket + '/' + encodedPath, {
       method: 'POST',
       headers: {
         'apikey': _SB_KEY,
         'Authorization': 'Bearer ' + _SB_KEY,
-        'Content-Type': file.type,
+        'Content-Type': file.type || 'image/jpeg',
         'x-upsert': 'true'
       },
       body: file
     });
     if (!r.ok) return null;
-    return _SB_URL + '/storage/v1/object/public/' + bucket + '/' + encodeURIComponent(path);
+    return _SB_URL + '/storage/v1/object/public/' + bucket + '/' + encodedPath;
   } catch(e) { return null; }
 }
 var _SB_URL = 'https://qucwmmizqxudxvolfwkx.supabase.co';
