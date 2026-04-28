@@ -355,13 +355,14 @@
       var bar=document.getElementById('dyn-filter-bar');
       var spacer=document.getElementById('filter-bar-spacer');
       if(!bar) return;
-      var isMobile=window.innerWidth<=900;
       if(bar.style.display==='none'||bar.style.display===''){
         if(spacer) spacer.style.height='0'; bar._openH=0; return;
       }
-      bar._openH=bar.offsetHeight;
-      if(spacer && isMobile) spacer.style.height=bar._openH+'px';
-      if(window._fbResetScroll) window._fbResetScroll();
+      requestAnimationFrame(function(){
+        bar._openH=bar.offsetHeight;
+        if(spacer) spacer.style.height=bar._openH+'px';
+        if(window._fbResetScroll) window._fbResetScroll();
+      });
     }
 
     // Filter bar for category view (by kat)
