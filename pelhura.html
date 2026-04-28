@@ -26,7 +26,7 @@
     :root { --art-side: 180px; }
     @media(max-width:900px){ :root { --art-side: 60px; } }
     @media(max-width:600px){ :root { --art-side: 20px; } }
-    #dyn-filter-bar { position:fixed; top:var(--navbar-h); left:0; right:0; z-index:99; background:#fff; border-bottom:.5px solid var(--border); padding:8px var(--art-side); display:none; flex-wrap:nowrap; gap:6px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; transform:translateY(0); transition:transform 0.35s ease; }
+    #dyn-filter-bar { position:fixed; top:var(--navbar-h); left:0; right:0; z-index:99; background:#fff; border-bottom:.5px solid var(--border); padding:8px var(--art-side); display:none; flex-wrap:nowrap; gap:6px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; transform:translateY(0); transition:transform 0.35s ease; will-change:transform; }
     #dyn-filter-bar.fb-hidden { transform:translateY(-100%); }
     #filter-bar-spacer { }
     #dyn-filter-bar::-webkit-scrollbar { display:none; }
@@ -237,6 +237,7 @@
         spacer.style.height='0'; return;
       }
       spacer.style.height=bar.offsetHeight+'px';
+      if(window._fbResetScroll) window._fbResetScroll();
     }
 
     function renderFilterBar(list,active){
@@ -383,18 +384,19 @@
     }catch(e){}
   })();
 
-  /* Filter bar scroll — identical logic to navbar (js/main.js) */
+  /* Filter bar scroll — same logic as navbar in js/main.js */
   (function(){
     var bar=document.getElementById('dyn-filter-bar');
     if(!bar) return;
     var lastY=window.scrollY, ticking=false;
+    window._fbResetScroll=function(){ lastY=window.scrollY; bar.classList.remove('fb-hidden'); };
     window.addEventListener('scroll',function(){
       if(!ticking){
         requestAnimationFrame(function(){
           var currentY=window.scrollY;
           var scrolledDown=currentY>lastY;
           var pastThreshold=currentY>80;
-          if(bar.style.display&&bar.style.display!=='none'){
+          if(bar.style.display==='flex'||bar.style.display==='block'){
             if(scrolledDown&&pastThreshold){
               bar.classList.add('fb-hidden');
             } else {
