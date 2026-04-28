@@ -17,11 +17,8 @@
     .pg-breadcrumb .sep { color:var(--border); }
     .pg-breadcrumb .cur { color:var(--black); text-transform:uppercase; }
     #pg-count { font-size:11px; color:var(--muted); letter-spacing:1px; white-space:nowrap; }
-    #filter-bar-wrap { position:sticky; top:var(--navbar-h); z-index:99; overflow:hidden; max-height:200px; transition:max-height 0.32s cubic-bezier(0.4,0,0.2,1); }
-    #filter-bar-wrap.fb-hidden { max-height:0; }
-    #dyn-filter-bar { background:#fff; border-bottom:.5px solid var(--border); transform:translateY(0); transition:transform 0.32s cubic-bezier(0.4,0,0.2,1); }
-    #filter-bar-wrap.fb-hidden #dyn-filter-bar { transform:translateY(-100%); }
-    #dyn-filter-bar { padding:0 var(--art-side); display:none; flex-direction:column; }
+    #filter-bar-wrap { position:sticky; top:var(--navbar-h); z-index:99; overflow:hidden; max-height:0; transition:max-height 0.35s ease; }
+    #dyn-filter-bar { background:#fff; border-bottom:.5px solid var(--border); padding:0 var(--art-side); display:none; flex-direction:column; }
     .dfc-row { display:flex; flex-wrap:nowrap; gap:6px; padding:8px 0; align-items:center; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
     .dfc-row::-webkit-scrollbar { display:none; }
     .dfc-row-sub { gap:2px; }
@@ -353,18 +350,32 @@
       scrollToGrid();
     };
 
+    // Sync wrapper max-height to real content height (call after any render)
+    function syncWrapH(){
+      var wrap=document.getElementById('filter-bar-wrap');
+      var bar=document.getElementById('dyn-filter-bar');
+      if(!wrap||!bar) return;
+      if(bar.style.display==='none'||bar.style.display===''){
+        wrap._openH=0; if(!wrap._scrollHidden) wrap.style.maxHeight='0'; return;
+      }
+      var h=bar.offsetHeight;
+      wrap._openH=h;
+      if(!wrap._scrollHidden) wrap.style.maxHeight=h+'px';
+    }
+
     // Filter bar for category view (by kat)
     function renderFilterBar(list,active){
       var bar=document.getElementById('dyn-filter-bar');
       var kats=[];
       list.forEach(function(a){ var k=a.kat||''; if(k&&!kats.includes(k)) kats.push(k); });
-      if(!kats.length){ bar.style.display='none'; return; }
+      if(!kats.length){ bar.style.display='none'; syncWrapH(); return; }
       bar.style.display='flex';
       var btns=['te-gjitha'].concat(kats).map(function(k){
         var lbl=k==='te-gjitha'?'Të Gjitha':k;
         return '<button class="dfc'+(active===k?' active':'')+'" onclick="applyFilter(\''+k.replace(/'/g,"\\'")+'\')">'+lbl+'</button>';
       }).join('');
       bar.innerHTML='<div class="dfc-row">'+btns+'<button class="dfc-share" onclick="shareUrl(window.location.href,\'Intal Underwear — Artikujt\')"><i class="ri-share-line"></i> Share</button></div>';
+      syncWrapH();
     }
 
     // Two-row filter bar for "show all" view
@@ -402,6 +413,7 @@
       }
       bar.innerHTML=row1+row2;
       bar.style.display='block';
+      syncWrapH();
     }
 
     function buildCardHtml(a, opener){
@@ -704,7 +716,7 @@
     }catch(e){}
   })();
 
-  /* Filter bar — sticky below hero, same scroll hide/show as navbar */
+  /* Filter bar — sticky below hero, hide on scroll down / show on scroll up */
   (function(){
     var wrap=document.getElementById('filter-bar-wrap');
     if(!wrap) return;
@@ -713,8 +725,13 @@
       if(!ticking){
         requestAnimationFrame(function(){
           var y=window.scrollY;
-          if(y>lastY && y>80){ wrap.classList.add('fb-hidden'); }
-          else { wrap.classList.remove('fb-hidden'); }
+          if(y>lastY && y>80){
+            wrap._scrollHidden=true;
+            wrap.style.maxHeight='0';
+          } else {
+            wrap._scrollHidden=false;
+            wrap.style.maxHeight=(wrap._openH||0)+'px';
+          }
           lastY=y; ticking=false;
         });
         ticking=true;

@@ -26,10 +26,8 @@
     :root { --art-side: 180px; }
     @media(max-width:900px){ :root { --art-side: 60px; } }
     @media(max-width:600px){ :root { --art-side: 20px; } }
-    #filter-bar-wrap { position:sticky; top:var(--navbar-h); z-index:99; overflow:hidden; max-height:200px; transition:max-height 0.32s cubic-bezier(0.4,0,0.2,1); }
-    #filter-bar-wrap.fb-hidden { max-height:0; }
-    #dyn-filter-bar { background:#fff; border-bottom:.5px solid var(--border); transform:translateY(0); transition:transform 0.32s cubic-bezier(0.4,0,0.2,1); padding:8px var(--art-side); display:none; flex-wrap:nowrap; gap:6px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
-    #filter-bar-wrap.fb-hidden #dyn-filter-bar { transform:translateY(-100%); }
+    #filter-bar-wrap { position:sticky; top:var(--navbar-h); z-index:99; overflow:hidden; max-height:0; transition:max-height 0.35s ease; }
+    #dyn-filter-bar { background:#fff; border-bottom:.5px solid var(--border); padding:8px var(--art-side); display:none; flex-wrap:nowrap; gap:6px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
     #dyn-filter-bar::-webkit-scrollbar { display:none; }
     .dfc { padding:4px 12px; border:.5px solid var(--border); background:#fff; font-size:10px; font-weight:500; letter-spacing:.8px; text-transform:uppercase; cursor:pointer; transition:all .15s; white-space:nowrap; flex-shrink:0; }
     .dfc:hover { border-color:var(--black); }
@@ -230,16 +228,29 @@
     var _all=[], _filter='te-gjitha';
     var _det={artIdx:0,photoIdx:0,articles:[]};
 
+    function syncWrapH(){
+      var wrap=document.getElementById('filter-bar-wrap');
+      var bar=document.getElementById('dyn-filter-bar');
+      if(!wrap||!bar) return;
+      if(bar.style.display==='none'||bar.style.display===''){
+        wrap._openH=0; if(!wrap._scrollHidden) wrap.style.maxHeight='0'; return;
+      }
+      var h=bar.offsetHeight;
+      wrap._openH=h;
+      if(!wrap._scrollHidden) wrap.style.maxHeight=h+'px';
+    }
+
     function renderFilterBar(list,active){
       var bar=document.getElementById('dyn-filter-bar');
       var kats=[];
       list.forEach(function(a){ var k=a.kat||''; if(k&&!kats.includes(k)) kats.push(k); });
-      if(!kats.length){ bar.style.display='none'; return; }
+      if(!kats.length){ bar.style.display='none'; syncWrapH(); return; }
       bar.style.display='flex';
       bar.innerHTML=['te-gjitha'].concat(kats).map(function(k){
         var lbl=k==='te-gjitha'?'Të Gjitha':k;
         return '<button class="dfc'+(active===k?' active':'')+'" onclick="applyFilter(\''+k.replace(/'/g,"\\'")+'\')">'+lbl+'</button>';
       }).join('');
+      syncWrapH();
     }
 
     function renderGrid(list,filter){
@@ -373,7 +384,7 @@
     }catch(e){}
   })();
 
-  /* Filter bar — sticky below hero, same scroll hide/show as navbar */
+  /* Filter bar — sticky below hero, hide on scroll down / show on scroll up */
   (function(){
     var wrap=document.getElementById('filter-bar-wrap');
     if(!wrap) return;
@@ -382,8 +393,13 @@
       if(!ticking){
         requestAnimationFrame(function(){
           var y=window.scrollY;
-          if(y>lastY && y>80){ wrap.classList.add('fb-hidden'); }
-          else { wrap.classList.remove('fb-hidden'); }
+          if(y>lastY && y>80){
+            wrap._scrollHidden=true;
+            wrap.style.maxHeight='0';
+          } else {
+            wrap._scrollHidden=false;
+            wrap.style.maxHeight=(wrap._openH||0)+'px';
+          }
           lastY=y; ticking=false;
         });
         ticking=true;
