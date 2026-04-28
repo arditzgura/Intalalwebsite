@@ -17,10 +17,9 @@
     .pg-breadcrumb .sep { color:var(--border); }
     .pg-breadcrumb .cur { color:var(--black); text-transform:uppercase; }
     #pg-count { font-size:11px; color:var(--muted); letter-spacing:1px; white-space:nowrap; }
-    #filter-bar-wrap { position:sticky; top:var(--navbar-h); z-index:99; height:0; overflow:visible; }
-    #dyn-filter-bar { position:absolute; left:0; right:0; top:0; background:#fff; border-bottom:.5px solid var(--border); padding:0 var(--art-side); display:none; flex-direction:column; transform:translateY(0); transition:transform 0.35s ease; }
+    #dyn-filter-bar { position:fixed; top:var(--navbar-h); left:0; right:0; z-index:99; background:#fff; border-bottom:.5px solid var(--border); padding:0 var(--art-side); display:none; flex-direction:column; transform:translateY(0); transition:transform 0.35s ease; }
     #dyn-filter-bar.fb-hidden { transform:translateY(-100%); }
-    #filter-bar-spacer { transition:height 0.35s ease; }
+    #filter-bar-spacer { }
     .dfc-row { display:flex; flex-wrap:nowrap; gap:6px; padding:8px 0; align-items:center; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
     .dfc-row::-webkit-scrollbar { display:none; }
     .dfc-row-sub { gap:2px; }
@@ -111,8 +110,6 @@
     </div>
   </div>
 
-  <!-- Filter bar — sticky below hero -->
-  <div id="filter-bar-wrap"><div id="dyn-filter-bar"></div></div>
   <div id="filter-bar-spacer" style="height:0;"></div>
 
   <!-- Page header -->
@@ -358,11 +355,9 @@
       var spacer=document.getElementById('filter-bar-spacer');
       if(!bar||!spacer) return;
       if(bar.style.display==='none'||bar.style.display===''){
-        spacer.style.height='0'; bar._h=0; return;
+        spacer.style.height='0'; return;
       }
-      var h=bar.offsetHeight;
-      bar._h=h;
-      if(!bar.classList.contains('fb-hidden')) spacer.style.height=h+'px';
+      spacer.style.height=bar.offsetHeight+'px';
     }
 
     // Filter bar for category view (by kat)
@@ -508,7 +503,7 @@
     }
 
     function scrollToGrid(){
-      var target=document.getElementById('filter-bar-wrap')||document.getElementById('pg-header');
+      var target=document.getElementById('filter-bar-spacer')||document.getElementById('pg-header');
       if(!target) return;
       var navbar=document.querySelector('.navbar');
       var navH=navbar?navbar.offsetHeight:55;
@@ -718,27 +713,25 @@
     }catch(e){}
   })();
 
-  /* Filter bar — hide on scroll down, show on scroll up (same as navbar) */
+  /* Filter bar scroll — identical logic to navbar (js/main.js) */
   (function(){
     var bar=document.getElementById('dyn-filter-bar');
-    var spacer=document.getElementById('filter-bar-spacer');
-    if(!bar||!spacer) return;
+    if(!bar) return;
     var lastY=window.scrollY, ticking=false;
     window.addEventListener('scroll',function(){
       if(!ticking){
         requestAnimationFrame(function(){
-          var y=window.scrollY;
-          var delta=y-lastY;
-          if(Math.abs(delta)>2 && bar.style.display&&bar.style.display!=='none'){
-            if(delta>0 && y>80){ // scroll down → hide
+          var currentY=window.scrollY;
+          var scrolledDown=currentY>lastY;
+          var pastThreshold=currentY>80;
+          if(bar.style.display&&bar.style.display!=='none'){
+            if(scrolledDown&&pastThreshold){
               bar.classList.add('fb-hidden');
-              spacer.style.height='0';
-            } else if(delta<0){ // scroll up → show
+            } else {
               bar.classList.remove('fb-hidden');
-              spacer.style.height=(bar._h||0)+'px';
             }
           }
-          lastY=y; ticking=false;
+          lastY=currentY; ticking=false;
         });
         ticking=true;
       }

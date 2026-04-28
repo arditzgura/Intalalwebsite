@@ -26,10 +26,9 @@
     :root { --art-side: 180px; }
     @media(max-width:900px){ :root { --art-side: 60px; } }
     @media(max-width:600px){ :root { --art-side: 20px; } }
-    #filter-bar-wrap { position:sticky; top:var(--navbar-h); z-index:99; height:0; overflow:visible; }
-    #dyn-filter-bar { position:absolute; left:0; right:0; top:0; background:#fff; border-bottom:.5px solid var(--border); padding:8px var(--art-side); display:none; flex-wrap:nowrap; gap:6px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; transform:translateY(0); transition:transform 0.35s ease; }
+    #dyn-filter-bar { position:fixed; top:var(--navbar-h); left:0; right:0; z-index:99; background:#fff; border-bottom:.5px solid var(--border); padding:8px var(--art-side); display:none; flex-wrap:nowrap; gap:6px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; transform:translateY(0); transition:transform 0.35s ease; }
     #dyn-filter-bar.fb-hidden { transform:translateY(-100%); }
-    #filter-bar-spacer { transition:height 0.35s ease; }
+    #filter-bar-spacer { }
     #dyn-filter-bar::-webkit-scrollbar { display:none; }
     .dfc { padding:4px 12px; border:.5px solid var(--border); background:#fff; font-size:10px; font-weight:500; letter-spacing:.8px; text-transform:uppercase; cursor:pointer; transition:all .15s; white-space:nowrap; flex-shrink:0; }
     .dfc:hover { border-color:var(--black); }
@@ -101,8 +100,7 @@
     </div>
   </div>
 
-  <!-- Filter bar — sticky below hero -->
-  <div id="filter-bar-wrap"><div id="dyn-filter-bar"></div></div>
+  <div id="dyn-filter-bar"></div>
   <div id="filter-bar-spacer" style="height:0;"></div>
 
   <!-- Page header -->
@@ -236,11 +234,9 @@
       var spacer=document.getElementById('filter-bar-spacer');
       if(!bar||!spacer) return;
       if(bar.style.display==='none'||bar.style.display===''){
-        spacer.style.height='0'; bar._h=0; return;
+        spacer.style.height='0'; return;
       }
-      var h=bar.offsetHeight;
-      bar._h=h;
-      if(!bar.classList.contains('fb-hidden')) spacer.style.height=h+'px';
+      spacer.style.height=bar.offsetHeight+'px';
     }
 
     function renderFilterBar(list,active){
@@ -387,27 +383,25 @@
     }catch(e){}
   })();
 
-  /* Filter bar — hide on scroll down, show on scroll up (same as navbar) */
+  /* Filter bar scroll — identical logic to navbar (js/main.js) */
   (function(){
     var bar=document.getElementById('dyn-filter-bar');
-    var spacer=document.getElementById('filter-bar-spacer');
-    if(!bar||!spacer) return;
+    if(!bar) return;
     var lastY=window.scrollY, ticking=false;
     window.addEventListener('scroll',function(){
       if(!ticking){
         requestAnimationFrame(function(){
-          var y=window.scrollY;
-          var delta=y-lastY;
-          if(Math.abs(delta)>2 && bar.style.display&&bar.style.display!=='none'){
-            if(delta>0 && y>80){ // scroll down → hide
+          var currentY=window.scrollY;
+          var scrolledDown=currentY>lastY;
+          var pastThreshold=currentY>80;
+          if(bar.style.display&&bar.style.display!=='none'){
+            if(scrolledDown&&pastThreshold){
               bar.classList.add('fb-hidden');
-              spacer.style.height='0';
-            } else if(delta<0){ // scroll up → show
+            } else {
               bar.classList.remove('fb-hidden');
-              spacer.style.height=(bar._h||0)+'px';
             }
           }
-          lastY=y; ticking=false;
+          lastY=currentY; ticking=false;
         });
         ticking=true;
       }
