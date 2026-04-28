@@ -342,13 +342,14 @@
 
     // Init — sync from Supabase if cache empty, then render
     (async function(){
-      await sbSyncCache();
+      var refreshed = await sbSyncCache();
       var pageRefreshed = await sbSyncLocal('page_pel_v1','intal_pel_page_v1');
       var data=loadData();
       _all=data&&data.pelhurat?data.pelhurat:[];
       renderFilterBar(_all,'te-gjitha');
       renderGrid(_all,'te-gjitha');
       if(pageRefreshed) location.reload();
+      else if(refreshed){ data=loadData(); _all=data&&data.pelhurat?data.pelhurat:[]; renderFilterBar(_all,'te-gjitha'); renderGrid(_all,'te-gjitha'); }
     })();
   })();
   </script>

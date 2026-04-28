@@ -32,8 +32,8 @@
 })();
 
 /* ── Filter bar scroll hide / show — all screen sizes ───────── */
-/* Hide on scroll up, show on scroll down — same logic as navbar  */
-(function () {
+/* Hide on scroll down, show on scroll up — same logic as navbar  */
+document.addEventListener('DOMContentLoaded', function () {
   const bar = document.getElementById('dyn-filter-bar');
   const spacer = document.getElementById('filter-bar-spacer');
   if (!bar) return;
@@ -79,7 +79,7 @@
       ticking = true;
     }
   }, { passive: true });
-})();
+});
 
 /* ── Menu drawer ────────────────────────────────────────────── */
 function openMenuDrawer() {
