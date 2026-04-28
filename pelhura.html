@@ -26,9 +26,10 @@
     :root { --art-side: 180px; }
     @media(max-width:900px){ :root { --art-side: 60px; } }
     @media(max-width:600px){ :root { --art-side: 20px; } }
-    #filter-bar-wrap { position:sticky; top:var(--navbar-h); z-index:99; background:#fff; border-bottom:.5px solid var(--border); overflow:hidden; max-height:120px; transition:max-height 0.35s ease, border-color 0.35s ease; }
-    #filter-bar-wrap.fb-hidden { max-height:0; border-color:transparent; }
-    #dyn-filter-bar { padding:8px var(--art-side); display:none; flex-wrap:nowrap; gap:6px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; border-bottom:none; }
+    #filter-bar-wrap { position:sticky; top:var(--navbar-h); z-index:99; overflow:hidden; max-height:200px; transition:max-height 0.32s cubic-bezier(0.4,0,0.2,1); }
+    #filter-bar-wrap.fb-hidden { max-height:0; }
+    #dyn-filter-bar { background:#fff; border-bottom:.5px solid var(--border); transform:translateY(0); transition:transform 0.32s cubic-bezier(0.4,0,0.2,1); padding:8px var(--art-side); display:none; flex-wrap:nowrap; gap:6px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+    #filter-bar-wrap.fb-hidden #dyn-filter-bar { transform:translateY(-100%); }
     #dyn-filter-bar::-webkit-scrollbar { display:none; }
     .dfc { padding:4px 12px; border:.5px solid var(--border); background:#fff; font-size:10px; font-weight:500; letter-spacing:.8px; text-transform:uppercase; cursor:pointer; transition:all .15s; white-space:nowrap; flex-shrink:0; }
     .dfc:hover { border-color:var(--black); }
