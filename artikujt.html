@@ -462,6 +462,14 @@
       }
     }
 
+    function scrollToGrid(){
+      var grid=document.getElementById('dyn-grid');
+      if(!grid) return;
+      var top=grid.getBoundingClientRect().top+window.scrollY;
+      document.documentElement.style.scrollBehavior='auto';
+      window.scrollTo(0, top);
+    }
+
     // Filter for category view (by kat)
     window.applyFilter=function(f){
       _state.filter=f;
@@ -469,7 +477,7 @@
       renderGrid(_state.articles,f);
       renderBreadcrumb(_state.cat,f);
       setHash(_state.cat,f);
-      window.scrollTo(0,0);
+      scrollToGrid();
     };
 
     // Level-1 filter: sub category (Meshkuj, Femra...) — klik sërish e çaktivizon
@@ -479,7 +487,7 @@
       setHash(newSub==='te-gjitha'?'':newSub,'te-gjitha',true);
       renderFilterBarAll(_state.allArticles,newSub,'te-gjitha');
       renderGridAll(_state.allArticles,newSub,'te-gjitha');
-      window.scrollTo(0,0);
+      scrollToGrid();
     };
 
     // Level-2 filter: kat (Mbathje, Kanatjere...)
@@ -488,7 +496,7 @@
       setHash(_state.activeSub==='te-gjitha'?'':_state.activeSub,kat,true);
       renderFilterBarAll(_state.allArticles,_state.activeSub,kat);
       renderGridAll(_state.allArticles,_state.activeSub,kat);
-      window.scrollTo(0,0);
+      scrollToGrid();
     };
 
     window.hoverEnter=function(wrap){

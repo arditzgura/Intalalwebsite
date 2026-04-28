@@ -266,7 +266,9 @@
     }
 
     window.applyFilter=function(f){
-      _filter=f; renderFilterBar(_all,f); renderGrid(_all,f); window.scrollTo(0,0);
+      _filter=f; renderFilterBar(_all,f); renderGrid(_all,f);
+      var grid=document.getElementById('dyn-grid');
+      if(grid){ document.documentElement.style.scrollBehavior='auto'; window.scrollTo(0,grid.getBoundingClientRect().top+window.scrollY); }
     };
 
     window.cardStep=function(e,btn,dir){
