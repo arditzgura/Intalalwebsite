@@ -7,7 +7,7 @@
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
   <link rel="stylesheet" href="css/main.css">
   <style>
-    .pg-header { padding:clamp(20px,2.5vw,36px) var(--side) clamp(12px,1.5vw,20px); border-bottom:.5px solid var(--border); display:flex; align-items:baseline; justify-content:space-between; gap:12px; }
+    .pg-header { padding:10px var(--side) 8px; border-bottom:.5px solid var(--border); display:flex; align-items:baseline; justify-content:space-between; gap:12px; }
     .pg-breadcrumb { display:flex; align-items:center; gap:6px; font-size:12px; font-weight:500; letter-spacing:.5px; }
     .pg-breadcrumb a { color:var(--muted); text-decoration:none; text-transform:uppercase; transition:color .15s; }
     .pg-breadcrumb a:hover { color:var(--black); }
@@ -33,7 +33,7 @@
     .dfc { padding:4px 12px; border:.5px solid var(--border); background:#fff; font-size:10px; font-weight:500; letter-spacing:.8px; text-transform:uppercase; cursor:pointer; transition:all .15s; white-space:nowrap; flex-shrink:0; }
     .dfc:hover { border-color:var(--black); }
     .dfc.active { background:var(--black); color:#fff; border-color:var(--black); }
-    #dyn-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; padding:24px var(--art-side) 60px; }
+    #dyn-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; padding:16px var(--art-side) 60px; }
     @media(max-width:900px){ #dyn-grid { grid-template-columns:repeat(3,1fr); } }
     @media(max-width:600px){ #dyn-grid { grid-template-columns:repeat(2,1fr); gap:10px; padding:14px 14px 50px; } #dyn-filter-bar { padding:10px 14px; } }
     .art-card { cursor:pointer; position:relative; }
@@ -267,8 +267,8 @@
 
     window.applyFilter=function(f){
       _filter=f; renderFilterBar(_all,f); renderGrid(_all,f);
-      var grid=document.getElementById('dyn-grid');
-      if(grid){ document.documentElement.style.scrollBehavior='auto'; window.scrollTo(0,grid.getBoundingClientRect().top+window.scrollY); }
+      var hdr=document.getElementById('pg-header')||document.getElementById('dyn-grid');
+      if(hdr){ document.documentElement.style.scrollBehavior='auto'; window.scrollTo(0,hdr.getBoundingClientRect().top+window.scrollY); }
     };
 
     window.cardStep=function(e,btn,dir){
