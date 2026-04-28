@@ -20,6 +20,7 @@
     #pg-count { font-size:11px; color:var(--muted); letter-spacing:1px; white-space:nowrap; }
     #dyn-filter-bar { position:fixed; top:var(--navbar-h); left:0; right:0; z-index:99; background:#fff; border-bottom:.5px solid var(--border); padding:0 var(--art-side); display:none; flex-direction:column; transform:translateY(0); transition:transform 0.35s ease; will-change:transform; }
     #dyn-filter-bar.fb-hidden { transform:translateY(-100%); }
+    @media(max-width:600px){ #dyn-filter-bar { padding:0 14px; } }
     .dfc-row { display:flex; flex-wrap:nowrap; gap:6px; padding:8px 0; align-items:center; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
     .dfc-row::-webkit-scrollbar { display:none; }
     .dfc-row-sub { gap:2px; }
@@ -109,9 +110,6 @@
       <p class="art-page-hero-sub" id="art-page-hero-sub"></p>
     </div>
   </div>
-
-  <div id="dyn-filter-bar"></div>
-  <div id="filter-bar-spacer" style="height:0;"></div>
 
   <!-- Page header -->
   <div class="pg-header" id="pg-header">
@@ -353,14 +351,14 @@
 
     function syncWrapH(){
       var bar=document.getElementById('dyn-filter-bar');
-      var spacer=document.getElementById('filter-bar-spacer');
+      var hdr=document.getElementById('pg-header');
       if(!bar) return;
       if(bar.style.display==='none'||bar.style.display===''){
-        if(spacer) spacer.style.height='0'; bar._openH=0; return;
+        if(hdr) hdr.style.paddingTop=''; bar._openH=0; return;
       }
       requestAnimationFrame(function(){
         bar._openH=bar.offsetHeight;
-        if(spacer) spacer.style.height=bar._openH+'px';
+        if(hdr) hdr.style.paddingTop=bar._openH+'px';
         if(window._fbResetScroll) window._fbResetScroll();
       });
     }
@@ -508,7 +506,7 @@
     }
 
     function scrollToGrid(){
-      var target=document.getElementById('filter-bar-spacer')||document.getElementById('pg-header');
+      var target=document.getElementById('pg-header');
       if(!target) return;
       var navbar=document.querySelector('.navbar');
       var navH=navbar?navbar.offsetHeight:55;
@@ -741,6 +739,9 @@
     </svg>
   </a>
 </div>
+
+<!-- Filter bar — fixed below navbar, same as navbar behavior -->
+<div id="dyn-filter-bar"></div>
 
 </body>
 </html>

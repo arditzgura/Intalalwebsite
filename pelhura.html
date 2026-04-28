@@ -100,9 +100,6 @@
     </div>
   </div>
 
-  <div id="dyn-filter-bar"></div>
-  <div id="filter-bar-spacer" style="height:0;"></div>
-
   <!-- Page header -->
   <div class="pg-header" id="pg-header">
     <div class="pg-breadcrumb" id="pg-breadcrumb">
@@ -231,14 +228,14 @@
 
     function syncWrapH(){
       var bar=document.getElementById('dyn-filter-bar');
-      var spacer=document.getElementById('filter-bar-spacer');
+      var hdr=document.getElementById('pg-header');
       if(!bar) return;
       if(bar.style.display==='none'||bar.style.display===''){
-        if(spacer) spacer.style.height='0'; bar._openH=0; return;
+        if(hdr) hdr.style.paddingTop=''; bar._openH=0; return;
       }
       requestAnimationFrame(function(){
         bar._openH=bar.offsetHeight;
-        if(spacer) spacer.style.height=bar._openH+'px';
+        if(hdr) hdr.style.paddingTop=bar._openH+'px';
         if(window._fbResetScroll) window._fbResetScroll();
       });
     }
@@ -410,6 +407,9 @@
     </svg>
   </a>
 </div>
+
+<!-- Filter bar — fixed below navbar -->
+<div id="dyn-filter-bar"></div>
 
 </body>
 </html>
