@@ -35,18 +35,18 @@
 /* Hide on scroll up, show on scroll down — same logic as navbar  */
 (function () {
   const bar = document.getElementById('dyn-filter-bar');
-  const hdr = document.getElementById('pg-header');
+  const spacer = document.getElementById('filter-bar-spacer');
   if (!bar) return;
   let lastY = window.scrollY;
   let ticking = false;
 
   function hideBar() {
     bar.classList.add('fb-hidden');
-    if (hdr) hdr.style.paddingTop = '0';
+    if (spacer) spacer.style.height = '0';
   }
   function showBar() {
     bar.classList.remove('fb-hidden');
-    if (hdr && bar._openH) hdr.style.paddingTop = bar._openH + 'px';
+    if (spacer && bar._openH) spacer.style.height = bar._openH + 'px';
   }
 
   window._fbResetScroll = function () {
