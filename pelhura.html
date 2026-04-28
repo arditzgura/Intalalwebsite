@@ -26,8 +26,11 @@
     :root { --art-side: 180px; }
     @media(max-width:900px){ :root { --art-side: 60px; } }
     @media(max-width:600px){ :root { --art-side: 20px; } }
-    #filter-bar-wrap { position:sticky; top:var(--navbar-h); z-index:99; overflow:hidden; max-height:0; transition:max-height 0.35s ease; }
+    #filter-bar-wrap { position:fixed; top:var(--navbar-h); left:0; right:0; z-index:99; transform:translateY(0); transition:transform 0.35s ease; pointer-events:none; }
+    #filter-bar-wrap.fb-active { pointer-events:auto; }
+    #filter-bar-wrap.fb-hidden { transform:translateY(-100%); }
     #dyn-filter-bar { background:#fff; border-bottom:.5px solid var(--border); padding:8px var(--art-side); display:none; flex-wrap:nowrap; gap:6px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+    #filter-bar-spacer { transition:height 0.35s ease; }
     #dyn-filter-bar::-webkit-scrollbar { display:none; }
     .dfc { padding:4px 12px; border:.5px solid var(--border); background:#fff; font-size:10px; font-weight:500; letter-spacing:.8px; text-transform:uppercase; cursor:pointer; transition:all .15s; white-space:nowrap; flex-shrink:0; }
     .dfc:hover { border-color:var(--black); }
@@ -99,8 +102,9 @@
     </div>
   </div>
 
-  <!-- Filter bar — sticky below hero -->
+  <!-- Filter bar — fixed below navbar -->
   <div id="filter-bar-wrap"><div id="dyn-filter-bar"></div></div>
+  <div id="filter-bar-spacer" style="height:0;"></div>
 
   <!-- Page header -->
   <div class="pg-header" id="pg-header">
@@ -231,13 +235,16 @@
     function syncWrapH(){
       var wrap=document.getElementById('filter-bar-wrap');
       var bar=document.getElementById('dyn-filter-bar');
+      var spacer=document.getElementById('filter-bar-spacer');
       if(!wrap||!bar) return;
       if(bar.style.display==='none'||bar.style.display===''){
-        wrap._openH=0; if(!wrap._scrollHidden) wrap.style.maxHeight='0'; return;
+        wrap._openH=0; wrap.classList.remove('fb-active');
+        if(spacer) spacer.style.height='0'; return;
       }
       var h=bar.offsetHeight;
       wrap._openH=h;
-      if(!wrap._scrollHidden) wrap.style.maxHeight=h+'px';
+      wrap.classList.add('fb-active');
+      if(spacer && !wrap._scrollHidden) spacer.style.height=h+'px';
     }
 
     function renderFilterBar(list,active){
@@ -384,9 +391,10 @@
     }catch(e){}
   })();
 
-  /* Filter bar — sticky below hero, hide on scroll down / show on scroll up */
+  /* Filter bar — fixed below navbar, same hide/show as navbar */
   (function(){
     var wrap=document.getElementById('filter-bar-wrap');
+    var spacer=document.getElementById('filter-bar-spacer');
     if(!wrap) return;
     var lastY=window.scrollY, ticking=false;
     window.addEventListener('scroll',function(){
@@ -397,10 +405,12 @@
           if(Math.abs(delta)<2){ ticking=false; return; }
           if(delta<0){ // scroll up → show
             wrap._scrollHidden=false;
-            wrap.style.maxHeight=(wrap._openH||0)+'px';
+            wrap.classList.remove('fb-hidden');
+            if(spacer) spacer.style.height=(wrap._openH||0)+'px';
           } else if(delta>0 && y>80){ // scroll down → hide
             wrap._scrollHidden=true;
-            wrap.style.maxHeight='0';
+            wrap.classList.add('fb-hidden');
+            if(spacer) spacer.style.height='0';
           }
           lastY=y; ticking=false;
         });
