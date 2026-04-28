@@ -31,16 +31,14 @@
   }, { passive: true });
 })();
 
-/* ── Filter bar scroll hide / show ──────────────────────────── */
-/* Mobile: hide on scroll up, show on scroll down (same as navbar) */
-/* Desktop (>900px): always visible, sticky in-flow               */
+/* ── Filter bar scroll hide / show — all screen sizes ───────── */
+/* Hide on scroll up, show on scroll down — same logic as navbar  */
 (function () {
   const bar = document.getElementById('dyn-filter-bar');
   const spacer = document.getElementById('filter-bar-spacer');
   if (!bar) return;
   let lastY = window.scrollY;
   let ticking = false;
-  const MOBILE = () => window.innerWidth <= 900;
 
   function hideBar() {
     bar.classList.add('fb-hidden');
@@ -48,7 +46,7 @@
   }
   function showBar() {
     bar.classList.remove('fb-hidden');
-    if (spacer && MOBILE()) spacer.style.height = (bar._openH || bar.offsetHeight) + 'px';
+    if (spacer) spacer.style.height = (bar._openH || bar.offsetHeight) + 'px';
   }
 
   window._fbResetScroll = function () {
@@ -60,15 +58,11 @@
     if (!ticking) {
       requestAnimationFrame(function () {
         const currentY = window.scrollY;
+        const scrolledUp = currentY < lastY;
+        const pastThreshold = currentY > 80;
 
-        if (MOBILE()) {
-          const scrolledUp = currentY < lastY;
-          const pastThreshold = currentY > 80;
-          if (scrolledUp && pastThreshold) {
-            hideBar();
-          } else {
-            showBar();
-          }
+        if (scrolledUp && pastThreshold) {
+          hideBar();
         } else {
           showBar();
         }
