@@ -730,10 +730,10 @@
           var y=window.scrollY;
           var delta=y-lastY;
           if(Math.abs(delta)>2 && bar.style.display&&bar.style.display!=='none'){
-            if(delta>0 && y>80){ // scroll down → hide
+            if(delta<0 && y>80){ // scroll up → hide
               bar.classList.add('fb-hidden');
               spacer.style.height='0';
-            } else if(delta<0){ // scroll up → show
+            } else if(delta>0){ // scroll down → show
               bar.classList.remove('fb-hidden');
               spacer.style.height=(bar._h||0)+'px';
             }
