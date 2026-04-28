@@ -58,10 +58,10 @@
     if (!ticking) {
       requestAnimationFrame(function () {
         const currentY = window.scrollY;
-        const scrolledUp = currentY < lastY;
+        const scrolledDown = currentY > lastY;
         const pastThreshold = currentY > 80;
 
-        if (scrolledUp && pastThreshold) {
+        if (scrolledDown && pastThreshold) {
           hideBar();
         } else {
           showBar();
