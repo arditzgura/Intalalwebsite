@@ -26,7 +26,7 @@
     :root { --art-side: 180px; }
     @media(max-width:900px){ :root { --art-side: 60px; } }
     @media(max-width:600px){ :root { --art-side: 20px; } }
-    #filter-bar-wrap { position:fixed; top:var(--navbar-h); left:0; right:0; z-index:99; background:#fff; border-bottom:.5px solid var(--border); transform:translateY(0); transition:transform 0.35s ease; }
+    #filter-bar-wrap { position:sticky; top:var(--navbar-h); z-index:99; background:#fff; border-bottom:.5px solid var(--border); transform:translateY(0); transition:transform 0.35s ease; }
     #filter-bar-wrap.fb-hidden { transform:translateY(-100%); }
     #dyn-filter-bar { padding:8px var(--art-side); display:none; flex-wrap:nowrap; gap:6px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; border-bottom:none; }
     #dyn-filter-bar::-webkit-scrollbar { display:none; }
@@ -100,17 +100,16 @@
     </div>
   </div>
 
+  <!-- Filter bar — sticky below hero -->
+  <div id="filter-bar-wrap"><div id="dyn-filter-bar"></div></div>
+
   <!-- Page header -->
-  <div class="pg-header">
+  <div class="pg-header" id="pg-header">
     <div class="pg-breadcrumb" id="pg-breadcrumb">
       <a href="index.html">Home</a><span class="sep">/</span><span class="cur">Pelhura</span>
     </div>
     <span id="pg-count"></span>
   </div>
-
-  <!-- Filter bar (fixed, like navbar) -->
-  <div id="filter-bar-wrap"><div id="dyn-filter-bar"></div></div>
-  <div id="filter-bar-spacer"></div>
 
   <!-- Grid -->
   <div id="dyn-grid"></div>
@@ -267,8 +266,8 @@
 
     window.applyFilter=function(f){
       _filter=f; renderFilterBar(_all,f); renderGrid(_all,f);
-      var hdr=document.getElementById('pg-header')||document.getElementById('dyn-grid');
-      if(hdr){ var navH=(document.querySelector('.navbar')||{offsetHeight:55}).offsetHeight; document.documentElement.style.scrollBehavior='auto'; window.scrollTo(0,hdr.getBoundingClientRect().top+window.scrollY-navH); }
+      var target=document.getElementById('filter-bar-wrap')||document.getElementById('dyn-grid');
+      if(target){ var navH=(document.querySelector('.navbar')||{offsetHeight:55}).offsetHeight; document.documentElement.style.scrollBehavior='auto'; window.scrollTo(0,target.getBoundingClientRect().top+window.scrollY-navH); }
     };
 
     window.cardStep=function(e,btn,dir){
@@ -373,19 +372,10 @@
     }catch(e){}
   })();
 
-  /* Filter bar — fixed like navbar, same scroll hide/show logic */
+  /* Filter bar — sticky below hero, same scroll hide/show as navbar */
   (function(){
     var wrap=document.getElementById('filter-bar-wrap');
-    var spacer=document.getElementById('filter-bar-spacer');
     if(!wrap) return;
-
-    function syncSpacer(){
-      spacer.style.height = (wrap.offsetHeight||0)+'px';
-    }
-    var ro=window.ResizeObserver?new ResizeObserver(syncSpacer):null;
-    if(ro) ro.observe(wrap);
-    syncSpacer();
-
     var lastY=window.scrollY, ticking=false;
     window.addEventListener('scroll',function(){
       if(!ticking){

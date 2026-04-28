@@ -17,7 +17,7 @@
     .pg-breadcrumb .sep { color:var(--border); }
     .pg-breadcrumb .cur { color:var(--black); text-transform:uppercase; }
     #pg-count { font-size:11px; color:var(--muted); letter-spacing:1px; white-space:nowrap; }
-    #filter-bar-wrap { position:fixed; top:var(--navbar-h); left:0; right:0; z-index:99; background:#fff; border-bottom:.5px solid var(--border); transform:translateY(0); transition:transform 0.35s ease; }
+    #filter-bar-wrap { position:sticky; top:var(--navbar-h); z-index:99; background:#fff; border-bottom:.5px solid var(--border); transform:translateY(0); transition:transform 0.35s ease; }
     #filter-bar-wrap.fb-hidden { transform:translateY(-100%); }
     #dyn-filter-bar { border-bottom:none; }
     #dyn-filter-bar { padding:0 var(--art-side); border-bottom:.5px solid var(--border); display:none; flex-direction:column; }
@@ -111,15 +111,14 @@
     </div>
   </div>
 
+  <!-- Filter bar — sticky below hero -->
+  <div id="filter-bar-wrap"><div id="dyn-filter-bar"></div></div>
+
   <!-- Page header -->
-  <div class="pg-header">
+  <div class="pg-header" id="pg-header">
     <div class="pg-breadcrumb" id="pg-breadcrumb"></div>
     <span id="pg-count"></span>
   </div>
-
-  <!-- Filter bar (fixed, like navbar) -->
-  <div id="filter-bar-wrap"><div id="dyn-filter-bar"></div></div>
-  <div id="filter-bar-spacer"></div>
 
   <!-- Article grid -->
   <div id="dyn-grid"></div>
@@ -494,11 +493,11 @@
     }
 
     function scrollToGrid(){
-      var hdr=document.getElementById('pg-header')||document.getElementById('dyn-grid');
-      if(!hdr) return;
+      var target=document.getElementById('filter-bar-wrap')||document.getElementById('pg-header');
+      if(!target) return;
       var navbar=document.querySelector('.navbar');
       var navH=navbar?navbar.offsetHeight:55;
-      var top=hdr.getBoundingClientRect().top+window.scrollY-navH;
+      var top=target.getBoundingClientRect().top+window.scrollY-navH;
       document.documentElement.style.scrollBehavior='auto';
       window.scrollTo(0, top);
     }
@@ -704,20 +703,10 @@
     }catch(e){}
   })();
 
-  /* Filter bar — fixed like navbar, same scroll hide/show logic */
+  /* Filter bar — sticky below hero, same scroll hide/show as navbar */
   (function(){
     var wrap=document.getElementById('filter-bar-wrap');
-    var spacer=document.getElementById('filter-bar-spacer');
     if(!wrap) return;
-
-    function syncSpacer(){
-      spacer.style.height = (wrap.offsetHeight||0)+'px';
-    }
-    /* Update spacer whenever bar content changes */
-    var ro=window.ResizeObserver?new ResizeObserver(syncSpacer):null;
-    if(ro) ro.observe(wrap);
-    syncSpacer();
-
     var lastY=window.scrollY, ticking=false;
     window.addEventListener('scroll',function(){
       if(!ticking){
