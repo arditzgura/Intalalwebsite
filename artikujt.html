@@ -20,15 +20,16 @@
     #filter-bar-wrap { position:sticky; top:var(--navbar-h); z-index:99; background:#fff; overflow:hidden; max-height:200px; transition:max-height .32s ease; }
     #filter-bar-wrap.fb-hidden { max-height:0; }
     #dyn-filter-bar { padding:0 var(--art-side); border-bottom:.5px solid var(--border); display:none; flex-direction:column; }
-    .dfc-row { display:flex; flex-wrap:wrap; gap:8px; padding:10px 0; align-items:center; }
-    .dfc-row-sub { gap:4px; }
-    .dfc-share { margin-left:auto; display:flex; align-items:center; gap:5px; background:none; border:none; cursor:pointer; font-size:10px; font-weight:500; letter-spacing:1px; text-transform:uppercase; color:var(--muted); padding:4px 0; flex-shrink:0; transition:color .15s; }
+    .dfc-row { display:flex; flex-wrap:nowrap; gap:6px; padding:8px 0; align-items:center; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+    .dfc-row::-webkit-scrollbar { display:none; }
+    .dfc-row-sub { gap:2px; }
+    .dfc-share { margin-left:auto; display:flex; align-items:center; gap:4px; background:none; border:none; cursor:pointer; font-size:9px; font-weight:500; letter-spacing:1px; text-transform:uppercase; color:var(--muted); padding:4px 0; flex-shrink:0; transition:color .15s; }
     .dfc-share:hover { color:var(--black); }
-    .dfc-share i { font-size:14px; }
-    .dfc-sub { background:none; border:none; padding:4px 10px; font-size:10px; font-weight:500; letter-spacing:1px; text-transform:uppercase; cursor:pointer; color:var(--muted); transition:color .15s; }
+    .dfc-share i { font-size:13px; }
+    .dfc-sub { background:none; border:none; padding:3px 8px; font-size:9px; font-weight:500; letter-spacing:.8px; text-transform:uppercase; cursor:pointer; color:var(--muted); transition:color .15s; white-space:nowrap; flex-shrink:0; }
     .dfc-sub:hover { color:var(--black); }
     .dfc-sub.active { color:var(--black); text-decoration:underline; text-underline-offset:3px; }
-    .dfc { padding:5px 16px; border:.5px solid var(--border); background:#fff; font-size:11px; font-weight:500; letter-spacing:1px; text-transform:uppercase; cursor:pointer; transition:all .15s; }
+    .dfc { padding:4px 12px; border:.5px solid var(--border); background:#fff; font-size:10px; font-weight:500; letter-spacing:.8px; text-transform:uppercase; cursor:pointer; transition:all .15s; white-space:nowrap; flex-shrink:0; }
     .dfc:hover { border-color:var(--black); }
     .dfc.active { background:var(--black); color:#fff; border-color:var(--black); }
     #dyn-grid { display:none; grid-template-columns:repeat(4,1fr); gap:16px; padding:24px var(--art-side) 60px; }
@@ -667,7 +668,7 @@
       if(!ticking){
         requestAnimationFrame(function(){
           var y=window.scrollY;
-          if(y>lastY && y>80){ wrap.classList.add('fb-hidden'); }
+          if(y<lastY && y>80){ wrap.classList.add('fb-hidden'); }
           else { wrap.classList.remove('fb-hidden'); }
           lastY=y; ticking=false;
         });
