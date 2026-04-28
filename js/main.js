@@ -31,14 +31,16 @@
   }, { passive: true });
 })();
 
-/* ── Filter bar scroll hide / show (same logic as navbar) ───── */
+/* ── Filter bar scroll hide / show ──────────────────────────── */
+/* Mobile: same logic as navbar (hide on scroll down, show on scroll up) */
+/* Desktop (>900px): always visible                                       */
 (function () {
   const bar = document.getElementById('dyn-filter-bar');
   if (!bar) return;
   let lastY = window.scrollY;
   let ticking = false;
+  const MOBILE = () => window.innerWidth <= 900;
 
-  // called by syncWrapH() each time filter bar is rendered
   window._fbResetScroll = function () {
     lastY = window.scrollY;
     bar.classList.remove('fb-hidden');
@@ -48,11 +50,15 @@
     if (!ticking) {
       requestAnimationFrame(function () {
         const currentY = window.scrollY;
-        const scrolledDown = currentY > lastY;
-        const pastThreshold = currentY > 80;
 
-        if (scrolledDown && pastThreshold) {
-          bar.classList.add('fb-hidden');
+        if (MOBILE()) {
+          const scrolledDown = currentY > lastY;
+          const pastThreshold = currentY > 80;
+          if (scrolledDown && pastThreshold) {
+            bar.classList.add('fb-hidden');
+          } else {
+            bar.classList.remove('fb-hidden');
+          }
         } else {
           bar.classList.remove('fb-hidden');
         }
