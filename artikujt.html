@@ -725,12 +725,14 @@
       if(!ticking){
         requestAnimationFrame(function(){
           var y=window.scrollY;
-          if(y>lastY && y>80){
-            wrap._scrollHidden=true;
-            wrap.style.maxHeight='0';
-          } else {
+          var delta=y-lastY;
+          if(Math.abs(delta)<2){ ticking=false; return; }
+          if(delta<0){ // scroll up → show
             wrap._scrollHidden=false;
             wrap.style.maxHeight=(wrap._openH||0)+'px';
+          } else if(delta>0 && y>80){ // scroll down → hide
+            wrap._scrollHidden=true;
+            wrap.style.maxHeight='0';
           }
           lastY=y; ticking=false;
         });
