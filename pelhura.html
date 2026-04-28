@@ -26,9 +26,15 @@
     :root { --art-side: 180px; }
     @media(max-width:900px){ :root { --art-side: 60px; } }
     @media(max-width:600px){ :root { --art-side: 20px; } }
-    #dyn-filter-bar { position:fixed; top:var(--navbar-h); left:0; right:0; z-index:99; background:#fff; border-bottom:.5px solid var(--border); padding:8px var(--art-side); display:none; flex-wrap:nowrap; gap:6px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; transform:translateY(0); transition:transform 0.35s ease; will-change:transform; }
-    #dyn-filter-bar.fb-hidden { transform:translateY(-100%); }
-    #filter-bar-spacer { }
+    /* Desktop: sticky in-flow, always visible */
+    #dyn-filter-bar { position:sticky; top:var(--navbar-h); z-index:99; background:#fff; border-bottom:.5px solid var(--border); padding:8px var(--art-side); display:none; flex-wrap:nowrap; gap:6px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+    #filter-bar-spacer { display:none; }
+    /* Mobile: fixed + slide animation like navbar */
+    @media(max-width:900px){
+      #dyn-filter-bar { position:fixed; left:0; right:0; transform:translateY(0); transition:transform 0.35s ease; will-change:transform; }
+      #dyn-filter-bar.fb-hidden { transform:translateY(-100%); }
+      #filter-bar-spacer { display:block; }
+    }
     #dyn-filter-bar::-webkit-scrollbar { display:none; }
     .dfc { padding:4px 12px; border:.5px solid var(--border); background:#fff; font-size:10px; font-weight:500; letter-spacing:.8px; text-transform:uppercase; cursor:pointer; transition:all .15s; white-space:nowrap; flex-shrink:0; }
     .dfc:hover { border-color:var(--black); }
@@ -232,12 +238,13 @@
     function syncWrapH(){
       var bar=document.getElementById('dyn-filter-bar');
       var spacer=document.getElementById('filter-bar-spacer');
-      if(!bar||!spacer) return;
+      if(!bar) return;
+      var isMobile=window.innerWidth<=900;
       if(bar.style.display==='none'||bar.style.display===''){
-        spacer.style.height='0'; return;
+        if(spacer) spacer.style.height='0'; return;
       }
-      spacer.style.height=bar.offsetHeight+'px';
-      if(window._fbResetScroll) window._fbResetScroll();
+      if(spacer && isMobile) spacer.style.height=bar.offsetHeight+'px';
+      if(isMobile && window._fbResetScroll) window._fbResetScroll();
     }
 
     function renderFilterBar(list,active){

@@ -17,9 +17,15 @@
     .pg-breadcrumb .sep { color:var(--border); }
     .pg-breadcrumb .cur { color:var(--black); text-transform:uppercase; }
     #pg-count { font-size:11px; color:var(--muted); letter-spacing:1px; white-space:nowrap; }
-    #dyn-filter-bar { position:fixed; top:var(--navbar-h); left:0; right:0; z-index:99; background:#fff; border-bottom:.5px solid var(--border); padding:0 var(--art-side); display:none; flex-direction:column; transform:translateY(0); transition:transform 0.35s ease; will-change:transform; }
-    #dyn-filter-bar.fb-hidden { transform:translateY(-100%); }
-    #filter-bar-spacer { }
+    /* Desktop: sticky in-flow, always visible */
+    #dyn-filter-bar { position:sticky; top:var(--navbar-h); z-index:99; background:#fff; border-bottom:.5px solid var(--border); padding:0 var(--art-side); display:none; flex-direction:column; }
+    #filter-bar-spacer { display:none; }
+    /* Mobile: fixed + slide animation like navbar */
+    @media(max-width:900px){
+      #dyn-filter-bar { position:fixed; left:0; right:0; transform:translateY(0); transition:transform 0.35s ease; will-change:transform; }
+      #dyn-filter-bar.fb-hidden { transform:translateY(-100%); }
+      #filter-bar-spacer { display:block; }
+    }
     .dfc-row { display:flex; flex-wrap:nowrap; gap:6px; padding:8px 0; align-items:center; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
     .dfc-row::-webkit-scrollbar { display:none; }
     .dfc-row-sub { gap:2px; }
@@ -354,12 +360,13 @@
     function syncWrapH(){
       var bar=document.getElementById('dyn-filter-bar');
       var spacer=document.getElementById('filter-bar-spacer');
-      if(!bar||!spacer) return;
+      if(!bar) return;
+      var isMobile=window.innerWidth<=900;
       if(bar.style.display==='none'||bar.style.display===''){
-        spacer.style.height='0'; return;
+        if(spacer) spacer.style.height='0'; return;
       }
-      spacer.style.height=bar.offsetHeight+'px';
-      if(window._fbResetScroll) window._fbResetScroll();
+      if(spacer && isMobile) spacer.style.height=bar.offsetHeight+'px';
+      if(isMobile && window._fbResetScroll) window._fbResetScroll();
     }
 
     // Filter bar for category view (by kat)
