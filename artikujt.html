@@ -496,7 +496,9 @@
     function scrollToGrid(){
       var hdr=document.getElementById('pg-header')||document.getElementById('dyn-grid');
       if(!hdr) return;
-      var top=hdr.getBoundingClientRect().top+window.scrollY;
+      var navbar=document.querySelector('.navbar');
+      var navH=navbar?navbar.offsetHeight:55;
+      var top=hdr.getBoundingClientRect().top+window.scrollY-navH;
       document.documentElement.style.scrollBehavior='auto';
       window.scrollTo(0, top);
     }

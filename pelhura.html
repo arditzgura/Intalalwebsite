@@ -268,7 +268,7 @@
     window.applyFilter=function(f){
       _filter=f; renderFilterBar(_all,f); renderGrid(_all,f);
       var hdr=document.getElementById('pg-header')||document.getElementById('dyn-grid');
-      if(hdr){ document.documentElement.style.scrollBehavior='auto'; window.scrollTo(0,hdr.getBoundingClientRect().top+window.scrollY); }
+      if(hdr){ var navH=(document.querySelector('.navbar')||{offsetHeight:55}).offsetHeight; document.documentElement.style.scrollBehavior='auto'; window.scrollTo(0,hdr.getBoundingClientRect().top+window.scrollY-navH); }
     };
 
     window.cardStep=function(e,btn,dir){
