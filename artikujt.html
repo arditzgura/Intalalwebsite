@@ -43,8 +43,8 @@
     .art-card:hover .art-card-arr { opacity:1;pointer-events:auto; }
     .art-card-arr.l { left:8px; } .art-card-arr.r { right:8px; }
     #art-detail-overlay { display:none; position:fixed; inset:0; z-index:9000; background:rgba(0,0,0,.75); backdrop-filter:blur(6px); align-items:center; justify-content:center; padding:1rem; }
-    #art-detail-box { background:#fff; border-radius:4px; width:min(980px,96vw); height:min(560px,88vh); display:grid; grid-template-columns:1fr 1fr; overflow:hidden; flex-shrink:0; }
-    #art-detail-photos { background:#f5f5f5; overflow:hidden; display:flex; flex-direction:column; }
+    #art-detail-box { background:#fff; border-radius:4px; width:min(900px,96vw); height:min(580px,90vh); display:grid; grid-template-columns:1fr 1fr; overflow:hidden; flex-shrink:0; }
+    #art-detail-photos { background:#f0f0f0; overflow:hidden; display:flex; flex-direction:column; }
     .art-det-side { display:flex; flex-direction:column; overflow-y:auto; height:100%; }
     .art-nav-btn { position:fixed; top:calc(50% - min(280px,44vh) - 44px); background:rgba(255,255,255,.15); border:1.5px solid rgba(255,255,255,.4); color:#fff; border-radius:50%; width:40px; height:40px; font-size:20px; display:flex; align-items:center; justify-content:center; cursor:pointer; backdrop-filter:blur(6px); transition:background .15s; z-index:9100; }
     .art-nav-btn:hover:not(:disabled) { background:rgba(255,255,255,.3); }
@@ -65,11 +65,13 @@
     .art-page-hero-heading { font-size:clamp(26px,3.5vw,48px); font-weight:700; color:#fff; letter-spacing:-0.5px; line-height:1.1; }
     .art-page-hero-sub { font-size:13px; color:rgba(255,255,255,.75); max-width:480px; line-height:1.6; margin-top:2px; }
     @media(max-width:700px){
-      #art-detail-overlay { padding:.4rem; }
-      #art-detail-box { grid-template-columns:1fr 1fr; width:99vw; height:min(420px,94vw); }
-      .art-det-side > div:first-child { padding:14px !important; }
-      .art-det-side > div:last-child { padding:10px 14px 14px !important; }
-      #art-detail-name { font-size:14px !important; }
+      #art-detail-overlay { padding:.3rem; }
+      #art-detail-box { grid-template-columns:1fr; grid-template-rows:48% 1fr; width:99vw; height:92vh; max-height:640px; }
+      #art-detail-photos { min-height:0; }
+      .art-det-side { overflow-y:auto; }
+      .art-det-side > div:first-child { padding:12px 14px 0 !important; }
+      .art-det-side > div:last-child { padding:8px 14px 12px !important; }
+      #art-detail-name { font-size:13px !important; }
     }
   </style>
 </head>
@@ -129,19 +131,19 @@
     <div id="art-detail-box">
       <div id="art-detail-photos"></div>
       <div class="art-det-side">
-        <div style="padding:28px 28px 0;flex:1;position:relative;overflow-y:auto;">
-          <button onclick="closeArtDetail()" style="position:absolute;top:12px;right:12px;background:#f0f0f0;border:none;border-radius:50%;width:30px;height:30px;cursor:pointer;font-size:15px;z-index:5;">&#10005;</button>
-          <p id="art-detail-kat" style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;"></p>
-          <h2 id="art-detail-name" style="font-size:clamp(16px,2vw,24px);font-weight:500;letter-spacing:-0.3px;margin-bottom:5px;"></h2>
-          <p id="art-detail-code" style="font-size:11px;color:var(--muted);letter-spacing:1px;margin-bottom:14px;"></p>
-          <p id="art-detail-desc" style="font-size:13px;line-height:1.7;color:#555;margin-bottom:16px;"></p>
-          <div id="art-detail-masat" style="margin-bottom:14px;"></div>
-          <div id="art-detail-ngjyrat" style="margin-bottom:14px;"></div>
-          <div id="art-detail-perberja" style="margin-bottom:14px;"></div>
+        <div style="padding:18px 20px 0;flex:1;position:relative;overflow-y:auto;">
+          <button onclick="closeArtDetail()" style="position:absolute;top:10px;right:10px;background:#f0f0f0;border:none;border-radius:50%;width:26px;height:26px;cursor:pointer;font-size:13px;z-index:5;line-height:26px;text-align:center;">&#10005;</button>
+          <p id="art-detail-kat" style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:5px;"></p>
+          <h2 id="art-detail-name" style="font-size:clamp(14px,1.8vw,20px);font-weight:500;letter-spacing:-0.3px;margin-bottom:3px;line-height:1.25;"></h2>
+          <p id="art-detail-code" style="font-size:10px;color:var(--muted);letter-spacing:1px;margin-bottom:8px;"></p>
+          <p id="art-detail-desc" style="font-size:12px;line-height:1.6;color:#555;margin-bottom:10px;"></p>
+          <div id="art-detail-masat" style="margin-bottom:10px;"></div>
+          <div id="art-detail-ngjyrat" style="margin-bottom:10px;"></div>
+          <div id="art-detail-perberja" style="margin-bottom:10px;"></div>
         </div>
-        <div style="padding:16px 28px 24px;flex-shrink:0;display:flex;flex-direction:column;gap:8px;">
-          <button onclick="goKontaktArt()" style="display:block;width:100%;background:var(--black);color:#fff;border:none;padding:12px;font-size:11px;font-weight:500;letter-spacing:1px;text-transform:uppercase;cursor:pointer;text-align:center;">Na Kontaktoni</button>
-          <button onclick="shareArtUrl()" style="display:flex;align-items:center;justify-content:center;gap:6px;width:100%;background:none;border:.5px solid var(--border);padding:10px;font-size:10px;font-weight:500;letter-spacing:1px;text-transform:uppercase;cursor:pointer;color:var(--muted);transition:all .15s;" onmouseover="this.style.borderColor='#111';this.style.color='#111'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'"><i class="ri-share-line" style="font-size:14px;"></i> Share Artikullin</button>
+        <div style="padding:10px 20px 16px;flex-shrink:0;display:flex;flex-direction:column;gap:6px;">
+          <button onclick="goKontaktArt()" style="display:block;width:100%;background:var(--black);color:#fff;border:none;padding:10px;font-size:10px;font-weight:500;letter-spacing:1px;text-transform:uppercase;cursor:pointer;text-align:center;">Na Kontaktoni</button>
+          <button onclick="shareArtUrl()" style="display:flex;align-items:center;justify-content:center;gap:5px;width:100%;background:none;border:.5px solid var(--border);padding:8px;font-size:9px;font-weight:500;letter-spacing:1px;text-transform:uppercase;cursor:pointer;color:var(--muted);transition:all .15s;" onmouseover="this.style.borderColor='#111';this.style.color='#111'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'"><i class="ri-share-line" style="font-size:13px;"></i> Share Artikullin</button>
         </div>
       </div>
     </div>
@@ -526,7 +528,7 @@
       nextBtn.innerHTML='&#8594;'; nextBtn.disabled=(ai>=total-1);
 
       var mi=photos.length
-        ?'<img src="'+photos[idx]+'" style="width:100%;height:100%;object-fit:cover;display:block;cursor:pointer;" onclick="setPI('+(idx+1)+')">'
+        ?'<img src="'+photos[idx]+'" style="width:100%;height:100%;object-fit:contain;display:block;cursor:pointer;background:#f0f0f0;" onclick="setPI('+(idx+1)+')">'
         :'<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:60px;background:#f0f0f0;">&#128085;</div>';
       var th='';
       if(photos.length>1){ th='<div id="art-det-thumbs">'; photos.forEach(function(ph,i){ th+='<img src="'+ph+'" class="det-th'+(i===idx?' active':'')+'" onclick="setPI('+i+')" alt="">'; }); th+='</div>'; }
@@ -541,38 +543,38 @@
       document.getElementById('art-detail-code').textContent=a.code?'KOD: '+a.code:'';
       document.getElementById('art-detail-desc').textContent=a.desc||'';
 
-      /* MASAT — paneli ruan si "sizes" (array stringash) */
+      /* MASAT */
       var masat=a.masat||a.sizes||[];
       var mEl=document.getElementById('art-detail-masat');
       mEl.innerHTML=masat.length
-        ?'<p style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">MASAT</p>'
-         +'<div style="display:flex;flex-wrap:wrap;gap:6px;">'
-         +masat.map(function(m){ return '<span style="border:.5px solid var(--border);padding:5px 12px;font-size:12px;font-weight:500;">'+m+'</span>'; }).join('')
+        ?'<p style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:5px;">MASAT</p>'
+         +'<div style="display:flex;flex-wrap:wrap;gap:4px;">'
+         +masat.map(function(m){ return '<span style="border:.5px solid var(--border);padding:3px 8px;font-size:10px;font-weight:500;">'+m+'</span>'; }).join('')
          +'</div>':'';
 
-      /* NGJYRAT — {name, hex} */
+      /* NGJYRAT */
       var nEl=document.getElementById('art-detail-ngjyrat');
       var ngjyrat=a.ngjyrat||[];
       nEl.innerHTML=ngjyrat.length
-        ?'<p style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">NGJYRAT</p>'
-         +'<div style="display:flex;flex-wrap:wrap;gap:8px;">'
+        ?'<p style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:5px;">NGJYRAT</p>'
+         +'<div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;">'
          +ngjyrat.map(function(n){
-           return '<div style="display:flex;flex-direction:column;align-items:center;gap:4px;">'
-             +'<div style="width:26px;height:26px;border-radius:50%;background:'+(n.hex||n.color||'#ccc')+';border:.5px solid var(--border);"></div>'
-             +'<span style="font-size:9px;color:var(--muted);">'+(n.name||n.label||'')+'</span>'
+           return '<div style="display:flex;flex-direction:column;align-items:center;gap:2px;">'
+             +'<div style="width:20px;height:20px;border-radius:50%;background:'+(n.hex||n.color||'#ccc')+';border:.5px solid rgba(0,0,0,.15);"></div>'
+             +'<span style="font-size:8px;color:var(--muted);max-width:36px;text-align:center;line-height:1.2;">'+(n.name||n.label||'')+'</span>'
              +'</div>';
          }).join('')+'</div>':'';
 
-      /* PËRBËRJA — paneli ruan si {material, perqindje} ose {name, pct} */
+      /* PËRBËRJA */
       var perberja=a.perberja||[];
       var pEl=document.getElementById('art-detail-perberja');
       pEl.innerHTML=perberja.length
-        ?'<p style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">PËRBËRJA</p>'
-         +'<div style="display:flex;flex-direction:column;gap:4px;">'
+        ?'<p style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:5px;">PËRBËRJA</p>'
+         +'<div style="display:flex;flex-direction:column;gap:2px;">'
          +perberja.map(function(p){
            var emri=p.material||p.name||'';
            var pct=p.perqindje||p.pct||'';
-           return '<div style="display:flex;justify-content:space-between;font-size:12px;padding:5px 0;border-bottom:.5px solid var(--border);">'
+           return '<div style="display:flex;justify-content:space-between;font-size:11px;padding:3px 0;border-bottom:.5px solid var(--border);">'
              +'<span>'+emri+'</span><span style="font-weight:500;">'+(pct?pct+'%':'')+'</span></div>';
          }).join('')+'</div>':'';
     }
