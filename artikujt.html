@@ -17,8 +17,9 @@
     .pg-breadcrumb .sep { color:var(--border); }
     .pg-breadcrumb .cur { color:var(--black); text-transform:uppercase; }
     #pg-count { font-size:11px; color:var(--muted); letter-spacing:1px; white-space:nowrap; }
-    #filter-bar-wrap { position:sticky; top:var(--navbar-h); z-index:99; background:#fff; overflow:hidden; max-height:200px; transition:max-height .32s ease; }
-    #filter-bar-wrap.fb-hidden { max-height:0; }
+    #filter-bar-wrap { position:fixed; top:var(--navbar-h); left:0; right:0; z-index:99; background:#fff; border-bottom:.5px solid var(--border); transform:translateY(0); transition:transform 0.35s ease; }
+    #filter-bar-wrap.fb-hidden { transform:translateY(-100%); }
+    #dyn-filter-bar { border-bottom:none; }
     #dyn-filter-bar { padding:0 var(--art-side); border-bottom:.5px solid var(--border); display:none; flex-direction:column; }
     .dfc-row { display:flex; flex-wrap:nowrap; gap:6px; padding:8px 0; align-items:center; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
     .dfc-row::-webkit-scrollbar { display:none; }
@@ -116,8 +117,9 @@
     <span id="pg-count"></span>
   </div>
 
-  <!-- Filter bar -->
+  <!-- Filter bar (fixed, like navbar) -->
   <div id="filter-bar-wrap"><div id="dyn-filter-bar"></div></div>
+  <div id="filter-bar-spacer"></div>
 
   <!-- Article grid -->
   <div id="dyn-grid"></div>
@@ -659,16 +661,26 @@
     }catch(e){}
   })();
 
-  /* Filter bar scroll hide/show — same logic as navbar */
+  /* Filter bar — fixed like navbar, same scroll hide/show logic */
   (function(){
     var wrap=document.getElementById('filter-bar-wrap');
+    var spacer=document.getElementById('filter-bar-spacer');
     if(!wrap) return;
+
+    function syncSpacer(){
+      spacer.style.height = (wrap.offsetHeight||0)+'px';
+    }
+    /* Update spacer whenever bar content changes */
+    var ro=window.ResizeObserver?new ResizeObserver(syncSpacer):null;
+    if(ro) ro.observe(wrap);
+    syncSpacer();
+
     var lastY=window.scrollY, ticking=false;
     window.addEventListener('scroll',function(){
       if(!ticking){
         requestAnimationFrame(function(){
           var y=window.scrollY;
-          if(y<lastY && y>80){ wrap.classList.add('fb-hidden'); }
+          if(y>lastY && y>80){ wrap.classList.add('fb-hidden'); }
           else { wrap.classList.remove('fb-hidden'); }
           lastY=y; ticking=false;
         });
