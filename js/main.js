@@ -52,9 +52,9 @@
         const currentY = window.scrollY;
 
         if (MOBILE()) {
-          const scrolledDown = currentY > lastY;
+          const scrolledUp = currentY < lastY;
           const pastThreshold = currentY > 80;
-          if (scrolledDown && pastThreshold) {
+          if (scrolledUp && pastThreshold) {
             bar.classList.add('fb-hidden');
           } else {
             bar.classList.remove('fb-hidden');
