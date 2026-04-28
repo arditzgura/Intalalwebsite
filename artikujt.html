@@ -715,33 +715,6 @@
     }catch(e){}
   })();
 
-  /* Filter bar scroll — same logic as navbar in js/main.js */
-  (function(){
-    var bar=document.getElementById('dyn-filter-bar');
-    if(!bar) return;
-    var lastY=window.scrollY, ticking=false;
-    // reset lastY each time filter bar becomes visible
-    var origShow=Object.getOwnPropertyDescriptor(HTMLElement.prototype,'style');
-    window._fbResetScroll=function(){ lastY=window.scrollY; bar.classList.remove('fb-hidden'); };
-    window.addEventListener('scroll',function(){
-      if(!ticking){
-        requestAnimationFrame(function(){
-          var currentY=window.scrollY;
-          var scrolledDown=currentY>lastY;
-          var pastThreshold=currentY>80;
-          if(bar.style.display==='flex'||bar.style.display==='block'){
-            if(scrolledDown&&pastThreshold){
-              bar.classList.add('fb-hidden');
-            } else {
-              bar.classList.remove('fb-hidden');
-            }
-          }
-          lastY=currentY; ticking=false;
-        });
-        ticking=true;
-      }
-    },{passive:true});
-  })();
 
   </script>
 
