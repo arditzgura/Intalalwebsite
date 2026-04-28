@@ -43,7 +43,7 @@
     .art-card:hover .art-card-arr { opacity:1;pointer-events:auto; }
     .art-card-arr.l { left:8px; } .art-card-arr.r { right:8px; }
     #art-detail-overlay { display:none; position:fixed; inset:0; z-index:9000; background:rgba(0,0,0,.75); backdrop-filter:blur(6px); align-items:center; justify-content:center; padding:1rem; }
-    #art-detail-box { background:#fff; border-radius:4px; width:min(900px,96vw); height:min(580px,90vh); display:grid; grid-template-columns:1fr 1fr; overflow:hidden; flex-shrink:0; }
+    #art-detail-box { background:#fff; border-radius:4px; width:min(940px,94vw); height:min(520px,82vh); display:grid; grid-template-columns:55% 45%; overflow:hidden; flex-shrink:0; }
     #art-detail-photos { background:#f0f0f0; overflow:hidden; display:flex; flex-direction:column; }
     .art-det-side { display:flex; flex-direction:column; overflow-y:auto; height:100%; }
     .art-nav-btn { position:fixed; top:calc(50% - min(280px,44vh) - 44px); background:rgba(255,255,255,.15); border:1.5px solid rgba(255,255,255,.4); color:#fff; border-radius:50%; width:40px; height:40px; font-size:20px; display:flex; align-items:center; justify-content:center; cursor:pointer; backdrop-filter:blur(6px); transition:background .15s; z-index:9100; }
@@ -65,13 +65,11 @@
     .art-page-hero-heading { font-size:clamp(26px,3.5vw,48px); font-weight:700; color:#fff; letter-spacing:-0.5px; line-height:1.1; }
     .art-page-hero-sub { font-size:13px; color:rgba(255,255,255,.75); max-width:480px; line-height:1.6; margin-top:2px; }
     @media(max-width:700px){
-      #art-detail-overlay { padding:.3rem; }
-      #art-detail-box { grid-template-columns:1fr; grid-template-rows:48% 1fr; width:99vw; height:92vh; max-height:640px; }
-      #art-detail-photos { min-height:0; }
-      .art-det-side { overflow-y:auto; }
-      .art-det-side > div:first-child { padding:12px 14px 0 !important; }
-      .art-det-side > div:last-child { padding:8px 14px 12px !important; }
-      #art-detail-name { font-size:13px !important; }
+      #art-detail-overlay { padding:.4rem; }
+      #art-detail-box { grid-template-columns:1fr 1fr; width:99vw; height:min(360px,88vw); }
+      .art-det-side > div:first-child { padding:12px 12px 0 !important; }
+      .art-det-side > div:last-child { padding:8px 12px 12px !important; }
+      #art-detail-name { font-size:12px !important; }
     }
   </style>
 </head>
