@@ -59,12 +59,18 @@
       requestAnimationFrame(function () {
         const currentY = window.scrollY;
         const scrolledDown = currentY > lastY;
+        const scrolledUp = currentY < lastY;
         const pastThreshold = currentY > 80;
+        const isMobile = window.innerWidth <= 900;
 
-        if (scrolledDown && pastThreshold) {
-          hideBar();
+        if (isMobile) {
+          // mobile: hide on scroll up, show on scroll down
+          if (scrolledUp && pastThreshold) { hideBar(); }
+          else if (scrolledDown) { showBar(); }
         } else {
-          showBar();
+          // desktop: hide on scroll down, show on scroll up (same as navbar)
+          if (scrolledDown && pastThreshold) { hideBar(); }
+          else { showBar(); }
         }
 
         lastY = currentY;
