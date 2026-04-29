@@ -110,6 +110,9 @@
     <span id="pg-count"></span>
   </div>
 
+  <!-- Filter bar — fixed below navbar, must be in DOM before scripts run -->
+  <div id="dyn-filter-bar"></div>
+
   <!-- Grid -->
   <div id="dyn-grid"></div>
 
@@ -340,16 +343,18 @@
     document.getElementById('art-detail-overlay').addEventListener('click',function(e){ if(e.target===this) closeArtDetail(); });
     document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeArtDetail(); });
 
-    // Init — sync from Supabase if cache empty, then render
+    // Init — render immediately from cache, then always fetch fresh from Supabase and re-render
     (async function(){
-      var refreshed = await sbSyncCache();
-      var pageRefreshed = await sbSyncLocal('page_pel_v1','intal_pel_page_v1');
       var data=loadData();
       _all=data&&data.pelhurat?data.pelhurat:[];
       renderFilterBar(_all,'te-gjitha');
-      renderGrid(_all,'te-gjitha');
-      if(pageRefreshed) location.reload();
-      else if(refreshed){ data=loadData(); _all=data&&data.pelhurat?data.pelhurat:[]; renderFilterBar(_all,'te-gjitha'); renderGrid(_all,'te-gjitha'); }
+      renderGrid(_all,'te-gjitha'); // instant render from cache
+      await sbSyncCache(); // always fetch fresh from Supabase
+      var pageRefreshed = await sbSyncLocal('page_pel_v1','intal_pel_page_v1');
+      if(pageRefreshed) { location.reload(); return; }
+      data=loadData(); _all=data&&data.pelhurat?data.pelhurat:[];
+      renderFilterBar(_all,'te-gjitha');
+      renderGrid(_all,'te-gjitha'); // re-render with fresh data
     })();
   })();
   </script>
@@ -411,8 +416,6 @@
   </a>
 </div>
 
-<!-- Filter bar — fixed below navbar -->
-<div id="dyn-filter-bar"></div>
 
 </body>
 </html>

@@ -1246,12 +1246,12 @@
       }
     });
 
-    /* Supabase sync on first visit */
+    /* Supabase sync — render immediately from cache, then re-render with fresh data */
     (async function(){
-      var refreshed = await sbSyncCache();
+      renderShowcase(); // instant render from cache
+      await sbSyncCache(); // always fetch fresh from Supabase
       await sbSyncLocal('page_home_v1','intal_home_v1');
-      renderShowcase();
-      if(refreshed) renderShowcase();
+      renderShowcase(); // re-render with fresh data
     })();
   })();
   </script>

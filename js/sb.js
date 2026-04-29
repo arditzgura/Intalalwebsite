@@ -77,31 +77,20 @@ async function sbSyncLocal(sbKey, localKey) {
   return false;
 }
 
-/* Also sync intal_cache_v1 (articles + pelhura) from Supabase konfigurimi */
+/* Always fetch fresh data from Supabase and update intal_cache_v1.
+   Returns true if Supabase returned data (caller should re-render). */
 async function sbSyncCache() {
   try {
-    var raw = localStorage.getItem('intal_cache_v1');
-    var cached = raw ? JSON.parse(raw) : null;
-    var needFetch = !cached || !cached.artikujt || !cached.artikujt.length;
-    if (needFetch) {
-      var art  = await sbGet('artikujt');
-      var pel  = await sbGet('pelhurat');
-      var obj  = cached || {};
-      if (art) { try { obj.artikujt  = JSON.parse(art);  } catch(e) {} }
-      if (pel) { try { obj.pelhurat  = JSON.parse(pel);  } catch(e) {} }
-      if (art || pel) localStorage.setItem('intal_cache_v1', JSON.stringify(obj));
-      return true;
-    } else {
-      /* background refresh */
-      (async function() {
-        var art = await sbGet('artikujt');
-        var pel = await sbGet('pelhurat');
-        var obj = JSON.parse(localStorage.getItem('intal_cache_v1') || '{}');
-        if (art) { try { obj.artikujt = JSON.parse(art); } catch(e) {} }
-        if (pel) { try { obj.pelhurat = JSON.parse(pel); } catch(e) {} }
-        localStorage.setItem('intal_cache_v1', JSON.stringify(obj));
-      })().catch(function(){});
-      return false;
-    }
+    var art = await sbGet('artikujt');
+    var pel = await sbGet('pelhurat');
+    var obj = {};
+    try {
+      var raw = localStorage.getItem('intal_cache_v1');
+      if (raw) obj = JSON.parse(raw);
+    } catch(e) {}
+    if (art) { try { obj.artikujt = JSON.parse(art); } catch(e) {} }
+    if (pel) { try { obj.pelhurat = JSON.parse(pel); } catch(e) {} }
+    if (art || pel) localStorage.setItem('intal_cache_v1', JSON.stringify(obj));
+    return !!(art || pel);
   } catch(e) { return false; }
 }
