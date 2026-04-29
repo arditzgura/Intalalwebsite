@@ -63,15 +63,9 @@ document.addEventListener('DOMContentLoaded', function () {
         const pastThreshold = currentY > 80;
         const isMobile = window.innerWidth <= 900;
 
-        if (isMobile) {
-          // mobile: hide on scroll up, show on scroll down
-          if (scrolledUp && pastThreshold) { hideBar(); }
-          else if (scrolledDown) { showBar(); }
-        } else {
-          // desktop: hide on scroll down, show on scroll up (same as navbar)
-          if (scrolledDown && pastThreshold) { hideBar(); }
-          else { showBar(); }
-        }
+        // same logic as navbar: hide on scroll down, show on scroll up
+        if (scrolledDown && pastThreshold) { hideBar(); }
+        else { showBar(); }
 
         lastY = currentY;
         ticking = false;
