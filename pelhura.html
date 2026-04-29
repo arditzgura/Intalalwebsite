@@ -27,7 +27,7 @@
     :root { --art-side: 180px; }
     @media(max-width:900px){ :root { --art-side: 60px; } }
     @media(max-width:600px){ :root { --art-side: 20px; } }
-    #dyn-filter-bar { position:fixed; top:var(--navbar-h); left:0; right:0; z-index:99; background:#fff; border-bottom:.5px solid var(--border); padding:8px var(--art-side); display:none; flex-wrap:nowrap; gap:6px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; transform:translateY(0); transition:transform 0.35s ease; will-change:transform; }
+    #dyn-filter-bar { position:fixed; top:0; left:0; right:0; z-index:99; background:#fff; border-bottom:.5px solid var(--border); padding:8px var(--art-side); display:none; flex-wrap:nowrap; gap:6px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; transform:translateY(var(--navbar-h)); transition:transform 0.35s ease; will-change:transform; }
     #dyn-filter-bar.fb-hidden { transform:translateY(-100%); }
     #dyn-filter-bar::-webkit-scrollbar { display:none; }
     .dfc { padding:4px 12px; border:.5px solid var(--border); background:#fff; font-size:10px; font-weight:500; letter-spacing:.8px; text-transform:uppercase; cursor:pointer; transition:all .15s; white-space:nowrap; flex-shrink:0; }
