@@ -14,15 +14,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function hideAll() {
     navbar.classList.add('navbar--hidden');
-    if (bar) {
-      bar.classList.add('fb-hidden');
+    if (bar && bar.offsetHeight) {
+      var offset = -(navbar.offsetHeight + bar.offsetHeight);
+      bar.style.transform = 'translateY(' + offset + 'px)';
       if (spacer) spacer.style.height = '0';
     }
   }
   function showAll() {
     navbar.classList.remove('navbar--hidden');
     if (bar) {
-      bar.classList.remove('fb-hidden');
+      bar.style.transform = 'translateY(0)';
       if (spacer && bar._openH) spacer.style.height = bar._openH + 'px';
     }
   }
