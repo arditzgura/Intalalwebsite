@@ -2,72 +2,48 @@
    Intal Underwear — Shared JavaScript
    ============================================================ */
 
-/* ── Navbar scroll hide / show ──────────────────────────────── */
-(function () {
-  const navbar = document.querySelector('.navbar');
-  if (!navbar) return;
-  let lastY = window.scrollY;
-  let ticking = false;
-
-  window.addEventListener('scroll', function () {
-    if (!ticking) {
-      requestAnimationFrame(function () {
-        const currentY = window.scrollY;
-        const scrolledDown = currentY > lastY;
-        const pastThreshold = currentY > 80;
-
-        if (scrolledDown && pastThreshold) {
-          navbar.classList.add('navbar--hidden');
-        } else {
-          navbar.classList.remove('navbar--hidden');
-        }
-
-        navbar.classList.toggle('navbar--scrolled', currentY > 10);
-        lastY = currentY;
-        ticking = false;
-      });
-      ticking = true;
-    }
-  }, { passive: true });
-})();
-
-/* ── Filter bar scroll hide / show — all screen sizes ───────── */
-/* Hide on scroll down, show on scroll up — same logic as navbar  */
+/* ── Navbar + Filter bar — një listener, fshihen/shfaqen bashkë ─ */
 document.addEventListener('DOMContentLoaded', function () {
-  const bar = document.getElementById('dyn-filter-bar');
+  const navbar = document.querySelector('.navbar');
+  const bar    = document.getElementById('dyn-filter-bar');
   const spacer = document.getElementById('filter-bar-spacer');
-  if (!bar) return;
-  let lastY = window.scrollY;
+  if (!navbar) return;
+
+  let lastY   = window.scrollY;
   let ticking = false;
 
-  function hideBar() {
-    bar.classList.add('fb-hidden');
-    if (spacer) spacer.style.height = '0';
+  function hideAll() {
+    navbar.classList.add('navbar--hidden');
+    if (bar) {
+      bar.classList.add('fb-hidden');
+      if (spacer) spacer.style.height = '0';
+    }
   }
-  function showBar() {
-    bar.classList.remove('fb-hidden');
-    if (spacer && bar._openH) spacer.style.height = bar._openH + 'px';
+  function showAll() {
+    navbar.classList.remove('navbar--hidden');
+    if (bar) {
+      bar.classList.remove('fb-hidden');
+      if (spacer && bar._openH) spacer.style.height = bar._openH + 'px';
+    }
   }
 
   window._fbResetScroll = function () {
     lastY = window.scrollY;
-    showBar();
+    showAll();
   };
 
   window.addEventListener('scroll', function () {
     if (!ticking) {
       requestAnimationFrame(function () {
-        const currentY = window.scrollY;
+        const currentY    = window.scrollY;
         const scrolledDown = currentY > lastY;
-        const scrolledUp = currentY < lastY;
         const pastThreshold = currentY > 80;
-        const isMobile = window.innerWidth <= 900;
 
-        // same logic as navbar: hide on scroll down, show on scroll up
-        if (scrolledDown && pastThreshold) { hideBar(); }
-        else { showBar(); }
+        if (scrolledDown && pastThreshold) { hideAll(); }
+        else { showAll(); }
 
-        lastY = currentY;
+        navbar.classList.toggle('navbar--scrolled', currentY > 10);
+        lastY   = currentY;
         ticking = false;
       });
       ticking = true;
