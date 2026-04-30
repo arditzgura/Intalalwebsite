@@ -50,19 +50,24 @@
     .art-card-arr { position:absolute;top:50%;transform:translateY(-50%);background:none;border:none;padding:0;cursor:pointer;font-size:20px;line-height:1;opacity:0;transition:opacity .15s;pointer-events:none;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.6); }
     .art-card:hover .art-card-arr { opacity:1;pointer-events:auto; }
     .art-card-arr.l { left:8px; } .art-card-arr.r { right:8px; }
-    #art-detail-overlay { display:none; position:fixed; inset:0; z-index:9000; background:rgba(0,0,0,.75); backdrop-filter:blur(6px); align-items:center; justify-content:center; padding:1rem; }
-    #art-detail-box { background:#fff; border-radius:4px; width:min(940px,94vw); height:min(520px,82vh); display:grid; grid-template-columns:55% 45%; overflow:hidden; flex-shrink:0; }
-    #art-detail-photos { background:#f0f0f0; overflow:hidden; display:flex; flex-direction:column; }
-    .art-det-side { display:flex; flex-direction:column; overflow-y:auto; height:100%; }
-    .art-nav-btn { position:fixed; top:calc(50% - min(280px,44vh) - 44px); background:rgba(255,255,255,.15); border:1.5px solid rgba(255,255,255,.4); color:#fff; border-radius:50%; width:40px; height:40px; font-size:20px; display:flex; align-items:center; justify-content:center; cursor:pointer; backdrop-filter:blur(6px); transition:background .15s; z-index:9100; }
-    .art-nav-btn:hover:not(:disabled) { background:rgba(255,255,255,.3); }
+    #art-detail-overlay { display:none; position:fixed; inset:0; z-index:9000; background:rgba(0,0,0,.78); backdrop-filter:blur(8px); align-items:center; justify-content:center; padding:1.2rem; }
+    #art-detail-box { background:#fff; border-radius:6px; width:min(1080px,94vw); height:min(680px,90vh); display:grid; grid-template-columns:52% 48%; overflow:hidden; flex-shrink:0; box-shadow:0 24px 60px rgba(0,0,0,.45); position:relative; }
+    #art-detail-photos { background:#f2f2f2; overflow:hidden; display:flex; flex-direction:column; }
+    .art-det-side { display:flex; flex-direction:column; height:100%; }
+    .art-det-info { flex:1; overflow-y:auto; padding:24px 28px 12px; }
+    .art-det-info::-webkit-scrollbar { width:4px; } .art-det-info::-webkit-scrollbar-thumb { background:#ddd; border-radius:2px; }
+    .art-det-footer { padding:14px 28px 20px; flex-shrink:0; border-top:.5px solid var(--border); display:flex; gap:8px; }
+    .art-nav-btn { position:fixed; top:50%; transform:translateY(-50%); background:rgba(255,255,255,.18); border:1.5px solid rgba(255,255,255,.45); color:#fff; border-radius:50%; width:42px; height:42px; font-size:20px; display:flex; align-items:center; justify-content:center; cursor:pointer; backdrop-filter:blur(6px); transition:background .15s; z-index:9100; }
+    .art-nav-btn:hover:not(:disabled) { background:rgba(255,255,255,.32); }
     .art-nav-btn:disabled { opacity:.2; cursor:default; }
-    .art-nav-btn.prev { left:calc(50% - min(490px,48vw) - 52px); }
-    .art-nav-btn.next { right:calc(50% - min(490px,48vw) - 52px); }
-    @media(max-width:700px){ .art-nav-btn.prev { left:6px; } .art-nav-btn.next { right:6px; } .art-nav-btn { top:calc(50% - min(210px,47vw) - 44px); } }
-    #art-det-thumbs { display:flex; gap:5px; padding:8px 12px; background:rgba(0,0,0,.4); overflow-x:auto; flex-shrink:0; }
-    .det-th { width:46px; height:46px; border-radius:3px; object-fit:cover; border:2px solid transparent; cursor:pointer; flex-shrink:0; transition:border-color .15s; display:block; }
-    .det-th.active { border-color:#fff; }
+    .art-nav-btn.prev { left:calc(50% - min(560px,48vw) - 54px); }
+    .art-nav-btn.next { right:calc(50% - min(560px,48vw) - 54px); }
+    @media(max-width:700px){ .art-nav-btn.prev { left:6px; } .art-nav-btn.next { right:6px; } }
+    #art-det-thumbs { display:flex; gap:6px; padding:10px 14px; background:rgba(0,0,0,.35); overflow-x:auto; flex-shrink:0; scrollbar-width:none; }
+    #art-det-thumbs::-webkit-scrollbar { display:none; }
+    .det-th { width:52px; height:52px; border-radius:3px; object-fit:cover; border:2px solid transparent; cursor:pointer; flex-shrink:0; transition:border-color .15s,opacity .15s; display:block; opacity:.7; }
+    .det-th:hover { opacity:1; }
+    .det-th.active { border-color:#fff; opacity:1; }
     /* Page Hero Banner */
     .art-page-hero { display:none; position:relative; min-height:420px; background:#111; overflow:hidden; align-items:flex-end; }
     .art-page-hero.visible { display:flex; }
@@ -73,11 +78,12 @@
     .art-page-hero-heading { font-size:clamp(26px,3.5vw,48px); font-weight:700; color:#fff; letter-spacing:-0.5px; line-height:1.1; }
     .art-page-hero-sub { font-size:13px; color:rgba(255,255,255,.75); max-width:480px; line-height:1.6; margin-top:2px; }
     @media(max-width:700px){
-      #art-detail-overlay { padding:.4rem; }
-      #art-detail-box { grid-template-columns:1fr 1fr; width:99vw; height:min(360px,88vw); }
-      .art-det-side > div:first-child { padding:12px 12px 0 !important; }
-      .art-det-side > div:last-child { padding:8px 12px 12px !important; }
+      #art-detail-overlay { padding:.3rem; }
+      #art-detail-box { grid-template-columns:1fr 1fr; width:99vw; height:min(370px,90vw); }
+      .art-det-info { padding:10px 12px 6px !important; }
+      .art-det-footer { padding:8px 12px 12px !important; }
       #art-detail-name { font-size:12px !important; }
+      .art-det-footer button { font-size:8px !important; padding:7px 5px !important; }
     }
   </style>
 </head>
@@ -138,21 +144,39 @@
     <div id="art-detail-box">
       <div id="art-detail-photos"></div>
       <div class="art-det-side">
-        <div style="padding:12px 20px 0;flex:1;position:relative;overflow-y:auto;">
-          <button onclick="closeArtDetail()" style="position:absolute;top:8px;right:10px;background:#f0f0f0;border:none;border-radius:50%;width:24px;height:24px;cursor:pointer;font-size:12px;z-index:5;line-height:24px;text-align:center;">&#10005;</button>
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+        <!-- Close button outside scroll area -->
+        <button onclick="closeArtDetail()" style="position:absolute;top:12px;right:14px;background:#f0f0f0;border:none;border-radius:50%;width:26px;height:26px;cursor:pointer;font-size:13px;z-index:9200;line-height:26px;text-align:center;">&#10005;</button>
+
+        <div class="art-det-info">
+          <!-- Category · Sub + Code -->
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
             <p id="art-detail-kat" style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin:0;"></p>
             <p id="art-detail-code" style="font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin:0;"></p>
           </div>
-          <h2 id="art-detail-name" style="font-size:clamp(13px,1.6vw,18px);font-weight:500;letter-spacing:-0.3px;margin-bottom:6px;line-height:1.2;"></h2>
-          <p id="art-detail-desc" style="font-size:11px;line-height:1.5;color:#555;margin-bottom:8px;"></p>
-          <div id="art-detail-masat" style="margin-bottom:8px;"></div>
-          <div id="art-detail-ngjyrat" style="margin-bottom:8px;"></div>
-          <div id="art-detail-perberja" style="margin-bottom:6px;"></div>
+
+          <!-- Name -->
+          <h2 id="art-detail-name" style="font-size:clamp(16px,1.8vw,22px);font-weight:600;letter-spacing:-0.4px;margin:0 0 10px;line-height:1.2;color:#111;"></h2>
+
+          <!-- Description -->
+          <p id="art-detail-desc" style="font-size:12px;line-height:1.65;color:#555;margin:0 0 16px;"></p>
+
+          <!-- Divider -->
+          <div style="height:.5px;background:var(--border);margin-bottom:16px;"></div>
+
+          <!-- Sizes -->
+          <div id="art-detail-masat" style="margin-bottom:16px;"></div>
+
+          <!-- Colors -->
+          <div id="art-detail-ngjyrat" style="margin-bottom:16px;"></div>
+
+          <!-- Composition -->
+          <div id="art-detail-perberja"></div>
         </div>
-        <div style="padding:6px 20px 12px;flex-shrink:0;display:flex;flex-direction:row;gap:6px;">
-          <button onclick="goKontaktArt()" style="flex:1;background:var(--black);color:#fff;border:none;padding:7px 6px;font-size:9px;font-weight:500;letter-spacing:1px;text-transform:uppercase;cursor:pointer;text-align:center;">Na Kontaktoni</button>
-          <button onclick="shareArtUrl()" style="display:flex;align-items:center;justify-content:center;gap:4px;flex-shrink:0;background:none;border:.5px solid var(--border);padding:7px 10px;font-size:9px;font-weight:500;letter-spacing:1px;text-transform:uppercase;cursor:pointer;color:var(--muted);transition:all .15s;" onmouseover="this.style.borderColor='#111';this.style.color='#111'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'"><i class="ri-share-line" style="font-size:12px;"></i> Share</button>
+
+        <!-- Footer buttons -->
+        <div class="art-det-footer">
+          <button onclick="goKontaktArt()" style="flex:1;background:#111;color:#fff;border:none;padding:11px 10px;font-size:10px;font-weight:500;letter-spacing:1.2px;text-transform:uppercase;cursor:pointer;text-align:center;transition:background .15s;" onmouseover="this.style.background='#333'" onmouseout="this.style.background='#111'">Na Kontaktoni</button>
+          <button onclick="shareArtUrl()" style="display:flex;align-items:center;justify-content:center;gap:5px;background:#fff;border:.5px solid var(--border);padding:11px 18px;font-size:10px;font-weight:500;letter-spacing:1px;text-transform:uppercase;cursor:pointer;color:var(--muted);transition:all .15s;" onmouseover="this.style.borderColor='#111';this.style.color='#111'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'"><i class="ri-share-line" style="font-size:14px;"></i> Share</button>
         </div>
       </div>
     </div>
@@ -623,8 +647,8 @@
       nextBtn.innerHTML='&#8594;'; nextBtn.disabled=(ai>=total-1);
 
       var mi=photos.length
-        ?'<img src="'+photos[idx]+'" style="width:100%;height:100%;object-fit:contain;display:block;cursor:pointer;background:#f0f0f0;" onclick="setPI('+(idx+1)+')">'
-        :'<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:60px;background:#f0f0f0;">&#128085;</div>';
+        ?'<img src="'+photos[idx]+'" style="width:100%;height:100%;object-fit:cover;object-position:center top;display:block;cursor:pointer;" onclick="setPI('+(idx+1)+')">'
+        :'<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:60px;background:#f2f2f2;">&#128085;</div>';
       var th='';
       if(photos.length>1){ th='<div id="art-det-thumbs">'; photos.forEach(function(ph,i){ th+='<img src="'+ph+'" class="det-th'+(i===idx?' active':'')+'" onclick="setPI('+i+')" alt="">'; }); th+='</div>'; }
       document.getElementById('art-detail-photos').innerHTML='<div id="det-main-wrap" style="position:relative;flex:1;overflow:hidden;min-height:0;">'+mi+'</div>'+th;
@@ -663,21 +687,21 @@
       var masat=a.masat||a.sizes||[];
       var mEl=document.getElementById('art-detail-masat');
       mEl.innerHTML=masat.length
-        ?'<p style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:5px;">MASAT</p>'
-         +'<div style="display:flex;flex-wrap:wrap;gap:4px;">'
-         +masat.map(function(m){ return '<span style="border:.5px solid var(--border);padding:3px 8px;font-size:10px;font-weight:500;">'+m+'</span>'; }).join('')
+        ?'<p style="font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin:0 0 8px;font-weight:600;">MASAT</p>'
+         +'<div style="display:flex;flex-wrap:wrap;gap:6px;">'
+         +masat.map(function(m){ return '<span style="border:.5px solid #ccc;padding:5px 12px;font-size:11px;font-weight:500;letter-spacing:.5px;color:#222;min-width:36px;text-align:center;">'+m+'</span>'; }).join('')
          +'</div>':'';
 
       /* NGJYRAT */
       var nEl=document.getElementById('art-detail-ngjyrat');
       var ngjyrat=a.ngjyrat||[];
       nEl.innerHTML=ngjyrat.length
-        ?'<p style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:5px;">NGJYRAT</p>'
-         +'<div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;">'
+        ?'<p style="font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin:0 0 8px;font-weight:600;">NGJYRAT</p>'
+         +'<div style="display:flex;flex-wrap:wrap;gap:10px;align-items:flex-start;">'
          +ngjyrat.map(function(n){
-           return '<div style="display:flex;flex-direction:column;align-items:center;gap:2px;">'
-             +'<div style="width:20px;height:20px;border-radius:50%;background:'+(n.hex||n.color||'#ccc')+';border:.5px solid rgba(0,0,0,.15);"></div>'
-             +'<span style="font-size:8px;color:var(--muted);max-width:36px;text-align:center;line-height:1.2;">'+(n.name||n.label||'')+'</span>'
+           return '<div style="display:flex;flex-direction:column;align-items:center;gap:4px;">'
+             +'<div style="width:24px;height:24px;border-radius:50%;background:'+(n.hex||n.color||'#ccc')+';border:.5px solid rgba(0,0,0,.18);box-shadow:0 1px 4px rgba(0,0,0,.1);"></div>'
+             +'<span style="font-size:9px;color:#777;max-width:42px;text-align:center;line-height:1.3;">'+(n.name||n.label||'')+'</span>'
              +'</div>';
          }).join('')+'</div>':'';
 
@@ -685,13 +709,13 @@
       var perberja=a.perberja||[];
       var pEl=document.getElementById('art-detail-perberja');
       pEl.innerHTML=perberja.length
-        ?'<p style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:5px;">PËRBËRJA</p>'
-         +'<div style="display:flex;flex-direction:column;gap:2px;">'
-         +perberja.map(function(p){
+        ?'<p style="font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin:0 0 8px;font-weight:600;">PËRBËRJA</p>'
+         +'<div style="border:.5px solid var(--border);overflow:hidden;">'
+         +perberja.map(function(p,i){
            var emri=p.material||p.name||'';
            var pct=p.perqindje||p.pct||'';
-           return '<div style="display:flex;justify-content:space-between;font-size:11px;padding:3px 0;border-bottom:.5px solid var(--border);">'
-             +'<span>'+emri+'</span><span style="font-weight:500;">'+(pct?pct+'%':'')+'</span></div>';
+           return '<div style="display:flex;justify-content:space-between;align-items:center;font-size:11px;padding:7px 12px;'+(i>0?'border-top:.5px solid var(--border)':'')+';background:'+(i%2===0?'#fafafa':'#fff')+'">'
+             +'<span style="color:#444;">'+emri+'</span><span style="font-weight:600;color:#111;">'+(pct?pct+'%':'')+'</span></div>';
          }).join('')+'</div>':'';
     }
 
