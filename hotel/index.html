@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grand Vista Hotel</title>
+  <style>
+    /* ── Switzer font-face declarations ───────────────────────── */
+    @font-face { font-family: 'Switzer'; src: url('../fonts/Switzer-Thin.otf') format('opentype'); font-weight: 100; font-style: normal; }
+    @font-face { font-family: 'Switzer'; src: url('../fonts/Switzer-Extralight.otf') format('opentype'); font-weight: 200; font-style: normal; }
+    @font-face { font-family: 'Switzer'; src: url('../fonts/Switzer-Light.otf') format('opentype'); font-weight: 300; font-style: normal; }
+    @font-face { font-family: 'Switzer'; src: url('../fonts/Switzer-Regular.otf') format('opentype'); font-weight: 400; font-style: normal; }
+    @font-face { font-family: 'Switzer'; src: url('../fonts/Switzer-Medium.otf') format('opentype'); font-weight: 500; font-style: normal; }
+    @font-face { font-family: 'Switzer'; src: url('../fonts/Switzer-Semibold.otf') format('opentype'); font-weight: 600; font-style: normal; }
+    @font-face { font-family: 'Switzer'; src: url('../fonts/Switzer-Bold.otf') format('opentype'); font-weight: 700; font-style: normal; }
+    @font-face { font-family: 'Switzer'; src: url('../fonts/Switzer-Extrabold.otf') format('opentype'); font-weight: 800; font-style: normal; }
+    @font-face { font-family: 'Switzer'; src: url('../fonts/Switzer-Black.otf') format('opentype'); font-weight: 900; font-style: normal; }
+
+    /* ── Design tokens ─────────────────────────────────────────── */
+    :root {
+      --gold:         #9a7c3f;
+      --gold-light:   #c4a35a;
+      --black:        #0a0a0a;
+      --off-white:    #fafafa;
+      --surface-gray: #f9fafb;
+      --border:       #d1d5dc;
+      --muted:        #6a7282;
+      --white:        #ffffff;
+      --navbar-h:     clamp(42px, 4.2vw, 55px);
+      --side:         clamp(20px, 5vw, 60px);
+    }
+
+    /* ── Reset ─────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Switzer', sans-serif;
+      background: var(--white);
+      color: var(--black);
+      padding-top: var(--navbar-h);
+    }
+
+    /* ── Navbar ──────────────────────────────────────────────── */
+    .navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      height: var(--navbar-h);
+      background: var(--white);
+      border-bottom: 0.5px solid var(--border);
+      padding: 0 var(--side);
+      transition: transform 0.35s ease;
+    }
+    .navbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 100%;
+    }
+    .navbar-brand {
+      font-size: clamp(11px, 0.95vw, 13px);
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--black);
+      text-decoration: none;
+    }
+    .navbar-brand span {
+      color: var(--gold);
+    }
+    .navbar-links {
+      display: flex;
+      align-items: center;
+      gap: clamp(16px, 2.5vw, 36px);
+      list-style: none;
+    }
+    .navbar-links a {
+      font-size: clamp(10px, 0.85vw, 12px);
+      font-weight: 400;
+      letter-spacing: 0.35px;
+      text-transform: uppercase;
+      color: var(--black);
+      text-decoration: none;
+      opacity: 0.7;
+      transition: opacity 0.15s;
+    }
+    .navbar-links a:hover { opacity: 1; }
+    .navbar-btn {
+      font-size: clamp(10px, 0.85vw, 12px);
+      font-weight: 500;
+      letter-spacing: 0.35px;
+      text-transform: uppercase;
+      background: var(--gold);
+      color: var(--white);
+      border: none;
+      border-radius: 4px;
+      padding: clamp(8px, 0.8vw, 12px) clamp(14px, 1.5vw, 22px);
+      cursor: pointer;
+      transition: opacity 0.15s;
+      text-decoration: none;
+    }
+    .navbar-btn:hover { opacity: 0.85; }
+
+    /* ── Hamburger (mobile) ──────────────────────────────────── */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+    .hamburger span {
+      display: block;
+      width: 22px;
+      height: 1.5px;
+      background: var(--black);
+      transition: transform 0.25s;
+    }
+
+    /* ── Hero ────────────────────────────────────────────────── */
+    .hero {
+      position: relative;
+      width: 100%;
+      min-height: clamp(500px, 88vh, 900px);
+      display: flex;
+      align-items: flex-end;
+      overflow: hidden;
+      background: #1a1a1a;
+    }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(10,10,10,0.15) 0%,
+        rgba(10,10,10,0.55) 100%
+      ),
+      url('https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1600&q=80') center/cover no-repeat;
+      transform: scale(1.04);
+      transition: transform 8s ease;
+    }
+    .hero:hover .hero-bg { transform: scale(1); }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      padding: 0 var(--side) clamp(48px, 7vw, 90px);
+      max-width: 740px;
+    }
+    .hero-eyebrow {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 2.8px;
+      text-transform: uppercase;
+      color: var(--gold-light);
+      margin-bottom: clamp(10px, 1.2vw, 16px);
+    }
+    .hero-title {
+      font-size: clamp(32px, 5.5vw, 72px);
+      font-weight: 500;
+      line-height: 1.05;
+      letter-spacing: -1.5px;
+      color: var(--white);
+      margin-bottom: clamp(14px, 1.8vw, 22px);
+    }
+    .hero-subtitle {
+      font-size: clamp(13px, 1.1vw, 16px);
+      font-weight: 300;
+      color: rgba(255,255,255,0.72);
+      line-height: 1.65;
+      max-width: 480px;
+      margin-bottom: clamp(24px, 3vw, 40px);
+    }
+    .hero-actions {
+      display: flex;
+      gap: clamp(10px, 1.2vw, 16px);
+      flex-wrap: wrap;
+    }
+    .btn-primary {
+      font-size: clamp(10px, 0.85vw, 12px);
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      background: var(--gold);
+      color: var(--white);
+      border: none;
+      border-radius: 4px;
+      padding: clamp(11px, 1vw, 15px) clamp(20px, 2vw, 30px);
+      cursor: pointer;
+      text-decoration: none;
+      transition: opacity 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-primary:hover { opacity: 0.88; }
+    .btn-outline {
+      font-size: clamp(10px, 0.85vw, 12px);
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      background: transparent;
+      color: var(--white);
+      border: 1px solid rgba(255,255,255,0.45);
+      border-radius: 4px;
+      padding: clamp(11px, 1vw, 15px) clamp(20px, 2vw, 30px);
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color 0.15s, background 0.15s;
+      display: inline-flex;
+      align-items: center;
+    }
+    .btn-outline:hover { border-color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.07); }
+
+    /* ── Section scaffold ────────────────────────────────────── */
+    .section {
+      padding: clamp(60px, 8vw, 100px) var(--side);
+      border-top: 0.5px solid var(--border);
+    }
+    .section-header {
+      margin-bottom: clamp(32px, 4vw, 56px);
+    }
+    .section-eyebrow {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 10px;
+    }
+    .section-title {
+      font-size: clamp(22px, 3vw, 38px);
+      font-weight: 500;
+      letter-spacing: -0.5px;
+      line-height: 1.1;
+      color: var(--black);
+    }
+    .section-desc {
+      font-size: clamp(13px, 1vw, 15px);
+      font-weight: 300;
+      color: var(--muted);
+      line-height: 1.65;
+      max-width: 520px;
+      margin-top: 12px;
+    }
+
+    /* ── Services ────────────────────────────────────────────── */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: clamp(16px, 2.5vw, 28px);
+    }
+    .service-card {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      border: 0.5px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      transition: box-shadow 0.25s, transform 0.25s;
+    }
+    .service-card:hover {
+      box-shadow: 0 8px 28px rgba(0,0,0,0.10);
+      transform: translateY(-3px);
+    }
+    .service-img {
+      width: 100%;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+      display: block;
+      background: var(--surface-gray);
+    }
+    .service-body {
+      padding: clamp(16px, 1.8vw, 24px);
+    }
+    .service-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      background: rgba(154,124,63,0.10);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+    }
+    .service-icon svg { width: 16px; height: 16px; stroke: var(--gold); }
+    .service-name {
+      font-size: clamp(13px, 1.1vw, 16px);
+      font-weight: 500;
+      color: var(--black);
+      margin-bottom: 6px;
+    }
+    .service-desc {
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    /* ── Rooms ───────────────────────────────────────────────── */
+    .rooms-section {
+      background: var(--surface-gray);
+    }
+    .rooms-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: clamp(12px, 2vw, 20px);
+    }
+    .room-card {
+      position: relative;
+      border-radius: 4px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .room-card:first-child {
+      grid-column: span 2;
+    }
+    .room-img {
+      width: 100%;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.45s ease;
+      background: #d0ccc5;
+    }
+    .room-card:first-child .room-img {
+      aspect-ratio: 16/9;
+    }
+    .room-card:hover .room-img { transform: scale(1.04); }
+    .room-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(10,10,10,0.65) 0%, transparent 55%);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: clamp(14px, 1.5vw, 20px);
+    }
+    .room-label {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold-light);
+      margin-bottom: 4px;
+    }
+    .room-name {
+      font-size: clamp(14px, 1.3vw, 18px);
+      font-weight: 500;
+      color: var(--white);
+      line-height: 1.2;
+    }
+    .room-price {
+      font-size: 11px;
+      font-weight: 400;
+      color: rgba(255,255,255,0.65);
+      margin-top: 4px;
+    }
+
+    /* ── Contact ─────────────────────────────────────────────── */
+    .contact-section {
+      background: var(--black);
+    }
+    .contact-section .section-eyebrow { color: var(--gold-light); }
+    .contact-section .section-title { color: var(--white); }
+    .contact-section .section-desc { color: rgba(255,255,255,0.5); }
+    .contact-inner {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: clamp(40px, 6vw, 80px);
+      align-items: start;
+    }
+    .contact-info { display: flex; flex-direction: column; gap: clamp(20px, 2.5vw, 32px); }
+    .contact-detail {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .contact-detail-label {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+    }
+    .contact-detail-value {
+      font-size: clamp(13px, 1vw, 15px);
+      font-weight: 300;
+      color: rgba(255,255,255,0.8);
+    }
+    .contact-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(10px, 1.2vw, 16px);
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .form-group.full { grid-column: span 2; }
+    .form-label {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+    }
+    .form-input,
+    .form-textarea,
+    .form-select {
+      font-family: 'Switzer', sans-serif;
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--white);
+      background: rgba(255,255,255,0.05);
+      border: 0.5px solid rgba(255,255,255,0.15);
+      border-radius: 4px;
+      padding: clamp(10px, 1vw, 14px) clamp(12px, 1.2vw, 16px);
+      outline: none;
+      transition: border-color 0.2s;
+      width: 100%;
+      appearance: none;
+    }
+    .form-input::placeholder,
+    .form-textarea::placeholder { color: rgba(255,255,255,0.25); }
+    .form-input:focus,
+    .form-textarea:focus,
+    .form-select:focus { border-color: var(--gold-light); }
+    .form-textarea { resize: vertical; min-height: 100px; }
+    .form-select { cursor: pointer; }
+    .form-select option { background: #1a1a1a; color: var(--white); }
+    .form-submit {
+      grid-column: span 2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-top: 4px;
+    }
+    .form-note {
+      font-size: 11px;
+      font-weight: 400;
+      color: rgba(255,255,255,0.3);
+      line-height: 1.5;
+    }
+
+    /* ── Footer ──────────────────────────────────────────────── */
+    .footer {
+      background: var(--black);
+      border-top: 0.5px solid rgba(255,255,255,0.08);
+      padding: clamp(20px, 2.5vw, 32px) var(--side);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .footer-brand {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+      text-decoration: none;
+    }
+    .footer-brand span { color: var(--gold); }
+    .footer-copy {
+      font-size: 11px;
+      font-weight: 400;
+      color: rgba(255,255,255,0.25);
+    }
+
+    /* ── Responsive ──────────────────────────────────────────── */
+    @media (max-width: 960px) {
+      .navbar-links, .navbar-btn { display: none; }
+      .hamburger { display: flex; }
+      .services-grid { grid-template-columns: repeat(2, 1fr); }
+      .rooms-grid { grid-template-columns: 1fr 1fr; }
+      .room-card:first-child { grid-column: span 2; }
+      .contact-inner { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 640px) {
+      .services-grid { grid-template-columns: 1fr; }
+      .rooms-grid { grid-template-columns: 1fr; }
+      .room-card:first-child { grid-column: span 1; }
+      .contact-form { grid-template-columns: 1fr; }
+      .form-group.full, .form-submit { grid-column: span 1; }
+      .form-submit { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Navbar ───────────────────────────────────────────────── -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="#" class="navbar-brand">Grand<span>Vista</span></a>
+      <ul class="navbar-links">
+        <li><a href="#services">Services</a></li>
+        <li><a href="#rooms">Rooms</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <a href="#contact" class="navbar-btn">Book Now</a>
+      <button class="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ── Hero ─────────────────────────────────────────────────── -->
+  <section class="hero" id="home">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <p class="hero-eyebrow">Luxury Redefined</p>
+      <h1 class="hero-title">A Stay Beyond<br>Expectations</h1>
+      <p class="hero-subtitle">Experience world-class hospitality where every detail is crafted for your comfort and delight.</p>
+      <div class="hero-actions">
+        <a href="#rooms" class="btn-primary">
+          Explore Rooms
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+        <a href="#contact" class="btn-outline">Book a Stay</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Services ─────────────────────────────────────────────── -->
+  <section class="section" id="services">
+    <div class="section-header">
+      <p class="section-eyebrow">What We Offer</p>
+      <h2 class="section-title">Our Services</h2>
+      <p class="section-desc">From world-class dining to a rejuvenating spa, every amenity is designed to make your stay unforgettable.</p>
+    </div>
+    <div class="services-grid">
+
+      <div class="service-card">
+        <img class="service-img" src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=75" alt="Fine Dining" loading="lazy" />
+        <div class="service-body">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 11l19-9-9 19-2-8-8-2z"/>
+            </svg>
+          </div>
+          <p class="service-name">Fine Dining</p>
+          <p class="service-desc">Savor curated menus by our award-winning chef using seasonal, locally sourced ingredients.</p>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <img class="service-img" src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=800&q=75" alt="Spa & Wellness" loading="lazy" />
+        <div class="service-body">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+            </svg>
+          </div>
+          <p class="service-name">Spa & Wellness</p>
+          <p class="service-desc">Relax and restore with signature treatments, hydrotherapy, and a fully equipped fitness center.</p>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <img class="service-img" src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=75" alt="Concierge" loading="lazy" />
+        <div class="service-body">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+            </svg>
+          </div>
+          <p class="service-name">24/7 Concierge</p>
+          <p class="service-desc">Our dedicated team is always on hand to arrange tours, transfers, and personalized experiences.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── Rooms ─────────────────────────────────────────────────── -->
+  <section class="section rooms-section" id="rooms">
+    <div class="section-header">
+      <p class="section-eyebrow">Accommodations</p>
+      <h2 class="section-title">Our Rooms & Suites</h2>
+      <p class="section-desc">Each space is a sanctuary — thoughtfully designed with premium materials, natural light, and panoramic views.</p>
+    </div>
+    <div class="rooms-grid">
+
+      <div class="room-card">
+        <img class="room-img" src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=1200&q=80" alt="Presidential Suite" loading="lazy" />
+        <div class="room-overlay">
+          <span class="room-label">Signature</span>
+          <p class="room-name">Presidential Suite</p>
+          <p class="room-price">From €850 / night</p>
+        </div>
+      </div>
+
+      <div class="room-card">
+        <img class="room-img" src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=800&q=75" alt="Deluxe Room" loading="lazy" />
+        <div class="room-overlay">
+          <span class="room-label">Deluxe</span>
+          <p class="room-name">Deluxe King Room</p>
+          <p class="room-price">From €290 / night</p>
+        </div>
+      </div>
+
+      <div class="room-card">
+        <img class="room-img" src="https://images.unsplash.com/photo-1540518614846-7eded433c457?w=800&q=75" alt="Junior Suite" loading="lazy" />
+        <div class="room-overlay">
+          <span class="room-label">Suite</span>
+          <p class="room-name">Junior Suite</p>
+          <p class="room-price">From €420 / night</p>
+        </div>
+      </div>
+
+      <div class="room-card">
+        <img class="room-img" src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=800&q=75" alt="Classic Room" loading="lazy" />
+        <div class="room-overlay">
+          <span class="room-label">Classic</span>
+          <p class="room-name">Classic Double</p>
+          <p class="room-price">From €195 / night</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── Contact ───────────────────────────────────────────────── -->
+  <section class="section contact-section" id="contact">
+    <div class="section-header">
+      <p class="section-eyebrow">Get In Touch</p>
+      <h2 class="section-title">Reserve Your Stay</h2>
+      <p class="section-desc">Tell us about your perfect getaway and we will tailor every detail to exceed your expectations.</p>
+    </div>
+    <div class="contact-inner">
+
+      <div class="contact-info">
+        <div class="contact-detail">
+          <span class="contact-detail-label">Address</span>
+          <span class="contact-detail-value">12 Riviera Boulevard<br>Tirana, Albania</span>
+        </div>
+        <div class="contact-detail">
+          <span class="contact-detail-label">Phone</span>
+          <span class="contact-detail-value">+355 4 222 3344</span>
+        </div>
+        <div class="contact-detail">
+          <span class="contact-detail-label">Email</span>
+          <span class="contact-detail-value">reservations@grandvista.al</span>
+        </div>
+        <div class="contact-detail">
+          <span class="contact-detail-label">Check-in / Check-out</span>
+          <span class="contact-detail-value">3:00 PM — 12:00 PM</span>
+        </div>
+      </div>
+
+      <form class="contact-form" onsubmit="handleSubmit(event)">
+        <div class="form-group">
+          <label class="form-label" for="fname">First Name</label>
+          <input class="form-input" type="text" id="fname" name="fname" placeholder="John" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="lname">Last Name</label>
+          <input class="form-input" type="text" id="lname" name="lname" placeholder="Smith" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="email">Email</label>
+          <input class="form-input" type="email" id="email" name="email" placeholder="john@example.com" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="phone">Phone</label>
+          <input class="form-input" type="tel" id="phone" name="phone" placeholder="+1 555 000 0000" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="checkin">Check-in</label>
+          <input class="form-input" type="date" id="checkin" name="checkin" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="checkout">Check-out</label>
+          <input class="form-input" type="date" id="checkout" name="checkout" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="room">Room Type</label>
+          <select class="form-select" id="room" name="room">
+            <option value="">Select a room</option>
+            <option>Presidential Suite</option>
+            <option>Deluxe King Room</option>
+            <option>Junior Suite</option>
+            <option>Classic Double</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="guests">Guests</label>
+          <select class="form-select" id="guests" name="guests">
+            <option>1 Guest</option>
+            <option selected>2 Guests</option>
+            <option>3 Guests</option>
+            <option>4+ Guests</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label class="form-label" for="message">Special Requests</label>
+          <textarea class="form-textarea" id="message" name="message" placeholder="Anniversaries, dietary needs, late arrivals…"></textarea>
+        </div>
+        <div class="form-submit">
+          <p class="form-note">We will confirm within 24 hours.<br>No payment required at this stage.</p>
+          <button type="submit" class="btn-primary">
+            Send Enquiry
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </section>
+
+  <!-- ── Footer ───────────────────────────────────────────────── -->
+  <footer class="footer">
+    <a href="#" class="footer-brand">Grand<span>Vista</span></a>
+    <span class="footer-copy">© 2026 GrandVista Hotel. All rights reserved.</span>
+  </footer>
+
+  <script>
+    // Navbar hide on scroll
+    let lastY = 0;
+    window.addEventListener('scroll', () => {
+      const y = window.scrollY;
+      document.querySelector('.navbar').classList.toggle('navbar--hidden', y > lastY && y > 80);
+      lastY = y;
+    }, { passive: true });
+
+    // Form submit
+    function handleSubmit(e) {
+      e.preventDefault();
+      const btn = e.target.querySelector('[type="submit"]');
+      btn.textContent = 'Enquiry Sent ✓';
+      btn.style.opacity = '0.7';
+      btn.disabled = true;
+    }
+  </script>
+
+  <style>
+    .navbar--hidden { transform: translateY(calc(-100% - 2px)); }
+  </style>
+</body>
+</html>
