@@ -256,7 +256,7 @@
     function renderFilterBar(list,active){
       var bar=document.getElementById('dyn-filter-bar');
       var kats=[];
-      list.forEach(function(a){ var k=a.kat||''; if(k&&!kats.includes(k)) kats.push(k); });
+      list.forEach(function(a){ var ks=Array.isArray(a.kat)?a.kat:[a.kat||'']; ks.forEach(function(k){ if(k&&!kats.includes(k)) kats.push(k); }); });
       if(!kats.length){ bar.style.display='none'; syncWrapH(); return; }
       bar.style.display='flex';
       bar.innerHTML=['te-gjitha'].concat(kats).map(function(k){
@@ -267,7 +267,7 @@
     }
 
     function renderGrid(list,filter){
-      var show=filter==='te-gjitha'?list:list.filter(function(a){ return (a.kat||'').toLowerCase()===filter.toLowerCase(); });
+      var show=filter==='te-gjitha'?list:list.filter(function(a){ var ks=Array.isArray(a.kat)?a.kat:[a.kat||'']; return ks.some(function(k){ return (k||'').toLowerCase()===filter.toLowerCase(); }); });
       document.getElementById('pg-count').textContent=show.length+' PELHURA';
       var grid=document.getElementById('dyn-grid');
       if(!show.length){ grid.innerHTML='<div style="grid-column:1/-1;padding:80px 0;text-align:center;color:var(--muted);font-size:13px;">Nuk ka pelhura për këtë filtër.</div>'; return; }
@@ -282,7 +282,7 @@
         return '<div class="art-card" onclick="openDet(\''+a.id+'\')">'
           +'<div class="art-card-img-wrap"'+pa+'>'+imgEl+arr+'</div>'
           +'<div style="padding:12px 14px 16px;">'
-          +'<p style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:3px;">'+(a.kat||'')+'</p>'
+          +'<p style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:3px;">'+(Array.isArray(a.kat)?a.kat.join(', '):(a.kat||''))+'</p>'
           +'<p style="font-size:14px;font-weight:500;letter-spacing:-0.2px;color:var(--black);">'+a.name+'</p>'
           +(a.desc?'<p style="font-size:11px;color:var(--muted);margin-top:2px;">'+a.desc.slice(0,60)+'</p>':'')
           +'</div></div>';
@@ -351,7 +351,7 @@
 
     function renderDetInfo(){
       var a=_det.articles[_det.artIdx];
-      document.getElementById('art-detail-kat').textContent=a.kat||'';
+      document.getElementById('art-detail-kat').textContent=Array.isArray(a.kat)?a.kat.join(', '):(a.kat||'');
       document.getElementById('art-detail-name').textContent=a.name||'';
       document.getElementById('art-detail-code').textContent='';
       document.getElementById('art-detail-desc').textContent=a.desc||'';

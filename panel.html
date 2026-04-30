@@ -1119,34 +1119,24 @@ tr.drag-over{border-top:2.5px solid var(--pink);}
             <div class="fg"><label>Emri i Artikullit</label><input type="text" id="art-name" placeholder="P.sh. Mbathje Burra Classic"></div>
             <div class="fg"><label>Kodi i Artikullit</label><input type="text" id="art-code" placeholder="P.sh. MB-001"></div>
             <div class="fg">
-              <label>Kategoria (Veshja)</label>
-              <select id="art-kat" style="width:100%;margin-bottom:6px;">
-                <option value="mbathje">Mbathje</option>
-                <option value="kanatjere">Kanatjere</option>
-                <option value="__new__">+ Shto kategori te re...</option>
-              </select>
-              <div id="art-kat-tags" style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:5px;"></div>
+              <label>Kategoria (Veshja) <span style="font-weight:400;color:#aaa;font-size:10px;">— zgjidh një ose më shumë</span></label>
+              <div id="art-kat-chips" style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:6px;min-height:28px;"></div>
               <div id="art-kat-new-row" style="display:none;gap:4px;">
                 <input type="text" id="art-kat-new" placeholder="Emri i kategorise se re" onkeydown="if(event.key==='Enter')saveNewKat()" style="flex:1;background:#f8f8f8;border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-size:12px;font-family:var(--fb);">
                 <button class="btn-save" style="padding:6px 12px;font-size:11px;" onclick="saveNewKat()">Shto</button>
                 <button class="btn-reset" style="padding:6px 10px;font-size:11px;" onclick="cancelNewKat()">✕</button>
               </div>
+              <button onclick="document.getElementById('art-kat-new-row').style.display='flex';document.getElementById('art-kat-new').focus();" style="margin-top:4px;background:none;border:1px dashed #ccc;border-radius:6px;padding:4px 10px;font-size:11px;color:#888;cursor:pointer;font-family:var(--fb);">+ Shto kategori të re...</button>
             </div>
             <div class="fg">
-              <label>Gjinia / Grupi</label>
-              <select id="art-sub" style="width:100%;margin-bottom:6px;">
-                <option value="Meshkuj">Meshkuj</option>
-                <option value="Femra">Femra</option>
-                <option value="Femije">Femije</option>
-                <option value="Stinore">Stinore</option>
-                <option value="__new__">+ Shto grup te ri...</option>
-              </select>
-              <div id="art-sub-tags" style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:5px;"></div>
+              <label>Gjinia / Grupi <span style="font-weight:400;color:#aaa;font-size:10px;">— zgjidh një ose më shumë</span></label>
+              <div id="art-sub-chips" style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:6px;min-height:28px;"></div>
               <div id="art-sub-new-row" style="display:none;gap:4px;">
                 <input type="text" id="art-sub-new" placeholder="Emri i grupit te ri" onkeydown="if(event.key==='Enter')saveNewSub()" style="flex:1;background:#f8f8f8;border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-size:12px;font-family:var(--fb);">
                 <button class="btn-save" style="padding:6px 12px;font-size:11px;" onclick="saveNewSub()">Shto</button>
                 <button class="btn-reset" style="padding:6px 10px;font-size:11px;" onclick="cancelNewSub()">✕</button>
               </div>
+              <button onclick="document.getElementById('art-sub-new-row').style.display='flex';document.getElementById('art-sub-new').focus();" style="margin-top:4px;background:none;border:1px dashed #ccc;border-radius:6px;padding:4px 10px;font-size:11px;color:#888;cursor:pointer;font-family:var(--fb);">+ Shto grup të ri...</button>
             </div>
             <div class="fg full"><label>Pershkrimi</label><textarea id="art-desc" placeholder="Pershkrimi i artikullit..."></textarea></div>
             <div class="fg full">
@@ -1599,6 +1589,7 @@ var activeKat='te-gjitha', activeSub='te-gjitha', activeSearch='';
 var artPhotos=[], pelPhotos=[];
 var artSelNgjyrat=[], pelSelNgjyrat=[];
 var artSelMasa=[], artSelPerb=[], pelSelPerb=[];
+var artSelKat=[], artSelSub=[];
 var artCerts=[];
 var popArticle=null, popIdx=0;
 var cropState={type:'art',idx:0,ratio:'free',img:null,imgW:0,imgH:0,cx:0,cy:0,cw:0,ch:0,zoomPct:100};
@@ -2941,8 +2932,8 @@ function saveArt(){
     id:savedId,
     name:name, desc:desc,
     code:document.getElementById('art-code').value.trim(),
-    kat:(function(){var s=document.getElementById('art-kat');return s&&s.value&&s.value!=='__new__'?s.value:'';})(),
-    sub:document.getElementById('art-sub').value,
+    kat:artSelKat.slice(),
+    sub:artSelSub.slice(),
     sizes:artSelMasa.slice(),
     color:document.getElementById('art-color').value,
     emoji:document.getElementById('art-emoji').value||'🩲',
@@ -2990,9 +2981,9 @@ function editArt(id){
   document.getElementById('art-name').value=a.name;
   document.getElementById('art-code').value=a.code||'';
   document.getElementById('art-desc').value=a.desc;
-  var katMatch=(kategoriSettings.nenkategori||[]).find(function(k){return k.toLowerCase()===(a.kat||'').toLowerCase();});
-  document.getElementById('art-kat').value=katMatch||a.kat||'';
-  document.getElementById('art-sub').value=a.sub;
+  artSelKat=Array.isArray(a.kat)?a.kat.slice():(a.kat?[a.kat]:[]);
+  artSelSub=Array.isArray(a.sub)?a.sub.slice():(a.sub?[a.sub]:[]);
+  renderKatChips(); renderSubChips();
   document.getElementById('art-color').value=a.color||'#FFF0F5';
   document.getElementById('art-emoji').value=a.emoji||'';
   artPhotos=(a.photos||[]).slice(); renderThumbs('art');
@@ -3024,8 +3015,8 @@ function dupArt(id){
 }
 function resetArtForm(){
   ['art-eid','art-name','art-code','art-desc','art-emoji'].forEach(function(id){document.getElementById(id).value='';});
-  document.getElementById('art-kat').value=(kategoriSettings.nenkategori&&kategoriSettings.nenkategori[0])||'';
-  document.getElementById('art-sub').value=(kategoriSettings.kryesore&&kategoriSettings.kryesore[0])||'';
+  artSelKat=[]; artSelSub=[];
+  renderKatChips(); renderSubChips();
   document.getElementById('art-color').value='#FFF0F5';
   artPhotos=[]; document.getElementById('art-thumbs').innerHTML='';
   artSelMasa=[]; buildDefMasa(); renderSelMasa();
@@ -3126,63 +3117,46 @@ function loadSetForm(){
 // -- KATEGORI SETTINGS --
 async function saveKategoriSt(){await sbSet('kategorisettings',JSON.stringify(kategoriSettings));}
 
-function rebuildKatSelect(){
-  var sel=document.getElementById('art-kat');
-  if(!sel) return;
-  var cur=sel.value==='__new__'?'':sel.value;
-  sel.innerHTML=(kategoriSettings.nenkategori||[]).map(function(k){
-    return '<option value="'+k+'">'+k+'</option>';
-  }).join('')+'<option value="__new__">+ Shto kategori te re...</option>';
-  // Try to restore current value (case-insensitive match)
-  if(cur && cur!=='__new__'){
-    var match=(kategoriSettings.nenkategori||[]).find(function(k){return k.toLowerCase()===cur.toLowerCase();});
-    if(match) sel.value=match; else sel.selectedIndex=0;
-  }
-  renderKatTags();
-}
-function rebuildSubSelect(){
-  var sel=document.getElementById('art-sub');
-  if(!sel) return;
-  var cur=sel.value==='__new__'?'':sel.value;
-  sel.innerHTML=(kategoriSettings.kryesore||[]).map(function(k){
-    return '<option value="'+k+'">'+k+'</option>';
-  }).join('')+'<option value="__new__">+ Shto grup te ri...</option>';
-  if(cur && cur!=='__new__') sel.value=cur;
-  renderSubTags();
-}
-function renderKatTags(){
-  var el=document.getElementById('art-kat-tags');
-  if(!el) return;
-  el.innerHTML=(kategoriSettings.nenkategori||[]).map(function(k,i){
-    return '<span class="kat-tag">'+k+'<button class="kat-tag-del" onclick="delNenKat('+i+')" title="Fshi">×</button></span>';
+/* ── Multi-select chips for kat & sub ─────────────────────── */
+function renderKatChips(){
+  var el=document.getElementById('art-kat-chips'); if(!el) return;
+  var list=kategoriSettings.nenkategori||[];
+  el.innerHTML=list.map(function(k,i){
+    var sel=artSelKat.includes(k);
+    return '<span style="display:inline-flex;align-items:center;gap:3px;border-radius:20px;padding:4px 10px 4px 12px;font-size:11px;font-family:var(--fb);font-weight:500;cursor:pointer;user-select:none;border:1px solid '+(sel?'#111':'#ddd')+';background:'+(sel?'#111':'#f5f5f5')+';color:'+(sel?'#fff':'#555')+';transition:all .15s;"'
+      +' onclick="toggleKat(\''+k.replace(/'/g,"\\'")+'\')">'
+      +(sel?'✓ ':'')+k
+      +'<button onclick="event.stopPropagation();delNenKat('+i+')" style="background:none;border:none;color:'+(sel?'rgba(255,255,255,.7)':'#bbb')+';cursor:pointer;font-size:11px;line-height:1;padding:0 0 0 4px;font-family:inherit;" title="Fshi kategorinë">×</button>'
+      +'</span>';
   }).join('');
 }
-function renderSubTags(){
-  var el=document.getElementById('art-sub-tags');
-  if(!el) return;
-  el.innerHTML=(kategoriSettings.kryesore||[]).map(function(k,i){
-    return '<span class="kat-tag">'+k+'<button class="kat-tag-del" onclick="delKryeKat('+i+')" title="Fshi">×</button></span>';
+function renderSubChips(){
+  var el=document.getElementById('art-sub-chips'); if(!el) return;
+  var list=kategoriSettings.kryesore||[];
+  el.innerHTML=list.map(function(k,i){
+    var sel=artSelSub.includes(k);
+    return '<span style="display:inline-flex;align-items:center;gap:3px;border-radius:20px;padding:4px 10px 4px 12px;font-size:11px;font-family:var(--fb);font-weight:500;cursor:pointer;user-select:none;border:1px solid '+(sel?'#111':'#ddd')+';background:'+(sel?'#111':'#f5f5f5')+';color:'+(sel?'#fff':'#555')+';transition:all .15s;"'
+      +' onclick="toggleSub(\''+k.replace(/'/g,"\\'")+'\')">'
+      +(sel?'✓ ':'')+k
+      +'<button onclick="event.stopPropagation();delKryeKat('+i+')" style="background:none;border:none;color:'+(sel?'rgba(255,255,255,.7)':'#bbb')+';cursor:pointer;font-size:11px;line-height:1;padding:0 0 0 4px;font-family:inherit;" title="Fshi grupin">×</button>'
+      +'</span>';
   }).join('');
 }
-// kat select onchange
-document.addEventListener('change',function(e){
-  if(e.target && e.target.id==='art-kat'){
-    if(e.target.value==='__new__'){
-      document.getElementById('art-kat-new-row').style.display='flex';
-      document.getElementById('art-kat-new').focus();
-    } else {
-      document.getElementById('art-kat-new-row').style.display='none';
-    }
-  }
-  if(e.target && e.target.id==='art-sub'){
-    if(e.target.value==='__new__'){
-      document.getElementById('art-sub-new-row').style.display='flex';
-      document.getElementById('art-sub-new').focus();
-    } else {
-      document.getElementById('art-sub-new-row').style.display='none';
-    }
-  }
-});
+function toggleKat(v){
+  var i=artSelKat.indexOf(v);
+  if(i>-1) artSelKat.splice(i,1); else artSelKat.push(v);
+  renderKatChips();
+}
+function toggleSub(v){
+  var i=artSelSub.indexOf(v);
+  if(i>-1) artSelSub.splice(i,1); else artSelSub.push(v);
+  renderSubChips();
+}
+/* Keep legacy names so other call sites don't break */
+function rebuildKatSelect(){ renderKatChips(); }
+function rebuildSubSelect(){ renderSubChips(); }
+function renderKatTags(){ renderKatChips(); }
+function renderSubTags(){ renderSubChips(); }
 function saveNewKat(){
   var inp=document.getElementById('art-kat-new');
   var v=(inp.value||'').trim();
@@ -3192,11 +3166,10 @@ function saveNewKat(){
     showToast('Ekziston!',true); return;
   }
   kategoriSettings.nenkategori.push(v);
+  if(!artSelKat.includes(v)) artSelKat.push(v); // auto-select new value
   inp.value='';
   saveKategoriSt();
-  rebuildKatSelect();
-  var sel=document.getElementById('art-kat');
-  if(sel) sel.value=v;
+  renderKatChips();
   document.getElementById('art-kat-new-row').style.display='none';
   renderKatAdminLists();
   renderPublic();
@@ -3205,8 +3178,6 @@ function saveNewKat(){
 function cancelNewKat(){
   document.getElementById('art-kat-new').value='';
   document.getElementById('art-kat-new-row').style.display='none';
-  var sel=document.getElementById('art-kat');
-  if(sel && sel.options.length>1) sel.selectedIndex=0;
 }
 function saveNewSub(){
   var inp=document.getElementById('art-sub-new');
@@ -3215,11 +3186,10 @@ function saveNewSub(){
   if(!kategoriSettings.kryesore) kategoriSettings.kryesore=[];
   if(kategoriSettings.kryesore.includes(v)){showToast('Ekziston!',true); return;}
   kategoriSettings.kryesore.push(v);
+  if(!artSelSub.includes(v)) artSelSub.push(v); // auto-select new value
   inp.value='';
   saveKategoriSt();
-  rebuildSubSelect();
-  var sel=document.getElementById('art-sub');
-  if(sel) sel.value=v;
+  renderSubChips();
   document.getElementById('art-sub-new-row').style.display='none';
   renderKatAdminLists();
   renderPublic();
@@ -3228,8 +3198,6 @@ function saveNewSub(){
 function cancelNewSub(){
   document.getElementById('art-sub-new').value='';
   document.getElementById('art-sub-new-row').style.display='none';
-  var sel=document.getElementById('art-sub');
-  if(sel && sel.options.length>1) sel.selectedIndex=0;
 }
 function delNenKat(idx){
   var k=kategoriSettings.nenkategori[idx];
