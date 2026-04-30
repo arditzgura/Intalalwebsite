@@ -130,18 +130,55 @@ document.addEventListener('DOMContentLoaded', function () {
       if (isOpen) closeSearch(); else openSearch();
     });
 
+    /* Ridirektim tek artikujt.html nëse nuk jemi atje */
+    var _redirectTimer = null;
+    function onArtPage() {
+      return window.location.pathname.indexOf('artikujt') > -1;
+    }
+    function doRedirect(q) {
+      if (q.length < 2) return;
+      window.location.href = 'artikujt.html?q=' + encodeURIComponent(q);
+    }
+
     inp.addEventListener('input', function () {
       var q = inp.value.trim();
       clr.style.display = q ? 'block' : 'none';
-      if (window._searchCallback) window._searchCallback(q);
+      if (window._searchCallback) {
+        window._searchCallback(q);
+        /* Përditëso URL pa rifreskim (vetëm në artikujt.html) */
+        if (onArtPage()) {
+          var url = q
+            ? (window.location.pathname + '?q=' + encodeURIComponent(q))
+            : window.location.pathname;
+          history.replaceState(null, '', url);
+        }
+      } else {
+        /* Faqe tjetër (home, kontakt…) — ridirektim pas 500ms */
+        clearTimeout(_redirectTimer);
+        if (q.length >= 2) {
+          _redirectTimer = setTimeout(function () { doRedirect(q); }, 500);
+        }
+      }
+    });
+
+    inp.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+        clearTimeout(_redirectTimer);
+        var q = inp.value.trim();
+        if (!window._searchCallback && q) { doRedirect(q); }
+      }
     });
 
     clr.addEventListener('click', function () {
+      clearTimeout(_redirectTimer);
       inp.value = '';
       clr.style.display = 'none';
       cnt.textContent = '';
       inp.focus();
-      if (window._searchCallback) window._searchCallback('');
+      if (window._searchCallback) {
+        window._searchCallback('');
+        if (onArtPage()) history.replaceState(null, '', window.location.pathname);
+      }
     });
 
     document.addEventListener('keydown', function (e) {
@@ -154,6 +191,14 @@ document.addEventListener('DOMContentLoaded', function () {
     window._setSearchCount = function (n, total) {
       cnt.textContent = n < total ? n + ' / ' + total : '';
     };
+
+    /* Nëse URL ka ?q= (p.sh. ridirektim nga homepage), hap search-in dhe filtro */
+    var urlParams = new URLSearchParams(window.location.search);
+    var initQ = urlParams.get('q');
+    if (initQ && onArtPage()) {
+      /* Prit që artikujt të ngarkohen, pastaj apliko filtrin */
+      window._pendingSearchQ = initQ;
+    }
   });
 })();
 

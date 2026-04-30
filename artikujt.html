@@ -864,6 +864,16 @@
       if(pageRefreshed) { location.reload(); return; }
       route(); // re-render with fresh Supabase data
       sbTrack('pageView', {page:'artikujt'}); // track visit
+      /* Apliko kërkimin nga URL nëse ka (?q=...) */
+      if (window._pendingSearchQ) {
+        var pq = window._pendingSearchQ;
+        window._pendingSearchQ = null;
+        if (window.openSearch) window.openSearch();
+        setTimeout(function(){
+          var inp = document.getElementById('search-input');
+          if (inp) { inp.value = pq; inp.dispatchEvent(new Event('input')); }
+        }, 80);
+      }
     })();
   })();
   </script>
