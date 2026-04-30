@@ -9,59 +9,54 @@ document.addEventListener('DOMContentLoaded', function () {
 
   var lastY   = window.scrollY;
   var ticking = false;
+  var EXTRA   = 4; /* px shtesë — heq çdo border/vijë nga skajet */
 
-  /* Bar dhe spacer kërkohen gjatë ekzekutimit (mund të shfaqen pas DOMContentLoaded) */
   function bar()    { return document.getElementById('dyn-filter-bar'); }
   function spacer() { return document.getElementById('filter-bar-spacer'); }
 
-  /* Kthen lartësinë e filter bar-it.
-     Kur display:none offsetHeight=0 → përdor vlerën e ruajtur _openH */
+  /* Lartësia e filter bar-it — ruan vlerën e fundit të njohur si _openH */
   function barH() {
-    var b = bar();
-    if (!b) return 0;
-    if (b.offsetHeight) { b._openH = b.offsetHeight; }
+    var b = bar(); if (!b) return 0;
+    var h = b.offsetHeight;
+    if (h > 0) b._openH = h;
     return b._openH || 0;
+  }
+
+  /* Offset total për të fshehur filter bar-in plotësisht jashtë viewport */
+  function hideOffset() {
+    return navbar.offsetHeight + barH() + EXTRA;
+  }
+
+  function barIsVisible() {
+    var b = bar(); if (!b) return false;
+    return window.getComputedStyle(b).display !== 'none';
   }
 
   function hideAll() {
     navbar.classList.add('navbar--hidden');
-    var b = bar();
-    if (!b) return;
-    /* getComputedStyle — i saktë edhe për position:fixed (offsetParent=null në Firefox) */
-    if (window.getComputedStyle(b).display === 'none') return;
-    var h = barH();
-    if (!h) return;
-    b.style.transform = 'translateY(' + (-(navbar.offsetHeight + h)) + 'px)';
+    var b = bar(); if (!b || !barIsVisible()) return;
+    b.style.transform = 'translateY(-' + hideOffset() + 'px)';
     var sp = spacer(); if (sp) sp.style.height = '0';
   }
 
   function showAll() {
     navbar.classList.remove('navbar--hidden');
-    var b = bar();
-    if (!b) return;
+    var b = bar(); if (!b) return;
     b.style.transform = 'translateY(0)';
     var sp = spacer();
     if (sp) sp.style.height = (b._openH || 0) + 'px';
   }
 
-  /* Thirret nga faqet pas renderimit të filter bar-it.
-     Sinkronizon menjëherë transform-in me gjendjen aktuale të navbar-it. */
+  /* Thirret pas çdo render të filter bar-it.
+     Sinkronizon menjëherë me gjendjen aktuale të navbar-it. */
   window._fbResetScroll = function () {
     lastY = window.scrollY;
-    var b = bar();
-    if (!b) return;
     if (navbar.classList.contains('navbar--hidden')) {
-      /* Navbar është i fshehur — fshih edhe bar-in */
-      var h = barH();
-      if (h) {
-        b.style.transform = 'translateY(' + (-(navbar.offsetHeight + h)) + 'px)';
-        var sp = spacer(); if (sp) sp.style.height = '0';
-      }
+      var b = bar(); if (!b) return;
+      b.style.transform = 'translateY(-' + hideOffset() + 'px)';
+      var sp = spacer(); if (sp) sp.style.height = '0';
     } else {
-      /* Navbar i dukshëm — siguro që bar-i është i dukshëm */
-      b.style.transform = 'translateY(0)';
-      var sp2 = spacer();
-      if (sp2) sp2.style.height = (b._openH || 0) + 'px';
+      showAll();
     }
   };
 
@@ -70,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function () {
     ticking = true;
     requestAnimationFrame(function () {
       var cur = window.scrollY;
-      if (cur > lastY && cur > 80) { hideAll(); }
+      if (cur > lastY && cur > 60) { hideAll(); }
       else                          { showAll(); }
       navbar.classList.toggle('navbar--scrolled', cur > 10);
       lastY   = cur;

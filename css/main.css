@@ -63,7 +63,7 @@ body {
 }
 
 .navbar--hidden {
-  transform: translateY(-100%);
+  transform: translateY(calc(-100% - 2px)); /* +2px heq border-bottom nga viewport */
 }
 
 .navbar-inner {
