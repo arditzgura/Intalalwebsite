@@ -251,8 +251,39 @@
     .field-input:focus, .field-textarea:focus { border-color: var(--gold); }
     .field-textarea { resize: vertical; min-height: 70px; }
 
+    /* ── Image upload ── */
+    .img-upload-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-top: 6px;
+    }
+    .img-upload-row .field-input { flex: 1; margin: 0; }
+    .btn-upload {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'Switzer', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      background: var(--bg);
+      color: var(--black);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 9px 14px;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+      white-space: nowrap;
+    }
+    .btn-upload:hover { border-color: var(--gold); background: rgba(154,124,63,0.06); }
+    .btn-upload svg { width: 13px; height: 13px; }
+    .file-input-hidden { display: none; }
+
     /* ── Image preview ── */
-    .img-preview-wrap { position: relative; margin-top: 6px; }
+    .img-preview-wrap { position: relative; margin-top: 8px; }
     .img-preview {
       width: 100%;
       aspect-ratio: 16/9;
@@ -461,8 +492,15 @@
             <textarea class="field-textarea" id="h_subtitle"></textarea>
           </div>
           <div class="field full">
-            <label class="field-label">Background Image URL</label>
-            <input class="field-input" id="h_img" type="text" oninput="previewImg('h_img','h_img_preview')" />
+            <label class="field-label">Background Image</label>
+            <div class="img-upload-row">
+              <input class="field-input" id="h_img" type="text" placeholder="Paste URL or upload a file…" oninput="previewImg('h_img','h_img_preview')" />
+              <button type="button" class="btn-upload" onclick="triggerUpload('h_img_file')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Upload
+              </button>
+              <input class="file-input-hidden" type="file" id="h_img_file" accept="image/*" onchange="handleUpload(this,'h_img','h_img_preview')" />
+            </div>
             <div class="img-preview-wrap">
               <img class="img-preview" id="h_img_preview" src="" alt="Hero preview" />
             </div>
@@ -673,7 +711,26 @@
     return stored ? { ...DEFAULTS[section], ...stored } : { ...DEFAULTS[section] };
   }
 
-  // ── Image preview helper ──
+  // ── Image helpers ──
+  function triggerUpload(fileInputId) {
+    const el = document.getElementById(fileInputId);
+    if (el) el.click();
+  }
+
+  function handleUpload(fileInput, urlInputId, previewId) {
+    const file = fileInput.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      const base64 = e.target.result;
+      document.getElementById(urlInputId).value = base64;
+      const img = document.getElementById(previewId);
+      img.src = base64;
+      img.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  }
+
   function previewImg(inputId, previewId) {
     const src = document.getElementById(inputId).value.trim();
     const img = document.getElementById(previewId);
@@ -692,15 +749,20 @@
             <label class="field-label">Name</label>
             <input class="field-input" id="sv_name_${i}" type="text" value="${esc(item.name)}" />
           </div>
-          <div class="field">
-            <label class="field-label">Image URL</label>
-            <input class="field-input" id="sv_img_${i}" type="text" value="${esc(item.img)}" oninput="previewImg('sv_img_${i}','sv_imgp_${i}')" />
-          </div>
           <div class="field full">
             <label class="field-label">Description</label>
             <textarea class="field-textarea" id="sv_desc_${i}">${esc(item.desc)}</textarea>
           </div>
           <div class="field full">
+            <label class="field-label">Image</label>
+            <div class="img-upload-row">
+              <input class="field-input" id="sv_img_${i}" type="text" value="${esc(item.img)}" placeholder="Paste URL or upload…" oninput="previewImg('sv_img_${i}','sv_imgp_${i}')" />
+              <button type="button" class="btn-upload" onclick="triggerUpload('sv_img_file_${i}')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Upload
+              </button>
+              <input class="file-input-hidden" type="file" id="sv_img_file_${i}" accept="image/*" onchange="handleUpload(this,'sv_img_${i}','sv_imgp_${i}')" />
+            </div>
             <div class="img-preview-wrap">
               <img class="img-preview tall" id="sv_imgp_${i}" src="${esc(item.img)}" alt="" />
             </div>
@@ -730,10 +792,15 @@
             <input class="field-input" id="rm_price_${i}" type="text" value="${esc(item.price)}" />
           </div>
           <div class="field full">
-            <label class="field-label">Image URL</label>
-            <input class="field-input" id="rm_img_${i}" type="text" value="${esc(item.img)}" oninput="previewImg('rm_img_${i}','rm_imgp_${i}')" />
-          </div>
-          <div class="field full">
+            <label class="field-label">Image</label>
+            <div class="img-upload-row">
+              <input class="field-input" id="rm_img_${i}" type="text" value="${esc(item.img)}" placeholder="Paste URL or upload…" oninput="previewImg('rm_img_${i}','rm_imgp_${i}')" />
+              <button type="button" class="btn-upload" onclick="triggerUpload('rm_img_file_${i}')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Upload
+              </button>
+              <input class="file-input-hidden" type="file" id="rm_img_file_${i}" accept="image/*" onchange="handleUpload(this,'rm_img_${i}','rm_imgp_${i}')" />
+            </div>
             <div class="img-preview-wrap">
               <img class="img-preview" id="rm_imgp_${i}" src="${esc(item.img)}" alt="" />
             </div>
