@@ -536,6 +536,201 @@
       color: rgba(255,255,255,0.25);
     }
 
+    /* ── Admin overlay ──────────────────────────────────────────── */
+    #adminOverlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: none;
+      font-family: 'Switzer', sans-serif;
+    }
+    #adminOverlay.open { display: flex; }
+
+    /* Login screen */
+    .adm-login {
+      position: absolute;
+      inset: 0;
+      background: rgba(10,10,10,0.96);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+    }
+    .adm-login-box {
+      width: min(360px, 92vw);
+      background: #fff;
+      border-radius: 8px;
+      padding: 36px 32px 30px;
+    }
+    .adm-login-brand { font-size: 11px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; margin-bottom: 22px; }
+    .adm-login-brand span { color: var(--gold); }
+    .adm-login-title { font-size: 20px; font-weight: 600; margin-bottom: 4px; }
+    .adm-login-sub { font-size: 12px; color: var(--muted); margin-bottom: 24px; }
+    .adm-lf { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
+    .adm-lf label { font-size: 10px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); }
+    .adm-lf input {
+      font-family: 'Switzer', sans-serif; font-size: 13px;
+      padding: 10px 12px; border: 1px solid var(--border); border-radius: 4px;
+      outline: none; transition: border-color 0.2s;
+    }
+    .adm-lf input:focus { border-color: var(--gold); }
+    .adm-login-err { font-size: 11px; color: #c0392b; min-height: 16px; margin-bottom: 4px; }
+    .adm-btn-login {
+      width: 100%; padding: 12px; background: var(--gold); color: #fff;
+      font-family: 'Switzer', sans-serif; font-size: 11px; font-weight: 600;
+      letter-spacing: 1px; text-transform: uppercase; border: none; border-radius: 4px;
+      cursor: pointer; margin-top: 6px; transition: opacity 0.15s;
+    }
+    .adm-btn-login:hover { opacity: 0.88; }
+
+    /* Dashboard */
+    .adm-dash {
+      display: none;
+      width: 100%;
+      height: 100%;
+      background: #f4f5f7;
+      overflow: hidden;
+    }
+    .adm-dash.visible { display: flex; }
+
+    .adm-sidebar {
+      width: 210px;
+      flex-shrink: 0;
+      background: var(--black);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+    .adm-sidebar-brand {
+      padding: 20px 18px 16px;
+      font-size: 10px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+      border-bottom: 0.5px solid rgba(255,255,255,0.07);
+    }
+    .adm-sidebar-brand span { color: var(--gold); }
+    .adm-sidebar-label {
+      font-size: 9px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
+      color: rgba(255,255,255,0.22); padding: 16px 18px 6px;
+    }
+    .adm-nav-link {
+      display: flex; align-items: center; gap: 9px;
+      padding: 10px 18px; font-size: 12px; font-weight: 500;
+      color: rgba(255,255,255,0.45); cursor: pointer;
+      border-left: 2px solid transparent;
+      transition: color 0.15s, background 0.15s, border-color 0.15s;
+      user-select: none;
+    }
+    .adm-nav-link svg { width: 14px; height: 14px; flex-shrink: 0; }
+    .adm-nav-link:hover { color: rgba(255,255,255,0.8); background: rgba(255,255,255,0.04); }
+    .adm-nav-link.active { color: var(--gold-light); border-left-color: var(--gold); background: rgba(154,124,63,0.1); }
+    .adm-sidebar-footer {
+      margin-top: auto; padding: 14px 18px;
+      border-top: 0.5px solid rgba(255,255,255,0.07);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .adm-user { font-size: 10px; color: rgba(255,255,255,0.3); }
+    .adm-btn-logout {
+      font-size: 10px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase;
+      color: rgba(255,255,255,0.3); background: none; border: none; cursor: pointer; transition: color 0.15s;
+    }
+    .adm-btn-logout:hover { color: #c0392b; }
+
+    .adm-main {
+      flex: 1; overflow-y: auto;
+      padding: 28px clamp(16px, 3vw, 36px) 50px;
+    }
+    .adm-topbar {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      margin-bottom: 22px; gap: 12px; flex-wrap: wrap;
+    }
+    .adm-topbar-title { font-size: 18px; font-weight: 600; }
+    .adm-topbar-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .adm-btn-close {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase;
+      color: var(--muted); background: #fff; border: 1px solid var(--border);
+      border-radius: 4px; padding: 8px 14px; cursor: pointer; transition: color 0.15s, border-color 0.15s;
+      white-space: nowrap;
+    }
+    .adm-btn-close:hover { color: var(--black); border-color: var(--black); }
+
+    .adm-panel { display: none; }
+    .adm-panel.active { display: block; }
+
+    .adm-card {
+      background: #fff; border: 1px solid #e2e5ea;
+      border-radius: 6px; padding: 20px; margin-bottom: 16px;
+    }
+    .adm-card-title {
+      font-size: 12px; font-weight: 600; letter-spacing: 0.3px;
+      margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #e2e5ea;
+      display: flex; align-items: center; gap: 7px;
+    }
+    .adm-card-title svg { width: 13px; height: 13px; stroke: var(--gold); }
+
+    .adm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .adm-grid.cols1 { grid-template-columns: 1fr; }
+    .adm-grid.cols3 { grid-template-columns: 1fr 1fr 1fr; }
+    .adm-field { display: flex; flex-direction: column; gap: 4px; }
+    .adm-field.full { grid-column: 1 / -1; }
+    .adm-field label { font-size: 9px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); }
+    .adm-input, .adm-textarea {
+      font-family: 'Switzer', sans-serif; font-size: 13px; color: var(--black);
+      background: #fff; border: 1px solid #e2e5ea; border-radius: 4px;
+      padding: 8px 11px; outline: none; width: 100%; transition: border-color 0.2s;
+    }
+    .adm-input:focus, .adm-textarea:focus { border-color: var(--gold); }
+    .adm-textarea { resize: vertical; min-height: 65px; }
+
+    .adm-img-row { display: flex; gap: 7px; align-items: center; margin-top: 4px; }
+    .adm-img-row .adm-input { flex: 1; }
+    .adm-btn-upload {
+      flex-shrink: 0; display: inline-flex; align-items: center; gap: 5px;
+      font-family: 'Switzer', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase;
+      background: #f4f5f7; color: var(--black); border: 1px solid #e2e5ea;
+      border-radius: 4px; padding: 8px 12px; cursor: pointer; white-space: nowrap;
+      transition: border-color 0.15s;
+    }
+    .adm-btn-upload:hover { border-color: var(--gold); }
+    .adm-btn-upload svg { width: 12px; height: 12px; }
+    .adm-file-hidden { display: none; }
+
+    .adm-img-preview {
+      width: 100%; aspect-ratio: 16/9; object-fit: cover;
+      border-radius: 4px; border: 1px solid #e2e5ea;
+      background: #f4f5f7; display: block; margin-top: 8px;
+    }
+    .adm-img-preview.tall { aspect-ratio: 4/3; }
+
+    .adm-save-bar {
+      display: flex; align-items: center; justify-content: flex-end; gap: 10px;
+      margin-top: 4px; padding-top: 14px; border-top: 1px solid #e2e5ea;
+    }
+    .adm-save-msg { font-size: 11px; color: #27ae60; opacity: 0; transition: opacity 0.3s; }
+    .adm-save-msg.show { opacity: 1; }
+    .adm-btn-save {
+      font-family: 'Switzer', sans-serif; font-size: 10px; font-weight: 600;
+      letter-spacing: 0.8px; text-transform: uppercase;
+      background: var(--gold); color: #fff; border: none; border-radius: 4px;
+      padding: 9px 20px; cursor: pointer; transition: opacity 0.15s;
+    }
+    .adm-btn-save:hover { opacity: 0.88; }
+
+    .adm-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
+    .adm-stat { background: #fff; border: 1px solid #e2e5ea; border-radius: 6px; padding: 16px; }
+    .adm-stat-label { font-size: 9px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+    .adm-stat-value { font-size: 18px; font-weight: 600; }
+    .adm-stat-value small { font-size: 11px; font-weight: 400; color: var(--muted); }
+
+    @media (max-width: 700px) {
+      .adm-sidebar { width: 170px; }
+      .adm-grid.cols3 { grid-template-columns: 1fr; }
+      .adm-grid { grid-template-columns: 1fr; }
+      .adm-stats { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 500px) {
+      .adm-sidebar { display: none; }
+    }
+
     /* ── Responsive ──────────────────────────────────────────── */
     @media (max-width: 960px) {
       .navbar-links, .navbar-btn { display: none; }
@@ -777,8 +972,182 @@
   <footer class="footer">
     <a href="#" class="footer-brand">Hotel <span>Veizi</span></a>
     <span class="footer-copy">© 2026 Hotel Veizi. All rights reserved.</span>
-    <a href="admin/" aria-label="Admin" style="width:10px;height:10px;border-radius:50%;background:#0a0a0a;display:inline-block;flex-shrink:0;"></a>
+    <span onclick="openAdmin()" aria-label="Admin" style="width:10px;height:10px;border-radius:50%;background:#0a0a0a;display:inline-block;flex-shrink:0;cursor:pointer;"></span>
   </footer>
+
+  <!-- ── Admin overlay ─────────────────────────────────────────── -->
+  <div id="adminOverlay">
+
+    <!-- Login -->
+    <div class="adm-login" id="admLogin">
+      <div class="adm-login-box">
+        <div class="adm-login-brand">Hotel <span>Veizi</span></div>
+        <div class="adm-login-title">Admin Panel</div>
+        <p class="adm-login-sub">Sign in to edit your page.</p>
+        <div class="adm-lf">
+          <label for="adm_u">Username</label>
+          <input type="text" id="adm_u" placeholder="admin" autocomplete="username" />
+        </div>
+        <div class="adm-lf">
+          <label for="adm_p">Password</label>
+          <input type="password" id="adm_p" placeholder="••••••••" autocomplete="current-password" />
+        </div>
+        <p class="adm-login-err" id="admErr"></p>
+        <button class="adm-btn-login" onclick="admDoLogin()">Sign In</button>
+      </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div class="adm-dash" id="admDash">
+
+      <aside class="adm-sidebar">
+        <div class="adm-sidebar-brand">Hotel <span>Veizi</span></div>
+        <div class="adm-sidebar-label">Content</div>
+        <div class="adm-nav-link active" data-admpanel="overview" onclick="admShowPanel(this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          Overview
+        </div>
+        <div class="adm-nav-link" data-admpanel="hero" onclick="admShowPanel(this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg>
+          Hero
+        </div>
+        <div class="adm-nav-link" data-admpanel="services" onclick="admShowPanel(this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+          Services
+        </div>
+        <div class="adm-nav-link" data-admpanel="rooms" onclick="admShowPanel(this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+          Rooms
+        </div>
+        <div class="adm-nav-link" data-admpanel="contact" onclick="admShowPanel(this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.77 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          Contact
+        </div>
+        <div class="adm-sidebar-footer">
+          <span class="adm-user">admin</span>
+          <button class="adm-btn-logout" onclick="admDoLogout()">Log out</button>
+        </div>
+      </aside>
+
+      <main class="adm-main">
+        <div class="adm-topbar">
+          <div>
+            <div class="adm-topbar-title" id="admPanelTitle">Overview</div>
+            <div class="adm-topbar-sub" id="admPanelSub">Manage your hotel page content.</div>
+          </div>
+          <button class="adm-btn-close" onclick="closeAdmin()">✕ Close Panel</button>
+        </div>
+
+        <!-- Overview -->
+        <div class="adm-panel active" id="adm-panel-overview">
+          <div class="adm-stats">
+            <div class="adm-stat"><div class="adm-stat-label">Services</div><div class="adm-stat-value">3 <small>cards</small></div></div>
+            <div class="adm-stat"><div class="adm-stat-label">Rooms</div><div class="adm-stat-value">4 <small>listed</small></div></div>
+            <div class="adm-stat"><div class="adm-stat-label">Last saved</div><div class="adm-stat-value" id="admLastSaved" style="font-size:12px;font-weight:500;">—</div></div>
+          </div>
+          <div class="adm-card">
+            <div class="adm-card-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              How it works
+            </div>
+            <p style="font-size:12px;color:var(--muted);line-height:1.7;">Use the sidebar to switch sections. Edit any text or image, then click <strong>Save</strong> — the live page updates instantly without reloading. Uploaded images are compressed automatically.</p>
+          </div>
+        </div>
+
+        <!-- Hero -->
+        <div class="adm-panel" id="adm-panel-hero">
+          <div class="adm-card">
+            <div class="adm-card-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg>
+              Hero Section
+            </div>
+            <div class="adm-grid">
+              <div class="adm-field"><label for="adm_h_eyebrow">Eyebrow</label><input class="adm-input" id="adm_h_eyebrow" type="text" /></div>
+              <div class="adm-field"><label for="adm_h_btn1">Button Label</label><input class="adm-input" id="adm_h_btn1" type="text" /></div>
+              <div class="adm-field full"><label for="adm_h_title">Heading</label><input class="adm-input" id="adm_h_title" type="text" /></div>
+              <div class="adm-field full"><label for="adm_h_subtitle">Subtitle</label><textarea class="adm-textarea" id="adm_h_subtitle"></textarea></div>
+              <div class="adm-field full">
+                <label>Background Image</label>
+                <div class="adm-img-row">
+                  <input class="adm-input" id="adm_h_img" type="text" placeholder="Paste URL or upload…" oninput="admPreviewImg('adm_h_img','adm_h_imgp')" />
+                  <button type="button" class="adm-btn-upload" onclick="admTriggerUpload('adm_h_imgf')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    Upload
+                  </button>
+                  <input class="adm-file-hidden" type="file" id="adm_h_imgf" accept="image/*" onchange="admHandleUpload(this,'adm_h_img','adm_h_imgp')" />
+                </div>
+                <img class="adm-img-preview" id="adm_h_imgp" src="" alt="" />
+              </div>
+            </div>
+            <div class="adm-save-bar">
+              <span class="adm-save-msg" id="adm-saved-hero">Saved!</span>
+              <button class="adm-btn-save" onclick="admSave('hero')">Save</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Services -->
+        <div class="adm-panel" id="adm-panel-services">
+          <div class="adm-card">
+            <div class="adm-card-title">Section Header</div>
+            <div class="adm-grid">
+              <div class="adm-field"><label for="adm_sv_eyebrow">Eyebrow</label><input class="adm-input" id="adm_sv_eyebrow" type="text" /></div>
+              <div class="adm-field"><label for="adm_sv_title">Title</label><input class="adm-input" id="adm_sv_title" type="text" /></div>
+              <div class="adm-field full"><label for="adm_sv_desc">Description</label><textarea class="adm-textarea" id="adm_sv_desc"></textarea></div>
+            </div>
+          </div>
+          <div id="adm-sv-items"></div>
+          <div class="adm-card" style="margin-top:0;">
+            <div class="adm-save-bar" style="padding-top:0;border-top:none;margin-top:0;">
+              <span class="adm-save-msg" id="adm-saved-services">Saved!</span>
+              <button class="adm-btn-save" onclick="admSave('services')">Save</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rooms -->
+        <div class="adm-panel" id="adm-panel-rooms">
+          <div class="adm-card">
+            <div class="adm-card-title">Section Header</div>
+            <div class="adm-grid">
+              <div class="adm-field"><label for="adm_rm_eyebrow">Eyebrow</label><input class="adm-input" id="adm_rm_eyebrow" type="text" /></div>
+              <div class="adm-field"><label for="adm_rm_title">Title</label><input class="adm-input" id="adm_rm_title" type="text" /></div>
+              <div class="adm-field full"><label for="adm_rm_desc">Description</label><textarea class="adm-textarea" id="adm_rm_desc"></textarea></div>
+            </div>
+          </div>
+          <div id="adm-rm-items"></div>
+          <div class="adm-card" style="margin-top:0;">
+            <div class="adm-save-bar" style="padding-top:0;border-top:none;margin-top:0;">
+              <span class="adm-save-msg" id="adm-saved-rooms">Saved!</span>
+              <button class="adm-btn-save" onclick="admSave('rooms')">Save</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact -->
+        <div class="adm-panel" id="adm-panel-contact">
+          <div class="adm-card">
+            <div class="adm-card-title">Contact Details</div>
+            <div class="adm-grid">
+              <div class="adm-field"><label for="adm_ct_eyebrow">Eyebrow</label><input class="adm-input" id="adm_ct_eyebrow" type="text" /></div>
+              <div class="adm-field"><label for="adm_ct_title">Title</label><input class="adm-input" id="adm_ct_title" type="text" /></div>
+              <div class="adm-field full"><label for="adm_ct_desc">Description</label><textarea class="adm-textarea" id="adm_ct_desc"></textarea></div>
+              <div class="adm-field full"><label for="adm_ct_address">Address</label><input class="adm-input" id="adm_ct_address" type="text" /></div>
+              <div class="adm-field"><label for="adm_ct_phone">Phone</label><input class="adm-input" id="adm_ct_phone" type="text" /></div>
+              <div class="adm-field"><label for="adm_ct_email">Email</label><input class="adm-input" id="adm_ct_email" type="text" /></div>
+              <div class="adm-field"><label for="adm_ct_checkin">Check-in</label><input class="adm-input" id="adm_ct_checkin" type="text" /></div>
+              <div class="adm-field"><label for="adm_ct_checkout">Check-out</label><input class="adm-input" id="adm_ct_checkout" type="text" /></div>
+            </div>
+            <div class="adm-save-bar">
+              <span class="adm-save-msg" id="adm-saved-contact">Saved!</span>
+              <button class="adm-btn-save" onclick="admSave('contact')">Save</button>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
 
   <script>
     // Disable smooth scroll — instant jumps
@@ -861,67 +1230,340 @@
     .navbar--hidden { transform: translateY(calc(-100% - 2px)); }
   </style>
 
-  <!-- ── CMS: load saved content from admin dashboard ── -->
   <script>
-    (function () {
-      let data;
-      try { data = JSON.parse(localStorage.getItem('hv_content')) || {}; } catch { return; }
+  // ════════════════════════════════════════════════════
+  //  CMS — defaults, storage, live-apply
+  // ════════════════════════════════════════════════════
+  const ADM_CREDS = { u: 'admin', p: 'veizi2026' };
 
-      function set(id, val) { const el = document.getElementById(id); if (el) el.textContent = val; }
-      function setHTML(id, val) { const el = document.getElementById(id); if (el) el.innerHTML = val; }
-      function attr(id, attr, val) { const el = document.getElementById(id); if (el) el.setAttribute(attr, val); }
+  const ADM_DEFAULTS = {
+    hero: {
+      eyebrow: 'Luxury Redefined',
+      title: 'A Stay Beyond Expectations',
+      subtitle: 'Experience world-class hospitality where every detail is crafted for your comfort and delight.',
+      btn1: 'Explore Rooms',
+      img: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1600&q=80',
+    },
+    services: {
+      eyebrow: 'What We Offer', title: 'Our Services',
+      desc: 'From world-class dining to a rejuvenating spa, every amenity is designed to make your stay unforgettable.',
+      items: [
+        { name:'Fine Dining',    desc:'Savor curated menus by our award-winning chef using seasonal, locally sourced ingredients.', img:'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=75' },
+        { name:'Spa & Wellness', desc:'Relax and restore with signature treatments, hydrotherapy, and a fully equipped fitness center.', img:'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=800&q=75' },
+        { name:'24/7 Concierge', desc:'Our dedicated team is always on hand to arrange tours, transfers, and personalized experiences.', img:'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=75' },
+      ]
+    },
+    rooms: {
+      eyebrow: 'Accommodations', title: 'Our Rooms & Suites',
+      desc: 'Each space is a sanctuary — thoughtfully designed with premium materials, natural light, and panoramic views.',
+      items: [
+        { label:'Signature', name:'Presidential Suite',  price:'From €850 / night', img:'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=1200&q=80' },
+        { label:'Deluxe',    name:'Deluxe King Room',    price:'From €290 / night', img:'https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=800&q=75' },
+        { label:'Suite',     name:'Junior Suite',        price:'From €420 / night', img:'https://images.unsplash.com/photo-1540518614846-7eded433c457?w=800&q=75' },
+        { label:'Classic',   name:'Classic Double',      price:'From €195 / night', img:'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=800&q=75' },
+      ]
+    },
+    contact: {
+      eyebrow:'Get In Touch', title:'Reserve Your Stay',
+      desc:'Tell us about your perfect getaway and we will tailor every detail to exceed your expectations.',
+      address:'12 Riviera Boulevard, Tirana, Albania',
+      phone:'+355 4 222 3344', email:'reservations@hotelveizi.al',
+      checkin:'3:00 PM', checkout:'12:00 PM',
+    }
+  };
 
-      // Hero
-      const h = data.hero;
-      if (h) {
-        set('cms-hero-eyebrow', h.eyebrow);
-        set('cms-hero-title-1', h.title.split('\n')[0] || h.title);
-        set('cms-hero-subtitle', h.subtitle);
-        const btn = document.getElementById('cms-hero-btn1');
-        if (btn && h.btn1) { btn.childNodes[0].textContent = h.btn1 + ' '; }
-        const bg = document.querySelector('.hero-bg');
-        if (bg && h.img) bg.style.backgroundImage = `linear-gradient(to bottom,rgba(10,10,10,.15) 0%,rgba(10,10,10,.55) 100%),url('${h.img}')`;
-      }
+  function admLoadData() { try { return JSON.parse(localStorage.getItem('hv_content')) || {}; } catch { return {}; } }
+  function admSaveData(data) {
+    try {
+      localStorage.setItem('hv_content', JSON.stringify(data));
+      localStorage.setItem('hv_saved', new Date().toLocaleString());
+    } catch { alert('Storage full. Try using image URLs instead of uploading large files.'); }
+  }
+  function admGet(section) {
+    const s = admLoadData()[section];
+    return s ? { ...ADM_DEFAULTS[section], ...s } : { ...ADM_DEFAULTS[section] };
+  }
 
-      // Services header
-      const sv = data.services;
-      if (sv) {
-        set('cms-sv-eyebrow', sv.eyebrow);
-        set('cms-sv-title', sv.title);
-        set('cms-sv-desc', sv.desc);
-        if (sv.items) sv.items.forEach((item, i) => {
-          set(`cms-sv-name-${i}`, item.name);
-          set(`cms-sv-desc-${i}`, item.desc);
-          attr(`cms-sv-img-${i}`, 'src', item.img);
-        });
-      }
+  // ── Apply data to live page DOM ──
+  function cmsSet(id, val) { const el = document.getElementById(id); if (el && val !== undefined) el.textContent = val; }
+  function cmsAttr(id, attr, val) { const el = document.getElementById(id); if (el && val) el.setAttribute(attr, val); }
 
-      // Rooms header
-      const rm = data.rooms;
-      if (rm) {
-        set('cms-rm-eyebrow', rm.eyebrow);
-        set('cms-rm-title', rm.title);
-        set('cms-rm-desc', rm.desc);
-        if (rm.items) rm.items.forEach((item, i) => {
-          set(`cms-rm-label-${i}`, item.label);
-          set(`cms-rm-name-${i}`, item.name);
-          set(`cms-rm-price-${i}`, item.price);
-          attr(`cms-rm-img-${i}`, 'src', item.img);
-        });
-      }
+  function cmsApply(data) {
+    const h = data.hero;
+    if (h) {
+      cmsSet('cms-hero-eyebrow', h.eyebrow);
+      cmsSet('cms-hero-title-1', h.title);
+      cmsSet('cms-hero-subtitle', h.subtitle);
+      const btn = document.getElementById('cms-hero-btn1');
+      if (btn && h.btn1) btn.childNodes[0].textContent = h.btn1 + ' ';
+      if (h.img) document.querySelector('.hero-bg').style.backgroundImage =
+        `linear-gradient(to bottom,rgba(10,10,10,.15) 0%,rgba(10,10,10,.55) 100%),url('${h.img}')`;
+    }
+    const sv = data.services;
+    if (sv) {
+      cmsSet('cms-sv-eyebrow', sv.eyebrow); cmsSet('cms-sv-title', sv.title); cmsSet('cms-sv-desc', sv.desc);
+      (sv.items || []).forEach((item, i) => {
+        cmsSet(`cms-sv-name-${i}`, item.name); cmsSet(`cms-sv-desc-${i}`, item.desc);
+        cmsAttr(`cms-sv-img-${i}`, 'src', item.img);
+      });
+    }
+    const rm = data.rooms;
+    if (rm) {
+      cmsSet('cms-rm-eyebrow', rm.eyebrow); cmsSet('cms-rm-title', rm.title); cmsSet('cms-rm-desc', rm.desc);
+      (rm.items || []).forEach((item, i) => {
+        cmsSet(`cms-rm-label-${i}`, item.label); cmsSet(`cms-rm-name-${i}`, item.name);
+        cmsSet(`cms-rm-price-${i}`, item.price); cmsAttr(`cms-rm-img-${i}`, 'src', item.img);
+      });
+    }
+    const ct = data.contact;
+    if (ct) {
+      cmsSet('cms-ct-eyebrow', ct.eyebrow); cmsSet('cms-ct-title', ct.title); cmsSet('cms-ct-desc', ct.desc);
+      cmsSet('cms-ct-address', ct.address); cmsSet('cms-ct-phone', ct.phone); cmsSet('cms-ct-email', ct.email);
+      cmsSet('cms-ct-times', (ct.checkin || '3:00 PM') + ' — ' + (ct.checkout || '12:00 PM'));
+    }
+  }
 
-      // Contact
-      const ct = data.contact;
-      if (ct) {
-        set('cms-ct-eyebrow', ct.eyebrow);
-        set('cms-ct-title', ct.title);
-        set('cms-ct-desc', ct.desc);
-        set('cms-ct-address', ct.address);
-        set('cms-ct-phone', ct.phone);
-        set('cms-ct-email', ct.email);
-        set('cms-ct-times', (ct.checkin || '3:00 PM') + ' — ' + (ct.checkout || '12:00 PM'));
-      }
-    })();
+  // Apply on page load
+  cmsApply(admLoadData());
+
+  // ════════════════════════════════════════════════════
+  //  Admin overlay — open / close / auth
+  // ════════════════════════════════════════════════════
+  function openAdmin() {
+    document.getElementById('adminOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    if (sessionStorage.getItem('hv_auth')) {
+      document.getElementById('admLogin').style.display = 'none';
+      document.getElementById('admDash').classList.add('visible');
+      admInitDash();
+    }
+  }
+  function closeAdmin() {
+    document.getElementById('adminOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  function admDoLogin() {
+    const u = document.getElementById('adm_u').value.trim();
+    const p = document.getElementById('adm_p').value;
+    if (u === ADM_CREDS.u && p === ADM_CREDS.p) {
+      sessionStorage.setItem('hv_auth', '1');
+      document.getElementById('admLogin').style.display = 'none';
+      document.getElementById('admDash').classList.add('visible');
+      admInitDash();
+    } else {
+      document.getElementById('admErr').textContent = 'Incorrect username or password.';
+    }
+  }
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeAdmin();
+    if (e.key === 'Enter' && document.getElementById('adminOverlay').classList.contains('open')
+        && !document.getElementById('admDash').classList.contains('visible')) admDoLogin();
+  });
+  function admDoLogout() {
+    sessionStorage.removeItem('hv_auth');
+    document.getElementById('admDash').classList.remove('visible');
+    document.getElementById('admLogin').style.display = 'flex';
+    document.getElementById('adm_u').value = '';
+    document.getElementById('adm_p').value = '';
+  }
+
+  // ── Panel navigation ──
+  const ADM_PANEL_META = {
+    overview: { title:'Overview',  sub:'Manage your hotel page content.' },
+    hero:     { title:'Hero',      sub:'Edit the main banner image, heading and subtitle.' },
+    services: { title:'Services',  sub:'Update the three service cards.' },
+    rooms:    { title:'Rooms',     sub:'Edit room names, prices and images.' },
+    contact:  { title:'Contact',   sub:'Update address, phone, email and hours.' },
+  };
+  function admShowPanel(link) {
+    document.querySelectorAll('.adm-nav-link').forEach(l => l.classList.remove('active'));
+    document.querySelectorAll('.adm-panel').forEach(p => p.classList.remove('active'));
+    link.classList.add('active');
+    const id = link.dataset.admpanel;
+    document.getElementById('adm-panel-' + id).classList.add('active');
+    document.getElementById('admPanelTitle').textContent = ADM_PANEL_META[id].title;
+    document.getElementById('admPanelSub').textContent   = ADM_PANEL_META[id].sub;
+  }
+
+  // ── Image helpers ──
+  function admTriggerUpload(id) { document.getElementById(id).click(); }
+  function admPreviewImg(inputId, previewId) {
+    const src = document.getElementById(inputId).value.trim();
+    const img = document.getElementById(previewId);
+    if (src) { img.src = src; }
+  }
+  function admHandleUpload(fileInput, urlId, previewId) {
+    const file = fileInput.files[0]; if (!file) return;
+    const imgEl = new Image(), url = URL.createObjectURL(file);
+    imgEl.onload = () => {
+      const MAX = 1200; let w = imgEl.width, h = imgEl.height;
+      if (w > MAX) { h = Math.round(h * MAX / w); w = MAX; }
+      const c = document.createElement('canvas'); c.width = w; c.height = h;
+      c.getContext('2d').drawImage(imgEl, 0, 0, w, h);
+      URL.revokeObjectURL(url);
+      const b64 = c.toDataURL('image/jpeg', 0.82);
+      document.getElementById(urlId).value = b64;
+      document.getElementById(previewId).src = b64;
+    };
+    imgEl.src = url;
+  }
+
+  // ── Render service items ──
+  function admRenderServices(items) {
+    document.getElementById('adm-sv-items').innerHTML = items.map((item, i) => `
+      <div class="adm-card" style="margin-bottom:12px;">
+        <div class="adm-card-title">Service ${i+1}</div>
+        <div class="adm-grid">
+          <div class="adm-field"><label>Name</label><input class="adm-input" id="adm_sv_name_${i}" type="text" value="${esc(item.name)}" /></div>
+          <div class="adm-field full"><label>Description</label><textarea class="adm-textarea" id="adm_sv_desc_${i}">${esc(item.desc)}</textarea></div>
+          <div class="adm-field full">
+            <label>Image</label>
+            <div class="adm-img-row">
+              <input class="adm-input" id="adm_sv_img_${i}" type="text" value="${esc(item.img)}" placeholder="URL or upload…" oninput="admPreviewImg('adm_sv_img_${i}','adm_sv_imgp_${i}')" />
+              <button type="button" class="adm-btn-upload" onclick="admTriggerUpload('adm_sv_imgf_${i}')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Upload
+              </button>
+              <input class="adm-file-hidden" type="file" id="adm_sv_imgf_${i}" accept="image/*" onchange="admHandleUpload(this,'adm_sv_img_${i}','adm_sv_imgp_${i}')" />
+            </div>
+            <img class="adm-img-preview tall" id="adm_sv_imgp_${i}" src="${esc(item.img)}" alt="" />
+          </div>
+        </div>
+      </div>`).join('');
+  }
+
+  // ── Render room items ──
+  function admRenderRooms(items) {
+    document.getElementById('adm-rm-items').innerHTML = items.map((item, i) => `
+      <div class="adm-card" style="margin-bottom:12px;">
+        <div class="adm-card-title">Room ${i+1}</div>
+        <div class="adm-grid adm-grid cols3">
+          <div class="adm-field"><label>Badge</label><input class="adm-input" id="adm_rm_label_${i}" type="text" value="${esc(item.label)}" /></div>
+          <div class="adm-field"><label>Name</label><input class="adm-input" id="adm_rm_name_${i}" type="text" value="${esc(item.name)}" /></div>
+          <div class="adm-field"><label>Price</label><input class="adm-input" id="adm_rm_price_${i}" type="text" value="${esc(item.price)}" /></div>
+          <div class="adm-field full">
+            <label>Image</label>
+            <div class="adm-img-row">
+              <input class="adm-input" id="adm_rm_img_${i}" type="text" value="${esc(item.img)}" placeholder="URL or upload…" oninput="admPreviewImg('adm_rm_img_${i}','adm_rm_imgp_${i}')" />
+              <button type="button" class="adm-btn-upload" onclick="admTriggerUpload('adm_rm_imgf_${i}')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Upload
+              </button>
+              <input class="adm-file-hidden" type="file" id="adm_rm_imgf_${i}" accept="image/*" onchange="admHandleUpload(this,'adm_rm_img_${i}','adm_rm_imgp_${i}')" />
+            </div>
+            <img class="adm-img-preview" id="adm_rm_imgp_${i}" src="${esc(item.img)}" alt="" />
+          </div>
+        </div>
+      </div>`).join('');
+  }
+
+  function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  // ── Populate forms ──
+  function admPopulate() {
+    const h = admGet('hero');
+    document.getElementById('adm_h_eyebrow').value  = h.eyebrow;
+    document.getElementById('adm_h_title').value    = h.title;
+    document.getElementById('adm_h_subtitle').value = h.subtitle;
+    document.getElementById('adm_h_btn1').value     = h.btn1;
+    document.getElementById('adm_h_img').value      = h.img;
+    document.getElementById('adm_h_imgp').src       = h.img;
+
+    const sv = admGet('services');
+    document.getElementById('adm_sv_eyebrow').value = sv.eyebrow;
+    document.getElementById('adm_sv_title').value   = sv.title;
+    document.getElementById('adm_sv_desc').value    = sv.desc;
+    admRenderServices(sv.items);
+
+    const rm = admGet('rooms');
+    document.getElementById('adm_rm_eyebrow').value = rm.eyebrow;
+    document.getElementById('adm_rm_title').value   = rm.title;
+    document.getElementById('adm_rm_desc').value    = rm.desc;
+    admRenderRooms(rm.items);
+
+    const ct = admGet('contact');
+    document.getElementById('adm_ct_eyebrow').value  = ct.eyebrow;
+    document.getElementById('adm_ct_title').value    = ct.title;
+    document.getElementById('adm_ct_desc').value     = ct.desc;
+    document.getElementById('adm_ct_address').value  = ct.address;
+    document.getElementById('adm_ct_phone').value    = ct.phone;
+    document.getElementById('adm_ct_email').value    = ct.email;
+    document.getElementById('adm_ct_checkin').value  = ct.checkin;
+    document.getElementById('adm_ct_checkout').value = ct.checkout;
+
+    const ls = localStorage.getItem('hv_saved');
+    if (ls) document.getElementById('admLastSaved').textContent = ls;
+  }
+
+  // ── Save section → localStorage + live DOM ──
+  function admSave(section) {
+    const data = admLoadData();
+
+    if (section === 'hero') {
+      data.hero = {
+        eyebrow:  document.getElementById('adm_h_eyebrow').value,
+        title:    document.getElementById('adm_h_title').value,
+        subtitle: document.getElementById('adm_h_subtitle').value,
+        btn1:     document.getElementById('adm_h_btn1').value,
+        img:      document.getElementById('adm_h_img').value,
+      };
+    }
+    if (section === 'services') {
+      data.services = {
+        eyebrow: document.getElementById('adm_sv_eyebrow').value,
+        title:   document.getElementById('adm_sv_title').value,
+        desc:    document.getElementById('adm_sv_desc').value,
+        items: ADM_DEFAULTS.services.items.map((_, i) => ({
+          name: document.getElementById(`adm_sv_name_${i}`).value,
+          desc: document.getElementById(`adm_sv_desc_${i}`).value,
+          img:  document.getElementById(`adm_sv_img_${i}`).value,
+        }))
+      };
+    }
+    if (section === 'rooms') {
+      data.rooms = {
+        eyebrow: document.getElementById('adm_rm_eyebrow').value,
+        title:   document.getElementById('adm_rm_title').value,
+        desc:    document.getElementById('adm_rm_desc').value,
+        items: ADM_DEFAULTS.rooms.items.map((_, i) => ({
+          label: document.getElementById(`adm_rm_label_${i}`).value,
+          name:  document.getElementById(`adm_rm_name_${i}`).value,
+          price: document.getElementById(`adm_rm_price_${i}`).value,
+          img:   document.getElementById(`adm_rm_img_${i}`).value,
+        }))
+      };
+    }
+    if (section === 'contact') {
+      data.contact = {
+        eyebrow:  document.getElementById('adm_ct_eyebrow').value,
+        title:    document.getElementById('adm_ct_title').value,
+        desc:     document.getElementById('adm_ct_desc').value,
+        address:  document.getElementById('adm_ct_address').value,
+        phone:    document.getElementById('adm_ct_phone').value,
+        email:    document.getElementById('adm_ct_email').value,
+        checkin:  document.getElementById('adm_ct_checkin').value,
+        checkout: document.getElementById('adm_ct_checkout').value,
+      };
+    }
+
+    admSaveData(data);
+
+    // Apply instantly to the live page behind the overlay
+    cmsApply(data);
+
+    // Confirm message
+    const msg = document.getElementById(`adm-saved-${section}`);
+    msg.classList.add('show');
+    setTimeout(() => msg.classList.remove('show'), 2500);
+
+    // Update timestamp in overview
+    const ls = localStorage.getItem('hv_saved');
+    if (ls) document.getElementById('admLastSaved').textContent = ls;
+  }
+
+  function admInitDash() {
+    admPopulate();
+  }
   </script>
 </body>
 </html>
