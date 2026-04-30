@@ -27,8 +27,8 @@ document.addEventListener('DOMContentLoaded', function () {
     navbar.classList.add('navbar--hidden');
     var b = bar();
     if (!b) return;
-    /* Fshih filter bar-in vetëm kur është i dukshëm (offsetParent != null = visible) */
-    if (b.offsetParent === null) return;
+    /* getComputedStyle — i saktë edhe për position:fixed (offsetParent=null në Firefox) */
+    if (window.getComputedStyle(b).display === 'none') return;
     var h = barH();
     if (!h) return;
     b.style.transform = 'translateY(' + (-(navbar.offsetHeight + h)) + 'px)';
