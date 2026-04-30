@@ -2,79 +2,80 @@
    Intal Underwear — Shared JavaScript
    ============================================================ */
 
-/* ── Navbar + Filter bar — një listener, fshihen/shfaqen bashkë ─ */
+/* ── Navbar + Filter bar — fshihen/shfaqen bashkë ────────── */
 document.addEventListener('DOMContentLoaded', function () {
-  const navbar = document.querySelector('.navbar');
-  const bar    = document.getElementById('dyn-filter-bar');
-  const spacer = document.getElementById('filter-bar-spacer');
+  var navbar = document.querySelector('.navbar');
   if (!navbar) return;
 
-  let lastY      = window.scrollY;
-  let ticking    = false;
-  let isHidden   = false;
+  var lastY   = window.scrollY;
+  var ticking = false;
 
-  function getBarH() {
-    if (!bar) return 0;
-    /* offsetHeight funksionon vetëm kur display != none */
-    var h = bar.offsetHeight;
-    if (h) { bar._openH = h; return h; }
-    return bar._openH || 0;
+  /* Bar dhe spacer kërkohen gjatë ekzekutimit (mund të shfaqen pas DOMContentLoaded) */
+  function bar()    { return document.getElementById('dyn-filter-bar'); }
+  function spacer() { return document.getElementById('filter-bar-spacer'); }
+
+  /* Kthen lartësinë e filter bar-it.
+     Kur display:none offsetHeight=0 → përdor vlerën e ruajtur _openH */
+  function barH() {
+    var b = bar();
+    if (!b) return 0;
+    if (b.offsetHeight) { b._openH = b.offsetHeight; }
+    return b._openH || 0;
   }
 
   function hideAll() {
-    if (isHidden) return;
-    isHidden = true;
     navbar.classList.add('navbar--hidden');
-    if (bar && bar.style.display !== 'none' && bar.style.display !== '') {
-      var barH = getBarH();
-      if (barH) {
-        bar.style.transform = 'translateY(' + (-(navbar.offsetHeight + barH)) + 'px)';
-        if (spacer) spacer.style.height = '0';
-      }
-    }
-  }
-  function showAll() {
-    if (!isHidden) return;
-    isHidden = false;
-    navbar.classList.remove('navbar--hidden');
-    if (bar) {
-      bar.style.transform = 'translateY(0)';
-      var h = getBarH();
-      if (spacer && h) spacer.style.height = h + 'px';
-    }
+    var b = bar();
+    if (!b) return;
+    /* Fshih filter bar-in vetëm kur është i dukshëm (offsetParent != null = visible) */
+    if (b.offsetParent === null) return;
+    var h = barH();
+    if (!h) return;
+    b.style.transform = 'translateY(' + (-(navbar.offsetHeight + h)) + 'px)';
+    var sp = spacer(); if (sp) sp.style.height = '0';
   }
 
-  /* Thirret nga faqet kur filter bar bëhet i dukshëm (pas render) */
+  function showAll() {
+    navbar.classList.remove('navbar--hidden');
+    var b = bar();
+    if (!b) return;
+    b.style.transform = 'translateY(0)';
+    var sp = spacer();
+    if (sp) sp.style.height = (b._openH || 0) + 'px';
+  }
+
+  /* Thirret nga faqet pas renderimit të filter bar-it.
+     Sinkronizon menjëherë transform-in me gjendjen aktuale të navbar-it. */
   window._fbResetScroll = function () {
-    isHidden = false;  /* reset gjendje që showAll/hideAll të punojnë */
     lastY = window.scrollY;
-    /* Nëse navbar ishte i fshehur, sinkronizo edhe filter bar-in */
-    if (navbar.classList.contains('navbar--hidden') && bar) {
-      var barH = getBarH();
-      if (barH) {
-        bar.style.transform = 'translateY(' + (-(navbar.offsetHeight + barH)) + 'px)';
-        if (spacer) spacer.style.height = '0';
-        isHidden = true;
+    var b = bar();
+    if (!b) return;
+    if (navbar.classList.contains('navbar--hidden')) {
+      /* Navbar është i fshehur — fshih edhe bar-in */
+      var h = barH();
+      if (h) {
+        b.style.transform = 'translateY(' + (-(navbar.offsetHeight + h)) + 'px)';
+        var sp = spacer(); if (sp) sp.style.height = '0';
       }
+    } else {
+      /* Navbar i dukshëm — siguro që bar-i është i dukshëm */
+      b.style.transform = 'translateY(0)';
+      var sp2 = spacer();
+      if (sp2) sp2.style.height = (b._openH || 0) + 'px';
     }
   };
 
   window.addEventListener('scroll', function () {
-    if (!ticking) {
-      requestAnimationFrame(function () {
-        const currentY     = window.scrollY;
-        const scrolledDown = currentY > lastY;
-        const pastThreshold = currentY > 80;
-
-        if (scrolledDown && pastThreshold) { hideAll(); }
-        else { showAll(); }
-
-        navbar.classList.toggle('navbar--scrolled', currentY > 10);
-        lastY   = currentY;
-        ticking = false;
-      });
-      ticking = true;
-    }
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function () {
+      var cur = window.scrollY;
+      if (cur > lastY && cur > 80) { hideAll(); }
+      else                          { showAll(); }
+      navbar.classList.toggle('navbar--scrolled', cur > 10);
+      lastY   = cur;
+      ticking = false;
+    });
   }, { passive: true });
 });
 
