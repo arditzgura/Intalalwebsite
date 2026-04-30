@@ -32,19 +32,35 @@ document.addEventListener('DOMContentLoaded', function () {
     return window.getComputedStyle(b).display !== 'none';
   }
 
+  function searchBar() { return document.getElementById('search-bar'); }
+
   function hideAll() {
     navbar.classList.add('navbar--hidden');
-    var b = bar(); if (!b || !barIsVisible()) return;
-    b.style.transform = 'translateY(-' + hideOffset() + 'px)';
-    var sp = spacer(); if (sp) sp.style.height = '0';
+    /* Filter bar */
+    var b = bar();
+    if (b && barIsVisible()) {
+      b.style.transform = 'translateY(-' + hideOffset() + 'px)';
+      var sp = spacer(); if (sp) sp.style.height = '0';
+    }
+    /* Search bar — lëviz lart bashkë me navbar-in */
+    var sb = searchBar();
+    if (sb && !sb.classList.contains('open')) {
+      sb.style.transform = 'translateY(-' + (navbar.offsetHeight + EXTRA) + 'px)';
+    }
   }
 
   function showAll() {
     navbar.classList.remove('navbar--hidden');
-    var b = bar(); if (!b) return;
-    b.style.transform = 'translateY(0)';
-    var sp = spacer();
-    if (sp) sp.style.height = (b._openH || 0) + 'px';
+    /* Filter bar */
+    var b = bar();
+    if (b) {
+      b.style.transform = 'translateY(0)';
+      var sp = spacer();
+      if (sp) sp.style.height = (b._openH || 0) + 'px';
+    }
+    /* Search bar */
+    var sb = searchBar();
+    if (sb) sb.style.transform = 'translateY(0)';
   }
 
   /* Thirret pas çdo render të filter bar-it.
@@ -52,9 +68,7 @@ document.addEventListener('DOMContentLoaded', function () {
   window._fbResetScroll = function () {
     lastY = window.scrollY;
     if (navbar.classList.contains('navbar--hidden')) {
-      var b = bar(); if (!b) return;
-      b.style.transform = 'translateY(-' + hideOffset() + 'px)';
-      var sp = spacer(); if (sp) sp.style.height = '0';
+      hideAll();
     } else {
       showAll();
     }

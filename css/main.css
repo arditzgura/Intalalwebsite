@@ -144,21 +144,21 @@ body {
   position: fixed;
   top: var(--navbar-h);
   left: 0; right: 0;
-  z-index: 101;           /* mbi navbar (100) dhe filter bar (99) */
+  z-index: 101;
   background: #fff;
-  border-bottom: .5px solid var(--border);
   display: flex;
   align-items: center;
-  gap: 0;
   padding: 0 20px;
   height: 0;
   overflow: hidden;
-  transition: height .25s ease;
-  will-change: height;
-  box-shadow: 0 4px 16px rgba(0,0,0,.07);
+  border-bottom: none;               /* pa border kur mbyllur — heq vijën */
+  transition: height .25s ease, transform .35s ease;
+  will-change: transform, height;
 }
 #search-bar.open {
   height: 48px;
+  border-bottom: .5px solid var(--border);
+  box-shadow: 0 4px 16px rgba(0,0,0,.07);
 }
 #search-bar i.ri-search-line {
   font-size: 16px;
