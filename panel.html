@@ -2491,91 +2491,101 @@ function renderAnalytics(){
   var an=analytics||{};
   var artClicks=an.artClicks||{};
   var artViews=an.artViews||{};
-  // Merge views + clicks per article
-  var allNames=Array.from(new Set(Object.keys(artClicks).concat(Object.keys(artViews))));
-  var topArts=allNames.sort(function(a,b){
-    var scoreA=(artViews[a]||0)+(artClicks[a]||0);
-    var scoreB=(artViews[b]||0)+(artClicks[b]||0);
-    return scoreB-scoreA;
-  }).slice(0,10);
+  var pages=an.pages||{};
   var leads=(an.popupLeads||[]).concat(an.contactLeads||[]);
+  var newLeads=leads.filter(function(l){return !l.notified;}).length;
+
+  // Total vizita publike
+  var totalPublic=Object.values(pages).reduce(function(a,b){return a+b;},0);
+  var totalArtOpen=Object.values(artClicks).reduce(function(a,b){return a+b;},0);
+
+  var th='background:#fafafa;padding:7px 10px;text-align:left;font-family:var(--fh);font-size:10px;font-weight:700;color:#888;border-bottom:1px solid var(--border);';
+  var td8='padding:8px 10px;font-size:12px;border-bottom:1px solid #f5f5f5;';
   var html='';
-  // Stats row
-  html+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.875rem;margin-bottom:1.5rem;">'
-    +'<div class="sc"><div class="sc-n">'+(an.pageViews||0)+'</div><div class="sc-l">Vizita</div></div>'
-    +'<div class="sc"><div class="sc-n">'+Object.values(artViews).reduce(function(a,b){return a+b;},0)+'</div><div class="sc-l">Foto te hapura</div></div>'
-    +'<div class="sc"><div class="sc-n">'+Object.values(artClicks).reduce(function(a,b){return a+b;},0)+'</div><div class="sc-l">Porosi / Pyetje</div></div>'
-    +'<div class="sc"><div class="sc-n">'+leads.length+'</div><div class="sc-l">Kontakte</div></div>'
+
+  /* ── 1. Kartela stats ── */
+  html+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin-bottom:1.5rem;">'
+    +sc(totalPublic,'🌐','Vizita publike')
+    +sc(pages.home||0,'🏠','Home')
+    +sc(pages.artikujt||0,'👕','Artikujt')
+    +sc(pages.pelhura||0,'🧵','Pelhura')
+    +'</div>'
+    +'<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin-bottom:1.75rem;">'
+    +sc(totalArtOpen,'👁','Artikuj hapur')
+    +sc(leads.length,'📩','Kerkesa totale')
+    +sc(newLeads,'🔔','Kerkesa te reja','#FFFBEB','#F59E0B')
     +'</div>';
-  // Last visit
-  if(an.lastVisit){
-    html+='<div style="font-size:11px;color:var(--muted);margin-bottom:1.25rem;">Vizita e fundit: '+new Date(an.lastVisit).toLocaleString()+'</div>';
-  }
-  // Top clicked articles
-  html+='<div style="margin-bottom:1.5rem;">';
-  html+='<div style="font-family:var(--fh);font-size:10px;font-weight:700;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:.75rem;">Artikujt me te klikuar</div>';
-  if(topArts.length){
-    var maxClicks=artClicks[topArts[0]]||1;
-    html+=topArts.map(function(name,i){
-      var views=artViews[name]||0;
-      var clicks=artClicks[name]||0;
-      var maxScore=Math.max.apply(null,topArts.map(function(n){return (artViews[n]||0)+(artClicks[n]||0);}));
-      var pct=maxScore?Math.round(((views+clicks)/maxScore)*100):0;
-      return '<div style="margin-bottom:.6rem;">'
-        +'<div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px;">'
-          +'<span style="font-family:var(--fh);font-weight:600;max-width:60%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+name+'</span>'
-          +'<span style="display:flex;gap:8px;font-size:11px;">'
-            +(views?'<span style="color:#718096;">&#128247; '+views+' foto</span>':'')
-            +(clicks?'<span style="color:var(--pink);font-weight:700;">&#128722; '+clicks+' porosi</span>':'')
-          +'</span>'
+
+  /* ── 2. Vizita e fundit ── */
+  var lastV=an.lastPublicVisit||an.lastVisit;
+  if(lastV) html+='<div style="font-size:11px;color:var(--muted);margin-bottom:1.5rem;">⏱ Vizita e fundit: <strong>'+new Date(lastV).toLocaleString()+'</strong></div>';
+
+  /* ── 3. Artikujt me te hapur ── */
+  var allNames=Object.keys(artClicks).sort(function(a,b){return artClicks[b]-artClicks[a];}).slice(0,12);
+  html+='<div style="margin-bottom:1.75rem;">';
+  html+='<div style="font-family:var(--fh);font-size:10px;font-weight:700;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:.75rem;">👕 Artikujt me te hapur</div>';
+  if(allNames.length){
+    var maxC=artClicks[allNames[0]]||1;
+    html+=allNames.map(function(name){
+      var c=artClicks[name]||0;
+      var pct=Math.round((c/maxC)*100);
+      return '<div style="margin-bottom:.5rem;">'
+        +'<div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:2px;">'
+          +'<span style="font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:70%;">'+name+'</span>'
+          +'<span style="color:var(--pink);font-weight:700;font-size:11px;">'+c+'×</span>'
         +'</div>'
-        +'<div style="height:5px;background:#f0f0f0;border-radius:3px;">'
-          +'<div style="height:100%;width:'+pct+'%;background:var(--pink);border-radius:3px;"></div>'
-        +'</div>'
-        +'</div>';
+        +'<div style="height:4px;background:#f0f0f0;border-radius:2px;">'
+          +'<div style="height:100%;width:'+pct+'%;background:var(--pink);border-radius:2px;transition:width .4s;"></div>'
+        +'</div></div>';
     }).join('');
-  } else {
-    html+='<div style="color:#bbb;font-size:12px;">Nuk ka te dhena akoma.</div>';
-  }
+  } else { html+='<div style="color:#bbb;font-size:12px;">Ende pa klikime të regjistruara.</div>'; }
   html+='</div>';
-  // Leads
+
+  /* ── 4. Kontaktet / Kërkesat ── */
   html+='<div>';
-  html+='<div style="font-family:var(--fh);font-size:10px;font-weight:700;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:.75rem;">Kontaktet / Klientet e Interesuar</div>';
+  html+='<div style="font-family:var(--fh);font-size:10px;font-weight:700;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:.75rem;">📩 Kontaktet / Kërkesat</div>';
   if(leads.length){
-    html+='<table style="width:100%;border-collapse:collapse;">'
+    html+='<div style="overflow-x:auto;">';
+    html+='<table style="width:100%;border-collapse:collapse;min-width:540px;">'
       +'<thead><tr>'
-        +'<th style="background:#fafafa;padding:7px 10px;text-align:left;font-family:var(--fh);font-size:10px;font-weight:700;color:#888;border-bottom:1px solid var(--border);">Emri</th>'
-        +'<th style="background:#fafafa;padding:7px 10px;text-align:left;font-family:var(--fh);font-size:10px;font-weight:700;color:#888;border-bottom:1px solid var(--border);">Tel / Email</th>'
-        +'<th style="background:#fafafa;padding:7px 10px;text-align:left;font-family:var(--fh);font-size:10px;font-weight:700;color:#888;border-bottom:1px solid var(--border);">Produktet / Mesazhi</th>'
-        +'<th style="background:#fafafa;padding:7px 10px;text-align:left;font-family:var(--fh);font-size:10px;font-weight:700;color:#888;border-bottom:1px solid var(--border);">Burimi</th>'
-        +'<th style="background:#fafafa;padding:7px 10px;text-align:left;font-family:var(--fh);font-size:10px;font-weight:700;color:#888;border-bottom:1px solid var(--border);">Data</th>'
-        +'<th style="background:#fafafa;padding:7px 10px;text-align:left;font-family:var(--fh);font-size:10px;font-weight:700;color:#888;border-bottom:1px solid var(--border);">WA</th>'
+        +'<th style="'+th+'">Emri</th>'
+        +'<th style="'+th+'">Telefon</th>'
+        +'<th style="'+th+'">Produktet / Mesazhi</th>'
+        +'<th style="'+th+'">Burimi</th>'
+        +'<th style="'+th+'">Data</th>'
+        +'<th style="'+th+'">WA</th>'
       +'</tr></thead><tbody>'
       +leads.slice().reverse().map(function(l,ri){
         var realIdx=leads.length-1-ri;
-        var contact=[l.tel,l.email].filter(Boolean).join(' / ')||'---';
         var isNew=!l.notified;
         var rowBg=isNew?'background:#FFFBEB;':'';
-        var waBtnHtml=buildLeadWABtn(l,realIdx);
         return '<tr style="'+rowBg+'">'
-          +'<td style="padding:8px 10px;font-size:12px;border-bottom:1px solid #f5f5f5;font-family:var(--fh);font-weight:600;">'
-            +(isNew?'<span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#F59E0B;margin-right:5px;"></span>':'')
-            +(l.name||'---')
+          +'<td style="'+td8+';font-weight:600;">'
+            +(isNew?'<span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#F59E0B;margin-right:5px;vertical-align:middle;"></span>':'')
+            +(l.name||'<span style="color:#aaa;">---</span>')
           +'</td>'
-          +'<td style="padding:8px 10px;font-size:12px;border-bottom:1px solid #f5f5f5;">'+contact+'</td>'
-          +'<td style="padding:8px 10px;font-size:11px;color:#555;border-bottom:1px solid #f5f5f5;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+(l.produktet||l.mesazh||'---')+'</td>'
-          +'<td style="padding:8px 10px;font-size:12px;border-bottom:1px solid #f5f5f5;"><span class="cb'+(l.source==='popup'?' p':'')+'">'+( l.source==='popup'?'Pop-up':'Formular')+'</span></td>'
-          +'<td style="padding:8px 10px;font-size:10px;color:#aaa;border-bottom:1px solid #f5f5f5;white-space:nowrap;">'+(l.date?new Date(l.date).toLocaleString():'')+'</td>'
-          +'<td style="padding:6px 8px;border-bottom:1px solid #f5f5f5;">'+waBtnHtml+'</td>'
+          +'<td style="'+td8+'">'+(l.tel||'---')+'</td>'
+          +'<td style="'+td8+';max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px;color:#555;">'
+            +([l.produktet,l.mesazh].filter(Boolean).join(' · ')||'---')
+          +'</td>'
+          +'<td style="'+td8+'"><span class="cb'+(l.source==='popup'?' p':'')+'">'+( l.source==='popup'?'Pop-up':'Formular')+'</span></td>'
+          +'<td style="'+td8+';font-size:10px;color:#aaa;white-space:nowrap;">'+(l.date?new Date(l.date).toLocaleDateString()+' '+new Date(l.date).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}):'')+'</td>'
+          +'<td style="padding:6px 8px;border-bottom:1px solid #f5f5f5;">'+buildLeadWABtn(l,realIdx)+'</td>'
           +'</tr>';
       }).join('')
-      +'</tbody></table>';
-    html+='<button onclick="clearLeads()" style="margin-top:.75rem;background:#FEE2E2;border:none;border-radius:5px;padding:5px 12px;font-family:var(--fh);font-size:10px;font-weight:700;color:var(--danger);cursor:pointer;">Fshi te gjitha kontaktet</button>';
+      +'</tbody></table></div>';
+    html+='<button onclick="clearLeads()" style="margin-top:.75rem;background:#FEE2E2;border:none;border-radius:5px;padding:5px 12px;font-family:var(--fh);font-size:10px;font-weight:700;color:var(--danger);cursor:pointer;">Fshi të gjitha kontaktet</button>';
   } else {
     html+='<div style="color:#bbb;font-size:12px;">Nuk ka kontakte akoma.</div>';
   }
   html+='</div>';
   el.innerHTML=html;
+}
+function sc(n,icon,label,bg,col){
+  return '<div class="sc" style="'+(bg?'background:'+bg+';':'')+(col?'border-top:3px solid '+col+';':'')+'">'
+    +'<div class="sc-n" style="'+(col?'color:'+col+';':'')+'">'+icon+' '+n+'</div>'
+    +'<div class="sc-l">'+label+'</div>'
+    +'</div>';
 }
 function buildLeadWABtn(l, idx){
   var rawTel=(settings.tel||'').trim().replace(/[^0-9+]/g,'');

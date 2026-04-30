@@ -719,6 +719,7 @@
       if(!noHash) setArtHash(id);
       renderDetPhotos(); renderDetInfo();
       document.getElementById('art-detail-overlay').style.display='flex';
+      sbTrack('artOpen', {name: visible[idx].name||id});
     };
 
     window.openDet=function(id,noHash){
@@ -728,6 +729,7 @@
       if(!noHash) setArtHash(id);
       renderDetPhotos(); renderDetInfo();
       document.getElementById('art-detail-overlay').style.display='flex';
+      sbTrack('artOpen', {name: arts[idx].name||id});
     };
     window.closeArtDetail=function(){ var ov=document.getElementById('art-detail-overlay'); ov.style.display='none'; ov.querySelectorAll('.art-nav-btn').forEach(function(b){ b.remove(); }); clearArtHash(); };
     document.getElementById('art-detail-overlay').addEventListener('click',function(e){ if(e.target===this) closeArtDetail(); });
@@ -742,6 +744,7 @@
       var pageRefreshed = await sbSyncLocal('page_art_v1','intal_art_page_v1');
       if(pageRefreshed) { location.reload(); return; }
       route(); // re-render with fresh Supabase data
+      sbTrack('pageView', {page:'artikujt'}); // track visit
     })();
   })();
   </script>

@@ -77,6 +77,29 @@ async function sbSyncLocal(sbKey, localKey) {
   return false;
 }
 
+/* Track an analytics event — fire and forget, nuk bllokon faqen.
+   type: 'pageView' | 'artOpen' | 'artPhoto'
+   data: { page?, name? } */
+async function sbTrack(type, data) {
+  try {
+    var raw = await sbGet('analytics');
+    var an  = raw ? JSON.parse(raw) : {};
+    var now = new Date().toISOString();
+    if (type === 'pageView') {
+      if (!an.pages) an.pages = {};
+      an.pages[data.page] = (an.pages[data.page] || 0) + 1;
+      an.lastPublicVisit = now;
+    } else if (type === 'artOpen') {
+      if (!an.artClicks) an.artClicks = {};
+      an.artClicks[data.name] = (an.artClicks[data.name] || 0) + 1;
+    } else if (type === 'artPhoto') {
+      if (!an.artViews) an.artViews = {};
+      an.artViews[data.name] = (an.artViews[data.name] || 0) + 1;
+    }
+    await sbSet('analytics', JSON.stringify(an));
+  } catch(e) {}
+}
+
 /* Always fetch fresh data from Supabase and update intal_cache_v1.
    Returns true if Supabase returned data (caller should re-render). */
 async function sbSyncCache() {

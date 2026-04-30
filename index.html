@@ -1340,6 +1340,7 @@
       await sbSyncCache(); // always fetch fresh from Supabase
       await sbSyncLocal('page_home_v1','intal_home_v1');
       renderShowcase(); // re-render with fresh data
+      sbTrack('pageView', {page:'home'}); // track visit (fire & forget)
     })();
   })();
   </script>

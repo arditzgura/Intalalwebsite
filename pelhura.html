@@ -373,6 +373,7 @@
       _det.articles=_all; _det.artIdx=idx; _det.photoIdx=0;
       renderDetPhotos(); renderDetInfo();
       document.getElementById('art-detail-overlay').style.display='flex';
+      sbTrack('artOpen', {name: _all[idx].name||id});
     };
     window.closeArtDetail=function(){ document.getElementById('art-detail-overlay').style.display='none'; };
     document.getElementById('art-detail-overlay').addEventListener('click',function(e){ if(e.target===this) closeArtDetail(); });
@@ -390,6 +391,7 @@
       data=loadData(); _all=data&&data.pelhurat?data.pelhurat:[];
       renderFilterBar(_all,'te-gjitha');
       renderGrid(_all,'te-gjitha'); // re-render with fresh data
+      sbTrack('pageView', {page:'pelhura'}); // track visit
     })();
   })();
   </script>
