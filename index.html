@@ -574,15 +574,15 @@
       <!-- Right: form -->
       <div class="contact-right">
         <p class="contact-form-title">Dërgoni një Mesazh</p>
-        <form class="contact-form" onsubmit="return false">
+        <form class="contact-form" id="cf-form">
           <div class="cf-row">
             <div class="cf-field">
               <label class="cf-label">EMRI <span class="cf-opt">(opsional)</span></label>
-              <input class="cf-input" type="text" placeholder="Emri juaj">
+              <input class="cf-input" id="cf-name" type="text" placeholder="Emri juaj" autocomplete="name">
             </div>
             <div class="cf-field">
-              <label class="cf-label">TELEFON</label>
-              <input class="cf-input" type="tel" placeholder="Nr. i telefonit">
+              <label class="cf-label">TELEFON <span style="color:#e53e3e;">*</span></label>
+              <input class="cf-input" id="cf-tel" type="tel" placeholder="Nr. i telefonit" autocomplete="tel">
             </div>
           </div>
           <div class="cf-field">
@@ -611,8 +611,9 @@
           </div>
           <div class="cf-field">
             <label class="cf-label">MESAZHI</label>
-            <textarea class="cf-input cf-textarea" placeholder="Sasia, specifikimet..."></textarea>
+            <textarea class="cf-input cf-textarea" id="cf-msg" placeholder="Sasia, specifikimet..."></textarea>
           </div>
+          <div id="cf-notif" style="display:none;padding:10px 14px;border-radius:4px;font-size:12px;letter-spacing:.3px;margin-bottom:8px;"></div>
           <button class="cf-submit" type="submit">DËRGO KËRKESËN</button>
         </form>
       </div>
@@ -765,6 +766,7 @@
 
           const chip = document.createElement('span');
           chip.className = 'cf-tag';
+          chip.dataset.val = val;
           chip.innerHTML = `${val}<span class="cf-tag-remove" data-val="${val}">×</span>`;
           tags.insertBefore(chip, ph);
 
@@ -791,7 +793,108 @@
           tags.classList.remove('open');
         }
       });
+
+      // Ekspozo reset per submit
+      window.cfResetMultiselect = function() {
+        selected.clear();
+        tags.querySelectorAll('.cf-tag').forEach(function(t){ t.remove(); });
+        dropdown.querySelectorAll('.cf-option').forEach(function(o){ o.classList.remove('selected'); });
+        ph.style.display = '';
+      };
     })();
+  </script>
+
+  <script>
+  /* ── Contact form: validim, WhatsApp, analytics ─────────── */
+  (function(){
+    var form   = document.getElementById('cf-form');
+    var notif  = document.getElementById('cf-notif');
+    if(!form || !notif) return;
+
+    function showNotif(msg, isErr){
+      notif.innerHTML = msg;
+      notif.style.cssText = 'display:block;padding:10px 14px;border-radius:4px;font-size:12px;letter-spacing:.3px;margin-bottom:8px;'
+        + (isErr
+          ? 'color:#9b2c2c;background:#fff5f5;border:1px solid #fed7d7;'
+          : 'color:#276749;background:#f0fff4;border:1px solid #c6f6d5;');
+      if(!isErr) setTimeout(function(){ notif.style.display='none'; }, 6000);
+    }
+
+    function getSelectedProducts(){
+      return Array.from(document.querySelectorAll('#cfTags .cf-tag'))
+        .map(function(t){ return (t.dataset.val || t.textContent.replace('×','').trim()); })
+        .filter(Boolean).join(', ');
+    }
+
+    function highlight(el, on){
+      el.style.borderColor = on ? '#e53e3e' : '';
+    }
+
+    form.addEventListener('submit', async function(e){
+      e.preventDefault();
+      var nameEl = document.getElementById('cf-name');
+      var telEl  = document.getElementById('cf-tel');
+      var msgEl  = document.getElementById('cf-msg');
+      var name   = nameEl.value.trim();
+      var tel    = telEl.value.trim();
+      var msg    = msgEl.value.trim();
+      var prod   = getSelectedProducts();
+
+      // Reset highlights
+      highlight(telEl, false); highlight(msgEl, false);
+
+      // Validim
+      if(!tel){
+        showNotif('⚠ Mungon numri i telefonit.', true);
+        highlight(telEl, true); telEl.focus(); return;
+      }
+      if(!prod && !msg){
+        showNotif('⚠ Plotëso të paktën produktin ose mesazhin.', true);
+        highlight(msgEl, true); msgEl.focus(); return;
+      }
+
+      // Admin WA number (nga settings ose default)
+      var adminNum = '355692776636';
+      try {
+        var st = await sbGet('settings');
+        if(st){ var sp=JSON.parse(st); if(sp.tel){ var r=sp.tel.trim().replace(/[^0-9+]/g,''); adminNum=r.startsWith('+')?r.slice(1):r.startsWith('00')?r.slice(2):r; } }
+      } catch(ex){}
+
+      // Nderto mesazhin per WA
+      var waLines = ['*Kërkesë e re — Formulari*',''];
+      waLines.push('*Emri:* ' + (name||'---'));
+      waLines.push('*Telefon:* ' + tel);
+      if(prod) waLines.push('*Produktet:* ' + prod);
+      if(msg)  waLines.push('*Mesazhi:* ' + msg);
+      waLines.push(''); waLines.push('_intalal.com_');
+      var waMsg = waLines.map(function(l){ return encodeURIComponent(l); }).join('%0A');
+
+      // Ruaj ne analytics (Supabase)
+      try {
+        var anRaw = await sbGet('analytics');
+        var an = anRaw ? JSON.parse(anRaw) : {};
+        if(!an.contactLeads) an.contactLeads = [];
+        an.contactLeads.push({
+          name: name, tel: tel,
+          produktet: prod, mesazh: msg,
+          source: 'form',
+          date: new Date().toISOString(),
+          notified: false
+        });
+        await sbSet('analytics', JSON.stringify(an));
+      } catch(ex){}
+
+      // Hap WhatsApp
+      window.open('https://wa.me/' + adminNum + '?text=' + waMsg, '_blank');
+
+      // Njoftim suksesi
+      showNotif('✓ Mesazhi u dërgua! Do t\'ju kontaktojmë së shpejti.', false);
+
+      // Reset forma
+      form.reset();
+      if(window.cfResetMultiselect) window.cfResetMultiselect();
+    });
+  })();
   </script>
 
   <!-- GSAP + ScrollTrigger -->
