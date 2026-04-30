@@ -853,23 +853,7 @@
         highlight(msgEl, true); msgEl.focus(); return;
       }
 
-      // Admin WA number (nga settings ose default)
-      var adminNum = '355692776636';
-      try {
-        var st = await sbGet('settings');
-        if(st){ var sp=JSON.parse(st); if(sp.tel){ var r=sp.tel.trim().replace(/[^0-9+]/g,''); adminNum=r.startsWith('+')?r.slice(1):r.startsWith('00')?r.slice(2):r; } }
-      } catch(ex){}
-
-      // Nderto mesazhin per WA
-      var waLines = ['*Kërkesë e re — Formulari*',''];
-      waLines.push('*Emri:* ' + (name||'---'));
-      waLines.push('*Telefon:* ' + tel);
-      if(prod) waLines.push('*Produktet:* ' + prod);
-      if(msg)  waLines.push('*Mesazhi:* ' + msg);
-      waLines.push(''); waLines.push('_intalal.com_');
-      var waMsg = waLines.map(function(l){ return encodeURIComponent(l); }).join('%0A');
-
-      // Ruaj ne analytics (Supabase)
+      // Ruaj ne analytics / Supabase
       try {
         var anRaw = await sbGet('analytics');
         var an = anRaw ? JSON.parse(anRaw) : {};
@@ -884,10 +868,7 @@
         await sbSet('analytics', JSON.stringify(an));
       } catch(ex){}
 
-      // Hap WhatsApp
-      window.open('https://wa.me/' + adminNum + '?text=' + waMsg, '_blank');
-
-      // Njoftim suksesi
+      // Njoftim suksesi — perdoruesi qendron ne faqe
       showNotif('✓ Mesazhi u dërgua! Do t\'ju kontaktojmë së shpejti.', false);
 
       // Reset forma
