@@ -576,19 +576,21 @@
       <div class="contact-right">
         <p class="contact-form-title">Dërgoni një Mesazh</p>
         <form class="contact-form" id="cf-form">
+          [https://formspree.io/f/mwvyklyo](https://formspree.io/f/mwvyklyo)" method="POST">
           <div class="cf-row">
             <div class="cf-field">
               <label class="cf-label">EMRI <span class="cf-opt">(opsional)</span></label>
-              <input class="cf-input" id="cf-name" type="text" placeholder="Emri juaj" autocomplete="name">
+             <input class="cf-input" id="cf-name" type="text" name="Emri" placeholder="Emri juaj" autocomplete="name">
             </div>
             <div class="cf-field">
               <label class="cf-label">TELEFON <span style="color:#e53e3e;">*</span></label>
-              <input class="cf-input" id="cf-tel" type="tel" placeholder="Nr. i telefonit" autocomplete="tel">
+              <input class="cf-input" id="cf-tel" type="tel" name="Telefoni" required placeholder="Nr. i telefonit" autocomplete="tel">
             </div>
           </div>
           <div class="cf-field">
             <label class="cf-label">PRODUKTET <span class="cf-opt">(zgjidhni një ose më shumë)</span></label>
             <div class="cf-multiselect" id="cfMultiselect">
+              <input type="hidden" name="Produktet" id="inputiFshehteProduktet">
               <div class="cf-tags" id="cfTags">
                 <span class="cf-placeholder" id="cfPlaceholder">+ Shto produkt...</span>
               </div>
@@ -1470,5 +1472,27 @@
   </a>
 </div>
 
+  <script>
+document.getElementById('cf-form').addEventListener('submit', function(event) {
+    // 1. Kapim produktet që ka klikuar klienti
+    let container = document.getElementById('cfTags');
+    // Heqim fjalën "+ Shto produkt..." dhe rregullojmë hapësirat
+    let chosenText = container.innerText.replace('+ Shto produkt...', '').trim().replace(/\n/g, ', ');
+    
+    // I kalojmë produktet te fusha e fshehtë që Formspree e lexon
+    document.getElementById('inputiFshehteProduktet').value = chosenText;
+
+    // 2. Kapim Mesazhin
+    // KUJDES: Sigurohu që fusha e mesazhit (textarea) në HTML-në tënde e ka id="cf-message"
+    let mesazhiObj = document.getElementById('cf-message');
+    let mesazhi = mesazhiObj ? mesazhiObj.value.trim() : '';
+
+    // 3. Rregulli: A ka zgjedhur të paktën një Produkt OSE ka shkruar Mesazh?
+    if (chosenText === '' && mesazhi === '') {
+        event.preventDefault(); // Ndalon dërgimin e emailit
+        alert("Ju lutem zgjidhni të paktën një Produkt OSE shkruani një Mesazh për të dërguar kërkesën.");
+    }
+});
+</script>
 </body>
 </html>
