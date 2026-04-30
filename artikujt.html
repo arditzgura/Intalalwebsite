@@ -580,6 +580,33 @@
       img.dataset.idx=idx; img.src=ps[idx];
     };
 
+    // Touch swipe ne kartat e gridit (event delegation)
+    (function(){
+      var grid=document.getElementById('dyn-grid');
+      if(!grid) return;
+      var sx=0, sy=0, swipeWrap=null, moved=false;
+      grid.addEventListener('touchstart',function(e){
+        var wrap=e.target.closest('.art-card-img-wrap');
+        if(!wrap||!wrap.dataset.photos) return;
+        swipeWrap=wrap; sx=e.touches[0].clientX; sy=e.touches[0].clientY; moved=false;
+      },{passive:true});
+      grid.addEventListener('touchmove',function(e){
+        if(!swipeWrap) return;
+        moved=true;
+      },{passive:true});
+      grid.addEventListener('touchend',function(e){
+        if(!swipeWrap||!moved) { swipeWrap=null; return; }
+        var dx=e.changedTouches[0].clientX-sx;
+        var dy=e.changedTouches[0].clientY-sy;
+        if(Math.abs(dx)<30||Math.abs(dx)<Math.abs(dy)*1.2){ swipeWrap=null; return; }
+        var ps=JSON.parse(swipeWrap.dataset.photos||'[]'); if(ps.length<2){ swipeWrap=null; return; }
+        var img=swipeWrap.querySelector('img');
+        var idx=((parseInt(img.dataset.idx||'0')+(dx<0?1:-1))+ps.length)%ps.length;
+        img.dataset.idx=idx; img.src=ps[idx];
+        swipeWrap=null;
+      },{passive:true});
+    })();
+
     // Detail popup
     function renderDetPhotos(){
       var a=_det.articles[_det.artIdx];
