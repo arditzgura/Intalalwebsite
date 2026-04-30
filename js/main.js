@@ -99,10 +99,15 @@ document.addEventListener('DOMContentLoaded', function () {
     var cnt   = document.getElementById('search-count');
     var isOpen = false;
 
+    function filterBar() { return document.getElementById('dyn-filter-bar'); }
+
     function openSearch() {
       isOpen = true;
       sb.classList.add('open');
       if (btn) btn.classList.add('active');
+      /* Fshih filter bar-in — search bar është sipër tij */
+      var fb = filterBar();
+      if (fb) { fb._searchHidden = fb.style.display; fb.style.display = 'none'; }
       setTimeout(function () { inp.focus(); }, 260);
     }
     function closeSearch() {
@@ -112,6 +117,12 @@ document.addEventListener('DOMContentLoaded', function () {
       inp.value = '';
       clr.style.display = 'none';
       cnt.textContent = '';
+      /* Kthe filter bar-in */
+      var fb = filterBar();
+      if (fb && fb._searchHidden !== undefined) {
+        fb.style.display = fb._searchHidden || '';
+        fb._searchHidden = undefined;
+      }
       if (window._searchCallback) window._searchCallback('');
     }
 
