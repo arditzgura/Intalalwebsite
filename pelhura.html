@@ -379,6 +379,41 @@
     document.getElementById('art-detail-overlay').addEventListener('click',function(e){ if(e.target===this) closeArtDetail(); });
     document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeArtDetail(); });
 
+    /* ── Search ─────────────────────────────────────────────── */
+    window._searchCallback = function(q){
+      var grid = document.getElementById('dyn-grid');
+      if (!q) {
+        renderFilterBar(_all, _filter||'te-gjitha');
+        renderGrid(_all, _filter||'te-gjitha');
+        document.getElementById('dyn-filter-bar').style.display = 'flex';
+        return;
+      }
+      document.getElementById('dyn-filter-bar').style.display = 'none';
+      var lq = q.toLowerCase();
+      var found = _all.filter(function(a){
+        if ((a.name||'').toLowerCase().indexOf(lq) > -1) return true;
+        if ((a.code||'').toLowerCase().indexOf(lq) > -1) return true;
+        var kats = Array.isArray(a.kat)?a.kat:[a.kat||''];
+        if (kats.some(function(k){ return k.toLowerCase().indexOf(lq) > -1; })) return true;
+        if ((a.desc||'').toLowerCase().indexOf(lq) > -1) return true;
+        return false;
+      });
+      document.getElementById('pg-count').textContent = found.length + ' PELHURA';
+      if (!found.length) {
+        grid.innerHTML = '<div style="grid-column:1/-1;padding:80px 0;text-align:center;color:var(--muted);font-size:13px;">Nuk u gjet asnjë pelhurë për "<strong>'+q+'</strong>".</div>';
+      } else {
+        grid.innerHTML = found.map(function(a){
+          var photos=(a.photos||[]).map(getPhotoSrc).filter(Boolean);
+          var img0=photos[0]||'';
+          return '<div class="art-card" onclick="openDet(\''+a.id+'\')"><div class="art-card-img-wrap">'
+            +(img0?'<img src="'+img0+'" data-idx="0" style="width:100%;height:100%;object-fit:cover;display:block;">':'<div style="width:100%;height:100%;background:#e0e0e0;display:flex;align-items:center;justify-content:center;font-size:40px;">&#129525;</div>')
+            +'</div><div style="padding:12px 14px 16px;"><p style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:3px;">'+(Array.isArray(a.kat)?a.kat.join(', '):(a.kat||''))+'</p>'
+            +'<p style="font-size:14px;font-weight:500;letter-spacing:-0.2px;color:var(--black);">'+a.name+'</p></div></div>';
+        }).join('');
+      }
+      if (window._setSearchCount) window._setSearchCount(found.length, _all.length);
+    };
+
     // Init — render immediately from cache, then always fetch fresh from Supabase and re-render
     (async function(){
       var data=loadData();

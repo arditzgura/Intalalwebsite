@@ -79,6 +79,73 @@ document.addEventListener('DOMContentLoaded', function () {
   }, { passive: true });
 });
 
+/* ── Search bar ─────────────────────────────────────────────── */
+(function () {
+  document.addEventListener('DOMContentLoaded', function () {
+    /* Krijo search bar-in dhe shtoje pas navbar-it */
+    var sb = document.createElement('div');
+    sb.id = 'search-bar';
+    sb.innerHTML =
+      '<i class="ri-search-line"></i>' +
+      '<input id="search-input" type="text" placeholder="Kërko artikull, kod..." autocomplete="off">' +
+      '<span id="search-count"></span>' +
+      '<button id="search-clear" aria-label="Pastro">&#10005;</button>';
+    var nav = document.querySelector('.navbar');
+    if (nav && nav.parentNode) nav.parentNode.insertBefore(sb, nav.nextSibling);
+
+    var btn   = document.querySelector('.search-btn');
+    var inp   = document.getElementById('search-input');
+    var clr   = document.getElementById('search-clear');
+    var cnt   = document.getElementById('search-count');
+    var isOpen = false;
+
+    function openSearch() {
+      isOpen = true;
+      sb.classList.add('open');
+      if (btn) btn.classList.add('active');
+      setTimeout(function () { inp.focus(); }, 260);
+    }
+    function closeSearch() {
+      isOpen = false;
+      sb.classList.remove('open');
+      if (btn) btn.classList.remove('active');
+      inp.value = '';
+      clr.style.display = 'none';
+      cnt.textContent = '';
+      if (window._searchCallback) window._searchCallback('');
+    }
+
+    if (btn) btn.addEventListener('click', function () {
+      if (isOpen) closeSearch(); else openSearch();
+    });
+
+    inp.addEventListener('input', function () {
+      var q = inp.value.trim();
+      clr.style.display = q ? 'block' : 'none';
+      if (window._searchCallback) window._searchCallback(q);
+    });
+
+    clr.addEventListener('click', function () {
+      inp.value = '';
+      clr.style.display = 'none';
+      cnt.textContent = '';
+      inp.focus();
+      if (window._searchCallback) window._searchCallback('');
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && isOpen) closeSearch();
+    });
+
+    /* Ekspono funksione globale */
+    window.openSearch  = openSearch;
+    window.closeSearch = closeSearch;
+    window._setSearchCount = function (n, total) {
+      cnt.textContent = n < total ? n + ' / ' + total : '';
+    };
+  });
+})();
+
 /* ── Menu drawer ────────────────────────────────────────────── */
 function openMenuDrawer() {
   document.getElementById('menuDrawer').classList.add('open');

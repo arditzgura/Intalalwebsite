@@ -822,6 +822,38 @@
     document.getElementById('art-detail-overlay').addEventListener('click',function(e){ if(e.target===this) closeArtDetail(); });
     document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeArtDetail(); });
 
+    /* ── Search ─────────────────────────────────────────────── */
+    function artMatchesQuery(a, q){
+      var lq = q.toLowerCase();
+      if ((a.name||'').toLowerCase().indexOf(lq) > -1) return true;
+      if ((a.code||'').toLowerCase().indexOf(lq) > -1) return true;
+      var kats = Array.isArray(a.kat) ? a.kat : [a.kat||''];
+      if (kats.some(function(k){ return k.toLowerCase().indexOf(lq) > -1; })) return true;
+      var subs = Array.isArray(a.sub) ? a.sub : [a.sub||''];
+      if (subs.some(function(s){ return s.toLowerCase().indexOf(lq) > -1; })) return true;
+      return false;
+    }
+    window._searchCallback = function(q){
+      var grid = document.getElementById('dyn-grid');
+      var all  = _state.allArticles || [];
+      if (!q) {
+        /* Kthe filtrin normal */
+        renderGridAll(all, _state.activeSub||'te-gjitha', _state.activeKat||'te-gjitha');
+        document.getElementById('dyn-filter-bar').style.display = 'block';
+        return;
+      }
+      /* Fshih filter bar-in gjatë kërkimit */
+      document.getElementById('dyn-filter-bar').style.display = 'none';
+      var found = all.filter(function(a){ return artMatchesQuery(a, q); });
+      document.getElementById('pg-count').textContent = found.length + ' ARTIKUJ';
+      if (!found.length) {
+        grid.innerHTML = '<div style="grid-column:1/-1;padding:80px 0;text-align:center;color:var(--muted);font-size:13px;">Nuk u gjet asnjë artikull për "<strong>'+q+'</strong>".</div>';
+      } else {
+        grid.innerHTML = found.map(function(a){ return buildCardHtml(a,'openDetAll(\''+a.id+'\')'); }).join('');
+      }
+      if (window._setSearchCount) window._setSearchCount(found.length, all.length);
+    };
+
     window.addEventListener('hashchange',route);
     window.addEventListener('popstate',route);
     /* Supabase sync: render immediately from cache, then fetch fresh data and re-render */
