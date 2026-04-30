@@ -703,8 +703,12 @@
     try { return JSON.parse(localStorage.getItem('hv_content')) || {}; } catch { return {}; }
   }
   function saveData(data) {
-    localStorage.setItem('hv_content', JSON.stringify(data));
-    localStorage.setItem('hv_saved', new Date().toLocaleString());
+    try {
+      localStorage.setItem('hv_content', JSON.stringify(data));
+      localStorage.setItem('hv_saved', new Date().toLocaleString());
+    } catch (e) {
+      alert('Storage limit reached. Try using image URLs instead of uploading large files.');
+    }
   }
   function get(section) {
     const stored = loadData()[section];
@@ -717,18 +721,32 @@
     if (el) el.click();
   }
 
+  // Compress image via canvas before storing (max 1200px wide, JPEG 0.82)
+  function compressImage(file, callback) {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      const MAX = 1200;
+      let w = img.width, h = img.height;
+      if (w > MAX) { h = Math.round(h * MAX / w); w = MAX; }
+      const canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      URL.revokeObjectURL(url);
+      callback(canvas.toDataURL('image/jpeg', 0.82));
+    };
+    img.src = url;
+  }
+
   function handleUpload(fileInput, urlInputId, previewId) {
     const file = fileInput.files[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = e => {
-      const base64 = e.target.result;
+    compressImage(file, base64 => {
       document.getElementById(urlInputId).value = base64;
       const img = document.getElementById(previewId);
       img.src = base64;
       img.style.display = 'block';
-    };
-    reader.readAsDataURL(file);
+    });
   }
 
   function previewImg(inputId, previewId) {
