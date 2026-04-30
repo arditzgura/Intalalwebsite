@@ -9,34 +9,60 @@ document.addEventListener('DOMContentLoaded', function () {
   const spacer = document.getElementById('filter-bar-spacer');
   if (!navbar) return;
 
-  let lastY   = window.scrollY;
-  let ticking = false;
+  let lastY      = window.scrollY;
+  let ticking    = false;
+  let isHidden   = false;
+
+  function getBarH() {
+    if (!bar) return 0;
+    /* offsetHeight funksionon vetëm kur display != none */
+    var h = bar.offsetHeight;
+    if (h) { bar._openH = h; return h; }
+    return bar._openH || 0;
+  }
 
   function hideAll() {
+    if (isHidden) return;
+    isHidden = true;
     navbar.classList.add('navbar--hidden');
-    if (bar && bar.offsetHeight) {
-      var offset = -(navbar.offsetHeight + bar.offsetHeight);
-      bar.style.transform = 'translateY(' + offset + 'px)';
-      if (spacer) spacer.style.height = '0';
+    if (bar && bar.style.display !== 'none' && bar.style.display !== '') {
+      var barH = getBarH();
+      if (barH) {
+        bar.style.transform = 'translateY(' + (-(navbar.offsetHeight + barH)) + 'px)';
+        if (spacer) spacer.style.height = '0';
+      }
     }
   }
   function showAll() {
+    if (!isHidden) return;
+    isHidden = false;
     navbar.classList.remove('navbar--hidden');
     if (bar) {
       bar.style.transform = 'translateY(0)';
-      if (spacer && bar._openH) spacer.style.height = bar._openH + 'px';
+      var h = getBarH();
+      if (spacer && h) spacer.style.height = h + 'px';
     }
   }
 
+  /* Thirret nga faqet kur filter bar bëhet i dukshëm (pas render) */
   window._fbResetScroll = function () {
+    isHidden = false;  /* reset gjendje që showAll/hideAll të punojnë */
     lastY = window.scrollY;
-    showAll();
+    /* Nëse navbar ishte i fshehur, sinkronizo edhe filter bar-in */
+    if (navbar.classList.contains('navbar--hidden') && bar) {
+      var barH = getBarH();
+      if (barH) {
+        bar.style.transform = 'translateY(' + (-(navbar.offsetHeight + barH)) + 'px)';
+        if (spacer) spacer.style.height = '0';
+        isHidden = true;
+      }
+    }
   };
 
   window.addEventListener('scroll', function () {
     if (!ticking) {
       requestAnimationFrame(function () {
-        const currentY    = window.scrollY;
+        const currentY     = window.scrollY;
         const scrolledDown = currentY > lastY;
         const pastThreshold = currentY > 80;
 
