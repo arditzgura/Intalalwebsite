@@ -1360,7 +1360,11 @@
       if(d.hero){
         if(d.hero.bgImage){
           var hero=document.querySelector('.hero');
-          if(hero)hero.style.backgroundImage='url("'+d.hero.bgImage+'")';
+          if(hero){
+            var _hi=new Image();
+            _hi.onload=function(){hero.style.backgroundImage='url("'+d.hero.bgImage+'")';};
+            _hi.src=d.hero.bgImage;
+          }
         }
         setText('.hero-eyebrow',d.hero.eyebrow);
         setText('.hero-heading',d.hero.heading);
