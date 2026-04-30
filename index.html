@@ -575,7 +575,7 @@
       <!-- Right: form -->
       <div class="contact-right">
         <p class="contact-form-title">Dërgoni një Mesazh</p>
-        <form class="contact-form" id="cf-form" action="https://formspree.io/f/mwvyklyo" method="POST">
+        <form class="contact-form" id="formular-i-ri" action="https://formspree.io/f/mwvyklyo" method="POST">
             <div class="cf-row">
             <div class="cf-field">
               <label class="cf-label">EMRI <span class="cf-opt">(opsional)</span></label>
@@ -616,9 +616,9 @@
             <textarea class="cf-input cf-textarea" id="cf-msg" placeholder="Sasia, specifikimet..."></textarea>
           </div>
           <div id="cf-notif" style="display:none;padding:10px 14px;border-radius:4px;font-size:12px;letter-spacing:.3px;margin-bottom:8px;"></div>
-          <button class="cf-submit" type="submit">DËRGO KËRKESËN</button>
         </form>
       </div>
+          <button type="submit">DËRGO KËRKESËN</button>
 
     </div>
 
@@ -1472,7 +1472,7 @@
 </div>
 
   <script>
-document.getElementById('cf-form').addEventListener('submit', function(event) {
+document.getElementById('formular-i-ri').addEventListener('submit', function(event) {
     // 1. Kapim produktet që ka klikuar klienti
     let container = document.getElementById('cfTags');
     // Heqim fjalën "+ Shto produkt..." dhe rregullojmë hapësirat
