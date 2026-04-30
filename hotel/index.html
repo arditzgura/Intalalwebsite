@@ -82,27 +82,29 @@
       text-transform: uppercase;
       color: var(--black);
       text-decoration: none;
-      opacity: 0.5;
-      transition: opacity 0.15s;
+      opacity: 0.45;
+      transition: opacity 0.2s, color 0.2s, font-weight 0.2s;
       position: relative;
-      padding-bottom: 2px;
+      padding-bottom: 3px;
     }
     .navbar-links a::after {
       content: '';
       position: absolute;
-      bottom: -2px;
+      bottom: -1px;
       left: 0;
       right: 0;
-      height: 1.5px;
+      height: 2px;
       background: var(--gold);
+      border-radius: 2px;
       transform: scaleX(0);
       transform-origin: left;
-      transition: transform 0.2s ease;
+      transition: transform 0.22s ease;
     }
-    .navbar-links a:hover { opacity: 1; }
+    .navbar-links a:hover { opacity: 0.85; }
     .navbar-links a.active {
-      opacity: 1;
-      font-weight: 500;
+      opacity: 1 !important;
+      color: var(--gold);
+      font-weight: 600;
     }
     .navbar-links a.active::after { transform: scaleX(1); }
     .navbar-btn {
@@ -583,11 +585,11 @@
   <section class="hero" id="home">
     <div class="hero-bg"></div>
     <div class="hero-content">
-      <p class="hero-eyebrow">Luxury Redefined</p>
-      <h1 class="hero-title">A Stay Beyond<br>Expectations</h1>
-      <p class="hero-subtitle">Experience world-class hospitality where every detail is crafted for your comfort and delight.</p>
+      <p class="hero-eyebrow" id="cms-hero-eyebrow">Luxury Redefined</p>
+      <h1 class="hero-title"><span id="cms-hero-title-1">A Stay Beyond Expectations</span></h1>
+      <p class="hero-subtitle" id="cms-hero-subtitle">Experience world-class hospitality where every detail is crafted for your comfort and delight.</p>
       <div class="hero-actions">
-        <a href="#rooms" class="btn-primary">
+        <a href="#rooms" class="btn-primary" id="cms-hero-btn1">
           Explore Rooms
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
         </a>
@@ -599,48 +601,36 @@
   <!-- ── Services ─────────────────────────────────────────────── -->
   <section class="section" id="services">
     <div class="section-header">
-      <p class="section-eyebrow">What We Offer</p>
-      <h2 class="section-title">Our Services</h2>
-      <p class="section-desc">From world-class dining to a rejuvenating spa, every amenity is designed to make your stay unforgettable.</p>
+      <p class="section-eyebrow" id="cms-sv-eyebrow">What We Offer</p>
+      <h2 class="section-title" id="cms-sv-title">Our Services</h2>
+      <p class="section-desc" id="cms-sv-desc">From world-class dining to a rejuvenating spa, every amenity is designed to make your stay unforgettable.</p>
     </div>
     <div class="services-grid">
 
       <div class="service-card">
-        <img class="service-img" src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=75" alt="Fine Dining" loading="lazy" />
+        <img class="service-img" id="cms-sv-img-0" src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=75" alt="Fine Dining" loading="lazy" />
         <div class="service-body">
-          <div class="service-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M3 11l19-9-9 19-2-8-8-2z"/>
-            </svg>
-          </div>
-          <p class="service-name">Fine Dining</p>
-          <p class="service-desc">Savor curated menus by our award-winning chef using seasonal, locally sourced ingredients.</p>
+          <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg></div>
+          <p class="service-name" id="cms-sv-name-0">Fine Dining</p>
+          <p class="service-desc" id="cms-sv-desc-0">Savor curated menus by our award-winning chef using seasonal, locally sourced ingredients.</p>
         </div>
       </div>
 
       <div class="service-card">
-        <img class="service-img" src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=800&q=75" alt="Spa & Wellness" loading="lazy" />
+        <img class="service-img" id="cms-sv-img-1" src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=800&q=75" alt="Spa & Wellness" loading="lazy" />
         <div class="service-body">
-          <div class="service-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
-            </svg>
-          </div>
-          <p class="service-name">Spa & Wellness</p>
-          <p class="service-desc">Relax and restore with signature treatments, hydrotherapy, and a fully equipped fitness center.</p>
+          <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+          <p class="service-name" id="cms-sv-name-1">Spa & Wellness</p>
+          <p class="service-desc" id="cms-sv-desc-1">Relax and restore with signature treatments, hydrotherapy, and a fully equipped fitness center.</p>
         </div>
       </div>
 
       <div class="service-card">
-        <img class="service-img" src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=75" alt="Concierge" loading="lazy" />
+        <img class="service-img" id="cms-sv-img-2" src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=75" alt="Concierge" loading="lazy" />
         <div class="service-body">
-          <div class="service-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
-            </svg>
-          </div>
-          <p class="service-name">24/7 Concierge</p>
-          <p class="service-desc">Our dedicated team is always on hand to arrange tours, transfers, and personalized experiences.</p>
+          <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+          <p class="service-name" id="cms-sv-name-2">24/7 Concierge</p>
+          <p class="service-desc" id="cms-sv-desc-2">Our dedicated team is always on hand to arrange tours, transfers, and personalized experiences.</p>
         </div>
       </div>
 
@@ -650,45 +640,45 @@
   <!-- ── Rooms ─────────────────────────────────────────────────── -->
   <section class="section rooms-section" id="rooms">
     <div class="section-header">
-      <p class="section-eyebrow">Accommodations</p>
-      <h2 class="section-title">Our Rooms & Suites</h2>
-      <p class="section-desc">Each space is a sanctuary — thoughtfully designed with premium materials, natural light, and panoramic views.</p>
+      <p class="section-eyebrow" id="cms-rm-eyebrow">Accommodations</p>
+      <h2 class="section-title" id="cms-rm-title">Our Rooms & Suites</h2>
+      <p class="section-desc" id="cms-rm-desc">Each space is a sanctuary — thoughtfully designed with premium materials, natural light, and panoramic views.</p>
     </div>
     <div class="rooms-grid">
 
       <div class="room-card">
-        <img class="room-img" src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=1200&q=80" alt="Presidential Suite" loading="lazy" />
+        <img class="room-img" id="cms-rm-img-0" src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=1200&q=80" alt="Presidential Suite" loading="lazy" />
         <div class="room-overlay">
-          <span class="room-label">Signature</span>
-          <p class="room-name">Presidential Suite</p>
-          <p class="room-price">From €850 / night</p>
+          <span class="room-label" id="cms-rm-label-0">Signature</span>
+          <p class="room-name" id="cms-rm-name-0">Presidential Suite</p>
+          <p class="room-price" id="cms-rm-price-0">From €850 / night</p>
         </div>
       </div>
 
       <div class="room-card">
-        <img class="room-img" src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=800&q=75" alt="Deluxe Room" loading="lazy" />
+        <img class="room-img" id="cms-rm-img-1" src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=800&q=75" alt="Deluxe Room" loading="lazy" />
         <div class="room-overlay">
-          <span class="room-label">Deluxe</span>
-          <p class="room-name">Deluxe King Room</p>
-          <p class="room-price">From €290 / night</p>
+          <span class="room-label" id="cms-rm-label-1">Deluxe</span>
+          <p class="room-name" id="cms-rm-name-1">Deluxe King Room</p>
+          <p class="room-price" id="cms-rm-price-1">From €290 / night</p>
         </div>
       </div>
 
       <div class="room-card">
-        <img class="room-img" src="https://images.unsplash.com/photo-1540518614846-7eded433c457?w=800&q=75" alt="Junior Suite" loading="lazy" />
+        <img class="room-img" id="cms-rm-img-2" src="https://images.unsplash.com/photo-1540518614846-7eded433c457?w=800&q=75" alt="Junior Suite" loading="lazy" />
         <div class="room-overlay">
-          <span class="room-label">Suite</span>
-          <p class="room-name">Junior Suite</p>
-          <p class="room-price">From €420 / night</p>
+          <span class="room-label" id="cms-rm-label-2">Suite</span>
+          <p class="room-name" id="cms-rm-name-2">Junior Suite</p>
+          <p class="room-price" id="cms-rm-price-2">From €420 / night</p>
         </div>
       </div>
 
       <div class="room-card">
-        <img class="room-img" src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=800&q=75" alt="Classic Room" loading="lazy" />
+        <img class="room-img" id="cms-rm-img-3" src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=800&q=75" alt="Classic Room" loading="lazy" />
         <div class="room-overlay">
-          <span class="room-label">Classic</span>
-          <p class="room-name">Classic Double</p>
-          <p class="room-price">From €195 / night</p>
+          <span class="room-label" id="cms-rm-label-3">Classic</span>
+          <p class="room-name" id="cms-rm-name-3">Classic Double</p>
+          <p class="room-price" id="cms-rm-price-3">From €195 / night</p>
         </div>
       </div>
 
@@ -698,28 +688,28 @@
   <!-- ── Contact ───────────────────────────────────────────────── -->
   <section class="section contact-section" id="contact">
     <div class="section-header">
-      <p class="section-eyebrow">Get In Touch</p>
-      <h2 class="section-title">Reserve Your Stay</h2>
-      <p class="section-desc">Tell us about your perfect getaway and we will tailor every detail to exceed your expectations.</p>
+      <p class="section-eyebrow" id="cms-ct-eyebrow">Get In Touch</p>
+      <h2 class="section-title" id="cms-ct-title">Reserve Your Stay</h2>
+      <p class="section-desc" id="cms-ct-desc">Tell us about your perfect getaway and we will tailor every detail to exceed your expectations.</p>
     </div>
     <div class="contact-inner">
 
       <div class="contact-info">
         <div class="contact-detail">
           <span class="contact-detail-label">Address</span>
-          <span class="contact-detail-value">12 Riviera Boulevard<br>Tirana, Albania</span>
+          <span class="contact-detail-value" id="cms-ct-address">12 Riviera Boulevard, Tirana, Albania</span>
         </div>
         <div class="contact-detail">
           <span class="contact-detail-label">Phone</span>
-          <span class="contact-detail-value">+355 4 222 3344</span>
+          <span class="contact-detail-value" id="cms-ct-phone">+355 4 222 3344</span>
         </div>
         <div class="contact-detail">
           <span class="contact-detail-label">Email</span>
-          <span class="contact-detail-value">reservations@hotelveizi.al</span>
+          <span class="contact-detail-value" id="cms-ct-email">reservations@hotelveizi.al</span>
         </div>
         <div class="contact-detail">
           <span class="contact-detail-label">Check-in / Check-out</span>
-          <span class="contact-detail-value">3:00 PM — 12:00 PM</span>
+          <span class="contact-detail-value" id="cms-ct-times">3:00 PM — 12:00 PM</span>
         </div>
       </div>
 
@@ -793,9 +783,11 @@
     // Disable smooth scroll — instant jumps
     document.documentElement.style.scrollBehavior = 'auto';
 
-    // Navbar hide on scroll
+    // Navbar hide on scroll (ignore right after a nav-click)
     let lastY = 0;
+    let navClickLock = false;
     window.addEventListener('scroll', () => {
+      if (navClickLock) return;
       const y = window.scrollY;
       document.querySelector('.navbar').classList.toggle('navbar--hidden', y > lastY && y > 80);
       lastY = y;
@@ -809,6 +801,9 @@
         a.classList.toggle('active', a.dataset.section === sectionId);
       });
     }
+
+    // Default: mark Services active on load
+    setActive('services');
 
     // IntersectionObserver — marks link active when section is in view
     const observer = new IntersectionObserver(entries => {
@@ -828,8 +823,15 @@
         e.preventDefault();
         const id = a.dataset.section;
         setActive(id);
+        // Lock scroll-hide for 600ms so navbar stays visible after click
+        navClickLock = true;
+        document.querySelector('.navbar').classList.remove('navbar--hidden');
         const target = document.getElementById(id);
-        if (target) target.scrollIntoView();
+        if (target) {
+          target.scrollIntoView();
+          lastY = window.scrollY;
+        }
+        setTimeout(() => { navClickLock = false; lastY = window.scrollY; }, 600);
         // Close mobile drawer
         drawer.classList.remove('open');
         hamburger.classList.remove('open');
@@ -857,5 +859,68 @@
   <style>
     .navbar--hidden { transform: translateY(calc(-100% - 2px)); }
   </style>
+
+  <!-- ── CMS: load saved content from admin dashboard ── -->
+  <script>
+    (function () {
+      let data;
+      try { data = JSON.parse(localStorage.getItem('hv_content')) || {}; } catch { return; }
+
+      function set(id, val) { const el = document.getElementById(id); if (el) el.textContent = val; }
+      function setHTML(id, val) { const el = document.getElementById(id); if (el) el.innerHTML = val; }
+      function attr(id, attr, val) { const el = document.getElementById(id); if (el) el.setAttribute(attr, val); }
+
+      // Hero
+      const h = data.hero;
+      if (h) {
+        set('cms-hero-eyebrow', h.eyebrow);
+        set('cms-hero-title-1', h.title.split('\n')[0] || h.title);
+        set('cms-hero-subtitle', h.subtitle);
+        const btn = document.getElementById('cms-hero-btn1');
+        if (btn && h.btn1) { btn.childNodes[0].textContent = h.btn1 + ' '; }
+        const bg = document.querySelector('.hero-bg');
+        if (bg && h.img) bg.style.backgroundImage = `linear-gradient(to bottom,rgba(10,10,10,.15) 0%,rgba(10,10,10,.55) 100%),url('${h.img}')`;
+      }
+
+      // Services header
+      const sv = data.services;
+      if (sv) {
+        set('cms-sv-eyebrow', sv.eyebrow);
+        set('cms-sv-title', sv.title);
+        set('cms-sv-desc', sv.desc);
+        if (sv.items) sv.items.forEach((item, i) => {
+          set(`cms-sv-name-${i}`, item.name);
+          set(`cms-sv-desc-${i}`, item.desc);
+          attr(`cms-sv-img-${i}`, 'src', item.img);
+        });
+      }
+
+      // Rooms header
+      const rm = data.rooms;
+      if (rm) {
+        set('cms-rm-eyebrow', rm.eyebrow);
+        set('cms-rm-title', rm.title);
+        set('cms-rm-desc', rm.desc);
+        if (rm.items) rm.items.forEach((item, i) => {
+          set(`cms-rm-label-${i}`, item.label);
+          set(`cms-rm-name-${i}`, item.name);
+          set(`cms-rm-price-${i}`, item.price);
+          attr(`cms-rm-img-${i}`, 'src', item.img);
+        });
+      }
+
+      // Contact
+      const ct = data.contact;
+      if (ct) {
+        set('cms-ct-eyebrow', ct.eyebrow);
+        set('cms-ct-title', ct.title);
+        set('cms-ct-desc', ct.desc);
+        set('cms-ct-address', ct.address);
+        set('cms-ct-phone', ct.phone);
+        set('cms-ct-email', ct.email);
+        set('cms-ct-times', (ct.checkin || '3:00 PM') + ' — ' + (ct.checkout || '12:00 PM'));
+      }
+    })();
+  </script>
 </body>
 </html>
