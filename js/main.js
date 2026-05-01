@@ -37,11 +37,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function hideAll() {
     navbar.classList.add('navbar--hidden');
-    /* Filter bar */
+    /* Filter bar — transform lart, spacer NUK ndryshon (content mbetet si homepage) */
     var b = bar();
     if (b && barIsVisible()) {
       b.style.transform = 'translateY(-' + hideOffset() + 'px)';
-      var sp = spacer(); if (sp) sp.style.height = '0';
     }
     /* Mobile search row — lëviz lart bashkë me navbar-in */
     var msw = mobSearchWrap();
@@ -50,27 +49,39 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function showAll() {
     navbar.classList.remove('navbar--hidden');
-    /* Filter bar */
+    /* Filter bar — kthe transform, spacer NUK ndryshon */
     var b = bar();
-    if (b) {
-      b.style.transform = 'translateY(0)';
-      var sp = spacer();
-      if (sp) sp.style.height = (b._openH || 0) + 'px';
-    }
+    if (b) { b.style.transform = 'translateY(0)'; }
     /* Mobile search row */
     var msw = mobSearchWrap();
     if (msw) msw.style.transform = 'translateY(0)';
   }
 
   /* Thirret pas çdo render të filter bar-it.
-     Sinkronizon menjëherë me gjendjen aktuale të navbar-it. */
+     Sinkronizon MENJËHERË (pa animacion) me gjendjen aktuale të navbar-it. */
   window._fbResetScroll = function () {
     lastY = window.scrollY;
-    if (navbar.classList.contains('navbar--hidden')) {
-      hideAll();
-    } else {
-      showAll();
-    }
+    var b = bar();
+    var sp = spacer();
+    var msw = mobSearchWrap();
+
+    /* Fik tranzicionet → pozicion i menjëhershëm pa animacion */
+    if (b)   b.style.transition   = 'none';
+    if (sp)  sp.style.transition  = 'none';
+    if (msw) msw.style.transition = 'none';
+    navbar.style.transition = 'none';
+
+    if (navbar.classList.contains('navbar--hidden')) { hideAll(); }
+    else                                              { showAll(); }
+
+    /* Flush reflow — konfirmo vlerat pa animacion */
+    void navbar.offsetHeight;
+
+    /* Rikthe tranzicionet nga stylesheet-i */
+    navbar.style.transition = '';
+    if (b)   b.style.transition   = '';
+    if (sp)  sp.style.transition  = '';
+    if (msw) msw.style.transition = '';
   };
 
   window.addEventListener('scroll', function () {
