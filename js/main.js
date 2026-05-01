@@ -88,40 +88,54 @@ document.addEventListener('DOMContentLoaded', function () {
   }, { passive: true });
 });
 
-/* ── Search bar ─────────────────────────────────────────────── */
+/* ── Search inline (brenda navbar) ─────────────────────────── */
 (function () {
   document.addEventListener('DOMContentLoaded', function () {
-    /* Krijo search bar-in dhe shtoje pas navbar-it */
-    var sb = document.createElement('div');
-    sb.id = 'search-bar';
-    sb.innerHTML =
-      '<i class="ri-search-line"></i>' +
-      '<input id="search-input" type="text" placeholder="Kërko artikull, kod..." autocomplete="off">' +
-      '<span id="search-count"></span>' +
-      '<button id="search-clear" aria-label="Pastro">&#10005;</button>';
     var nav = document.querySelector('.navbar');
-    if (nav && nav.parentNode) nav.parentNode.insertBefore(sb, nav.nextSibling);
+    if (!nav) return;
 
-    var btn   = document.querySelector('.search-btn');
-    var inp   = document.getElementById('search-input');
-    var clr   = document.getElementById('search-clear');
-    var cnt   = document.getElementById('search-count');
+    /* Injekto #nav-search-wrap brenda navbar-right, para butonit search */
+    var navRight = nav.querySelector('.navbar-right');
+    var wrap = document.createElement('div');
+    wrap.id = 'nav-search-wrap';
+    wrap.innerHTML =
+      '<input id="search-input" type="text" placeholder="Kërko..." autocomplete="off" tabindex="-1">' +
+      '<span id="search-count"></span>' +
+      '<button id="search-clear" aria-label="Pastro" tabindex="-1">&#10005;</button>';
+    /* Ndarëse midis search dhe butonit */
+    var sep = document.createElement('span');
+    sep.className = 'search-sep';
+
+    var btn = nav.querySelector('.search-btn');
+    if (navRight && btn) {
+      navRight.insertBefore(sep, btn);
+      navRight.insertBefore(wrap, sep);
+    } else if (navRight) {
+      navRight.appendChild(wrap);
+    }
+
+    var inp = document.getElementById('search-input');
+    var clr = document.getElementById('search-clear');
+    var cnt = document.getElementById('search-count');
     var isOpen = false;
 
     function filterBar() { return document.getElementById('dyn-filter-bar'); }
 
     function openSearch() {
       isOpen = true;
-      sb.classList.add('open');
+      nav.classList.add('search-open');
+      inp.removeAttribute('tabindex');
       if (btn) btn.classList.add('active');
-      /* Fshih filter bar-in — search bar është sipër tij */
+      /* Fshih filter bar-in ndërkohë që search është aktiv */
       var fb = filterBar();
       if (fb) { fb._searchHidden = fb.style.display; fb.style.display = 'none'; }
-      setTimeout(function () { inp.focus(); }, 260);
+      setTimeout(function () { inp.focus(); }, 50);
     }
+
     function closeSearch() {
       isOpen = false;
-      sb.classList.remove('open');
+      nav.classList.remove('search-open');
+      inp.setAttribute('tabindex', '-1');
       if (btn) btn.classList.remove('active');
       inp.value = '';
       clr.style.display = 'none';
@@ -135,8 +149,14 @@ document.addEventListener('DOMContentLoaded', function () {
       if (window._searchCallback) window._searchCallback('');
     }
 
-    if (btn) btn.addEventListener('click', function () {
+    if (btn) btn.addEventListener('click', function (e) {
+      e.stopPropagation();
       if (isOpen) closeSearch(); else openSearch();
+    });
+
+    /* Klik jashtë navbar → mbyll search */
+    document.addEventListener('click', function (e) {
+      if (isOpen && !nav.contains(e.target)) closeSearch();
     });
 
     /* Ridirektim tek artikujt.html nëse nuk jemi atje */
@@ -154,7 +174,6 @@ document.addEventListener('DOMContentLoaded', function () {
       clr.style.display = q ? 'block' : 'none';
       if (window._searchCallback) {
         window._searchCallback(q);
-        /* Përditëso URL pa rifreskim (vetëm në artikujt.html) */
         if (onArtPage()) {
           var url = q
             ? (window.location.pathname + '?q=' + encodeURIComponent(q))
@@ -162,7 +181,6 @@ document.addEventListener('DOMContentLoaded', function () {
           history.replaceState(null, '', url);
         }
       } else {
-        /* Faqe tjetër (home, kontakt…) — ridirektim pas 500ms */
         clearTimeout(_redirectTimer);
         if (q.length >= 2) {
           _redirectTimer = setTimeout(function () { doRedirect(q); }, 500);
@@ -176,9 +194,11 @@ document.addEventListener('DOMContentLoaded', function () {
         var q = inp.value.trim();
         if (!window._searchCallback && q) { doRedirect(q); }
       }
+      if (e.key === 'Escape') closeSearch();
     });
 
-    clr.addEventListener('click', function () {
+    clr.addEventListener('click', function (e) {
+      e.stopPropagation();
       clearTimeout(_redirectTimer);
       inp.value = '';
       clr.style.display = 'none';
@@ -188,10 +208,6 @@ document.addEventListener('DOMContentLoaded', function () {
         window._searchCallback('');
         if (onArtPage()) history.replaceState(null, '', window.location.pathname);
       }
-    });
-
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && isOpen) closeSearch();
     });
 
     /* Ekspono funksione globale */
@@ -205,7 +221,6 @@ document.addEventListener('DOMContentLoaded', function () {
     var urlParams = new URLSearchParams(window.location.search);
     var initQ = urlParams.get('q');
     if (initQ && onArtPage()) {
-      /* Prit që artikujt të ngarkohen, pastaj apliko filtrin */
       window._pendingSearchQ = initQ;
     }
   });

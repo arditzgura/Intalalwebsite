@@ -139,54 +139,44 @@ body {
 .search-btn.active { background: #f0f0f0; border-radius: 50%; }
 .search-btn.active i::before { content: '\EB99'; } /* ri-close-line kur aktiv */
 
-/* ── Search bar ─────────────────────────────────────────────── */
-#search-bar {
-  position: fixed;
-  top: var(--navbar-h);
-  left: 0; right: 0;
-  z-index: 101;
-  background: #fff;
+/* ── Search inline (brenda navbar) ──────────────────────────── */
+#nav-search-wrap {
   display: flex;
   align-items: center;
-  padding: 0 20px;
-  height: 0;
+  max-width: 0;
   overflow: hidden;
-  border-bottom: none;               /* pa border kur mbyllur — heq vijën */
-  transition: height .25s ease, transform .35s ease;
-  will-change: transform, height;
+  opacity: 0;
+  transition: max-width .3s ease, opacity .25s ease;
+  pointer-events: none;
 }
-#search-bar.open {
-  height: 48px;
-  border-bottom: .5px solid var(--border);
-  box-shadow: 0 4px 16px rgba(0,0,0,.07);
-}
-#search-bar i.ri-search-line {
-  font-size: 16px;
-  color: #aaa;
-  flex-shrink: 0;
-  margin-right: 10px;
+.navbar.search-open #nav-search-wrap {
+  max-width: min(260px, 52vw);
+  opacity: 1;
+  pointer-events: auto;
 }
 #search-input {
-  flex: 1;
+  width: 100%;
   border: none;
   outline: none;
-  font-size: 13px;
+  font-size: clamp(11px, 0.95vw, 13px);
   font-family: var(--fb);
   font-weight: 400;
   color: var(--black);
   background: transparent;
   letter-spacing: .2px;
+  padding: 0 4px 0 0;
 }
 #search-input::placeholder { color: #bbb; }
 #search-clear {
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 18px;
+  font-size: 16px;
   color: #bbb;
-  padding: 0 0 0 8px;
+  padding: 0 0 0 6px;
   line-height: 1;
   display: none;
+  flex-shrink: 0;
   transition: color .15s;
 }
 #search-clear:hover { color: var(--black); }
@@ -195,9 +185,19 @@ body {
   color: #aaa;
   letter-spacing: 1px;
   white-space: nowrap;
-  margin-left: 10px;
+  margin-left: 6px;
   flex-shrink: 0;
 }
+/* Ndarëse vizuale midis search wrap dhe butonit */
+.navbar.search-open .search-sep {
+  display: block;
+  width: 1px;
+  height: 16px;
+  background: var(--border);
+  margin: 0 8px 0 4px;
+  flex-shrink: 0;
+}
+.search-sep { display: none; }
 
 .btn-order {
   background: var(--red);
