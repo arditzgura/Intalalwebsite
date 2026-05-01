@@ -588,28 +588,15 @@
             </div>
           </div>
           <div class="cf-field">
-            <label class="cf-label">PRODUKTET <span class="cf-opt">(zgjidhni një ose më shumë)</span></label>
+            <label class="cf-label">PRODUKTET <span class="cf-opt">(shkruaj ose zgjedh)</span></label>
             <div class="cf-multiselect" id="cfMultiselect">
               <input type="hidden" name="Produktet" id="inputiFshehteProduktet">
               <div class="cf-tags" id="cfTags">
-                <span class="cf-placeholder" id="cfPlaceholder">+ Shto produkt...</span>
+                <input id="cfProdInput" class="cf-prod-input" type="text"
+                  placeholder="Shkruaj dhe shtyp Enter..."
+                  autocomplete="off">
               </div>
-              <div class="cf-dropdown" id="cfDropdown">
-                <div class="cf-dropdown-group">Artikuj</div>
-                <div class="cf-option" data-val="Bluze CRZ">Bluze CRZ</div>
-                <div class="cf-option" data-val="Fanella Basic">Fanella Basic</div>
-                <div class="cf-option" data-val="Kanatjere Premium">Kanatjere Premium</div>
-                <div class="cf-option" data-val="Mbathje Classic">Mbathje Classic</div>
-                <div class="cf-option" data-val="Bluze Sport">Bluze Sport</div>
-                <div class="cf-option" data-val="Fanella Termo">Fanella Termo</div>
-                <div class="cf-option" data-val="Mbathje Slim">Mbathje Slim</div>
-                <div class="cf-dropdown-group">Pelhura</div>
-                <div class="cf-option" data-val="Pelhure Ribana e Bardhë">Pelhure Ribana e Bardhë</div>
-                <div class="cf-option" data-val="Pelhure Vikson Gri">Pelhure Vikson Gri</div>
-                <div class="cf-option" data-val="Pelhure Ribana Blu">Pelhure Ribana Blu</div>
-                <div class="cf-option" data-val="Pelhure Cotton e Zezë">Pelhure Cotton e Zezë</div>
-                <div class="cf-option" data-val="Pelhure Premium Mix">Pelhure Premium Mix</div>
-              </div>
+              <div class="cf-dropdown" id="cfDropdown"></div>
             </div>
           </div>
           <div class="cf-field">
@@ -745,64 +732,133 @@
   <script src="js/sb.js"></script>
 
   <script>
-    /* ── Multi-select product picker ────────────────────────── */
+    /* ── Produktet — autocomplete + tag input ───────────────── */
     (function () {
-      const tags     = document.getElementById('cfTags');
-      const dropdown = document.getElementById('cfDropdown');
-      const ph       = document.getElementById('cfPlaceholder');
-      if (!tags) return;
+      var tags     = document.getElementById('cfTags');
+      var dropdown = document.getElementById('cfDropdown');
+      var inp      = document.getElementById('cfProdInput');
+      if (!tags || !inp) return;
 
-      const selected = new Set();
+      var selected   = new Set();   /* çmimet e zgjedhura */
+      var allSuggest = [];          /* lista nga Supabase */
+      var loaded     = false;
 
-      tags.addEventListener('click', () => {
-        dropdown.classList.toggle('open');
-        tags.classList.toggle('open');
-      });
+      /* Ngarko artikujt nga Supabase (herë të parë kur fokusohet input-i) */
+      async function loadSuggestions() {
+        if (loaded) return;
+        loaded = true;
+        try {
+          var raw = await sbGet('artikujt_data');
+          if (raw) {
+            var data = JSON.parse(raw);
+            if (Array.isArray(data)) {
+              allSuggest = data.map(function(a){ return a.name || ''; }).filter(Boolean);
+            }
+          }
+        } catch(e) { /* vazhdo pa suggestions */ }
+        renderDropdown('');
+      }
 
-      dropdown.querySelectorAll('.cf-option').forEach(opt => {
-        opt.addEventListener('click', e => {
-          e.stopPropagation();
-          const val = opt.dataset.val;
-          if (selected.has(val)) return;
-          selected.add(val);
-          opt.classList.add('selected');
-
-          const chip = document.createElement('span');
-          chip.className = 'cf-tag';
-          chip.dataset.val = val;
-          chip.innerHTML = `${val}<span class="cf-tag-remove" data-val="${val}">×</span>`;
-          tags.insertBefore(chip, ph);
-
-          ph.style.display = selected.size ? 'none' : '';
-          dropdown.classList.remove('open');
-          tags.classList.remove('open');
+      /* Vizato dropdown sipas query-t */
+      function renderDropdown(q) {
+        var ql = (q || '').trim().toLowerCase();
+        var matches = ql
+          ? allSuggest.filter(function(n){ return n.toLowerCase().includes(ql) && !selected.has(n); })
+          : allSuggest.filter(function(n){ return !selected.has(n); });
+        if (!matches.length && !ql) { dropdown.classList.remove('open'); return; }
+        var html = '';
+        if (matches.length) {
+          html += '<div class="cf-dropdown-group">Artikuj të regjistruar</div>';
+          html += matches.slice(0,12).map(function(n){
+            return '<div class="cf-option" data-val="'+n+'">'+n+'</div>';
+          }).join('');
+        }
+        /* Opsion "shto si custom" nëse teksti nuk gjendet */
+        if (ql && !allSuggest.some(function(n){ return n.toLowerCase()===ql; }) && !selected.has(q.trim())) {
+          html += '<div class="cf-option cf-option-custom" data-val="'+q.trim()+'">+ Shto "<strong>'+q.trim()+'</strong>"</div>';
+        }
+        dropdown.innerHTML = html;
+        dropdown.classList.toggle('open', !!html);
+        /* Bind klikimit */
+        dropdown.querySelectorAll('.cf-option').forEach(function(opt){
+          opt.addEventListener('mousedown', function(e){
+            e.preventDefault();
+            addTag(opt.dataset.val);
+            inp.value = '';
+            renderDropdown('');
+          });
         });
-      });
+      }
 
-      tags.addEventListener('click', e => {
+      /* Shto tag */
+      function addTag(val) {
+        val = (val || '').trim();
+        if (!val || selected.has(val)) return;
+        selected.add(val);
+        var chip = document.createElement('span');
+        chip.className = 'cf-tag';
+        chip.dataset.val = val;
+        chip.innerHTML = val + '<span class="cf-tag-remove">×</span>';
+        tags.insertBefore(chip, inp);
+      }
+
+      /* Fshi tag me klikim × */
+      tags.addEventListener('click', function(e) {
         if (e.target.classList.contains('cf-tag-remove')) {
-          e.stopPropagation();
-          const val = e.target.dataset.val;
-          selected.delete(val);
-          e.target.parentElement.remove();
-          dropdown.querySelector(`[data-val="${val}"]`)?.classList.remove('selected');
-          ph.style.display = selected.size ? 'none' : '';
+          var chip = e.target.parentElement;
+          selected.delete(chip.dataset.val);
+          chip.remove();
+        }
+        inp.focus();
+      });
+
+      /* Klik mbi tag-container → fokuso input */
+      tags.addEventListener('click', function(e) {
+        if (e.target === tags) inp.focus();
+      });
+
+      /* Input eventi */
+      inp.addEventListener('focus', function() {
+        loadSuggestions().then(function(){ renderDropdown(inp.value); });
+      });
+      inp.addEventListener('input', function() {
+        renderDropdown(inp.value);
+      });
+      inp.addEventListener('keydown', function(e) {
+        var val = inp.value.trim();
+        if ((e.key === 'Enter' || e.key === ',') && val) {
+          e.preventDefault();
+          addTag(val);
+          inp.value = '';
+          renderDropdown('');
+        }
+        if (e.key === 'Backspace' && !val) {
+          /* Fshi tag-un e fundit me Backspace */
+          var chips = tags.querySelectorAll('.cf-tag');
+          if (chips.length) {
+            var last = chips[chips.length - 1];
+            selected.delete(last.dataset.val);
+            last.remove();
+          }
         }
       });
 
-      document.addEventListener('click', e => {
+      /* Mbyll dropdown kur klikon jashtë */
+      document.addEventListener('click', function(e) {
         if (!document.getElementById('cfMultiselect').contains(e.target)) {
+          /* Nëse ka tekst të pa-konfirmuar, shto si tag */
+          var val = inp.value.trim();
+          if (val) { addTag(val); inp.value = ''; }
           dropdown.classList.remove('open');
-          tags.classList.remove('open');
         }
       });
 
-      // Ekspozo reset per submit
+      /* Ekspozo reset */
       window.cfResetMultiselect = function() {
         selected.clear();
         tags.querySelectorAll('.cf-tag').forEach(function(t){ t.remove(); });
-        dropdown.querySelectorAll('.cf-option').forEach(function(o){ o.classList.remove('selected'); });
-        ph.style.display = '';
+        inp.value = '';
+        dropdown.classList.remove('open');
       };
     })();
   </script>

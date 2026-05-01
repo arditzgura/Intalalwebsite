@@ -2462,6 +2462,10 @@ function doLogin(){
   document.getElementById('admin-ui').style.display='block';
   document.getElementById('admin-bar').style.display='flex';
   document.body.classList.add('admin-bar-visible');
+  /* Anulo popup-in "Na Kontakto" për sesionin admin */
+  popupShown=true;
+  if(popupTimer) clearTimeout(popupTimer);
+  document.getElementById('contact-popup').style.display='none';
   initAdmin();
 }
 /* Enter on login fields handled via onkeydown inline */

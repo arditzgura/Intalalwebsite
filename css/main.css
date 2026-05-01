@@ -1110,20 +1110,28 @@ body {
   background: rgba(255,255,255,0.05);
   border: 0.5px solid rgba(255,255,255,0.12);
   border-radius: 4px;
-  padding: 10px 12px;
+  padding: 8px 12px;
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  cursor: pointer;
+  align-items: center;
+  gap: 7px;
+  cursor: text;
   transition: border-color 0.2s;
 }
-.cf-tags:hover, .cf-tags.open { border-color: rgba(255,255,255,0.4); }
-.cf-placeholder {
+.cf-tags:focus-within { border-color: rgba(255,255,255,0.4); }
+/* Input shkruaj brenda tags */
+.cf-prod-input {
+  flex: 1;
+  min-width: 120px;
+  background: transparent;
+  border: none;
+  outline: none;
   font-size: 13px;
-  color: rgba(255,255,255,0.25);
-  align-self: center;
-  user-select: none;
+  font-family: 'Switzer', sans-serif;
+  color: var(--off-white);
+  padding: 4px 0;
 }
+.cf-prod-input::placeholder { color: rgba(255,255,255,0.25); }
 .cf-tag {
   display: flex;
   align-items: center;
@@ -1175,6 +1183,7 @@ body {
 }
 .cf-option:hover { background: rgba(255,255,255,0.07); }
 .cf-option.selected { opacity: 0.35; pointer-events: none; }
+.cf-option-custom { color: rgba(255,255,255,0.55); font-style: italic; }
 .cf-textarea {
   resize: vertical;
   min-height: 110px;
