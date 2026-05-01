@@ -498,14 +498,13 @@
       });
       row1+='<button class="dfc-share" onclick="shareUrl(window.location.href,\'Intal Underwear — Artikujt\')"><i class="ri-share-line"></i> Share</button>';
       row1+='</div>';
-      // row 2: kat values — shfaqet VETËM kur aktivizohet Meshkuj ose Femra
-      var SUB_ME_NENFILTËR = ['meshkuj','femra'];
+      // row 2: kat values — shfaqet kur klikohet çdo kategori me të paktën 1 nënfiltër
       var row2='';
-      if(activeSub && SUB_ME_NENFILTËR.indexOf(activeSub.toLowerCase())>-1){
+      if(activeSub&&activeSub!=='te-gjitha'){
         var subArts=allList.filter(function(a){ return artMatchesCat(a,activeSub); });
         var kats=[];
         subArts.forEach(function(a){ artKatArr(a).forEach(function(k){ if(k&&!kats.includes(k)) kats.push(k); }); });
-        if(kats.length>1){
+        if(kats.length){
           row2='<div class="dfc-row dfc-row-sub">';
           kats.forEach(function(k){
             row2+='<button class="dfc-sub'+(activeKat===k?' active':'')+'" onclick="applyKatFilter(\''+k.replace(/'/g,"\\'")+'\')">'+k+'</button>';
