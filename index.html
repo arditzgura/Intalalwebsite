@@ -576,7 +576,6 @@
       <div class="contact-right">
         <p class="contact-form-title">Dërgoni një Mesazh</p>
         <form class="contact-form" id="cf-form">
-          [https://formspree.io/f/mwvyklyo](https://formspree.io/f/mwvyklyo)" method="POST">
           <div class="cf-row">
             <div class="cf-field">
               <label class="cf-label">EMRI <span class="cf-opt">(opsional)</span></label>
@@ -743,42 +742,72 @@
       var allSuggest = [];          /* lista nga Supabase */
       var loaded     = false;
 
-      /* Ngarko artikujt nga Supabase (herë të parë kur fokusohet input-i) */
+      /* Ngarko artikujt — cache-i lokal menjëherë, Supabase në sfond */
+      function parseSuggest(raw) {
+        try {
+          var data = JSON.parse(raw);
+          if (Array.isArray(data))
+            return data.map(function(a){ return a.name||''; }).filter(Boolean);
+        } catch(e) {}
+        return [];
+      }
+
       async function loadSuggestions() {
         if (loaded) return;
         loaded = true;
+        /* 1. Provo cache-in lokal menjëherë */
         try {
-          var raw = await sbGet('artikujt_data');
-          if (raw) {
-            var data = JSON.parse(raw);
-            if (Array.isArray(data)) {
-              allSuggest = data.map(function(a){ return a.name || ''; }).filter(Boolean);
-            }
+          var cache = localStorage.getItem('intal_cache_v1');
+          if (cache) {
+            var obj = JSON.parse(cache);
+            if (obj.artikujt && Array.isArray(obj.artikujt))
+              allSuggest = obj.artikujt.map(function(a){ return a.name||''; }).filter(Boolean);
           }
-        } catch(e) { /* vazhdo pa suggestions */ }
-        renderDropdown('');
+        } catch(e) {}
+        if (allSuggest.length) renderDropdown(inp.value); /* shfaq menjëherë */
+        /* 2. Rifresko nga Supabase në sfond */
+        try {
+          var raw = await sbGet('artikujt');
+          if (raw) {
+            var fresh = parseSuggest(raw);
+            if (fresh.length) { allSuggest = fresh; renderDropdown(inp.value); }
+          }
+        } catch(e) {}
       }
 
-      /* Vizato dropdown sipas query-t */
+      /* Vizato dropdown sipas query-t — filtrim live si search */
+      function highlight(text, q) {
+        if (!q) return text;
+        var i = text.toLowerCase().indexOf(q.toLowerCase());
+        if (i < 0) return text;
+        return text.slice(0,i) + '<mark style="background:rgba(255,255,255,.22);color:inherit;border-radius:2px;padding:0 1px;">'
+          + text.slice(i, i+q.length) + '</mark>' + text.slice(i+q.length);
+      }
+
       function renderDropdown(q) {
         var ql = (q || '').trim().toLowerCase();
+        var qval = (q || '').trim();
+        var avail = allSuggest.filter(function(n){ return !selected.has(n); });
         var matches = ql
-          ? allSuggest.filter(function(n){ return n.toLowerCase().includes(ql) && !selected.has(n); })
-          : allSuggest.filter(function(n){ return !selected.has(n); });
+          ? avail.filter(function(n){ return n.toLowerCase().includes(ql); })
+          : avail;
+
         if (!matches.length && !ql) { dropdown.classList.remove('open'); return; }
+
         var html = '';
         if (matches.length) {
           html += '<div class="cf-dropdown-group">Artikuj të regjistruar</div>';
-          html += matches.slice(0,12).map(function(n){
-            return '<div class="cf-option" data-val="'+n+'">'+n+'</div>';
+          html += matches.slice(0, 10).map(function(n){
+            return '<div class="cf-option" data-val="'+n+'">'+highlight(n, qval)+'</div>';
           }).join('');
         }
-        /* Opsion "shto si custom" nëse teksti nuk gjendet */
-        if (ql && !allSuggest.some(function(n){ return n.toLowerCase()===ql; }) && !selected.has(q.trim())) {
-          html += '<div class="cf-option cf-option-custom" data-val="'+q.trim()+'">+ Shto "<strong>'+q.trim()+'</strong>"</div>';
+        /* Opsion "shto si custom" nëse teksti nuk përputhet saktë */
+        if (ql && !allSuggest.some(function(n){ return n.toLowerCase()===ql; }) && !selected.has(qval)) {
+          html += '<div class="cf-option cf-option-custom" data-val="'+qval+'">+ Shto "<strong>'+qval+'</strong>"</div>';
         }
+        if (!html) { dropdown.classList.remove('open'); return; }
         dropdown.innerHTML = html;
-        dropdown.classList.toggle('open', !!html);
+        dropdown.classList.add('open');
         /* Bind klikimit */
         dropdown.querySelectorAll('.cf-option').forEach(function(opt){
           opt.addEventListener('mousedown', function(e){
@@ -786,6 +815,7 @@
             addTag(opt.dataset.val);
             inp.value = '';
             renderDropdown('');
+            inp.focus();
           });
         });
       }
