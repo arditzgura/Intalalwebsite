@@ -856,20 +856,20 @@
         highlight(msgEl, true); msgEl.focus(); return;
       }
 
-      // Ruaj ne analytics / Supabase
+      // Ruaj ne contact_leads (çelës i veçantë — paneli nuk mund ta mbishkruajë)
       try {
-        var anRaw = await sbGet('analytics');
-        var an = anRaw ? JSON.parse(anRaw) : {};
-        if(!an.contactLeads) an.contactLeads = [];
-        an.contactLeads.push({
+        var raw = await sbGet('contact_leads');
+        var leads = raw ? JSON.parse(raw) : [];
+        if (!Array.isArray(leads)) leads = [];
+        leads.push({
           name: name, tel: tel,
           produktet: prod, mesazh: msg,
           source: 'form',
           date: new Date().toISOString(),
-          notified: false
+          read: false
         });
-        await sbSet('analytics', JSON.stringify(an));
-      } catch(ex){}
+        await sbSet('contact_leads', JSON.stringify(leads));
+      } catch(ex){ console.error('Contact save error:', ex); }
 
       // Njoftim suksesi — perdoruesi qendron ne faqe
       showNotif('✓ Mesazhi u dërgua! Do t\'ju kontaktojmë së shpejti.', false);
@@ -1472,27 +1472,5 @@
   </a>
 </div>
 
-  <script>
-document.getElementById('cf-form').addEventListener('submit', function(event) {
-    // 1. Kapim produktet që ka klikuar klienti
-    let container = document.getElementById('cfTags');
-    // Heqim fjalën "+ Shto produkt..." dhe rregullojmë hapësirat
-    let chosenText = container.innerText.replace('+ Shto produkt...', '').trim().replace(/\n/g, ', ');
-    
-    // I kalojmë produktet te fusha e fshehtë që Formspree e lexon
-    document.getElementById('inputiFshehteProduktet').value = chosenText;
-
-    // 2. Kapim Mesazhin
-    // KUJDES: Sigurohu që fusha e mesazhit (textarea) në HTML-në tënde e ka id="cf-message"
-    let mesazhiObj = document.getElementById('cf-message');
-    let mesazhi = mesazhiObj ? mesazhiObj.value.trim() : '';
-
-    // 3. Rregulli: A ka zgjedhur të paktën një Produkt OSE ka shkruar Mesazh?
-    if (chosenText === '' && mesazhi === '') {
-        event.preventDefault(); // Ndalon dërgimin e emailit
-        alert("Ju lutem zgjidhni të paktën një Produkt OSE shkruani një Mesazh për të dërguar kërkesën.");
-    }
-});
-</script>
 </body>
 </html>

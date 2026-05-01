@@ -2022,6 +2022,8 @@ async function loadData(){
   try{var dm=await sbGetKfg('def_materialet');if(dm)DEFAULT_MATERIALET=JSON.parse(dm);}catch(e){}
   try{var ad=await sbGetKfg('adresat');if(ad)adresat=JSON.parse(ad);}catch(e){}
   try{var an=await sbGetKfg('analytics');if(an)analytics=JSON.parse(an);}catch(e){}
+  /* Ngarko contact_leads nga çelësi i veçantë */
+  try{var cl=await sbGetKfg('contact_leads');if(cl){var clArr=JSON.parse(cl);if(Array.isArray(clArr))analytics.contactLeads=clArr;}}catch(e){}
   // Track page view
   analytics.pageViews=(analytics.pageViews||0)+1;
   analytics.lastVisit=new Date().toISOString();
@@ -2475,6 +2477,7 @@ function swTab(id,btn){
   document.querySelectorAll('.tc').forEach(function(t){t.classList.remove('active');});
   btn.classList.add('active');
   document.getElementById('tc-'+id).classList.add('active');
+  if(id==='analytics' && typeof refreshContactLeads==='function') refreshContactLeads();
 }
 function renderAnalytics(){
   var el=document.getElementById('analytics-content');
@@ -2615,17 +2618,22 @@ function notifyLeadWA(idx){
     +(l.mesazh?'%0A*Mesazhi:* '+encodeURIComponent(l.mesazh):'')
     +'%0A%0A_'+new Date(l.date).toLocaleString()+'_';
   window.open('https://wa.me/'+waNum+'?text='+msg,'_blank');
-  // Mark as notified
+  // Mark as read — contact_leads ruhet në çelësin e vet
   var popLen=(analytics.popupLeads||[]).length;
-  if(idx < popLen) analytics.popupLeads[idx].notified=true;
-  else analytics.contactLeads[idx-popLen].notified=true;
-  sbSet('analytics',JSON.stringify(analytics));
+  if(idx < popLen){
+    analytics.popupLeads[idx].notified=true;
+    sbSet('analytics',JSON.stringify(analytics));
+  } else {
+    var clIdx=idx-popLen;
+    if(analytics.contactLeads[clIdx]) analytics.contactLeads[clIdx].read=true;
+    sbSet('contact_leads',JSON.stringify(analytics.contactLeads));
+  }
   updateAnalyticsBadge();
   renderAnalytics();
 }
 function updateAnalyticsBadge(){
   var all=(analytics.popupLeads||[]).concat(analytics.contactLeads||[]);
-  var unread=all.filter(function(l){return !l.notified;}).length;
+  var unread=all.filter(function(l){return !l.notified&&!l.read;}).length;
   var badge=document.getElementById('analytics-badge');
   if(badge){
     badge.textContent=unread;
@@ -2637,8 +2645,18 @@ function clearLeads(){
   analytics.popupLeads=[];
   analytics.contactLeads=[];
   sbSet('analytics',JSON.stringify(analytics));
+  sbSet('contact_leads',JSON.stringify([]));
   renderAnalytics();
   showToast('Kontaktet u fshin!');
+}
+/* Rifreskо contact_leads nga Supabase (thirret kur hapet tab Analitika) */
+async function refreshContactLeads(){
+  try{
+    var cl=await sbGetKfg('contact_leads');
+    if(cl){var arr=JSON.parse(cl);if(Array.isArray(arr)){analytics.contactLeads=arr;}}
+  }catch(e){}
+  renderAnalytics();
+  updateAnalyticsBadge();
 }
 function rebuildArtPelhuraSelect(){
   var sel=document.getElementById('art-pelhura-id');
