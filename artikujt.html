@@ -498,13 +498,13 @@
       });
       row1+='<button class="dfc-share" onclick="shareUrl(window.location.href,\'Intal Underwear — Artikujt\')"><i class="ri-share-line"></i> Share</button>';
       row1+='</div>';
-      // row 2: kat values (borderless, smaller, no "Të Gjitha")
+      // row 2: kat values — shfaqet vetëm kur sub ka më shumë se 1 kategori (p.sh. Meshkuj/Femra)
       var row2='';
       if(activeSub&&activeSub!=='te-gjitha'){
         var subArts=allList.filter(function(a){ return artMatchesCat(a,activeSub); });
         var kats=[];
         subArts.forEach(function(a){ artKatArr(a).forEach(function(k){ if(k&&!kats.includes(k)) kats.push(k); }); });
-        if(kats.length){
+        if(kats.length>1){
           row2='<div class="dfc-row dfc-row-sub">';
           kats.forEach(function(k){
             row2+='<button class="dfc-sub'+(activeKat===k?' active':'')+'" onclick="applyKatFilter(\''+k.replace(/'/g,"\\'")+'\')">'+k+'</button>';
