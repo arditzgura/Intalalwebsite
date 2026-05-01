@@ -1073,7 +1073,7 @@
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
                     Upload
                   </button>
-                  <input class="adm-file-hidden" type="file" id="adm_h_imgf" accept="image/*" onchange="admHandleUpload(this,'adm_h_img','adm_h_imgp')" />
+                  <input class="adm-file-hidden" type="file" id="adm_h_imgf" accept="image/*" onchange="admHandleUpload(this,'adm_h_img','adm_h_imgp','hero')" />
                 </div>
                 <img class="adm-img-preview" id="adm_h_imgp" src="" alt="" />
               </div>
@@ -1271,12 +1271,71 @@
     }
   };
 
-  function admLoadData() { try { return JSON.parse(localStorage.getItem('hv_content')) || {}; } catch { return {}; } }
-  function admSaveData(data) {
+  // ── Hotel Veizi — Supabase config (isolated project) ──
+  const HV_URL = 'https://dirnsligikbxlwtcsmoj.supabase.co';
+  const HV_KEY = 'sb_publishable_cYCsR1twUTSxKWLwwWOJSA_LYqdpHVy';
+  const HV_BUCKET = 'hotel-images';
+  const HV_TABLE  = 'hotel_konfigurimi';
+  const HV_KEY_NAME = 'hv_content';
+
+  async function hvGet(key) {
     try {
-      localStorage.setItem('hv_content', JSON.stringify(data));
+      const r = await fetch(`${HV_URL}/rest/v1/${HV_TABLE}?key=eq.${encodeURIComponent(key)}`, {
+        headers: { 'apikey': HV_KEY, 'Authorization': `Bearer ${HV_KEY}` }
+      });
+      const d = await r.json();
+      return d && d[0] ? d[0].value : null;
+    } catch { return null; }
+  }
+
+  async function hvSet(key, value) {
+    try {
+      const check = await fetch(`${HV_URL}/rest/v1/${HV_TABLE}?key=eq.${encodeURIComponent(key)}`, {
+        headers: { 'apikey': HV_KEY, 'Authorization': `Bearer ${HV_KEY}` }
+      });
+      const existing = await check.json();
+      const method = existing && existing.length > 0 ? 'PATCH' : 'POST';
+      const url = method === 'PATCH'
+        ? `${HV_URL}/rest/v1/${HV_TABLE}?key=eq.${encodeURIComponent(key)}`
+        : `${HV_URL}/rest/v1/${HV_TABLE}`;
+      await fetch(url, {
+        method,
+        headers: {
+          'apikey': HV_KEY, 'Authorization': `Bearer ${HV_KEY}`,
+          'Content-Type': 'application/json', 'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify({ key, value })
+      });
+    } catch {}
+  }
+
+  async function hvUploadImg(file, path) {
+    try {
+      const encoded = path.split('/').map(encodeURIComponent).join('/');
+      const r = await fetch(`${HV_URL}/storage/v1/object/${HV_BUCKET}/${encoded}`, {
+        method: 'POST',
+        headers: {
+          'apikey': HV_KEY, 'Authorization': `Bearer ${HV_KEY}`,
+          'Content-Type': file.type || 'image/jpeg', 'x-upsert': 'true'
+        },
+        body: file
+      });
+      if (!r.ok) return null;
+      return `${HV_URL}/storage/v1/object/public/${HV_BUCKET}/${encoded}`;
+    } catch { return null; }
+  }
+
+  // ── Storage helpers ──
+  function admLoadData() { try { return JSON.parse(localStorage.getItem('hv_content')) || {}; } catch { return {}; } }
+
+  async function admSaveData(data) {
+    const json = JSON.stringify(data);
+    try {
+      localStorage.setItem('hv_content', json);
       localStorage.setItem('hv_saved', new Date().toLocaleString());
-    } catch { alert('Storage full. Try using image URLs instead of uploading large files.'); }
+    } catch { alert('localStorage full — saving to Supabase only.'); }
+    // Push to Hotel Veizi Supabase project
+    await hvSet(HV_KEY_NAME, json);
   }
   function admGet(section) {
     const s = admLoadData()[section];
@@ -1322,8 +1381,19 @@
     }
   }
 
-  // Apply on page load
+  // Apply from localStorage immediately (fast), then sync from Hotel Veizi Supabase in background
   cmsApply(admLoadData());
+  hvGet(HV_KEY_NAME).then(remote => {
+    if (remote) {
+      try {
+        const fresh = JSON.parse(remote);
+        if (fresh) {
+          localStorage.setItem('hv_content', remote);
+          cmsApply(fresh);
+        }
+      } catch {}
+    }
+  });
 
   // ════════════════════════════════════════════════════
   //  Admin overlay — open / close / auth
@@ -1391,20 +1461,51 @@
     const img = document.getElementById(previewId);
     if (src) { img.src = src; }
   }
-  function admHandleUpload(fileInput, urlId, previewId) {
+
+  // Compress file → Blob (max 1200px, JPEG 0.82)
+  function admCompress(file) {
+    return new Promise(resolve => {
+      const imgEl = new Image(), objUrl = URL.createObjectURL(file);
+      imgEl.onload = () => {
+        const MAX = 1200; let w = imgEl.width, h = imgEl.height;
+        if (w > MAX) { h = Math.round(h * MAX / w); w = MAX; }
+        const c = document.createElement('canvas'); c.width = w; c.height = h;
+        c.getContext('2d').drawImage(imgEl, 0, 0, w, h);
+        URL.revokeObjectURL(objUrl);
+        c.toBlob(blob => resolve(blob), 'image/jpeg', 0.82);
+      };
+      imgEl.src = objUrl;
+    });
+  }
+
+  // Upload to Supabase Storage; fallback to base64 if it fails
+  async function admHandleUpload(fileInput, urlId, previewId, imgKey) {
     const file = fileInput.files[0]; if (!file) return;
-    const imgEl = new Image(), url = URL.createObjectURL(file);
-    imgEl.onload = () => {
-      const MAX = 1200; let w = imgEl.width, h = imgEl.height;
-      if (w > MAX) { h = Math.round(h * MAX / w); w = MAX; }
-      const c = document.createElement('canvas'); c.width = w; c.height = h;
-      c.getContext('2d').drawImage(imgEl, 0, 0, w, h);
-      URL.revokeObjectURL(url);
-      const b64 = c.toDataURL('image/jpeg', 0.82);
-      document.getElementById(urlId).value = b64;
-      document.getElementById(previewId).src = b64;
-    };
-    imgEl.src = url;
+    const previewEl = document.getElementById(previewId);
+    const urlEl     = document.getElementById(urlId);
+
+    // Show local preview immediately
+    const tmpUrl = URL.createObjectURL(file);
+    previewEl.src = tmpUrl;
+
+    // Compress
+    const blob = await admCompress(file);
+    const path = `hotel/${imgKey || 'img'}-${Date.now()}.jpg`;
+    const sbFile = new File([blob], path, { type: 'image/jpeg' });
+
+    // Try Hotel Veizi Supabase Storage upload
+    const publicUrl = await hvUploadImg(sbFile, path);
+    URL.revokeObjectURL(tmpUrl);
+
+    if (publicUrl) {
+      urlEl.value   = publicUrl;
+      previewEl.src = publicUrl;
+    } else {
+      // Fallback: store as base64 in localStorage
+      const reader = new FileReader();
+      reader.onload = e => { urlEl.value = e.target.result; previewEl.src = e.target.result; };
+      reader.readAsDataURL(blob);
+    }
   }
 
   // ── Render service items ──
@@ -1423,7 +1524,7 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
                 Upload
               </button>
-              <input class="adm-file-hidden" type="file" id="adm_sv_imgf_${i}" accept="image/*" onchange="admHandleUpload(this,'adm_sv_img_${i}','adm_sv_imgp_${i}')" />
+              <input class="adm-file-hidden" type="file" id="adm_sv_imgf_${i}" accept="image/*" onchange="admHandleUpload(this,'adm_sv_img_${i}','adm_sv_imgp_${i}','service-${i}')" />
             </div>
             <img class="adm-img-preview tall" id="adm_sv_imgp_${i}" src="${esc(item.img)}" alt="" />
           </div>
@@ -1448,7 +1549,7 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
                 Upload
               </button>
-              <input class="adm-file-hidden" type="file" id="adm_rm_imgf_${i}" accept="image/*" onchange="admHandleUpload(this,'adm_rm_img_${i}','adm_rm_imgp_${i}')" />
+              <input class="adm-file-hidden" type="file" id="adm_rm_imgf_${i}" accept="image/*" onchange="admHandleUpload(this,'adm_rm_img_${i}','adm_rm_imgp_${i}','room-${i}')" />
             </div>
             <img class="adm-img-preview" id="adm_rm_imgp_${i}" src="${esc(item.img)}" alt="" />
           </div>
@@ -1494,8 +1595,8 @@
     if (ls) document.getElementById('admLastSaved').textContent = ls;
   }
 
-  // ── Save section → localStorage + live DOM ──
-  function admSave(section) {
+  // ── Save section → localStorage + Supabase + live DOM ──
+  async function admSave(section) {
     const data = admLoadData();
 
     if (section === 'hero') {
@@ -1545,15 +1646,18 @@
       };
     }
 
-    admSaveData(data);
-
     // Apply instantly to the live page behind the overlay
     cmsApply(data);
 
-    // Confirm message
+    // Show saving state
     const msg = document.getElementById(`adm-saved-${section}`);
+    msg.textContent = 'Saving…';
     msg.classList.add('show');
-    setTimeout(() => msg.classList.remove('show'), 2500);
+
+    await admSaveData(data);
+
+    msg.textContent = 'Saved ✓';
+    setTimeout(() => { msg.classList.remove('show'); msg.textContent = 'Saved!'; }, 2500);
 
     // Update timestamp in overview
     const ls = localStorage.getItem('hv_saved');
