@@ -808,7 +808,7 @@ tr.drag-over{border-top:2.5px solid var(--pink);}
         <button class="mob-close" onclick="closeMobMenu()">&#x2715;</button>
       </div>
       <div class="mob-search-wrap">
-        <input class="mob-search-input" type="text" placeholder="&#128269; Kerko artikuj..." oninput="doMobSearch(this.value)" id="mob-search-input">
+        <input class="mob-search-input" type="text" placeholder="&#128269; Kerko artikuj..." oninput="doMobSearch(this.value)" id="mob-search-input" tabindex="-1">
         <div class="mob-search-results" id="mob-search-results"></div>
       </div>
       <div class="mob-menu-body">
@@ -1068,9 +1068,9 @@ tr.drag-over{border-top:2.5px solid var(--pink);}
       <div class="login-logo"><span>intal</span><small>ADMIN</small></div>
       <h2>Hyrja ne Panel</h2>
       <p>Vendosni kredencialet e administratorit</p>
-      <input type="text" id="l-user" placeholder="Perdoruesi" autocomplete="off">
-      <input type="password" id="l-pass" placeholder="Fjalekalimi">
-      <button class="login-btn" onclick="doLogin()">Hyr</button>
+      <input type="text" id="l-user" placeholder="Perdoruesi" autocomplete="off" onkeydown="if(event.key==='Enter')doLogin()">
+      <input type="password" id="l-pass" placeholder="Fjalekalimi" onkeydown="if(event.key==='Enter')doLogin()">
+      <button type="button" class="login-btn" onclick="doLogin()">Hyr</button>
       <div class="login-err" id="l-err">Kredenciale te gabuara!</div>
       <p style="font-size:10px;color:#ccc;margin-top:.75rem;">Demo: admin / intal2025</p>
     </div>
@@ -2464,7 +2464,7 @@ function doLogin(){
   document.body.classList.add('admin-bar-visible');
   initAdmin();
 }
-document.getElementById('l-pass').addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
+/* Enter on login fields handled via onkeydown inline */
 function doLogout(){
   document.getElementById('admin-ui').style.display='none';
   document.getElementById('login-screen').style.display='flex';
@@ -4507,8 +4507,20 @@ function mobSearchGo(el){
   if(inp){inp.value=name;}
   filterBySearch(name);
 }
-function openMobMenu(){document.getElementById('mob-menu').classList.add('open');document.body.style.overflow='hidden';}
-function closeMobMenu(){document.getElementById('mob-menu').classList.remove('open');document.body.style.overflow='';}
+function openMobMenu(){
+  document.getElementById('mob-menu').classList.add('open');
+  document.body.style.overflow='hidden';
+  /* Lejo fokusimin e kerkimit kur menu hapet */
+  var ms=document.getElementById('mob-search-input');
+  if(ms) ms.removeAttribute('tabindex');
+}
+function closeMobMenu(){
+  document.getElementById('mob-menu').classList.remove('open');
+  document.body.style.overflow='';
+  /* Bloko fokusimin kur menu mbyllet */
+  var ms=document.getElementById('mob-search-input');
+  if(ms) ms.setAttribute('tabindex','-1');
+}
 function closeMobMenuOutside(e){if(e.target===document.getElementById('mob-menu')) closeMobMenu();}
 function showCallModal(){
   var tel=(settings.tel||'').replace(/\s/g,'');
