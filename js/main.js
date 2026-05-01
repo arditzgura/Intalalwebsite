@@ -32,7 +32,8 @@ document.addEventListener('DOMContentLoaded', function () {
     return window.getComputedStyle(b).display !== 'none';
   }
 
-  function searchBar() { return document.getElementById('search-bar'); }
+  /* Rreshti i kerkimit mobile (nav-search-wrap) — i fiksuar poshtë navbar-it */
+  function mobSearchWrap() { return document.getElementById('nav-search-wrap'); }
 
   function hideAll() {
     navbar.classList.add('navbar--hidden');
@@ -42,11 +43,9 @@ document.addEventListener('DOMContentLoaded', function () {
       b.style.transform = 'translateY(-' + hideOffset() + 'px)';
       var sp = spacer(); if (sp) sp.style.height = '0';
     }
-    /* Search bar — lëviz lart bashkë me navbar-in */
-    var sb = searchBar();
-    if (sb && !sb.classList.contains('open')) {
-      sb.style.transform = 'translateY(-' + (navbar.offsetHeight + EXTRA) + 'px)';
-    }
+    /* Mobile search row — lëviz lart bashkë me navbar-in */
+    var msw = mobSearchWrap();
+    if (msw) msw.style.transform = 'translateY(-' + (navbar.offsetHeight + EXTRA) + 'px)';
   }
 
   function showAll() {
@@ -58,9 +57,9 @@ document.addEventListener('DOMContentLoaded', function () {
       var sp = spacer();
       if (sp) sp.style.height = (b._openH || 0) + 'px';
     }
-    /* Search bar */
-    var sb = searchBar();
-    if (sb) sb.style.transform = 'translateY(0)';
+    /* Mobile search row */
+    var msw = mobSearchWrap();
+    if (msw) msw.style.transform = 'translateY(0)';
   }
 
   /* Thirret pas çdo render të filter bar-it.
