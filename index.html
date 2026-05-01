@@ -747,7 +747,7 @@
         try {
           var data = JSON.parse(raw);
           if (Array.isArray(data))
-            return data.map(function(a){ return a.name||''; }).filter(Boolean);
+            return [...new Set(data.map(function(a){ return a.name||''; }).filter(Boolean))];
         } catch(e) {}
         return [];
       }
@@ -761,7 +761,7 @@
           if (cache) {
             var obj = JSON.parse(cache);
             if (obj.artikujt && Array.isArray(obj.artikujt))
-              allSuggest = obj.artikujt.map(function(a){ return a.name||''; }).filter(Boolean);
+              allSuggest = [...new Set(obj.artikujt.map(function(a){ return a.name||''; }).filter(Boolean))];
           }
         } catch(e) {}
         if (allSuggest.length) renderDropdown(inp.value); /* shfaq menjëherë */
