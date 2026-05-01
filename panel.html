@@ -791,7 +791,7 @@ tr.drag-over{border-top:2.5px solid var(--pink);}
     <!-- RIGHT: search + cta -->
     <div class="nav-right">
       <div class="search-wrap" id="search-wrap">
-        <input class="search-input" id="search-input" type="text" placeholder="Kerko artikuj..." oninput="doSearch(this.value)" onblur="setTimeout(closeSearch,200)" tabindex="-1">
+        <input class="search-input" id="search-input" type="text" placeholder="Kerko artikuj..." oninput="doSearch(this.value)" onblur="setTimeout(closeSearch,200)" tabindex="-1" disabled>
         <button class="search-btn" onclick="toggleSearch()" title="Kerko">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         </button>
@@ -808,7 +808,7 @@ tr.drag-over{border-top:2.5px solid var(--pink);}
         <button class="mob-close" onclick="closeMobMenu()">&#x2715;</button>
       </div>
       <div class="mob-search-wrap">
-        <input class="mob-search-input" type="text" placeholder="&#128269; Kerko artikuj..." oninput="doMobSearch(this.value)" id="mob-search-input" tabindex="-1">
+        <input class="mob-search-input" type="text" placeholder="&#128269; Kerko artikuj..." oninput="doMobSearch(this.value)" id="mob-search-input" tabindex="-1" disabled>
         <div class="mob-search-results" id="mob-search-results"></div>
       </div>
       <div class="mob-menu-body">
@@ -4400,9 +4400,11 @@ function toggleSearch(){
   var inp=document.getElementById('search-input');
   inp.classList.toggle('open');
   if(inp.classList.contains('open')){
+    inp.removeAttribute('disabled');
     inp.removeAttribute('tabindex');
     inp.focus();
   } else {
+    inp.setAttribute('disabled','');
     inp.setAttribute('tabindex','-1');
     closeSearch();
     clearSearch();
@@ -4510,16 +4512,14 @@ function mobSearchGo(el){
 function openMobMenu(){
   document.getElementById('mob-menu').classList.add('open');
   document.body.style.overflow='hidden';
-  /* Lejo fokusimin e kerkimit kur menu hapet */
   var ms=document.getElementById('mob-search-input');
-  if(ms) ms.removeAttribute('tabindex');
+  if(ms){ ms.removeAttribute('disabled'); ms.removeAttribute('tabindex'); }
 }
 function closeMobMenu(){
   document.getElementById('mob-menu').classList.remove('open');
   document.body.style.overflow='';
-  /* Bloko fokusimin kur menu mbyllet */
   var ms=document.getElementById('mob-search-input');
-  if(ms) ms.setAttribute('tabindex','-1');
+  if(ms){ ms.setAttribute('disabled',''); ms.setAttribute('tabindex','-1'); }
 }
 function closeMobMenuOutside(e){if(e.target===document.getElementById('mob-menu')) closeMobMenu();}
 function showCallModal(){

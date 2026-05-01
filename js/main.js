@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var wrap = document.createElement('div');
     wrap.id = 'nav-search-wrap';
     wrap.innerHTML =
-      '<input id="search-input" type="text" placeholder="Kërko..." autocomplete="off" tabindex="-1">' +
+      '<input id="search-input" type="text" placeholder="Kërko..." autocomplete="off" tabindex="-1" disabled>' +
       '<span id="search-count"></span>' +
       '<button id="search-clear" aria-label="Pastro" tabindex="-1">&#10005;</button>';
     /* Ndarëse midis search dhe butonit */
@@ -123,6 +123,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function openSearch() {
       isOpen = true;
       nav.classList.add('search-open');
+      inp.removeAttribute('disabled');
       inp.removeAttribute('tabindex');
       if (btn) btn.classList.add('active');
       /* Fshih filter bar-in ndërkohë që search është aktiv */
@@ -134,6 +135,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function closeSearch() {
       isOpen = false;
       nav.classList.remove('search-open');
+      inp.setAttribute('disabled', '');
       inp.setAttribute('tabindex', '-1');
       if (btn) btn.classList.remove('active');
       inp.value = '';
