@@ -644,6 +644,22 @@ body{font-family:var(--fb);background:var(--gray);color:var(--text);}
 .atab{padding:8px 18px;border-radius:7px;border:1.5px solid var(--border);background:#fff;font-size:12px;font-weight:600;font-family:var(--fh);cursor:pointer;transition:all .2s;}
 .atab.active{background:var(--pink);color:#fff;border-color:var(--pink);}
 .tc{display:none;}.tc.active{display:block;}
+/* Reels AI */
+.reels-col{border:1px solid var(--border);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;}
+.reels-col-head{display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--border);}
+.reels-col-head strong{font-family:var(--fh);font-size:13px;font-weight:700;}
+.reels-badge{font-size:9px;font-weight:700;color:#fff;padding:2px 7px;border-radius:100px;letter-spacing:.5px;margin-left:auto;}
+.reels-col-body{flex:1;padding:14px;font-size:12px;line-height:1.7;overflow-y:auto;max-height:420px;min-height:120px;}
+.reels-empty{color:#bbb;font-size:12px;text-align:center;padding:24px 0;}
+.reels-nokey{text-align:center;padding:24px 10px;}
+.reels-addkey-btn{background:#f0f0f0;border:none;border-radius:6px;padding:6px 14px;font-size:11px;font-family:var(--fh);font-weight:600;cursor:pointer;}
+.reels-col-foot{padding:10px 14px;border-top:1px solid var(--border);}
+.reels-copy-btn{width:100%;background:#111;color:#fff;border:none;border-radius:6px;padding:8px;font-size:11px;font-family:var(--fh);font-weight:600;cursor:pointer;letter-spacing:.5px;}
+.reels-copy-btn:hover{background:#333;}
+.reels-section-label{font-family:var(--fh);font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#aaa;margin:10px 0 4px;}
+.reels-section-val{background:#f8f8f8;border-radius:6px;padding:8px 10px;font-size:12px;line-height:1.6;white-space:pre-wrap;}
+.reels-loading{text-align:center;padding:28px 10px;color:#aaa;font-size:12px;}
+@media(max-width:700px){#reels-results{grid-template-columns:1fr !important;}}
 .fcard{background:#fff;border-radius:12px;border:1px solid var(--border);padding:1.25rem;margin-bottom:1.25rem;}
 .fcard h3{font-family:var(--fh);font-size:14px;font-weight:700;margin-bottom:1rem;}
 .fgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
@@ -1090,6 +1106,7 @@ tr.drag-over{border-top:2.5px solid var(--pink);}
         <button class="atab" data-tab="pel" onclick="swTab('pel',this)">Pelhura</button>
         <button class="atab" id="atab-analytics" onclick="swTab('analytics',this)">&#128200; Analitika <span id="analytics-badge" style="display:none;background:var(--pink);color:#fff;border-radius:100px;font-size:9px;padding:1px 6px;margin-left:3px;">0</span></button>
         <button class="atab" onclick="swTab('set',this)">Cilesimet</button>
+        <button class="atab" onclick="swTab('reels',this)">&#127916; Reels AI</button>
       </div>
       <div class="tc active" id="tc-art">
         <div class="fcard">
@@ -1383,6 +1400,33 @@ tr.drag-over{border-top:2.5px solid var(--pink);}
           <div id="adresat-list"></div>
         </div>
         <div class="fcard">
+          <h3>&#127916; API Keys — Reels AI</h3>
+          <div class="info-b">Ruhen vetëm në browser-in tuaj (localStorage). Nuk dërgohen askund tjetër.</div>
+          <div class="fgrid">
+            <div class="fg full">
+              <label>Gemini API Key (Google · Falas)</label>
+              <div style="display:flex;gap:8px;">
+                <input type="password" id="ai-key-gemini" placeholder="AIza..." style="flex:1;background:#f8f8f8;border:1px solid var(--border);border-radius:6px;padding:7px 10px;font-size:12px;font-family:var(--fb);">
+                <button class="btn-save" style="padding:7px 14px;font-size:12px;" onclick="saveAiKey('gemini')">Ruaj</button>
+              </div>
+            </div>
+            <div class="fg full">
+              <label>Claude API Key (Anthropic)</label>
+              <div style="display:flex;gap:8px;">
+                <input type="password" id="ai-key-claude" placeholder="sk-ant-..." style="flex:1;background:#f8f8f8;border:1px solid var(--border);border-radius:6px;padding:7px 10px;font-size:12px;font-family:var(--fb);">
+                <button class="btn-save" style="padding:7px 14px;font-size:12px;" onclick="saveAiKey('claude')">Ruaj</button>
+              </div>
+            </div>
+            <div class="fg full">
+              <label>OpenAI API Key (ChatGPT)</label>
+              <div style="display:flex;gap:8px;">
+                <input type="password" id="ai-key-openai" placeholder="sk-..." style="flex:1;background:#f8f8f8;border:1px solid var(--border);border-radius:6px;padding:7px 10px;font-size:12px;font-family:var(--fb);">
+                <button class="btn-save" style="padding:7px 14px;font-size:12px;" onclick="saveAiKey('openai')">Ruaj</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="fcard">
           <h3>Kredencialet e Adminit</h3>
           <div class="fgrid">
             <div class="fg"><label>Username i Ri</label><input type="text" id="nu" placeholder="username i ri"></div>
@@ -1414,6 +1458,82 @@ tr.drag-over{border-top:2.5px solid var(--pink);}
           <div id="backup-status" style="font-size:11px;color:#888;min-height:18px;"></div>
         </div>
       </div>
+
+      <!-- ── TAB: REELS AI ─────────────────────────────────── -->
+      <div class="tc" id="tc-reels">
+        <div class="fcard">
+          <h3>&#127916; Gjenero Ide Reels me AI</h3>
+          <div class="info-b">Zgjidh një artikull dhe AI gjeneron automatikisht caption, skript dhe hashtags për Instagram Reel.</div>
+          <div class="fgrid" style="margin-bottom:16px;">
+            <div class="fg" style="flex:2;">
+              <label>Zgjidh Artikullin</label>
+              <select id="reels-art-sel" style="width:100%;background:#f8f8f8;border:1px solid var(--border);border-radius:6px;padding:8px 10px;font-size:13px;font-family:var(--fb);">
+                <option value="">— Zgjidh artikullin —</option>
+              </select>
+            </div>
+            <div class="fg" style="flex:1;display:flex;align-items:flex-end;">
+              <button class="btn-save" style="width:100%;padding:9px 16px;display:flex;align-items:center;justify-content:center;gap:8px;" onclick="genReels()">
+                <span id="reels-btn-ico">&#10024;</span> Gjenero
+              </button>
+            </div>
+          </div>
+          <div id="reels-error" style="display:none;background:#fff0f0;border:1px solid #fcc;border-radius:6px;padding:10px 14px;font-size:12px;color:#c00;margin-bottom:14px;"></div>
+          <!-- 3 kolona rezultatesh -->
+          <div id="reels-results" style="display:none;display:grid;grid-template-columns:repeat(3,1fr);gap:14px;">
+            <!-- Gemini -->
+            <div class="reels-col" id="reels-col-gemini">
+              <div class="reels-col-head" style="background:#e8f5e9;">
+                <span style="font-size:18px;">🟢</span>
+                <strong>Gemini</strong>
+                <span class="reels-badge" style="background:#4caf50;">Google · Falas</span>
+              </div>
+              <div class="reels-col-body" id="reels-body-gemini">
+                <div class="reels-empty">Kliko "Gjenero" për të parë rezultatin</div>
+              </div>
+              <div class="reels-col-foot" id="reels-foot-gemini" style="display:none;">
+                <button onclick="copyReels('gemini')" class="reels-copy-btn">&#128203; Kopjo të gjitha</button>
+              </div>
+            </div>
+            <!-- Claude -->
+            <div class="reels-col" id="reels-col-claude">
+              <div class="reels-col-head" style="background:#f3e5f5;">
+                <span style="font-size:18px;">🟣</span>
+                <strong>Claude</strong>
+                <span class="reels-badge" style="background:#9c27b0;">Anthropic</span>
+              </div>
+              <div class="reels-col-body" id="reels-body-claude">
+                <div class="reels-nokey">
+                  <div style="font-size:24px;margin-bottom:8px;">🔑</div>
+                  <div style="font-size:12px;color:#888;margin-bottom:10px;">Shto Claude API Key në Cilësimet</div>
+                  <button onclick="swTab('set',document.querySelector('.atab[onclick*=\"set\"]'))" class="reels-addkey-btn">Shto Key</button>
+                </div>
+              </div>
+              <div class="reels-col-foot" id="reels-foot-claude" style="display:none;">
+                <button onclick="copyReels('claude')" class="reels-copy-btn">&#128203; Kopjo të gjitha</button>
+              </div>
+            </div>
+            <!-- ChatGPT -->
+            <div class="reels-col" id="reels-col-openai">
+              <div class="reels-col-head" style="background:#e3f2fd;">
+                <span style="font-size:18px;">🔵</span>
+                <strong>ChatGPT</strong>
+                <span class="reels-badge" style="background:#2196f3;">OpenAI</span>
+              </div>
+              <div class="reels-col-body" id="reels-body-openai">
+                <div class="reels-nokey">
+                  <div style="font-size:24px;margin-bottom:8px;">🔑</div>
+                  <div style="font-size:12px;color:#888;margin-bottom:10px;">Shto OpenAI API Key në Cilësimet</div>
+                  <button onclick="swTab('set',document.querySelector('.atab[onclick*=\"set\"]'))" class="reels-addkey-btn">Shto Key</button>
+                </div>
+              </div>
+              <div class="reels-col-foot" id="reels-foot-openai" style="display:none;">
+                <button onclick="copyReels('openai')" class="reels-copy-btn">&#128203; Kopjo të gjitha</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -3135,6 +3255,12 @@ function loadSetForm(){
   document.getElementById('s-addr').value=settings.addr||'';
   document.getElementById('s-year').value=settings.year||'';
   document.getElementById('s-exp').value=settings.exp||'';
+  /* AI keys — shfaq placeholder nëse janë ruajtur */
+  ['gemini','claude','openai'].forEach(function(p){
+    var k=localStorage.getItem('intal_ai_'+p);
+    var inp=document.getElementById('ai-key-'+p);
+    if(inp && k) inp.placeholder='••••••••••••••• (i ruajtur)';
+  });
 }
 // -- KATEGORI SETTINGS --
 async function saveKategoriSt(){await sbSet('kategorisettings',JSON.stringify(kategoriSettings));}
@@ -4688,6 +4814,202 @@ function showToast(msg,err){
     if(pt){ sessionStorage.removeItem('intal_panel_tab'); setTimeout(function(){ var btn=document.querySelector('.atab[data-tab="'+pt+'"]'); if(btn) btn.click(); },300); }
   }
 })();
+
+/* ── REELS AI ──────────────────────────────────────────────── */
+var _reelsData = {}; // ruan rezultatet per kopjim
+
+function saveAiKey(provider) {
+  var inp = document.getElementById('ai-key-' + provider);
+  var val = (inp.value || '').trim();
+  if (!val) { showToast('Shto key-n fillimisht'); return; }
+  localStorage.setItem('intal_ai_' + provider, val);
+  inp.value = '';
+  showToast('Key u ruajt ✓');
+  /* nëse jemi në tab reels, rifreskojmë pamjen */
+  updateReelsKeyStatus();
+}
+
+function loadAiKeys() {
+  /* shfaq *** nëse ka key */
+  ['gemini','claude','openai'].forEach(function(p) {
+    var k = localStorage.getItem('intal_ai_' + p);
+    var inp = document.getElementById('ai-key-' + p);
+    if (inp && k) inp.placeholder = '••••••••••••••• (i ruajtur)';
+  });
+}
+
+function updateReelsKeyStatus() {
+  ['claude','openai'].forEach(function(p) {
+    var k = localStorage.getItem('intal_ai_' + p);
+    var body = document.getElementById('reels-body-' + p);
+    if (k && body && body.querySelector('.reels-nokey')) {
+      body.innerHTML = '<div class="reels-empty">Kliko "Gjenero" për të parë rezultatin</div>';
+    }
+  });
+}
+
+function initReels() {
+  /* Mbush dropdown me artikujt */
+  var sel = document.getElementById('reels-art-sel');
+  if (!sel) return;
+  sel.innerHTML = '<option value="">— Zgjidh artikullin —</option>';
+  (artikujt || []).forEach(function(a, i) {
+    var op = document.createElement('option');
+    op.value = i;
+    op.textContent = a.name + (a.category ? ' · ' + a.category : '');
+    sel.appendChild(op);
+  });
+  loadAiKeys();
+  updateReelsKeyStatus();
+}
+
+function buildReelsPrompt(a) {
+  return 'Jeni ekspert marketingu për "Intal Underwear", fabrikë shqiptare e të brendëshmes.\n' +
+    'Gjenero ide për Instagram Reel për artikullin e mëposhtëm:\n\n' +
+    'Emri: ' + (a.name || '') + '\n' +
+    'Kategoria: ' + (a.category || '') + '\n' +
+    'Nënkategoria: ' + (a.sub || '') + '\n' +
+    'Përshkrimi: ' + (a.desc || '') + '\n' +
+    'Materialet: ' + (a.materials || '') + '\n\n' +
+    'Gjenero VETËM në shqip:\n' +
+    '1. CAPTION – tekst tërheqës për Instagram (max 150 karaktere, me emoji)\n' +
+    '2. SKRIPT – 5 skena të shkurtra (çfarë shfaqet çdo 2-3 sekonda)\n' +
+    '3. HASHTAGS – 15 hashtag (shqip + anglisht)\n\n' +
+    'Formato SAKTËSISHT kështu (pa tekst tjetër):\n' +
+    'CAPTION:\n[caption]\n\nSKRIPT:\nSkena 1: [...]\nSkena 2: [...]\nSkena 3: [...]\nSkena 4: [...]\nSkena 5: [...]\n\nHASHTAGS:\n[hashtags]';
+}
+
+function parseReelsResponse(txt) {
+  var caption = '', skript = '', hashtags = '';
+  var cM = txt.match(/CAPTION:\s*([\s\S]*?)(?=SKRIPT:|$)/i);
+  var sM = txt.match(/SKRIPT:\s*([\s\S]*?)(?=HASHTAGS:|$)/i);
+  var hM = txt.match(/HASHTAGS:\s*([\s\S]*?)$/i);
+  if (cM) caption = cM[1].trim();
+  if (sM) skript = sM[1].trim();
+  if (hM) hashtags = hM[1].trim();
+  return { caption: caption, skript: skript, hashtags: hashtags };
+}
+
+function renderReelsResult(provider, data) {
+  var body = document.getElementById('reels-body-' + provider);
+  var foot = document.getElementById('reels-foot-' + provider);
+  if (!body) return;
+  _reelsData[provider] = data;
+  body.innerHTML =
+    '<div class="reels-section-label">📝 Caption</div>' +
+    '<div class="reels-section-val">' + escHtml(data.caption) + '</div>' +
+    '<div class="reels-section-label">🎬 Skript Reel</div>' +
+    '<div class="reels-section-val">' + escHtml(data.skript) + '</div>' +
+    '<div class="reels-section-label">#️⃣ Hashtags</div>' +
+    '<div class="reels-section-val">' + escHtml(data.hashtags) + '</div>';
+  if (foot) foot.style.display = 'block';
+}
+
+function escHtml(s) {
+  return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function copyReels(provider) {
+  var d = _reelsData[provider];
+  if (!d) return;
+  var txt = '--- CAPTION ---\n' + d.caption + '\n\n--- SKRIPT ---\n' + d.skript + '\n\n--- HASHTAGS ---\n' + d.hashtags;
+  navigator.clipboard.writeText(txt).then(function() { showToast('U kopjua ✓'); });
+}
+
+async function callGemini(prompt, key) {
+  var url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + key;
+  var res = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+  });
+  if (!res.ok) throw new Error('Gemini: ' + res.status + ' ' + res.statusText);
+  var json = await res.json();
+  return json.candidates[0].content.parts[0].text;
+}
+
+async function callClaude(prompt, key) {
+  var res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'x-api-key': key, 'anthropic-version': '2023-06-01' },
+    body: JSON.stringify({ model: 'claude-3-haiku-20240307', max_tokens: 1024, messages: [{ role: 'user', content: prompt }] })
+  });
+  if (!res.ok) throw new Error('Claude: ' + res.status);
+  var json = await res.json();
+  return json.content[0].text;
+}
+
+async function callOpenAI(prompt, key) {
+  var res = await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key },
+    body: JSON.stringify({ model: 'gpt-4o-mini', messages: [{ role: 'user', content: prompt }] })
+  });
+  if (!res.ok) throw new Error('OpenAI: ' + res.status);
+  var json = await res.json();
+  return json.choices[0].message.content;
+}
+
+async function genReels() {
+  var sel = document.getElementById('reels-art-sel');
+  var idx = sel ? sel.value : '';
+  if (idx === '') { showToast('Zgjidh artikullin fillimisht'); return; }
+  var art = artikujt[parseInt(idx)];
+  if (!art) return;
+
+  var errEl = document.getElementById('reels-error');
+  errEl.style.display = 'none';
+
+  var resultsEl = document.getElementById('reels-results');
+  resultsEl.style.display = 'grid';
+
+  var btn = document.getElementById('reels-btn-ico');
+  if (btn) btn.textContent = '⏳';
+
+  var prompt = buildReelsPrompt(art);
+  var errors = [];
+
+  /* Reset bodies */
+  ['gemini','claude','openai'].forEach(function(p) {
+    var body = document.getElementById('reels-body-' + p);
+    var foot = document.getElementById('reels-foot-' + p);
+    var k = localStorage.getItem('intal_ai_' + p);
+    if (k) {
+      if (body) body.innerHTML = '<div class="reels-loading">⏳ Duke gjeneruar...</div>';
+      if (foot) foot.style.display = 'none';
+    }
+  });
+
+  /* Thirr të gjitha njëherësh (paralel) */
+  var providers = [
+    { id: 'gemini', fn: callGemini },
+    { id: 'claude', fn: callClaude },
+    { id: 'openai', fn: callOpenAI }
+  ];
+
+  await Promise.allSettled(providers.map(async function(p) {
+    var key = localStorage.getItem('intal_ai_' + p.id);
+    if (!key) return;
+    try {
+      var txt = await p.fn(prompt, key);
+      var parsed = parseReelsResponse(txt);
+      renderReelsResult(p.id, parsed);
+    } catch(e) {
+      var body = document.getElementById('reels-body-' + p.id);
+      if (body) body.innerHTML = '<div style="color:#c00;font-size:12px;padding:12px;">⚠️ ' + escHtml(e.message) + '</div>';
+      errors.push(p.id + ': ' + e.message);
+    }
+  }));
+
+  if (btn) btn.textContent = '✨';
+}
+
+/* Thirr initReels kur hapet tabi */
+var _origSwTab = window.swTab || function(){};
+window.swTab = function(id, btn) {
+  _origSwTab(id, btn);
+  if (id === 'reels') initReels();
+};
 </script>
 </body>
 </html>
