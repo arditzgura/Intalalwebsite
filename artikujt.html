@@ -78,69 +78,89 @@
     .art-page-hero-heading { font-size:clamp(26px,3.5vw,48px); font-weight:700; color:#fff; letter-spacing:-0.5px; line-height:1.1; }
     .art-page-hero-sub { font-size:13px; color:rgba(255,255,255,.75); max-width:480px; line-height:1.6; margin-top:2px; }
     @media(max-width:700px){
-      /* Overlay zë gjithë ekranin */
-      #art-detail-overlay { padding:0; align-items:center; }
+      /* Overlay — scrollable, pa padding */
+      #art-detail-overlay {
+        padding:0;
+        align-items:flex-start;
+        overflow-y:auto;
+        overflow-x:hidden;
+      }
 
-      /* Kutia: foto majtas, info djathtas — pa scrollbar */
+      /* Kutia: kolonë e vetme — foto sipër, detaje poshtë */
       #art-detail-box {
-        grid-template-columns:50% 50%;
+        grid-template-columns:1fr;
+        grid-template-rows:auto auto;
         width:100vw;
-        height:min(86vw,400px);
+        height:auto;
+        min-height:100dvh;
         border-radius:0;
         box-shadow:none;
+        overflow:hidden;
       }
 
-      /* Foto: mbush plotësisht anën e majtë */
-      #art-detail-photos { background:#1a1a1a; }
+      /* Foto: gjithë gjerësia e ekranit */
+      #art-detail-photos {
+        width:100vw;
+        height:min(100vw, 480px);
+        background:#1a1a1a;
+        flex-shrink:0;
+      }
 
-      /* Info: pa scroll, gjithçka fillon brenda */
+      /* Detaje: poshtë fotos, gjithë gjerësia */
+      .art-det-side {
+        width:100vw;
+        height:auto;
+        display:flex;
+        flex-direction:column;
+      }
       .art-det-info {
-        overflow-y:hidden !important;
-        padding:8px 10px 4px !important;
+        overflow-y:visible !important;
+        padding:18px 20px 10px !important;
+        flex:none !important;
       }
-
-      /* Footer me buton — kompakt */
       .art-det-footer {
-        padding:5px 10px 8px !important;
-        gap:5px !important;
-        border-top:none !important;
+        padding:10px 20px 36px !important;
+        gap:10px !important;
+        border-top:.5px solid var(--border) !important;
+        flex-shrink:0;
       }
       .art-det-footer button {
-        padding:7px 4px !important;
-        font-size:8px !important;
-        letter-spacing:.6px !important;
+        padding:11px 8px !important;
+        font-size:10px !important;
+        letter-spacing:.8px !important;
       }
 
-      /* Tekste — miniaturë */
-      #art-detail-name  { font-size:11px !important; margin-bottom:5px !important; line-height:1.2 !important; }
-      #art-detail-desc  { font-size:9px  !important; line-height:1.4 !important; margin-bottom:7px !important; }
-      #art-detail-kat, #art-detail-code { font-size:7px !important; }
+      /* Tekste — lexueshme */
+      #art-detail-name  { font-size:16px !important; margin-bottom:8px !important; line-height:1.25 !important; }
+      #art-detail-desc  { font-size:12px !important; line-height:1.6  !important; margin-bottom:12px !important; }
+      #art-detail-kat, #art-detail-code { font-size:9px !important; }
 
-      /* Thumbs — më të vegjël */
-      #art-det-thumbs { padding:5px 8px !important; gap:4px !important; }
-      .det-th { width:32px !important; height:32px !important; }
+      /* Thumbs */
+      #art-det-thumbs { padding:8px 12px !important; gap:6px !important; }
+      .det-th { width:40px !important; height:40px !important; }
 
-      /* Butonat nav (prev/next artikull) — mbi overlay, anash kutisë */
-      .art-nav-btn { width:34px !important; height:34px !important; font-size:16px !important; }
-      .art-nav-btn.prev { left:4px; }
-      .art-nav-btn.next { right:4px; }
+      /* Butonat nav (prev/next artikull) — mbi foto */
+      .art-nav-btn {
+        top:min(50vw,240px) !important;
+        transform:translateY(-50%) !important;
+        width:36px !important; height:36px !important; font-size:18px !important;
+      }
+      .art-nav-btn.prev { left:8px !important; }
+      .art-nav-btn.next { right:8px !important; }
 
-      /* Fshih ndarësin horizontal */
-      .art-det-info > div[style*="height:.5px"] { display:none !important; }
+      /* Masat */
+      #art-detail-masat { margin-bottom:12px !important; }
+      #art-detail-masat span { padding:4px 10px !important; font-size:11px !important; }
 
-      /* Masat: badge-t më të vegjël */
-      #art-detail-masat { margin-bottom:7px !important; }
-      #art-detail-masat span { padding:2px 6px !important; font-size:9px !important; }
+      /* Ngjyrat */
+      #art-detail-ngjyrat { margin-bottom:12px !important; }
+      #art-detail-ngjyrat div[style*="border-radius:50%"] { width:20px !important; height:20px !important; }
+      #art-detail-ngjyrat span { font-size:9px !important; }
 
-      /* Ngjyrat: rrathë më të vegjël */
-      #art-detail-ngjyrat { margin-bottom:7px !important; }
-      #art-detail-ngjyrat div[style*="border-radius:50%"] { width:16px !important; height:16px !important; }
-      #art-detail-ngjyrat span { font-size:7px !important; }
+      /* Përbërja */
+      #art-detail-perberja div[style*="padding:7px"] { padding:6px 10px !important; font-size:11px !important; }
 
-      /* Përbërja: rreshta kompakt */
-      #art-detail-perberja div[style*="padding:7px"] { padding:4px 8px !important; font-size:9px !important; }
-
-      /* Etiketa seksionesh (MASAT / NGJYRAT / PËRBËRJA) */
+      /* Etiketa seksionesh */
       #art-detail-masat p, #art-detail-ngjyrat p, #art-detail-perberja p {
         font-size:7px !important; letter-spacing:1.5px !important; margin-bottom:4px !important;
       }
