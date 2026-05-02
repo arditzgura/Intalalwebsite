@@ -138,8 +138,14 @@
       #art-detail-desc  { font-size:12px !important; line-height:1.6  !important; margin-bottom:12px !important; }
       #art-detail-kat, #art-detail-code { font-size:9px !important; }
 
-      /* Thumbs */
-      #art-det-thumbs { padding:8px 12px !important; gap:6px !important; }
+      /* Thumbs — mbi foto (absolute), jo ndarës */
+      #art-detail-photos { position:relative !important; }
+      #det-main-wrap { position:absolute !important; top:0; left:0; width:100% !important; height:100% !important; flex:none !important; }
+      #art-det-thumbs {
+        position:absolute !important; bottom:0; left:0; right:0;
+        padding:8px 12px !important; gap:6px !important;
+        background:linear-gradient(transparent, rgba(0,0,0,.55)) !important;
+      }
       .det-th { width:40px !important; height:40px !important; }
 
       /* Butonat nav (prev/next artikull) — mes fotos 2/3 */
