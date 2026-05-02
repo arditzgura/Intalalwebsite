@@ -78,54 +78,57 @@
     .art-page-hero-heading { font-size:clamp(26px,3.5vw,48px); font-weight:700; color:#fff; letter-spacing:-0.5px; line-height:1.1; }
     .art-page-hero-sub { font-size:13px; color:rgba(255,255,255,.75); max-width:480px; line-height:1.6; margin-top:2px; }
     @media(max-width:700px){
-      /* Overlay — scrollable, pa padding */
+      /* Overlay — fiks, pa scroll (kutia mban gjithçka) */
       #art-detail-overlay {
         padding:0;
         align-items:flex-start;
-        overflow-y:auto;
-        overflow-x:hidden;
+        overflow:hidden;
       }
 
-      /* Kutia: kolonë e vetme — foto sipër, detaje poshtë */
+      /* Kutia: kolonë e vetme — 100dvh, foto 2/3, detaje 1/3 */
       #art-detail-box {
         grid-template-columns:1fr;
-        grid-template-rows:auto auto;
+        grid-template-rows:66dvh 34dvh;
         width:100vw;
-        height:auto;
-        min-height:100dvh;
+        height:100dvh;
         border-radius:0;
         box-shadow:none;
         overflow:hidden;
       }
 
-      /* Foto: gjithë gjerësia e ekranit */
+      /* Foto: 2/3 ekran, mbush pa hapësira të zeza */
       #art-detail-photos {
         width:100vw;
-        height:min(100vw, 480px);
+        height:66dvh;
         background:#1a1a1a;
         flex-shrink:0;
       }
+      #det-main-wrap img { object-fit:cover !important; }
 
-      /* Detaje: poshtë fotos, gjithë gjerësia */
+      /* Detaje: 1/3 ekran, scroll brenda nëse tejkalon */
       .art-det-side {
         width:100vw;
-        height:auto;
+        height:34dvh;
         display:flex;
         flex-direction:column;
+        overflow:hidden;
       }
       .art-det-info {
-        overflow-y:visible !important;
-        padding:18px 20px 10px !important;
-        flex:none !important;
+        overflow-y:auto !important;
+        padding:12px 20px 6px !important;
+        flex:1 !important;
+        min-height:0;
       }
       .art-det-footer {
-        padding:10px 20px 36px !important;
-        gap:10px !important;
+        padding:8px 16px 20px !important;
+        gap:8px !important;
         border-top:.5px solid var(--border) !important;
-        flex-shrink:0;
+        flex-shrink:0 !important;
+        flex-wrap:nowrap !important;
       }
       .art-det-footer button {
-        padding:11px 8px !important;
+        flex:1 !important;
+        padding:10px 8px !important;
         font-size:10px !important;
         letter-spacing:.8px !important;
       }
@@ -139,9 +142,9 @@
       #art-det-thumbs { padding:8px 12px !important; gap:6px !important; }
       .det-th { width:40px !important; height:40px !important; }
 
-      /* Butonat nav (prev/next artikull) — mbi foto */
+      /* Butonat nav (prev/next artikull) — mes fotos 2/3 */
       .art-nav-btn {
-        top:min(50vw,240px) !important;
+        top:33dvh !important;
         transform:translateY(-50%) !important;
         width:36px !important; height:36px !important; font-size:18px !important;
       }
