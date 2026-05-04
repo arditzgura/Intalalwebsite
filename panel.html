@@ -4973,17 +4973,22 @@ async function genReels() {
 
   /* Thirr paralel: çdo artikull × çdo provider */
   var tasks = [];
+  var delay = 0;
   sel.forEach(function(artIdx) {
     var art = artikujt[artIdx]; if (!art) return;
     var prompt = buildReelsPrompt(art);
     providers.forEach(function(p) {
       var key = localStorage.getItem('intal_ai_' + p.id);
       if (!key) return;
+      var d = delay;
       tasks.push(
-        p.fn(prompt, key)
-          .then(function(txt){ updateReelsCell(artIdx, p.id, parseReels(txt)); })
-          .catch(function(e){ updateReelsCell(artIdx, p.id, {err:e.message}); })
+        new Promise(function(res){ setTimeout(res, d); }).then(function(){
+          return p.fn(prompt, key)
+            .then(function(txt){ updateReelsCell(artIdx, p.id, parseReels(txt)); })
+            .catch(function(e){ updateReelsCell(artIdx, p.id, {err:e.message}); });
+        })
       );
+      delay += 2500; /* 2.5 sekonda vonesë midis çdo kërkese */
     });
   });
 
