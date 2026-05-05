@@ -838,6 +838,7 @@
       if(!noHash) setArtHash(id);
       renderDetPhotos(); renderDetInfo();
       document.getElementById('art-detail-overlay').style.display='flex';
+      floatBtns(false);
       sbTrack('artOpen', {name: visible[idx].name||id});
     };
 
@@ -848,9 +849,11 @@
       if(!noHash) setArtHash(id);
       renderDetPhotos(); renderDetInfo();
       document.getElementById('art-detail-overlay').style.display='flex';
+      floatBtns(false);
       sbTrack('artOpen', {name: arts[idx].name||id});
     };
-    window.closeArtDetail=function(){ var ov=document.getElementById('art-detail-overlay'); ov.style.display='none'; ov.querySelectorAll('.art-nav-btn').forEach(function(b){ b.remove(); }); clearArtHash(); };
+    function floatBtns(show){ var f=document.getElementById('float-btns'); if(f) f.style.display=show?'flex':'none'; }
+    window.closeArtDetail=function(){ var ov=document.getElementById('art-detail-overlay'); ov.style.display='none'; ov.querySelectorAll('.art-nav-btn').forEach(function(b){ b.remove(); }); clearArtHash(); floatBtns(true); };
     document.getElementById('art-detail-overlay').addEventListener('click',function(e){ if(e.target===this) closeArtDetail(); });
     document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeArtDetail(); });
 
