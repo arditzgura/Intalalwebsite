@@ -273,13 +273,32 @@
       .rn-partners-grid { grid-template-columns: repeat(2, 1fr); }
     }
     .rn-partner-logo {
-      aspect-ratio: 2 / 1;
+      /* Padding-bottom hack: funksionon në çdo iOS/Safari */
+      position: relative;
+      padding-bottom: 50%; /* 2:1 ratio */
+      height: 0;
+      overflow: hidden;
       background: var(--surface-gray);
       border: 0.5px solid var(--border);
       border-radius: 4px;
+    }
+    .rn-partner-logo > * {
+      position: absolute;
+      inset: 0;
+      display: -webkit-flex;
       display: flex;
+      -webkit-align-items: center;
       align-items: center;
+      -webkit-justify-content: center;
       justify-content: center;
+      width: 100%;
+      height: 100%;
+    }
+    .rn-partner-logo img {
+      object-fit: contain;
+      padding: 12px;
+      max-width: 100%;
+      max-height: 100%;
     }
     .rn-partner-logo span {
       font-size: 10px;
@@ -631,8 +650,8 @@
       if(grid && pt.items && pt.items.length){
         grid.innerHTML = pt.items.map(function(p){
           if(p.img){
-            return '<div class="rn-partner-logo" style="padding:10px;">'
-              +'<img src="'+p.img+'" alt="'+(p.name||'')+'" style="max-width:100%;max-height:100%;object-fit:contain;">'
+            return '<div class="rn-partner-logo">'
+              +'<img src="'+p.img+'" alt="'+(p.name||'')+'">'
               +'</div>';
           }
           return '<div class="rn-partner-logo"><span>'+(p.name||'Partner')+'</span></div>';
@@ -723,6 +742,20 @@
 
       /* CTA */
       revealUp('.rn-cta-eyebrow, .rn-cta-heading, .rn-cta-btn', { trigger: '.rn-cta', y: 32, duration: 0.9, stagger: 0.12 });
+
+      /* iOS fix: refresh pas ngarkimit të plotë (fonts + images) */
+      window.addEventListener('load', function() {
+        ScrollTrigger.refresh(true);
+      });
+      /* Fallback: nëse ScrollTrigger nuk aktivizohet (iOS e vjetër), shfaq elementët */
+      setTimeout(function() {
+        document.querySelectorAll('.rn-hero-content > *, .rn-overview-left, .rn-overview-right, .rn-stat, .rn-mv-card, .rn-value-card, .rn-partner-logo, .rn-cta-eyebrow, .rn-cta-heading, .rn-cta-btn').forEach(function(el) {
+          if (parseFloat(window.getComputedStyle(el).opacity) < 0.1) {
+            el.style.opacity = '1';
+            el.style.transform = 'none';
+          }
+        });
+      }, 1800);
     })();
   </script>
 
