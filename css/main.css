@@ -140,18 +140,23 @@ body {
 .search-btn.active i::before { content: '\EB99'; } /* ri-close-line kur aktiv */
 
 .nav-share-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
   background: none;
   border: none;
   cursor: pointer;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  color: var(--black);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 4px 0;
+  flex-shrink: 0;
+  transition: color .15s;
 }
-.nav-share-btn i {
-  font-size: clamp(15px, 1.3vw, 18px);
-  line-height: 1;
-}
+.nav-share-btn:hover { color: var(--black); }
+.nav-share-btn i { font-size: 13px; }
 
 /* ── Search — desktop: inline brenda navbar ─────────────────── */
 #nav-search-wrap {
