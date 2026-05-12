@@ -404,6 +404,20 @@
       document.getElementById('art-detail-name').textContent=a.name||'';
       document.getElementById('art-detail-code').textContent='';
       document.getElementById('art-detail-desc').textContent=a.desc||'';
+
+      /* Update OG meta tags for sharing this pelhurë */
+      (function(){
+        var photos=(a.photos||[]).map(getPhotoSrc).filter(Boolean);
+        var imgSrc=photos[0]?(photos[0].startsWith('http')?photos[0]:'https://intalal.com/'+photos[0]):'https://intalal.com/og_image.png';
+        var sm=function(prop,val,nm){ var el=document.querySelector(nm?'meta[name="'+prop+'"]':'meta[property="'+prop+'"]'); if(el) el.setAttribute('content',val); };
+        sm('og:title',(a.name||'Pelhurë')+' — Intal Underwear');
+        sm('og:description',a.desc||'Pëlhurat tona premium — material cilësor për prodhim të brendëshmes. Intal Albania.');
+        sm('og:image',imgSrc);
+        sm('og:url',window.location.href);
+        sm('twitter:image',imgSrc,true);
+        sm('twitter:title',(a.name||'Pelhurë')+' — Intal Underwear',true);
+      })();
+
       var nEl=document.getElementById('art-detail-ngjyrat');
       nEl.innerHTML=a.ngjyrat&&a.ngjyrat.length?'<p style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">NGJYRAT</p><div style="display:flex;flex-wrap:wrap;gap:8px;">'+a.ngjyrat.map(function(n){ return '<div style="display:flex;flex-direction:column;align-items:center;gap:4px;"><div style="width:26px;height:26px;border-radius:50%;background:'+(n.hex==='multi'?'conic-gradient(red,yellow,green,blue,red)':(n.hex||'#ccc'))+';border:.5px solid var(--border);"></div><span style="font-size:9px;color:var(--muted);">'+(n.name||'')+'</span></div>'; }).join('')+'</div>':'';
       var pEl=document.getElementById('art-detail-perberja');
@@ -430,6 +444,16 @@
     window.closeArtDetail=function(){
       document.getElementById('art-detail-overlay').style.display='none';
       floatBtns(true);
+      /* Reset OG meta tags to page defaults */
+      (function(){
+        var sm=function(prop,val,nm){ var el=document.querySelector(nm?'meta[name="'+prop+'"]':'meta[property="'+prop+'"]'); if(el) el.setAttribute('content',val); };
+        sm('og:title','Pelhura — Intal Underwear');
+        sm('og:description','Pëlhurat tona premium — material cilësor për prodhim të brendëshmes. Intal Albania, Tiranë.');
+        sm('og:image','https://intalal.com/og_image.png');
+        sm('og:url','https://intalal.com/pelhura');
+        sm('twitter:image','https://intalal.com/og_image.png',true);
+        sm('twitter:title','Pelhura — Intal Underwear',true);
+      })();
     };
     document.getElementById('art-detail-overlay').addEventListener('click',function(e){ if(e.target===this) closeArtDetail(); });
     document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeArtDetail(); });

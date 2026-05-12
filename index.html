@@ -80,6 +80,27 @@
       flex-wrap: wrap;
     }
 
+    .hero-share-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.28);
+      color: var(--off-white);
+      border-radius: 40px;
+      padding: 8px 18px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      transition: background .18s, border-color .18s;
+      width: fit-content;
+    }
+    .hero-share-btn:hover { background: rgba(255,255,255,0.22); border-color: rgba(255,255,255,0.5); }
+    .hero-share-btn i { font-size: 15px; }
+
     @media (max-width: 600px) {
       .hero { background-position: center center; }
     }
@@ -375,6 +396,7 @@
         <a href="artikujt.html" class="btn-primary">Shiko Artikujt</a>
         <a href="index.html?goto=kontakt" class="btn-outline">Na Kontakto</a>
       </div>
+      <button class="hero-share-btn" onclick="heroShare()"><i class="ri-share-line"></i> Share</button>
     </div>
   </section>
 
@@ -1541,6 +1563,25 @@
     window.addEventListener('load', _jumpKontakt);
   }
   </script>
+
+<script>
+  window.heroShare = function(){
+    var url = 'https://intalal.com/';
+    var title = 'Intal Albania Underwear — Prodhim Shqiptar';
+    if(navigator.share){
+      navigator.share({url:url, title:title});
+    } else {
+      navigator.clipboard ? navigator.clipboard.writeText(url) : (function(){ var ta=document.createElement('textarea'); ta.value=url; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); })();
+      var t=document.getElementById('share-toast');
+      if(!t){ t=document.createElement('div'); t.id='share-toast';
+        t.style.cssText='position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#111;color:#fff;padding:10px 20px;border-radius:30px;font-size:12px;font-weight:500;letter-spacing:.5px;z-index:99999;opacity:0;transition:opacity .25s;pointer-events:none;';
+        document.body.appendChild(t); }
+      t.textContent='Linku u kopjua!';
+      t.style.opacity='1';
+      clearTimeout(t._to); t._to=setTimeout(function(){ t.style.opacity='0'; }, 2200);
+    }
+  };
+</script>
 
 <!-- Floating contact buttons -->
 <div id="float-btns" style="position:fixed;bottom:24px;right:20px;z-index:9999;display:flex;flex-direction:column;align-items:center;gap:10px;">
