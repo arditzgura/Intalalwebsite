@@ -80,27 +80,6 @@
       flex-wrap: wrap;
     }
 
-    .hero-share-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(255,255,255,0.12);
-      border: 1px solid rgba(255,255,255,0.28);
-      color: var(--off-white);
-      border-radius: 40px;
-      padding: 8px 18px;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 1.2px;
-      text-transform: uppercase;
-      cursor: pointer;
-      backdrop-filter: blur(8px);
-      transition: background .18s, border-color .18s;
-      width: fit-content;
-    }
-    .hero-share-btn:hover { background: rgba(255,255,255,0.22); border-color: rgba(255,255,255,0.5); }
-    .hero-share-btn i { font-size: 15px; }
-
     @media (max-width: 600px) {
       .hero { background-position: center center; }
     }
@@ -382,7 +361,9 @@
         <button class="search-btn" aria-label="Kërko">
           <i class="ri-search-line"></i>
         </button>
-        
+        <button class="nav-share-btn" onclick="heroShare()" aria-label="Share">
+          <i class="ri-share-line"></i>
+        </button>
       </div>
     </div>
   </nav>
@@ -396,7 +377,6 @@
         <a href="artikujt.html" class="btn-primary">Shiko Artikujt</a>
         <a href="index.html?goto=kontakt" class="btn-outline">Na Kontakto</a>
       </div>
-      <button class="hero-share-btn" onclick="heroShare()"><i class="ri-share-line"></i> Share</button>
     </div>
   </section>
 

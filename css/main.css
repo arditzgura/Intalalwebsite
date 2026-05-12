@@ -139,6 +139,20 @@ body {
 .search-btn.active { background: #f0f0f0; border-radius: 50%; }
 .search-btn.active i::before { content: '\EB99'; } /* ri-close-line kur aktiv */
 
+.nav-share-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  color: var(--black);
+}
+.nav-share-btn i {
+  font-size: clamp(15px, 1.3vw, 18px);
+  line-height: 1;
+}
+
 /* ── Search — desktop: inline brenda navbar ─────────────────── */
 #nav-search-wrap {
   display: flex;
