@@ -236,16 +236,17 @@
     <div id="art-detail-box">
       <div id="art-detail-photos"></div>
       <div class="art-det-side">
-        <!-- Close button outside scroll area -->
-        <button onclick="closeArtDetail()" style="position:absolute;top:12px;right:14px;background:#f0f0f0;border:none;border-radius:50%;width:26px;height:26px;cursor:pointer;font-size:13px;z-index:9200;line-height:26px;text-align:center;">&#10005;</button>
-
         <div class="art-det-info">
-          <!-- Category · Sub + Code -->
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;padding-right:32px;">
-            <p id="art-detail-kat" style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin:0;"></p>
-            <p id="art-detail-code" style="font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin:0;"></p>
+          <!-- Close button + Category row -->
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+            <div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0;">
+              <p id="art-detail-kat" style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin:0;"></p>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <p id="art-detail-code" style="font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin:0;"></p>
+              <button onclick="closeArtDetail()" style="background:#f0f0f0;border:none;border-radius:50%;width:26px;height:26px;cursor:pointer;font-size:13px;flex-shrink:0;line-height:26px;text-align:center;">&#10005;</button>
+            </div>
           </div>
-
           <!-- Name -->
           <h2 id="art-detail-name" style="font-size:clamp(16px,1.8vw,22px);font-weight:600;letter-spacing:-0.4px;margin:0 0 10px;line-height:1.2;color:#111;"></h2>
 

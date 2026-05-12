@@ -380,7 +380,22 @@
       var aR=photos.length>1?'<button class="ph-arr r" onclick="setPI('+(idx+1)+')">&#8594;</button>':'';
       var th='';
       if(photos.length>1){ th='<div id="art-det-thumbs">'; photos.forEach(function(ph,i){ th+='<img src="'+ph+'" class="det-th'+(i===idx?' active':'')+'" onclick="setPI('+i+')" alt="">'; }); th+='</div>'; }
-      document.getElementById('art-detail-photos').innerHTML=nav+'<div style="position:relative;flex:1;overflow:hidden;min-height:0;">'+mi+aL+aR+'</div>'+th;
+      document.getElementById('art-detail-photos').innerHTML=nav+'<div id="det-main-wrap" style="position:relative;flex:1;overflow:hidden;min-height:0;">'+mi+aL+aR+'</div>'+th;
+      /* Swipe L/R në foto → ndrron foton */
+      (function(){
+        var wrap=document.getElementById('det-main-wrap');
+        if(!wrap) return;
+        var sx=0,sy=0,moved=false;
+        wrap.addEventListener('touchstart',function(e){ sx=e.touches[0].clientX; sy=e.touches[0].clientY; moved=false; },{passive:true});
+        wrap.addEventListener('touchmove',function(){ moved=true; },{passive:true});
+        wrap.addEventListener('touchend',function(e){
+          if(!moved) return;
+          var dx=e.changedTouches[0].clientX-sx, dy=e.changedTouches[0].clientY-sy;
+          if(Math.abs(dx)<40||Math.abs(dx)<Math.abs(dy)*1.2) return;
+          var ps=(_det.articles[_det.artIdx].photos||[]).map(getPhotoSrc).filter(Boolean);
+          if(dx<0) window.setPI(_det.photoIdx+1); else window.setPI(_det.photoIdx-1);
+        },{passive:true});
+      })();
     }
 
     function renderDetInfo(){
