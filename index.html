@@ -1453,19 +1453,19 @@
 
     /* Supabase sync — render immediately from cache, then re-render with fresh data */
     (async function(){
-      renderShowcase(); // instant render from cache
-      await sbSyncCache(); // always fetch fresh from Supabase
-      await sbSyncLocal('page_home_v1','intal_home_v1');
-      renderShowcase(); // re-render with fresh data
-      sbTrack('pageView', {page:'home'}); // track visit (fire & forget)
+      renderShowcase();   // instant render from cache
+      await sbSyncCache(); // sync artikujt + pelhurat + kategorisettings
+      var gotFresh = await sbSyncLocal('page_home_v1','intal_home_v1');
+      renderShowcase();   // re-render with fresh data
+      applyHomeData();    // apliko hero/about/services të reja (kritike për përdorues të rinj)
+      sbTrack('pageView', {page:'home'});
     })();
   })();
   </script>
 
   <script>
-  (function(){
+  function applyHomeData(){
     var KEY='intal_home_v1';
-    function get(id){return document.querySelector(id);}
     function setText(sel,val){var el=document.querySelector(sel);if(el&&val!==undefined&&val!=='')el.textContent=val;}
     try{
       var raw=localStorage.getItem(KEY);
@@ -1476,11 +1476,7 @@
       if(d.hero){
         if(d.hero.bgImage){
           var hero=document.querySelector('.hero');
-          if(hero){
-            var _hi=new Image();
-            _hi.onload=function(){hero.style.backgroundImage='url("'+d.hero.bgImage+'")';};
-            _hi.src=d.hero.bgImage;
-          }
+          if(hero) hero.style.backgroundImage='url("'+d.hero.bgImage+'")';
         }
         setText('.hero-eyebrow',d.hero.eyebrow);
         setText('.hero-heading',d.hero.heading);
@@ -1530,7 +1526,8 @@
         if(phones[1]&&d.contact.email)phones[1].textContent=d.contact.email;
       }
     }catch(e){}
-  })();
+  }
+  applyHomeData(); // apliko menjëherë nga cache (perdorues ekzistues)
   </script>
 
   <script>
