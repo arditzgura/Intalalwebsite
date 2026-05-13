@@ -159,14 +159,13 @@
       transition: transform 0.5s ease;
     }
     .showcase-card:hover .showcase-img-wrap img { transform: scale(1.04); }
-    /* Mobile: wide rectangle, image fully contained */
+    /* Mobile: wide rectangle, image fills completely */
     @media (max-width: 700px) {
       .showcase-img-wrap {
-        aspect-ratio: 5 / 2;
-        background: #f0f0f0;
+        aspect-ratio: 16 / 9;
       }
       .showcase-img-wrap img {
-        object-fit: contain;
+        object-fit: cover;
       }
     }
     .showcase-cat-label {
