@@ -157,6 +157,9 @@ body {
 }
 .nav-share-btn:hover { color: var(--black); }
 .nav-share-btn i { font-size: 13px; }
+@media (max-width: 700px) {
+  .nav-share-text { display: none; }
+}
 
 /* ── Search — desktop: inline brenda navbar ─────────────────── */
 #nav-search-wrap {
