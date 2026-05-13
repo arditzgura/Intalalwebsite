@@ -106,6 +106,7 @@ async function sbSyncCache() {
   try {
     var art = await sbGet('artikujt');
     var pel = await sbGet('pelhurat');
+    var ks  = await sbGet('kategorisettings');
     var obj = {};
     try {
       var raw = localStorage.getItem('intal_cache_v1');
@@ -113,7 +114,8 @@ async function sbSyncCache() {
     } catch(e) {}
     if (art) { try { obj.artikujt = JSON.parse(art); } catch(e) {} }
     if (pel) { try { obj.pelhurat = JSON.parse(pel); } catch(e) {} }
-    if (art || pel) localStorage.setItem('intal_cache_v1', JSON.stringify(obj));
-    return !!(art || pel);
+    if (ks)  { try { obj.kategoriSettings = JSON.parse(ks); } catch(e) {} }
+    if (art || pel || ks) localStorage.setItem('intal_cache_v1', JSON.stringify(obj));
+    return !!(art || pel || ks);
   } catch(e) { return false; }
 }
