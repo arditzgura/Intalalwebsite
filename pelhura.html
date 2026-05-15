@@ -165,7 +165,7 @@
         </div>
         <div class="art-det-footer-wrap" style="padding:14px 28px 20px;flex-shrink:0;border-top:.5px solid var(--border);display:flex;gap:8px;">
           <a href="index.html?goto=kontakt" style="flex:1;display:block;background:var(--black);color:#fff;border:none;padding:11px 10px;font-size:10px;font-weight:500;letter-spacing:1.2px;text-transform:uppercase;cursor:pointer;text-align:center;text-decoration:none;transition:background .15s;" onmouseover="this.style.background='#333'" onmouseout="this.style.background='var(--black)'">Na Kontaktoni</a>
-          <button onclick="window.shareUrl(window.location.href,'Intal Underwear — Pelhura')" style="display:flex;align-items:center;justify-content:center;gap:5px;background:#fff;border:.5px solid var(--border);padding:11px 18px;font-size:10px;font-weight:500;letter-spacing:1px;text-transform:uppercase;cursor:pointer;color:var(--muted);transition:all .15s;" onmouseover="this.style.borderColor='#111';this.style.color='#111'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'"><i class="ri-share-line" style="font-size:14px;"></i> Share</button>
+          <button onclick="window.shareUrl(buildShareUrl(),'Intal Underwear — Pelhura')" style="display:flex;align-items:center;justify-content:center;gap:5px;background:#fff;border:.5px solid var(--border);padding:11px 18px;font-size:10px;font-weight:500;letter-spacing:1px;text-transform:uppercase;cursor:pointer;color:var(--muted);transition:all .15s;" onmouseover="this.style.borderColor='#111';this.style.color='#111'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'"><i class="ri-share-line" style="font-size:14px;"></i> Share</button>
         </div>
       </div>
     </div>
@@ -341,6 +341,15 @@
         if(photos[0]){ var s=photos[0]; return s.startsWith('http')?s:'https://intalal.com/'+s; }
       }
       return 'https://intalal.com/og_image.png';
+    }
+    function buildShareUrl(){
+      var base='https://intalal.com/og.php?page=pelhura';
+      var ov=document.getElementById('art-detail-overlay');
+      if(ov&&ov.style.display==='flex'&&_det&&_det.articles&&_det.articles[_det.artIdx]){
+        var a=_det.articles[_det.artIdx]; if(a&&a.id) return base+'&art='+encodeURIComponent(a.id);
+      }
+      if(_filter&&_filter!=='te-gjitha') return base+'&kat='+encodeURIComponent(_filter);
+      return base;
     }
 
     window.applyFilter=function(f){

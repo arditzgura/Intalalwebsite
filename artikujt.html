@@ -516,7 +516,7 @@
         var lbl=k==='te-gjitha'?'Të Gjitha':k;
         return '<button class="dfc'+(active===k?' active':'')+'" onclick="applyFilter(\''+k.replace(/'/g,"\\'")+'\')">'+lbl+'</button>';
       }).join('');
-      bar.innerHTML='<div class="dfc-row">'+btns+'<button class="dfc-share" onclick="shareUrl(window.location.href,\'Intal Underwear — Artikujt\')"><i class="ri-share-line"></i> Share</button></div>';
+      bar.innerHTML='<div class="dfc-row">'+btns+'<button class="dfc-share" onclick="shareUrl(buildShareUrl(),\'Intal Underwear — Artikujt\')"><i class="ri-share-line"></i> Share</button></div>';
       syncWrapH();
     }
 
@@ -537,7 +537,7 @@
       subs.forEach(function(s){
         row1+='<button class="dfc'+(activeSub===s?' active':'')+'" onclick="applySubFilter(\''+s.replace(/'/g,"\\'")+'\')">'+s+'</button>';
       });
-      row1+='<button class="dfc-share" onclick="shareUrl(window.location.href,\'Intal Underwear — Artikujt\')"><i class="ri-share-line"></i> Share</button>';
+      row1+='<button class="dfc-share" onclick="shareUrl(buildShareUrl(),\'Intal Underwear — Artikujt\')"><i class="ri-share-line"></i> Share</button>';
       row1+='</div>';
       // row 2: kat values — shfaqet kur klikohet çdo kategori me të paktën 1 nënfiltër
       var row2='';
@@ -669,6 +669,22 @@
         if(photos[0]){ var s=photos[0]; return s.startsWith('http')?s:'https://intalal.com/'+s; }
       }
       return 'https://intalal.com/og_image.png';
+    }
+    /* Build a shareable og.php URL reflecting current filter/article state */
+    function buildShareUrl(){
+      var base='https://intalal.com/og.php?page=artikujt';
+      var ov=document.getElementById('art-detail-overlay');
+      if(ov&&ov.style.display==='flex'&&_det&&_det.articles&&_det.articles[_det.artIdx]){
+        var a=_det.articles[_det.artIdx]; if(a&&a.id) return base+'&art='+encodeURIComponent(a.id);
+      }
+      var sub=_state.activeSub&&_state.activeSub!=='te-gjitha'?_state.activeSub:'';
+      var kat=_state.activeKat&&_state.activeKat!=='te-gjitha'?_state.activeKat:'';
+      var cat=_state.cat||'';
+      var flt=_state.filter&&_state.filter!=='te-gjitha'?_state.filter:'';
+      var gjinia=sub||cat;
+      var katVal=kat||flt;
+      if(gjinia){ var u=base+'&gjinia='+encodeURIComponent(gjinia); if(katVal) u+='&kat='+encodeURIComponent(katVal); return u; }
+      return base;
     }
 
     // Filter for category view (by kat)
@@ -865,7 +881,7 @@
     }
 
     window.setPI=function(i){ var ps=(_det.articles[_det.artIdx].photos||[]).map(getPhotoSrc).filter(Boolean); if(!ps.length) return; _det.photoIdx=((i%ps.length)+ps.length)%ps.length; renderDetPhotos(); };
-    window.shareArtUrl=function(){ var a=_det.articles[_det.artIdx]; window.shareUrl(window.location.href,'Intal Underwear — '+(a?a.name:'Artikull')); };
+    window.shareArtUrl=function(){ var a=_det.articles[_det.artIdx]; window.shareUrl(buildShareUrl(),'Intal Underwear — '+(a?a.name:'Artikull')); };
     window.goKontaktArt=function(){
       var a=_det.articles[_det.artIdx]; if(!a) return;
       var val=a.name+(a.code?' ('+a.code+')':'');
