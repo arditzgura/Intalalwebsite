@@ -4495,10 +4495,13 @@ function renderPublicMaps(){
 // ── CONTACT POPUP ──
 var popupShown=false;
 var popupTimer=null;
+/* Set popupShown=true immediately if coming from admin dashboard */
+if(sessionStorage.getItem('intal_logged')==='1') popupShown=true;
 function initContactPopup(){
   if(popupShown) return;
+  if(document.body.classList.contains('admin-bar-visible')) return;
   popupTimer=setTimeout(function(){
-    if(!popupShown){
+    if(!popupShown && !document.body.classList.contains('admin-bar-visible')){
       document.getElementById('contact-popup').style.display='flex';
       popupShown=true;
     }
