@@ -674,7 +674,7 @@
       return 'https://intalal.com/og_image.png';
     }
     /* Build a shareable og.php URL reflecting current filter/article state */
-    function buildShareUrl(){
+    window.buildShareUrl=function buildShareUrl(){
       var base='https://intalal.com/og?page=artikujt';
       var ov=document.getElementById('art-detail-overlay');
       if(ov&&ov.style.display==='flex'&&_det&&_det.articles&&_det.articles[_det.artIdx]){

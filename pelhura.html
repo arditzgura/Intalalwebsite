@@ -345,7 +345,7 @@
       }
       return 'https://intalal.com/og_image.png';
     }
-    function buildShareUrl(){
+    window.buildShareUrl=function buildShareUrl(){
       var base='https://intalal.com/og?page=pelhura';
       var ov=document.getElementById('art-detail-overlay');
       if(ov&&ov.style.display==='flex'&&_det&&_det.articles&&_det.articles[_det.artIdx]){
