@@ -1210,7 +1210,8 @@ tr.drag-over{border-top:2.5px solid var(--pink);}
           </div>
         </div>
         <div class="icard">
-          <div class="ihdr"><h3>Lista e Artikujve (<span id="art-cnt">0</span>)</h3><div style="display:flex;gap:8px;align-items:center;"><input class="srch" placeholder="Kerko..." oninput="renderArtTbl(this.value)"><button class="be" style="white-space:nowrap;" onclick="toggleReorderMode(true)">&#9776; Rirendo</button></div></div>
+          <div class="ihdr"><h3>Lista e Artikujve (<span id="art-cnt">0</span>)</h3><div style="display:flex;gap:8px;align-items:center;"><input class="srch" id="art-srch" placeholder="Kerko..." oninput="renderArtTbl(this.value)"><button class="be" style="white-space:nowrap;" onclick="toggleReorderMode(true)">&#9776; Rirendo</button></div></div>
+          <div id="art-sub-filters" style="display:flex;flex-wrap:wrap;gap:6px;padding:8px 0 4px;"></div>
           <table><thead><tr><th style="width:32px;"></th><th>Foto</th><th>Kodi</th><th>Emri</th><th>Kat.</th><th>Ngjyra</th><th>Veprime</th></tr></thead><tbody id="art-tbl"></tbody></table>
         </div>
       </div>
@@ -2782,7 +2783,7 @@ function syncPelPreferredToArt(){
     setPerb('art-perb',manP);
   }
 }
-function initAdmin(){renderStats();renderArtTbl();renderPelTbl();loadSetForm();loadHeroForm();buildDefMasa();buildDefNgjyrat('art');buildDefNgjyrat('pel');buildDefPerb('art');buildDefPerb('pel');renderRrethCats();loadRrethForm();renderAdresatAdmin();renderAnalytics();rebuildArtPelhuraSelect();updateAnalyticsBadge();renderKatAdminLists();}
+function initAdmin(){renderStats();renderArtSubFilters();renderArtTbl();renderPelTbl();loadSetForm();loadHeroForm();buildDefMasa();buildDefNgjyrat('art');buildDefNgjyrat('pel');buildDefPerb('art');buildDefPerb('pel');renderRrethCats();loadRrethForm();renderAdresatAdmin();renderAnalytics();rebuildArtPelhuraSelect();updateAnalyticsBadge();renderKatAdminLists();}
 function loadRrethForm(){
   var ta=document.getElementById('rreth-main-text');
   if(ta&&window.rrethSettings) ta.value=window.rrethSettings.mainText||'';
@@ -3067,7 +3068,7 @@ function saveArt(){
   if(eid){var idx=artikujt.findIndex(function(a){return a.id===eid;});if(idx>-1)artikujt[idx]=item;}
   else artikujt.push(item);
   var wasEdit=!!eid;
-  saveArtSt(); renderArtTbl(); renderStats(); resetArtForm(); renderPublic();
+  saveArtSt(); renderArtSubFilters(); renderArtTbl(); renderStats(); resetArtForm(); renderPublic();
   showToast(wasEdit?'Artikulli u ndryshua!':'Artikulli u ruajt!');
   // Scroll to the saved article row in the table
   setTimeout(function(){
@@ -3081,12 +3082,48 @@ function saveArt(){
   },150);
 }
 
+var _artSubFilter='';
+
+function renderArtSubFilters(){
+  var wrap=document.getElementById('art-sub-filters');
+  if(!wrap) return;
+  /* Merr grupet unike nga artikujt + kategoriSettings */
+  var subs=[];
+  artikujt.forEach(function(a){
+    var s=Array.isArray(a.sub)?a.sub:(a.sub?[a.sub]:[]);
+    s.forEach(function(v){ if(v&&!subs.includes(v)) subs.push(v); });
+  });
+  if(kategoriSettings&&kategoriSettings.kryesore){
+    kategoriSettings.kryesore.forEach(function(k){
+      if(!subs.includes(k)) subs.push(k);
+    });
+  }
+  if(!subs.length){ wrap.style.display='none'; return; }
+  wrap.style.display='flex';
+  var chips=[{val:'',lbl:'Të Gjitha'}].concat(subs.map(function(s){return{val:s,lbl:s};}));
+  wrap.innerHTML=chips.map(function(c){
+    var active=_artSubFilter===c.val;
+    return '<button onclick="setArtSubFilter(\''+c.val+'\')" style="padding:4px 12px;border-radius:20px;border:1.5px solid '+(active?'var(--pink)':'var(--border)')+';background:'+(active?'var(--pink)':'#fff')+';color:'+(active?'#fff':'#555')+';font-size:11px;font-weight:600;font-family:var(--fh);cursor:pointer;transition:all .15s;">'+c.lbl+'</button>';
+  }).join('');
+}
+
+function setArtSubFilter(val){
+  _artSubFilter=val;
+  renderArtSubFilters();
+  var srch=document.getElementById('art-srch');
+  renderArtTbl(srch?srch.value:'');
+}
+
 function renderArtTbl(search){
   search=search||'';
-  var f=artikujt.filter(function(a){return a.name.toLowerCase().includes(search.toLowerCase());});
+  var f=artikujt.filter(function(a){
+    var matchSearch=a.name.toLowerCase().includes(search.toLowerCase());
+    var matchSub=!_artSubFilter||(Array.isArray(a.sub)?a.sub.includes(_artSubFilter):(a.sub||'')=== _artSubFilter);
+    return matchSearch&&matchSub;
+  });
   document.getElementById('art-cnt').textContent=artikujt.length;
   var tb=document.getElementById('art-tbl');
-  if(!f.length){tb.innerHTML='<tr><td colspan="6"><div class="empty">'+(search?'Asnje rezultat.':'Nuk ka artikuj!')+'</div></td></tr>';return;}
+  if(!f.length){tb.innerHTML='<tr><td colspan="6"><div class="empty">'+(search||_artSubFilter?'Asnje rezultat.':'Nuk ka artikuj!')+'</div></td></tr>';return;}
   tb.innerHTML=f.map(function(a){
     var mp=a.photos&&a.photos.find(function(p){return p.main;});
     var th=mp?'<img class="tmini" src="'+mp.src+'">':"<div class='tno'>"+(a.emoji||'🩲')+"</div>";
@@ -3121,7 +3158,7 @@ function editArt(id){
 function delArt(id){
   if(!confirm('Fshi?')) return;
   artikujt=artikujt.filter(function(a){return a.id!==id;});
-  saveArtSt(); renderArtTbl(); renderStats(); renderPublic(); showToast('Artikulli u fshi!');
+  saveArtSt(); renderArtSubFilters(); renderArtTbl(); renderStats(); renderPublic(); showToast('Artikulli u fshi!');
 }
 function dupArt(id){
   var a=artikujt.find(function(x){return x.id===id;});
@@ -3131,7 +3168,7 @@ function dupArt(id){
   copy.name=copy.name+' (Kopje)';
   copy.code=copy.code?copy.code+'-K':'';
   artikujt.push(copy);
-  saveArtSt(); renderArtTbl(); renderStats(); renderPublic(); showToast('Artikulli u duplifikua!');
+  saveArtSt(); renderArtSubFilters(); renderArtTbl(); renderStats(); renderPublic(); showToast('Artikulli u duplifikua!');
 }
 function resetArtForm(){
   ['art-eid','art-name','art-code','art-desc','art-emoji'].forEach(function(id){document.getElementById(id).value='';});
