@@ -519,7 +519,7 @@
         var lbl=k==='te-gjitha'?'Të Gjitha':k;
         return '<button class="dfc'+(active===k?' active':'')+'" onclick="applyFilter(\''+k.replace(/'/g,"\\'")+'\')">'+lbl+'</button>';
       }).join('');
-      bar.innerHTML='<div class="dfc-row">'+btns+'<button class="dfc-share" onclick="shareUrl(buildShareUrl(),\'Intal Underwear — Artikujt\')"><i class="ri-share-line"></i> Share</button></div>';
+      bar.innerHTML='<div class="dfc-row">'+btns+'</div>';
       syncWrapH();
     }
 
@@ -540,7 +540,6 @@
       subs.forEach(function(s){
         row1+='<button class="dfc'+(activeSub===s?' active':'')+'" onclick="applySubFilter(\''+s.replace(/'/g,"\\'")+'\')">'+s+'</button>';
       });
-      row1+='<button class="dfc-share" onclick="shareUrl(buildShareUrl(),\'Intal Underwear — Artikujt\')"><i class="ri-share-line"></i> Share</button>';
       row1+='</div>';
       // row 2: kat values — shfaqet kur klikohet çdo kategori me të paktën 1 nënfiltër
       var row2='';
