@@ -365,10 +365,12 @@
       <a href="index.html" class="navbar-brand">Intal Underwear</a>
 
       <div class="navbar-right">
+        <button class="nav-share-btn" onclick="rrShare()" aria-label="Share">
+          <i class="ri-share-line"></i><span class="nav-share-text"> Share</span>
+        </button>
         <button class="search-btn" aria-label="Kërko">
           <i class="ri-search-line"></i>
         </button>
-        
       </div>
     </div>
   </nav>
@@ -780,5 +782,22 @@
   </a>
 </div>
 
+<script>
+function rrShare(){
+  var url='https://intalal.com/rreth-nesh';
+  var title='Rreth Nesh — Intal Underwear';
+  if(navigator.share){ navigator.share({url:url,title:title}); return; }
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(url).then(function(){
+      var t=document.getElementById('rr-toast');
+      if(!t){ t=document.createElement('div'); t.id='rr-toast';
+        t.style.cssText='position:fixed;bottom:32px;left:50%;transform:translateX(-50%);background:#111;color:#fff;padding:8px 20px;border-radius:20px;font-size:11px;letter-spacing:1px;z-index:99999;pointer-events:none;transition:opacity .3s;';
+        document.body.appendChild(t); }
+      t.textContent='Linku u kopjua ✓'; t.style.opacity='1';
+      setTimeout(function(){ t.style.opacity='0'; },2000);
+    });
+  }
+}
+</script>
 </body>
 </html>
