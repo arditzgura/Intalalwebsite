@@ -657,6 +657,20 @@
       window.scrollTo(0, top);
     }
 
+    /* ── OG meta helper ── */
+    function smMeta(prop,val,nm){ var el=document.querySelector(nm?'meta[name="'+prop+'"]':'meta[property="'+prop+'"]'); if(el) el.setAttribute('content',val); }
+    function updatePageOg(title,desc,img,url){
+      smMeta('og:title',title); smMeta('og:description',desc); smMeta('og:image',img); smMeta('og:url',url);
+      smMeta('twitter:title',title,true); smMeta('twitter:image',img,true);
+    }
+    function firstPhotoFromList(list){
+      for(var i=0;i<list.length;i++){
+        var photos=(list[i].photos||[]).map(getPhotoSrc).filter(Boolean);
+        if(photos[0]){ var s=photos[0]; return s.startsWith('http')?s:'https://intalal.com/'+s; }
+      }
+      return 'https://intalal.com/og_image.png';
+    }
+
     // Filter for category view (by kat)
     window.applyFilter=function(f){
       _state.filter=f;
@@ -665,6 +679,12 @@
       renderBreadcrumb();
       setHash(_state.cat,f);
       scrollToGrid();
+      /* OG for category sub-filter */
+      var filtered=f==='te-gjitha'?_state.articles:_state.articles.filter(function(a){ return artKatArr(a).includes(f); });
+      var label=f==='te-gjitha'?(_state.cat||'Artikujt'):f;
+      var title=label+' — Intal Underwear';
+      var desc='Koleksioni i plotë i të brendëshmes — '+label+'. Cilësi shqiptare direkt nga fabrika.';
+      updatePageOg(title,desc,firstPhotoFromList(filtered),window.location.href);
     };
 
     // Level-1 filter: sub category (Meshkuj, Femra...) — klik sërish e çaktivizon
@@ -676,6 +696,12 @@
       renderFilterBarAll(_state.allArticles,newSub,'te-gjitha');
       renderGridAll(_state.allArticles,newSub,'te-gjitha');
       scrollToGrid();
+      /* OG for sub-category */
+      var filtered=newSub==='te-gjitha'?_state.allArticles:_state.allArticles.filter(function(a){ return artMatchesCat(a,newSub); });
+      var label=newSub==='te-gjitha'?'Artikujt':newSub;
+      var title=label+' — Intal Underwear';
+      var desc='Koleksioni i plotë i të brendëshmes — '+label+'. Cilësi shqiptare direkt nga fabrika.';
+      updatePageOg(title,desc,firstPhotoFromList(filtered),window.location.href);
     };
 
     // Level-2 filter: kat (Mbathje, Kanatjere...)
@@ -686,6 +712,14 @@
       renderFilterBarAll(_state.allArticles,_state.activeSub,kat);
       renderGridAll(_state.allArticles,_state.activeSub,kat);
       scrollToGrid();
+      /* OG for kat sub-filter */
+      var sub=_state.activeSub; var filtered;
+      if(kat==='te-gjitha'){ filtered=sub&&sub!=='te-gjitha'?_state.allArticles.filter(function(a){ return artMatchesCat(a,sub); }):_state.allArticles; }
+      else { filtered=_state.allArticles.filter(function(a){ return (sub&&sub!=='te-gjitha'?artMatchesCat(a,sub):true)&&artKatArr(a).includes(kat); }); }
+      var label=kat==='te-gjitha'?(sub&&sub!=='te-gjitha'?sub:'Artikujt'):kat;
+      var title=label+' — Intal Underwear';
+      var desc='Koleksioni i plotë i të brendëshmes — '+label+'. Cilësi shqiptare direkt nga fabrika.';
+      updatePageOg(title,desc,firstPhotoFromList(filtered),window.location.href);
     };
 
     window.hoverEnter=function(wrap){
@@ -791,13 +825,7 @@
       (function(){
         var photos=(a.photos||[]).map(getPhotoSrc).filter(Boolean);
         var imgSrc=photos[0]?(photos[0].startsWith('http')?photos[0]:'https://intalal.com/'+photos[0]):'https://intalal.com/og_image.png';
-        var sm=function(prop,val,nm){ var el=document.querySelector(nm?'meta[name="'+prop+'"]':'meta[property="'+prop+'"]'); if(el) el.setAttribute('content',val); };
-        sm('og:title',(a.name||'Artikull')+' — Intal Underwear');
-        sm('og:description',a.desc||'Koleksioni i plotë i të brendëshmes — Intal Albania.');
-        sm('og:image',imgSrc);
-        sm('og:url',window.location.href);
-        sm('twitter:image',imgSrc,true);
-        sm('twitter:title',(a.name||'Artikull')+' — Intal Underwear',true);
+        updatePageOg((a.name||'Artikull')+' — Intal Underwear', a.desc||'Koleksioni i plotë i të brendëshmes — Intal Albania.', imgSrc, window.location.href);
       })();
 
       /* MASAT */
@@ -878,15 +906,7 @@
     window.closeArtDetail=function(){
       var ov=document.getElementById('art-detail-overlay'); ov.style.display='none'; ov.querySelectorAll('.art-nav-btn').forEach(function(b){ b.remove(); }); clearArtHash(); floatBtns(true);
       /* Reset OG meta tags to page defaults */
-      (function(){
-        var sm=function(prop,val,nm){ var el=document.querySelector(nm?'meta[name="'+prop+'"]':'meta[property="'+prop+'"]'); if(el) el.setAttribute('content',val); };
-        sm('og:title','Artikujt — Intal Underwear');
-        sm('og:description','Koleksioni i plotë i të brendëshmes — Meshkuj, Femra, Fëmijë. Cilësi shqiptare direkt nga fabrika.');
-        sm('og:image','https://intalal.com/og_image.png');
-        sm('og:url','https://intalal.com/artikujt');
-        sm('twitter:image','https://intalal.com/og_image.png',true);
-        sm('twitter:title','Artikujt — Intal Underwear',true);
-      })();
+      updatePageOg('Artikujt — Intal Underwear','Koleksioni i plotë i të brendëshmes — Meshkuj, Femra, Fëmijë. Cilësi shqiptare direkt nga fabrika.','https://intalal.com/og_image.png',window.location.href);
     };
     document.getElementById('art-detail-overlay').addEventListener('click',function(e){ if(e.target===this) closeArtDetail(); });
     document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeArtDetail(); });
