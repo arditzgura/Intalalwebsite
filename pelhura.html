@@ -346,13 +346,7 @@
       return 'https://intalal.com/og_image.png';
     }
     window.buildShareUrl=function buildShareUrl(){
-      var base='https://intalal.com/og?page=pelhura';
-      var ov=document.getElementById('art-detail-overlay');
-      if(ov&&ov.style.display==='flex'&&_det&&_det.articles&&_det.articles[_det.artIdx]){
-        var a=_det.articles[_det.artIdx]; if(a&&a.id) return base+'&art='+encodeURIComponent(a.id);
-      }
-      if(_filter&&_filter!=='te-gjitha') return base+'&kat='+encodeURIComponent(_filter);
-      return base;
+      return window.location.href;
     }
 
     window.applyFilter=function(f){

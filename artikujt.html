@@ -674,19 +674,7 @@
     }
     /* Build a shareable og.php URL reflecting current filter/article state */
     window.buildShareUrl=function buildShareUrl(){
-      var base='https://intalal.com/og?page=artikujt';
-      var ov=document.getElementById('art-detail-overlay');
-      if(ov&&ov.style.display==='flex'&&_det&&_det.articles&&_det.articles[_det.artIdx]){
-        var a=_det.articles[_det.artIdx]; if(a&&a.id) return base+'&art='+encodeURIComponent(a.id);
-      }
-      var sub=_state.activeSub&&_state.activeSub!=='te-gjitha'?_state.activeSub:'';
-      var kat=_state.activeKat&&_state.activeKat!=='te-gjitha'?_state.activeKat:'';
-      var cat=_state.cat||'';
-      var flt=_state.filter&&_state.filter!=='te-gjitha'?_state.filter:'';
-      var gjinia=sub||cat;
-      var katVal=kat||flt;
-      if(gjinia){ var u=base+'&gjinia='+encodeURIComponent(gjinia); if(katVal) u+='&kat='+encodeURIComponent(katVal); return u; }
-      return base;
+      return window.location.href;
     }
 
     // Filter for category view (by kat)
