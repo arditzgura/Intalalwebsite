@@ -624,8 +624,12 @@
 
     function route(){
       var data=loadData(); var h=getHash();
-      // close overlay if open and no artId in hash
-      if(!h.artId){ var ov=document.getElementById('art-detail-overlay'); if(ov&&ov.style.display==='flex'){ ov.style.display='none'; ov.querySelectorAll('.art-nav-btn').forEach(function(b){b.remove();}); } }
+      // nëse popup është hapur dhe ka artId në hash, mos ri-rendero grid
+      var ov=document.getElementById('art-detail-overlay');
+      var popupOpen=ov&&ov.style.display==='flex';
+      if(popupOpen&&h.artId) return;
+      // mbyll popup nëse nuk ka artId
+      if(!h.artId){ if(popupOpen){ ov.style.display='none'; ov.querySelectorAll('.art-nav-btn').forEach(function(b){b.remove();}); } }
       if(!h.cat){ showAll(data); }
       else if(h.cat==='pelhura'){ location.href='pelhura.html'; }
       else if(isSub(h.cat,data)){
@@ -882,32 +886,35 @@
     window.prevDet=function(){ if(_det.artIdx<=0) return; _det.artIdx--; _det.photoIdx=0; setArtHash(_det.articles[_det.artIdx].id); renderDetPhotos(); renderDetInfo(); };
     window.nextDet=function(){ if(_det.artIdx>=_det.articles.length-1) return; _det.artIdx++; _det.photoIdx=0; setArtHash(_det.articles[_det.artIdx].id); renderDetPhotos(); renderDetInfo(); };
 
-    window.openDetAll=function(id,noHash){
-      var arts=_state.allArticles&&_state.allArticles.length?_state.allArticles:(loadData()&&loadData().artikujt||[]);
-      var visible;
+    function _openById(id,noHash){
+      /* Unified opener — tries filtered visible list first, falls back to all articles */
+      var allArts=(loadData()&&loadData().artikujt)||[];
+      var pool=_state.allArticles&&_state.allArticles.length?_state.allArticles
+               :(_state.articles&&_state.articles.length?_state.articles:allArts);
+      /* Build visible list based on active filters */
+      var visible=pool;
       if(_state.activeSub&&_state.activeSub!=='te-gjitha'){
-        visible=arts.filter(function(a){ return artMatchesCat(a,_state.activeSub); });
-        if(_state.activeKat&&_state.activeKat!=='te-gjitha') visible=visible.filter(function(a){ return (a.kat||'').toLowerCase()===_state.activeKat.toLowerCase(); });
-      } else { visible=arts; }
-      var idx=visible.findIndex(function(x){ return x.id===id; }); if(idx<0) return;
+        var filtered=pool.filter(function(a){ return artMatchesCat(a,_state.activeSub); });
+        if(_state.activeKat&&_state.activeKat!=='te-gjitha')
+          filtered=filtered.filter(function(a){ return artMatchesKat(a,_state.activeKat); });
+        if(filtered.length) visible=filtered;
+      } else if(_state.cat){
+        var filtered2=pool.filter(function(a){ return artMatchesCat(a,_state.cat); });
+        if(filtered2.length) visible=filtered2;
+      }
+      var idx=visible.findIndex(function(x){ return x.id===id; });
+      /* Fallback: search all articles if not found in visible */
+      if(idx<0){ visible=allArts; idx=allArts.findIndex(function(x){ return x.id===id; }); }
+      if(idx<0) return;
       _det.articles=visible; _det.artIdx=idx; _det.photoIdx=0;
       if(!noHash) setArtHash(id);
       renderDetPhotos(); renderDetInfo();
       document.getElementById('art-detail-overlay').style.display='flex';
       floatBtns(false);
       sbTrack('artOpen', {name: visible[idx].name||id});
-    };
-
-    window.openDet=function(id,noHash){
-      var arts=_state.articles.length?_state.articles:(loadData()&&loadData().artikujt||[]);
-      var idx=arts.findIndex(function(x){ return x.id===id; }); if(idx<0) return;
-      _det.articles=arts; _det.artIdx=idx; _det.photoIdx=0;
-      if(!noHash) setArtHash(id);
-      renderDetPhotos(); renderDetInfo();
-      document.getElementById('art-detail-overlay').style.display='flex';
-      floatBtns(false);
-      sbTrack('artOpen', {name: arts[idx].name||id});
-    };
+    }
+    window.openDetAll=function(id,noHash){ _openById(id,noHash); };
+    window.openDet=function(id,noHash){ _openById(id,noHash); };
     function floatBtns(show){ var f=document.getElementById('float-btns'); if(f) f.style.display=show?'flex':'none'; }
     window.closeArtDetail=function(){
       var ov=document.getElementById('art-detail-overlay'); ov.style.display='none'; ov.querySelectorAll('.art-nav-btn').forEach(function(b){ b.remove(); }); clearArtHash(); floatBtns(true);
