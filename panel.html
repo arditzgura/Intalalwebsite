@@ -4787,6 +4787,10 @@ function showToast(msg,err){
     document.getElementById('admin-ui').style.display='block';
     document.getElementById('admin-bar').style.display='flex';
     document.body.classList.add('admin-bar-visible');
+    /* Fsheh popup-in e kontaktit — jemi nga admin */
+    popupShown=true;
+    if(popupTimer) clearTimeout(popupTimer);
+    document.getElementById('contact-popup').style.display='none';
     initAdmin();
     var pt=sessionStorage.getItem('intal_panel_tab');
     if(pt){ sessionStorage.removeItem('intal_panel_tab'); setTimeout(function(){ var btn=document.querySelector('.atab[data-tab="'+pt+'"]'); if(btn) btn.click(); },300); }
