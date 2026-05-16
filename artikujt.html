@@ -622,6 +622,10 @@
       renderGridAll(artKats,'te-gjitha','te-gjitha');
     }
 
+    function isKat(cat,data){
+      var arts=data&&data.artikujt?data.artikujt:[];
+      return arts.some(function(a){ return artMatchesKat(a,cat); });
+    }
     function route(){
       var data=loadData(); var h=getHash();
       // nëse popup është hapur dhe ka artId në hash, mos ri-rendero grid
@@ -634,6 +638,10 @@
       else if(h.cat==='pelhura'){ location.href='pelhura.html'; }
       else if(isSub(h.cat,data)){
         showAllWithFilters(data,h.cat,h.filter&&h.filter!=='te-gjitha'?h.filter:'te-gjitha');
+      }
+      else if(isKat(h.cat,data)){
+        /* Kategori që ruhet si kat, jo sub — shfaq të gjithë artikujt me atë kat */
+        showAllWithFilters(data,'te-gjitha',h.cat);
       }
       else {
         var kats=data&&data.kategoriSettings&&data.kategoriSettings.kryesore?data.kategoriSettings.kryesore:[];
