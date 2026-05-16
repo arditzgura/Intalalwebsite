@@ -207,7 +207,7 @@
       <a href="index.html" class="navbar-brand">Intal Underwear</a>
 
       <div class="navbar-right">
-        <button class="nav-share-btn" onclick="shareUrl(window.location.href,'Intal Underwear — Artikujt')" aria-label="Share">
+        <button class="nav-share-btn" onclick="shareCurrentPage()" aria-label="Share">
           <i class="ri-share-line"></i><span class="nav-share-text"> Share</span>
         </button>
         <button class="search-btn" aria-label="Kërko">
@@ -407,6 +407,16 @@
       var h=window.location.hash.replace(/\/~[^/]*$|^#~[^/]*$/,'');
       history.replaceState(null,'',h||window.location.pathname.split('#')[0]);
     }
+    window.shareCurrentPage=function(){
+      var base=window.location.origin+window.location.pathname;
+      var hash=window.location.hash.replace(/^#/,'');
+      /* ri-enkodoj çdo segment të hash-it */
+      var encodedHash=hash.split('/').map(function(p){
+        try{ return encodeURIComponent(decodeURIComponent(p)); }catch(e){ return encodeURIComponent(p); }
+      }).filter(Boolean).join('/');
+      var url=base+(encodedHash?'#'+encodedHash:'');
+      shareUrl(url,'Intal Underwear — Artikujt');
+    };
     window.shareUrl=function(url,title){
       /* ri-enkodoj hash-in për të shmangur hapësirat të papërpunuara në URL */
       var safeUrl=url.replace(/#(.*)$/,function(_,h){
