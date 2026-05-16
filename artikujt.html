@@ -725,7 +725,8 @@
     // Level-2 filter: kat (Mbathje, Kanatjere...)
     window.applyKatFilter=function(kat){
       _state.activeKat=kat;
-      setHash(_state.activeSub==='te-gjitha'?'':_state.activeSub,kat,true);
+      var _sub=_state.activeSub&&_state.activeSub!=='te-gjitha'?_state.activeSub:'';
+      if(_sub){ setHash(_sub,kat,true); } else { setHash(kat,'te-gjitha',true); }
       renderBreadcrumb();
       renderFilterBarAll(_state.allArticles,_state.activeSub,kat);
       renderGridAll(_state.allArticles,_state.activeSub,kat);
