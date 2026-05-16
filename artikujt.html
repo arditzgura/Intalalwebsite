@@ -408,13 +408,7 @@
       history.replaceState(null,'',h||window.location.pathname.split('#')[0]);
     }
     window.shareCurrentPage=function(){
-      var base=window.location.origin+window.location.pathname;
-      var hash=window.location.hash.replace(/^#/,'');
-      /* ri-enkodoj çdo segment të hash-it */
-      var encodedHash=hash.split('/').map(function(p){
-        try{ return encodeURIComponent(decodeURIComponent(p)); }catch(e){ return encodeURIComponent(p); }
-      }).filter(Boolean).join('/');
-      var url=base+(encodedHash?'#'+encodedHash:'');
+      var url=window.location.href.replace(/ /g,'%20');
       shareUrl(url,'Intal Underwear — Artikujt');
     };
     window.shareUrl=function(url,title){
