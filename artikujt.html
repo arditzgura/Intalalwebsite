@@ -408,7 +408,11 @@
       history.replaceState(null,'',h||window.location.pathname.split('#')[0]);
     }
     window.shareUrl=function(url,title){
-      if(navigator.share){ navigator.share({url:url,title:title||'Intal Underwear'}); }
+      /* ri-enkodoj hash-in për të shmangur hapësirat të papërpunuara në URL */
+      var safeUrl=url.replace(/#(.*)$/,function(_,h){
+        return '#'+h.split('/').map(function(p){ try{ return encodeURIComponent(decodeURIComponent(p)); }catch(e){ return p; } }).join('/');
+      });
+      if(navigator.share){ navigator.share({url:safeUrl,title:title||'Intal Underwear'}); }
       else{
         var toast=function(){
           var t=document.getElementById('share-toast');
@@ -419,9 +423,9 @@
           setTimeout(function(){ t.style.opacity='0'; },2000);
         };
         if(navigator.clipboard&&navigator.clipboard.writeText){
-          navigator.clipboard.writeText(url).then(toast).catch(function(){ window.prompt('Kopjo linkun:',url); });
+          navigator.clipboard.writeText(safeUrl).then(toast).catch(function(){ window.prompt('Kopjo linkun:',safeUrl); });
         } else {
-          window.prompt('Kopjo linkun:',url);
+          window.prompt('Kopjo linkun:',safeUrl);
         }
       }
     };
