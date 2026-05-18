@@ -579,12 +579,9 @@
       var arr=hasM?'<button class="art-card-arr l" onclick="cardStep(event,this,-1)">&#8592;</button><button class="art-card-arr r" onclick="cardStep(event,this,1)">&#8594;</button>':'';
       return '<div class="art-card" onclick="'+opener+'">'
         +'<div class="art-card-img-wrap"'+pa+hoverAttr+'>'+imgEl+arr+'</div>'
-        +'<div style="padding:12px 14px 16px;">'
-        +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">'
-        +'<p style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin:0;"></p>'
-        +(a.code?'<p style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin:0;">Art: '+a.code+'</p>':'')
-        +'</div>'
-        +'<p style="font-size:14px;font-weight:500;letter-spacing:-0.2px;color:var(--black);">'+a.name+'</p>'
+        +'<div style="padding:12px 14px 16px;display:flex;justify-content:space-between;align-items:center;">'
+        +'<p style="font-size:14px;font-weight:500;letter-spacing:-0.2px;color:var(--black);margin:0;">'+a.name+'</p>'
+        +(a.code?'<p style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin:0;white-space:nowrap;">Art: '+a.code+'</p>':'')
         +'</div></div>';
     }
 
