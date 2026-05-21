@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PASH — Blerjet</title>
+<link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="pash.css">
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-badge"><i class="ri-line-chart-fill"></i></div>
+    <div class="logo-text">PASH<small>Pasqyra Financiare</small></div>
+  </div>
+  <nav class="sidebar-nav">
+    <a class="nav-item" href="index.html"><i class="ri-dashboard-2-line"></i>Paneli</a>
+    <a class="nav-item" href="shpenzime.html"><i class="ri-wallet-3-line"></i>Shpenzime</a>
+    <a class="nav-item active" href="blerjet.html"><i class="ri-shopping-bag-line"></i>Blerjet</a>
+    <a class="nav-item" href="furnitoret.html"><i class="ri-user-2-line"></i>Furnitorët</a>
+    <a class="nav-item" href="zerat.html"><i class="ri-price-tag-3-line"></i>Zërat</a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="sf-avatar">P</div>
+    <div><span class="sf-name">PASH</span><span class="sf-label">Sistemi</span></div>
+  </div>
+</aside>
+
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-user">
+      <div class="topbar-label">SEKSIONI</div>
+      <div class="topbar-name">Historia e Blerjeve</div>
+    </div>
+  </div>
+  <div class="content">
+    <div class="list-head">
+      <div>
+        <div class="page-title">Blerjet</div>
+        <div class="page-sub">Të gjitha blerjet — lëndë e parë, aksesore dhe materiale</div>
+      </div>
+      <button class="btn-primary" onclick="openModal()"><i class="ri-add-line"></i> Blerje e Re</button>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;">
+      <div class="search-wrap">
+        <i class="ri-search-line"></i>
+        <input class="search-input" id="search" placeholder="Kërko furnitor, zër..." oninput="renderList()">
+      </div>
+      <select id="filter-status" onchange="renderList()" style="background:var(--white);border:0.5px solid var(--border);border-radius:7px;padding:8px 12px;font-family:'Switzer',sans-serif;font-size:12px;outline:none;">
+        <option value="">Të gjitha statuset</option>
+        <option value="paguar">E Paguar</option>
+        <option value="pa_paguar">Pa Paguar</option>
+      </select>
+      <select id="filter-menyra" onchange="renderList()" style="background:var(--white);border:0.5px solid var(--border);border-radius:7px;padding:8px 12px;font-family:'Switzer',sans-serif;font-size:12px;outline:none;">
+        <option value="">Të gjitha mënyrat</option>
+        <option value="banke">Me Bankë</option>
+        <option value="dore">Në Dorë</option>
+      </select>
+      <div class="dp-wrap" id="dp-wrap">
+        <button class="dp-trigger" id="dp-trigger" onclick="DP.toggle()">
+          <i class="ri-calendar-line"></i><span id="dp-label">Të gjithë datat</span>
+        </button>
+        <div class="dp-popup" id="dp-popup">
+          <div class="dp-nav">
+            <button class="dp-nav-btn" onclick="DP.nav(-1)">↑</button>
+            <button class="dp-title" id="dp-title" onclick="DP.toggleMode()">—</button>
+            <button class="dp-nav-btn" onclick="DP.nav(1)">↓</button>
+          </div>
+          <div id="dp-body"></div>
+          <div class="dp-footer">
+            <button class="dp-clear" onclick="DP.clear()">Pastro</button>
+            <button class="dp-today" onclick="DP.today()">Sot</button>
+          </div>
+        </div>
+      </div>
+      <select id="filter-sort" onchange="renderList()" style="background:var(--white);border:0.5px solid var(--border);border-radius:7px;padding:8px 12px;font-family:'Switzer',sans-serif;font-size:12px;outline:none;">
+        <option value="date-desc">Data ↓ (i ri)</option>
+        <option value="date-asc">Data ↑ (i vjetër)</option>
+        <option value="val-desc">Vlera ↓ (më e madhe)</option>
+        <option value="val-asc">Vlera ↑ (më e vogël)</option>
+      </select>
+      <span id="list-total" style="margin-left:auto;font-size:12px;font-weight:600;color:var(--muted);"></span>
+    </div>
+
+    <div class="card" id="list-wrap"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     BLERJE E RE / EDITO MODAL
+══════════════════════════════════════════════════════════════ -->
+<div class="modal-backdrop" id="modal-bd" onclick="if(event.target===this)closeModal()">
+  <div class="modal wide">
+    <div class="modal-head">
+      <h2 id="modal-title">Blerje e Re</h2>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+
+      <!-- Furnitori — autocomplete -->
+      <div class="field">
+        <label>Furnitori <span style="color:var(--muted);font-size:9px;text-transform:none;letter-spacing:0">(opsional)</span></label>
+        <div id="f-furnitori-wrap">
+          <!-- toggled: input or chip -->
+        </div>
+        <!-- Quick-add furnitor panel -->
+        <div class="quick-add-panel" id="qa-furnitori">
+          <div class="quick-add-title"><i class="ri-user-add-line"></i> Shto Furnitorin e Ri</div>
+          <div style="font-size:12px;color:var(--accent);margin-bottom:4px;" id="qa-furn-name-lbl"></div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn-primary" style="font-size:11px;padding:7px 14px;" onclick="confirmAddFurnitor()"><i class="ri-check-line"></i> Konfirmo & Zgjidh</button>
+            <button class="btn-secondary" style="font-size:11px;padding:7px 14px;" onclick="cancelQAFurnitor()">Anulo</button>
+          </div>
+          <div style="font-size:10.5px;color:var(--muted);margin-top:2px;">Mund ta plotësosh profilin e plotë tek <a href="furnitoret.html" style="color:var(--accent)">Furnitorët</a>.</div>
+        </div>
+      </div>
+
+      <!-- Data -->
+      <div class="field">
+        <label>Data <span style="color:var(--muted);font-size:9px;text-transform:none;letter-spacing:0">(opsional)</span></label>
+        <input type="date" id="f-data">
+      </div>
+
+      <!-- Items -->
+      <div>
+        <label style="font-size:9.5px;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);font-weight:600;display:block;margin-bottom:8px;">
+          Artikujt / Zërat &nbsp;<span style="font-size:9px;color:var(--muted);text-transform:none;letter-spacing:0;font-weight:400">— vetëm shuma e detyrueshme</span>
+        </label>
+        <table class="items-table">
+          <thead>
+            <tr>
+              <th style="width:30%">Zëri (kërko ose shto)</th>
+              <th style="width:15%">Kategoria</th>
+              <th style="width:11%">Sasia</th>
+              <th style="width:10%">Njësia</th>
+              <th style="width:14%">Çmimi (L)</th>
+              <th style="width:12%;text-align:right;padding-right:8px">Totali *</th>
+              <th style="width:4%"></th>
+            </tr>
+          </thead>
+          <tbody id="items-body"></tbody>
+        </table>
+        <button class="add-row-btn" onclick="addRow()"><i class="ri-add-line"></i> Shto rresht</button>
+
+        <!-- Quick-add zëri panel (shown below table) -->
+        <div class="quick-add-panel" id="qa-zeri" style="margin-top:10px;">
+          <div class="quick-add-title"><i class="ri-price-tag-3-line"></i> Shto Zërin e Ri</div>
+          <div style="font-size:12px;color:var(--accent);margin-bottom:6px;" id="qa-zeri-name-lbl"></div>
+          <div>
+            <div style="font-size:9px;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:6px;">Zgjidh kategorinë:</div>
+            <div class="kat-btns" id="qa-kat-btns">
+              <button class="kat-btn" onclick="selectQAKat(this,'Lëndë e Parë')">Lëndë e Parë</button>
+              <button class="kat-btn" onclick="selectQAKat(this,'Aksesore')">Aksesore</button>
+              <button class="kat-btn" onclick="selectQAKat(this,'Tjetër')">Tjetër</button>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:4px;">
+            <button class="btn-primary" style="font-size:11px;padding:7px 14px;" onclick="confirmAddZeri()"><i class="ri-check-line"></i> Konfirmo & Zgjidh</button>
+            <button class="btn-secondary" style="font-size:11px;padding:7px 14px;" onclick="cancelQAZeri()">Anulo</button>
+          </div>
+          <div style="font-size:10.5px;color:var(--muted);margin-top:2px;">Mund ta plotësosh profilin e plotë tek <a href="zerat.html" style="color:var(--accent)">Zërat</a>.</div>
+        </div>
+
+        <div class="grand-total">
+          <span class="grand-total-lbl">Totali i Blerjes</span>
+          <span class="grand-total-val" id="grand-total">0 L</span>
+        </div>
+      </div>
+
+      <!-- Statusi + Mënyra pagesës -->
+      <div class="field-row">
+        <div class="field">
+          <label>Statusi i Pagesës <span style="color:var(--muted);font-size:9px;text-transform:none;letter-spacing:0">(opsional)</span></label>
+          <div class="status-toggle">
+            <button class="status-btn active-paguar" id="btn-paguar" onclick="setStatus('paguar')"><i class="ri-checkbox-circle-line"></i> E Paguar</button>
+            <button class="status-btn" id="btn-papag" onclick="setStatus('pa_paguar')"><i class="ri-time-line"></i> Pa Paguar</button>
+          </div>
+        </div>
+        <div class="field">
+          <label>Mënyra e Pagesës <span style="color:var(--muted);font-size:9px;text-transform:none;letter-spacing:0">(opsional)</span></label>
+          <div class="status-toggle">
+            <button class="status-btn active-banke" id="btn-banke" onclick="setMenyra('banke')"><i class="ri-bank-line"></i> Me Bankë</button>
+            <button class="status-btn" id="btn-dore" onclick="setMenyra('dore')"><i class="ri-hand-coin-line"></i> Në Dorë</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Shënime -->
+      <div class="field">
+        <label>Shënime <span style="color:var(--muted);font-size:9px;text-transform:none;letter-spacing:0">(opsional)</span></label>
+        <textarea id="f-notes" placeholder="Nr. faturë furnitori, detaje shtesë..."></textarea>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-secondary" onclick="closeModal()">Anulo</button>
+      <button class="btn-primary" onclick="saveBlerje()"><i class="ri-save-line"></i> Ruaj Blerjen</button>
+    </div>
+  </div>
+</div>
+
+<!-- View Modal -->
+<div class="modal-backdrop" id="view-bd" onclick="if(event.target===this)closeView()">
+  <div class="modal wide">
+    <div class="modal-head">
+      <h2 id="view-title">Blerja #—</h2>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <button class="btn-secondary" style="padding:6px 12px;font-size:11px;" onclick="editFromView()"><i class="ri-edit-line"></i> Edito</button>
+        <button class="btn-secondary" style="padding:6px 12px;font-size:11px;color:var(--accent);border-color:var(--accent);" onclick="deleteFromView()"><i class="ri-delete-bin-line"></i> Fshi</button>
+        <button class="modal-close" onclick="closeView()">✕</button>
+      </div>
+    </div>
+    <div class="modal-body" id="view-body"></div>
+  </div>
+</div>
+
+<!-- Confirm delete -->
+<div class="modal-backdrop confirm-modal" id="conf-bd" onclick="if(event.target===this)closeConf()">
+  <div class="modal" style="max-width:360px">
+    <div class="modal-head"><h2>Fshi Blerjen</h2><button class="modal-close" onclick="closeConf()">✕</button></div>
+    <div class="confirm-body">Jeni të sigurt? Ky veprim nuk mund të kthehet.</div>
+    <div class="modal-foot">
+      <button class="btn-secondary" onclick="closeConf()">Anulo</button>
+      <button class="btn-danger" onclick="confirmDel()">Fshi</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+<script src="pash-data.js"></script>
+<script>
+/* ══════════════════════════════════════════════════════════════
+   STATE
+══════════════════════════════════════════════════════════════ */
+const NJESIA_OPT = ['cope','kg','g','m','m²','litra','pako','set','orë','ditë','tjetër'];
+const KAT_OPT   = ['Lëndë e Parë','Aksesore','Tjetër'];
+
+let editId      = null;
+let deleteId    = null;
+let viewId      = null;
+let payStatus   = 'paguar';
+let payMenyra   = 'dore';
+
+/* Furnitor AC state */
+let acFurnitorId   = null;   // selected id
+let acFurnitorName = '';     // selected name
+let qaFurnitorName = '';     // pending new name
+
+/* Zëri quick-add state */
+let qaZeriName   = '';
+let qaZeriRowEl  = null;
+let qaZeriKat    = 'Lëndë e Parë';
+
+/* ══════════════════════════════════════════════════════════════
+   AUTOCOMPLETE — FURNITORI
+══════════════════════════════════════════════════════════════ */
+function renderFurnitorWrap(){
+  const wrap = document.getElementById('f-furnitori-wrap');
+  if(acFurnitorId || acFurnitorName){
+    const name = acFurnitorName;
+    wrap.innerHTML=`<div class="ac-chip">
+      <span class="ac-chip-name"><i class="ri-user-2-line" style="margin-right:5px;opacity:.5"></i>${esc(name)}</span>
+      <button class="ac-chip-clear" onclick="clearFurnitor()" title="Pastro"><i class="ri-close-line"></i></button>
+    </div>`;
+  } else {
+    wrap.innerHTML=`<div class="ac-wrap">
+      <input type="text" id="ac-furn-input" class="field input" autocomplete="off"
+        style="background:var(--surface);border:0.5px solid var(--border);border-radius:7px;
+               padding:9px 12px;font-family:'Switzer',sans-serif;font-size:13px;
+               color:var(--text);outline:none;width:100%;"
+        placeholder="Kërko furnitor p.sh. 'tiran', 'arb'..."
+        oninput="onFurnitorInput(this.value)"
+        onfocus="onFurnitorInput(this.value)">
+      <div class="ac-dd" id="ac-furn-dd"></div>
+    </div>`;
+    setTimeout(()=>document.getElementById('ac-furn-input')?.focus(),40);
+  }
+}
+
+function onFurnitorInput(q){
+  const dd = document.getElementById('ac-furn-dd');
+  if(!dd) return;
+  const ql = q.toLowerCase().trim();
+  const list = DB.furnitoret;
+  const matches = ql ? list.filter(f=>f.emri.toLowerCase().includes(ql)) : list;
+
+  let html = '';
+  if(matches.length){
+    html += '<div class="ac-group">Furnitorë të regjistruar</div>';
+    html += matches.slice(0,8).map(f=>`
+      <div class="ac-opt" data-id="${f.id}" data-name="${esc(f.emri)}">
+        <i class="ri-user-2-line" style="margin-right:6px;opacity:.4"></i>${hlSearch(f.emri,q)}
+      </div>`).join('');
+  }
+  if(ql && !list.some(f=>f.emri.toLowerCase()===ql)){
+    html+=`<div class="ac-opt new-item" data-new="${esc(q)}">
+      <i class="ri-user-add-line" style="margin-right:6px"></i>Shto "${esc(q)}" si furnitor të ri
+    </div>`;
+  }
+  if(!html){ dd.classList.remove('open'); return; }
+  dd.innerHTML=html; dd.classList.add('open');
+
+  dd.querySelectorAll('.ac-opt[data-id]').forEach(el=>{
+    el.addEventListener('mousedown',e=>{
+      e.preventDefault();
+      acFurnitorId=el.dataset.id; acFurnitorName=el.dataset.name;
+      dd.classList.remove('open');
+      hideQAFurnitor();
+      renderFurnitorWrap();
+      autoFillZeratFromFurnitor(acFurnitorId);
+    });
+  });
+  const newEl=dd.querySelector('.ac-opt.new-item');
+  if(newEl) newEl.addEventListener('mousedown',e=>{
+    e.preventDefault();
+    dd.classList.remove('open');
+    showQAFurnitor(q.trim());
+  });
+}
+
+function clearFurnitor(){
+  acFurnitorId=null; acFurnitorName='';
+  hideQAFurnitor();
+  renderFurnitorWrap();
+}
+
+function showQAFurnitor(name){
+  qaFurnitorName=name;
+  document.getElementById('qa-furn-name-lbl').textContent=`"${name}"`;
+  document.getElementById('qa-furnitori').classList.add('open');
+}
+function hideQAFurnitor(){
+  document.getElementById('qa-furnitori').classList.remove('open');
+  qaFurnitorName='';
+}
+function cancelQAFurnitor(){ hideQAFurnitor(); renderFurnitorWrap(); }
+function confirmAddFurnitor(){
+  if(!qaFurnitorName) return;
+  const newF={id:genId(),emri:qaFurnitorName,tel:'',email:'',adresa:'',nipt:'',notes:'',created:new Date().toISOString()};
+  const list=DB.furnitoret; list.push(newF); DB.furnitoret=list;
+  acFurnitorId=newF.id; acFurnitorName=newF.emri;
+  hideQAFurnitor();
+  renderFurnitorWrap();
+  toast(`✓ Furnitori "${newF.emri}" u shtua.`);
+}
+
+/* Auto-fill zërat linked to the selected furnitor */
+function autoFillZeratFromFurnitor(furnitorId){
+  if(!furnitorId || editId) return;
+  const linked = DB.zerat.filter(z => z.furnitori_id === furnitorId);
+  if(!linked.length) return;
+
+  /* Only replace if items-body is empty or has a single blank row */
+  const tbody = document.getElementById('items-body');
+  const rows  = [...tbody.querySelectorAll('tr')];
+  const hasData = rows.some(tr => {
+    const wrap = tr.querySelector('.ac-wrap');
+    return (wrap?.dataset?.zeriId) ||
+           parseFloat(tr.querySelector('.row-cmimi')?.value) > 0 ||
+           parseFloat(tr.querySelector('.row-sasia')?.value) > 0;
+  });
+  if(hasData) return;
+
+  clearItems();
+  linked.forEach(z => addRow({
+    zeri_id:   z.id,
+    zeri_emri: z.emri,
+    kategoria: z.kategoria || 'Lëndë e Parë',
+    njesia:    z.njesia    || 'cope',
+    cmimi:     z.cmimi     || 0,
+    sasia:     1,
+    totali:    z.cmimi     || 0
+  }));
+  calcTotal();
+  toast(`✓ U plotësuan ${linked.length} zëra nga ky furnitor.`);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   AUTOCOMPLETE — ZËRI (per row)
+══════════════════════════════════════════════════════════════ */
+function hlSearch(text, q){
+  if(!q) return esc(text);
+  const i=text.toLowerCase().indexOf(q.toLowerCase());
+  if(i<0) return esc(text);
+  return esc(text.slice(0,i))+'<mark>'+esc(text.slice(i,i+q.length))+'</mark>'+esc(text.slice(i+q.length));
+}
+
+function createZeriCell(it=null){
+  const wrap=document.createElement('div');
+  wrap.className='ac-wrap';
+  wrap.style.position='relative';
+
+  const existingId   = it?.zeri_id||null;
+  const existingName = it?.zeri_emri||'';
+
+  if(existingId || existingName){
+    wrap.innerHTML=`<div class="ac-chip" style="font-size:12px;padding:6px 10px;">
+      <span class="ac-chip-name">${esc(existingName||existingId)}</span>
+      <button class="ac-chip-clear" style="font-size:15px;" title="Pastro" onclick="clearZeriChip(this)"><i class="ri-close-line"></i></button>
+    </div>`;
+    wrap.dataset.zeriId=existingId||'';
+    wrap.dataset.zeriName=existingName;
+  } else {
+    buildZeriInput(wrap);
+  }
+  return wrap;
+}
+
+function buildZeriInput(wrap){
+  wrap.dataset.zeriId='';
+  wrap.dataset.zeriName='';
+  wrap.innerHTML=`
+    <input type="text" autocomplete="off"
+      style="background:var(--surface);border:0.5px solid var(--border);border-radius:5px;
+             padding:7px 8px;font-family:'Switzer',sans-serif;font-size:12px;
+             color:var(--text);outline:none;width:100%;transition:border-color .15s"
+      placeholder="Kërko p.sh. 'pambuk'..."
+      oninput="onZeriInput(this,event)"
+      onfocus="onZeriInput(this,event)">
+    <div class="ac-dd" style="font-size:12px;"></div>`;
+}
+
+function clearZeriChip(btn){
+  const wrap=btn.closest('.ac-wrap');
+  buildZeriInput(wrap);
+  const tr=wrap.closest('tr');
+  if(tr){
+    tr.querySelector('.row-kat').value='Lëndë e Parë';
+    tr.querySelector('.row-njesia').value='cope';
+  }
+  setTimeout(()=>wrap.querySelector('input')?.focus(),30);
+}
+
+function onZeriInput(input, event){
+  const wrap=input.closest('.ac-wrap');
+  const dd=wrap.querySelector('.ac-dd');
+  const q=input.value;
+  const ql=q.toLowerCase().trim();
+  const list=DB.zerat;
+  const matches=ql ? list.filter(z=>z.emri.toLowerCase().includes(ql)) : list;
+
+  let html='';
+  if(matches.length){
+    html+='<div class="ac-group">Zëra të regjistruar</div>';
+    html+=matches.slice(0,8).map(z=>`
+      <div class="ac-opt" data-id="${z.id}" data-name="${esc(z.emri)}"
+           data-kat="${esc(z.kategoria||'Lëndë e Parë')}" data-njesia="${esc(z.njesia||'cope')}">
+        ${hlSearch(z.emri,q)}
+        <span style="font-size:10px;color:var(--muted);margin-left:6px">${z.kategoria||''}</span>
+      </div>`).join('');
+  }
+  if(ql && !list.some(z=>z.emri.toLowerCase()===ql)){
+    html+=`<div class="ac-opt new-item" data-new="${esc(q)}">
+      <i class="ri-price-tag-3-line" style="margin-right:6px"></i>Shto "${esc(q)}" si zër të ri
+    </div>`;
+  }
+  if(!html){ dd.classList.remove('open'); return; }
+  dd.innerHTML=html; dd.classList.add('open');
+
+  dd.querySelectorAll('.ac-opt[data-id]').forEach(el=>{
+    el.addEventListener('mousedown',e=>{
+      e.preventDefault();
+      const tr=wrap.closest('tr');
+      /* Replace input with chip */
+      wrap.dataset.zeriId=el.dataset.id;
+      wrap.dataset.zeriName=el.dataset.name;
+      wrap.innerHTML=`<div class="ac-chip" style="font-size:12px;padding:6px 10px;">
+        <span class="ac-chip-name">${esc(el.dataset.name)}</span>
+        <button class="ac-chip-clear" style="font-size:15px;" title="Pastro" onclick="clearZeriChip(this)"><i class="ri-close-line"></i></button>
+      </div>`;
+      /* Auto-fill kat + njesia */
+      if(tr){
+        tr.querySelector('.row-kat').value=el.dataset.kat||'Lëndë e Parë';
+        tr.querySelector('.row-njesia').value=el.dataset.njesia||'cope';
+      }
+      dd.classList.remove('open');
+    });
+  });
+
+  const newEl=dd.querySelector('.ac-opt.new-item');
+  if(newEl) newEl.addEventListener('mousedown',e=>{
+    e.preventDefault();
+    dd.classList.remove('open');
+    showQAZeri(q.trim(), wrap.closest('tr'));
+  });
+}
+
+/* Quick-add zëri */
+function showQAZeri(name, rowEl){
+  qaZeriName=name; qaZeriRowEl=rowEl; qaZeriKat='Lëndë e Parë';
+  document.getElementById('qa-zeri-name-lbl').textContent=`"${name}"`;
+  document.querySelectorAll('.kat-btn').forEach(b=>b.classList.remove('sel'));
+  document.querySelectorAll('.kat-btn')[0]?.classList.add('sel');
+  document.getElementById('qa-zeri').classList.add('open');
+  document.getElementById('qa-zeri').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function selectQAKat(btn, kat){
+  qaZeriKat=kat;
+  document.querySelectorAll('.kat-btn').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+}
+function cancelQAZeri(){
+  document.getElementById('qa-zeri').classList.remove('open');
+  qaZeriName=''; qaZeriRowEl=null;
+}
+function confirmAddZeri(){
+  if(!qaZeriName) return;
+  const newZ={id:genId(),emri:qaZeriName,kategoria:qaZeriKat,njesia:'cope',cmimi:0,notes:'',created:new Date().toISOString()};
+  const list=DB.zerat; list.push(newZ); DB.zerat=list;
+
+  /* Fill the row that triggered the add */
+  if(qaZeriRowEl){
+    const wrap=qaZeriRowEl.querySelector('.ac-wrap');
+    if(wrap){
+      wrap.dataset.zeriId=newZ.id;
+      wrap.dataset.zeriName=newZ.emri;
+      wrap.innerHTML=`<div class="ac-chip" style="font-size:12px;padding:6px 10px;">
+        <span class="ac-chip-name">${esc(newZ.emri)}</span>
+        <button class="ac-chip-clear" style="font-size:15px;" title="Pastro" onclick="clearZeriChip(this)"><i class="ri-close-line"></i></button>
+      </div>`;
+      qaZeriRowEl.querySelector('.row-kat').value=newZ.kategoria;
+    }
+  }
+  document.getElementById('qa-zeri').classList.remove('open');
+  qaZeriName=''; qaZeriRowEl=null;
+  toast(`✓ Zëri "${newZ.emri}" u shtua.`);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   ITEM ROWS
+══════════════════════════════════════════════════════════════ */
+function clearItems(){ document.getElementById('items-body').innerHTML=''; }
+
+function addRow(it=null){
+  const njOpt=NJESIA_OPT.map(n=>`<option ${it?.njesia===n?'selected':''}>${n}</option>`).join('');
+  const katOpt=KAT_OPT.map(k=>`<option ${it?.kategoria===k?'selected':''}>${k}</option>`).join('');
+  const tr=document.createElement('tr');
+  tr.innerHTML=`
+    <td></td>
+    <td><select class="row-kat">${katOpt}</select></td>
+    <td><input type="number" class="row-sasia" min="0" step="0.01" value="${it?.sasia||''}" placeholder="1" oninput="calcTotal()"></td>
+    <td><select class="row-njesia">${njOpt}</select></td>
+    <td><input type="number" class="row-cmimi" min="0" step="0.01" value="${it?.cmimi||''}" placeholder="0" oninput="calcTotal()"></td>
+    <td class="td-total" style="text-align:right;padding-right:8px;font-weight:700;">${it?fmtL(it.totali):'—'}</td>
+    <td><button type="button" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:16px;padding:4px;" onclick="this.closest('tr').remove();calcTotal()"><i class="ri-close-line"></i></button></td>`;
+  /* Insert zëri autocomplete cell */
+  tr.cells[0].appendChild(createZeriCell(it));
+  document.getElementById('items-body').appendChild(tr);
+}
+
+function calcTotal(){
+  let grand=0;
+  document.querySelectorAll('#items-body tr').forEach(tr=>{
+    const s=parseFloat(tr.querySelector('.row-sasia')?.value)||0;
+    const c=parseFloat(tr.querySelector('.row-cmimi')?.value)||0;
+    const t=s*c; grand+=t;
+    tr.querySelector('.td-total').textContent=t>0?fmtL(t):'—';
+  });
+  document.getElementById('grand-total').textContent=fmtL(grand);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   STATUS / MODAL
+══════════════════════════════════════════════════════════════ */
+function setStatus(s){
+  payStatus=s;
+  document.getElementById('btn-paguar').className='status-btn'+(s==='paguar'?' active-paguar':'');
+  document.getElementById('btn-papag').className='status-btn'+(s==='pa_paguar'?' active-pa-paguar':'');
+}
+function setMenyra(m){
+  payMenyra=m;
+  document.getElementById('btn-banke').className='status-btn'+(m==='banke'?' active-banke':'');
+  document.getElementById('btn-dore').className='status-btn'+(m==='dore'?' active-dore':'');
+}
+
+function openModal(){
+  editId=null; acFurnitorId=null; acFurnitorName='';
+  document.getElementById('modal-title').textContent='Blerje e Re';
+  document.getElementById('f-data').value=todayISO();
+  document.getElementById('f-notes').value='';
+  setStatus('paguar');
+  setMenyra('dore');
+  clearItems(); addRow();
+  hideQAFurnitor();
+  cancelQAZeri();
+  renderFurnitorWrap();
+  document.getElementById('modal-bd').classList.add('open');
+}
+
+function openEdit(id){
+  const b=DB.blerjet.find(x=>x.id===id); if(!b) return;
+  editId=id;
+  const f=b.furnitori_id?DB.furnitoret.find(x=>x.id===b.furnitori_id):null;
+  acFurnitorId=b.furnitori_id||null;
+  acFurnitorName=f?f.emri:(b.furnitor_emri||'');
+  document.getElementById('modal-title').textContent=`Edito Blerjen #${b.nr}`;
+  document.getElementById('f-data').value=b.data||'';
+  document.getElementById('f-notes').value=b.notes||'';
+  setStatus(b.statusi||'paguar');
+  setMenyra(b.menyra_pages||'dore');
+  clearItems();
+  (b.items||[]).forEach(it=>addRow(it));
+  calcTotal();
+  hideQAFurnitor(); cancelQAZeri();
+  renderFurnitorWrap();
+  document.getElementById('modal-bd').classList.add('open');
+}
+
+function closeModal(){
+  document.getElementById('modal-bd').classList.remove('open');
+  editId=null;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SAVE
+══════════════════════════════════════════════════════════════ */
+function saveBlerje(){
+  /* Collect items — only rows with at least a totali > 0 */
+  const items=[];
+  let hasAmount=false;
+  document.querySelectorAll('#items-body tr').forEach(tr=>{
+    const wrap=tr.querySelector('.ac-wrap');
+    const zid=wrap?.dataset?.zeriId||null;
+    const zname=wrap?.dataset?.zeriName||'';
+    const sasia=parseFloat(tr.querySelector('.row-sasia')?.value)||0;
+    const cmimi=parseFloat(tr.querySelector('.row-cmimi')?.value)||0;
+    const kat=tr.querySelector('.row-kat')?.value||'';
+    const njesia=tr.querySelector('.row-njesia')?.value||'cope';
+
+    /* Accept row if has any amount signal */
+    const totali=sasia*cmimi;
+    if(totali>0 || cmimi>0){
+      hasAmount=true;
+      items.push({zeri_id:zid||null,zeri_emri:zname||'Pa emër',kategoria:kat,sasia:sasia||1,njesia,cmimi,totali:totali||cmimi});
+    }
+  });
+
+  if(!hasAmount && items.length===0){
+    toast('⚠ Vendos të paktën një çmim/shumë.'); return;
+  }
+
+  const totali=items.reduce((s,i)=>s+(i.totali||0),0);
+  const data=document.getElementById('f-data').value||todayISO();
+  const notes=document.getElementById('f-notes').value.trim();
+  const f=acFurnitorId?DB.furnitoret.find(x=>x.id===acFurnitorId):null;
+
+  let blerjet=DB.blerjet;
+  if(editId){
+    const idx=blerjet.findIndex(x=>x.id===editId);
+    if(idx>=0) blerjet[idx]={...blerjet[idx],furnitori_id:acFurnitorId||null,furnitor_emri:acFurnitorName||'',data,items,totali,statusi:payStatus,menyra_pages:payMenyra,notes};
+    toast('✓ Blerja u përditësua.');
+  } else {
+    blerjet.push({id:genId(),nr:nextNr(blerjet),furnitori_id:acFurnitorId||null,furnitor_emri:acFurnitorName||'',data,items,totali,statusi:payStatus,menyra_pages:payMenyra,notes,created:new Date().toISOString()});
+    toast('✓ Blerja u shtua.');
+  }
+  DB.blerjet=blerjet;
+  closeModal(); renderList();
+}
+
+/* ══════════════════════════════════════════════════════════════
+   VIEW
+══════════════════════════════════════════════════════════════ */
+function openView(id){
+  const b=DB.blerjet.find(x=>x.id===id); if(!b) return;
+  viewId=id;
+  const f=DB.furnitoret.find(x=>x.id===b.furnitori_id);
+  const fname=f?f.emri:(b.furnitor_emri||'—');
+  const st=b.statusi==='paguar';
+  const itemRows=(b.items||[]).map(it=>`<tr>
+    <td>${esc(it.zeri_emri||'—')}</td><td>${esc(it.kategoria||'—')}</td>
+    <td>${it.sasia||'—'} ${it.njesia||''}</td>
+    <td>${it.cmimi?fmtL(it.cmimi):'—'}</td>
+    <td style="font-weight:700;text-align:right">${fmtL(it.totali)}</td>
+  </tr>`).join('');
+  document.getElementById('view-title').textContent=`Blerja #${b.nr}`;
+  document.getElementById('view-body').innerHTML=`
+    <div style="display:flex;gap:20px;flex-wrap:wrap;margin-bottom:16px;">
+      <div><div style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;font-weight:600">FURNITORI</div><div style="font-size:15px;font-weight:700">${esc(fname)}</div></div>
+      <div><div style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;font-weight:600">DATA</div><div style="font-size:15px;font-weight:700">${fmtDate(b.data)}</div></div>
+      <div><div style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;font-weight:600">STATUSI</div><span class="badge ${st?'paguar':'pa-paguar'}" style="margin-top:2px;display:inline-flex">${st?'E Paguar':'Pa Paguar'}</span></div>
+      <div><div style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;font-weight:600">MËNYRA</div><span class="badge badge-menyra" style="margin-top:2px;display:inline-flex">${(b.menyra_pages||'dore')==='banke'?'<i class="ri-bank-line"></i> Me Bankë':'<i class="ri-hand-coin-line"></i> Në Dorë'}</span></div>
+    </div>
+    <table class="items-table" style="margin-bottom:12px;">
+      <thead><tr><th>Zëri</th><th>Kategoria</th><th>Sasia</th><th>Çmimi</th><th style="text-align:right">Totali</th></tr></thead>
+      <tbody>${itemRows}</tbody>
+    </table>
+    <div class="grand-total"><span class="grand-total-lbl">TOTALI</span><span class="grand-total-val">${fmtL(b.totali)}</span></div>
+    ${b.notes?`<div style="margin-top:14px;padding:12px;background:var(--surface);border-radius:8px;font-size:12px;color:var(--muted)">${esc(b.notes)}</div>`:''}`;
+  document.getElementById('view-bd').classList.add('open');
+}
+function closeView(){ document.getElementById('view-bd').classList.remove('open'); viewId=null; }
+function editFromView(){ const id=viewId; closeView(); openEdit(id); }
+function deleteFromView(){ askDel(viewId); closeView(); }
+
+/* Delete */
+function askDel(id){ deleteId=id; document.getElementById('conf-bd').classList.add('open'); }
+function closeConf(){ document.getElementById('conf-bd').classList.remove('open'); deleteId=null; }
+function confirmDel(){
+  DB.blerjet=DB.blerjet.filter(x=>x.id!==deleteId);
+  closeConf(); toast('Blerja u fshi.'); renderList();
+}
+
+/* ══════════════════════════════════════════════════════════════
+   LIST
+══════════════════════════════════════════════════════════════ */
+
+function renderList(){
+  const q=document.getElementById('search').value.toLowerCase();
+  const status=document.getElementById('filter-status').value;
+  const menyra=document.getElementById('filter-menyra').value;
+  const furnitoret=DB.furnitoret;
+
+  let list=DB.blerjet.filter(b=>{
+    if(status&&b.statusi!==status) return false;
+    if(menyra&&(b.menyra_pages||'dore')!==menyra) return false;
+    if(!DP.matches(b.data)) return false;
+    if(q){
+      const f=furnitoret.find(x=>x.id===b.furnitori_id);
+      const fname=(f?f.emri:b.furnitor_emri||'').toLowerCase();
+      const items=(b.items||[]).map(i=>i.zeri_emri||'').join(' ').toLowerCase();
+      if(!fname.includes(q)&&!items.includes(q)&&!String(b.nr).includes(q)) return false;
+    }
+    return true;
+  });
+  const sort=document.getElementById('filter-sort').value;
+  if(sort==='date-desc') list.sort((a,b)=>new Date(b.data)-new Date(a.data));
+  else if(sort==='date-asc') list.sort((a,b)=>new Date(a.data)-new Date(b.data));
+  else if(sort==='val-desc') list.sort((a,b)=>(b.totali||0)-(a.totali||0));
+  else if(sort==='val-asc')  list.sort((a,b)=>(a.totali||0)-(b.totali||0));
+
+  const total=list.reduce((s,b)=>s+(b.totali||0),0);
+  document.getElementById('list-total').textContent=`${list.length} rekorde · ${fmtL(total)}`;
+
+  const wrap=document.getElementById('list-wrap');
+  if(!list.length){
+    wrap.innerHTML='<div class="empty"><i class="ri-shopping-bag-line"></i>Nuk ka blerje.<br>Shtyp <strong>Blerje e Re</strong> për të filluar.</div>';
+    return;
+  }
+  const rows=list.map(b=>{
+    const f=furnitoret.find(x=>x.id===b.furnitori_id);
+    const fname=f?f.emri:(b.furnitor_emri||'—');
+    const st=b.statusi==='paguar';
+    const cats=[...new Set((b.items||[]).map(i=>i.kategoria).filter(Boolean))].join(', ');
+    return `<tr onclick="openView('${b.id}')">
+      <td class="td-nr">${b.nr||'—'}</td>
+      <td><div class="td-name">${esc(fname)}</div><div class="td-sub">${cats||'—'}</div></td>
+      <td>${b.data?fmtDate(b.data):'—'}</td>
+      <td class="td-amt" style="color:var(--accent)">${fmtL(b.totali)}</td>
+      <td>
+        <span class="badge ${st?'paguar':'pa-paguar'}">${st?'E Paguar':'Pa Paguar'}</span>
+        <span class="badge badge-menyra" style="margin-left:4px">${(b.menyra_pages||'dore')==='banke'?'<i class="ri-bank-line"></i> Bankë':'<i class="ri-hand-coin-line"></i> Dorë'}</span>
+      </td>
+      <td onclick="event.stopPropagation()">
+        <div style="display:flex;gap:6px;justify-content:flex-end;">
+          <button class="btn-icon" onclick="openEdit('${b.id}')"><i class="ri-edit-line"></i></button>
+          <button class="btn-icon danger" onclick="askDel('${b.id}')"><i class="ri-delete-bin-line"></i></button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+  wrap.innerHTML=`<table>
+    <thead><tr><th>Nr.</th><th>Furnitori / Kategoria</th><th>Data</th><th>Totali</th><th>Statusi</th><th></th></tr></thead>
+    <tbody>${rows}</tbody>
+  </table>`;
+}
+
+/* Close dropdowns on outside click */
+document.addEventListener('click',e=>{
+  if(!e.target.closest('.ac-wrap')) document.querySelectorAll('.ac-dd.open').forEach(d=>d.classList.remove('open'));
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){ closeModal(); closeView(); closeConf(); }
+  if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){
+    if(document.getElementById('modal-bd').classList.contains('open')) saveBlerje();
+  }
+});
+
+DP.onchange = renderList;
+renderList();
+</script>
+</body>
+</html>

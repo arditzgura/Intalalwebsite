@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PASH — Shpenzime</title>
+<link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="pash.css">
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-badge"><i class="ri-line-chart-fill"></i></div>
+    <div class="logo-text">PASH<small>Pasqyra Financiare</small></div>
+  </div>
+  <nav class="sidebar-nav">
+    <a class="nav-item" href="index.html"><i class="ri-dashboard-2-line"></i>Paneli</a>
+    <a class="nav-item active" href="shpenzime.html"><i class="ri-wallet-3-line"></i>Shpenzime</a>
+    <a class="nav-item" href="blerjet.html"><i class="ri-shopping-bag-line"></i>Blerjet</a>
+    <a class="nav-item" href="furnitoret.html"><i class="ri-user-2-line"></i>Furnitorët</a>
+    <a class="nav-item" href="zerat.html"><i class="ri-price-tag-3-line"></i>Zërat</a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="sf-avatar">P</div>
+    <div><span class="sf-name">PASH</span><span class="sf-label">Sistemi</span></div>
+  </div>
+</aside>
+
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-user">
+      <div class="topbar-label">SEKSIONI</div>
+      <div class="topbar-name">Shpenzime Operative</div>
+    </div>
+  </div>
+  <div class="content">
+    <div class="list-head">
+      <div>
+        <div class="page-title">Shpenzime</div>
+        <div class="page-sub">Kostot operative — paga, qira, utilities, transport dhe të tjera</div>
+      </div>
+      <button class="btn-primary" onclick="openModal()"><i class="ri-add-line"></i> Shpenzim i Ri</button>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px;" id="stats-strip"></div>
+
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;">
+      <div class="search-wrap">
+        <i class="ri-search-line"></i>
+        <input class="search-input" id="search" placeholder="Kërko shpenzim..." oninput="renderList()">
+      </div>
+      <select id="filter-kat" onchange="renderList()" style="background:var(--white);border:0.5px solid var(--border);border-radius:7px;padding:8px 12px;font-family:'Switzer',sans-serif;font-size:12px;outline:none;">
+        <option value="">Të gjitha kategoritë</option>
+        <option>Paga</option><option>Qira</option><option>Utilities</option>
+        <option>Transport</option><option>Mirëmbajtje</option>
+        <option>Marketing</option><option>Kosto Operative</option><option>Të Tjera</option>
+      </select>
+      <select id="filter-menyra" onchange="renderList()" style="background:var(--white);border:0.5px solid var(--border);border-radius:7px;padding:8px 12px;font-family:'Switzer',sans-serif;font-size:12px;outline:none;">
+        <option value="">Të gjitha mënyrat</option>
+        <option value="banke">Me Bankë</option>
+        <option value="dore">Në Dorë</option>
+      </select>
+      <div class="dp-wrap" id="dp-wrap">
+        <button class="dp-trigger" id="dp-trigger" onclick="DP.toggle()">
+          <i class="ri-calendar-line"></i><span id="dp-label">Të gjithë datat</span>
+        </button>
+        <div class="dp-popup" id="dp-popup">
+          <div class="dp-nav">
+            <button class="dp-nav-btn" onclick="DP.nav(-1)">↑</button>
+            <button class="dp-title" id="dp-title" onclick="DP.toggleMode()">—</button>
+            <button class="dp-nav-btn" onclick="DP.nav(1)">↓</button>
+          </div>
+          <div id="dp-body"></div>
+          <div class="dp-footer">
+            <button class="dp-clear" onclick="DP.clear()">Pastro</button>
+            <button class="dp-today" onclick="DP.today()">Sot</button>
+          </div>
+        </div>
+      </div>
+      <select id="filter-sort" onchange="renderList()" style="background:var(--white);border:0.5px solid var(--border);border-radius:7px;padding:8px 12px;font-family:'Switzer',sans-serif;font-size:12px;outline:none;">
+        <option value="date-desc">Data ↓ (i ri)</option>
+        <option value="date-asc">Data ↑ (i vjetër)</option>
+        <option value="val-desc">Vlera ↓ (më e madhe)</option>
+        <option value="val-asc">Vlera ↑ (më e vogël)</option>
+      </select>
+      <span id="list-total" style="margin-left:auto;font-size:12px;font-weight:600;color:var(--muted);"></span>
+    </div>
+
+    <div class="card" id="list-wrap"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     SHPENZIM I RI MODAL
+══════════════════════════════════════════════════════════════ -->
+<div class="modal-backdrop" id="modal-bd" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="modal-title">Shpenzim i Ri</h2>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+
+      <!-- Shuma — e vetmja e detyrueshme -->
+      <div class="field">
+        <label>Shuma (L) <span style="color:var(--accent);font-size:10px;">*</span></label>
+        <input type="number" id="f-shuma" min="0" step="0.01" placeholder="0.00"
+          style="font-size:18px;font-weight:600;padding:11px 14px;"
+          oninput="this.style.color=parseFloat(this.value)>0?'var(--accent)':'var(--text)'">
+      </div>
+
+      <!-- Kategoria — autocomplete nga kategoritë ekzistuese -->
+      <div class="field">
+        <label>Kategoria <span style="color:var(--muted);font-size:9px;text-transform:none;letter-spacing:0">(opsional)</span></label>
+        <div class="ac-wrap">
+          <input type="text" id="f-kat-input" autocomplete="off"
+            style="background:var(--surface);border:0.5px solid var(--border);border-radius:7px;
+                   padding:9px 12px;font-family:'Switzer',sans-serif;font-size:13px;
+                   color:var(--text);outline:none;width:100%;transition:border-color .15s"
+            placeholder="Kërko p.sh. 'pag', 'util'..."
+            oninput="onKatInput(this.value)"
+            onfocus="onKatInput(this.value)">
+          <div class="ac-dd" id="ac-kat-dd"></div>
+        </div>
+      </div>
+
+      <!-- Përshkrimi — autocomplete nga shpenzimet e kaluara -->
+      <div class="field">
+        <label>Përshkrimi <span style="color:var(--muted);font-size:9px;text-transform:none;letter-spacing:0">(opsional)</span></label>
+        <div class="ac-wrap">
+          <input type="text" id="f-pershkrim" autocomplete="off"
+            style="background:var(--surface);border:0.5px solid var(--border);border-radius:7px;
+                   padding:9px 12px;font-family:'Switzer',sans-serif;font-size:13px;
+                   color:var(--text);outline:none;width:100%;transition:border-color .15s"
+            placeholder="p.sh. Faturë OSHEE, Paga Maj..."
+            oninput="onPershkrimInput(this.value)"
+            onfocus="onPershkrimInput(this.value)">
+          <div class="ac-dd" id="ac-pershkrim-dd"></div>
+        </div>
+      </div>
+
+      <!-- Data -->
+      <div class="field">
+        <label>Data <span style="color:var(--muted);font-size:9px;text-transform:none;letter-spacing:0">(opsional)</span></label>
+        <input type="date" id="f-data">
+      </div>
+
+      <!-- Mënyra e pagesës -->
+      <div class="field">
+        <label>Mënyra e Pagesës <span style="color:var(--muted);font-size:9px;text-transform:none;letter-spacing:0">(opsional)</span></label>
+        <div class="status-toggle">
+          <button class="status-btn" id="btn-banke" onclick="setMenyra('banke')"><i class="ri-bank-line"></i> Me Bankë</button>
+          <button class="status-btn active-dore" id="btn-dore" onclick="setMenyra('dore')"><i class="ri-hand-coin-line"></i> Në Dorë</button>
+        </div>
+      </div>
+
+      <!-- Shënime -->
+      <div class="field">
+        <label>Shënime <span style="color:var(--muted);font-size:9px;text-transform:none;letter-spacing:0">(opsional)</span></label>
+        <textarea id="f-notes" placeholder="Detaje shtesë..." style="min-height:52px"></textarea>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-secondary" onclick="closeModal()">Anulo</button>
+      <button class="btn-primary" onclick="saveShpenzim()"><i class="ri-save-line"></i> Ruaj</button>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm delete -->
+<div class="modal-backdrop confirm-modal" id="conf-bd" onclick="if(event.target===this)closeConf()">
+  <div class="modal" style="max-width:360px">
+    <div class="modal-head"><h2>Fshi Shpenzimin</h2><button class="modal-close" onclick="closeConf()">✕</button></div>
+    <div class="confirm-body">Jeni të sigurt? Ky veprim nuk mund të kthehet.</div>
+    <div class="modal-foot">
+      <button class="btn-secondary" onclick="closeConf()">Anulo</button>
+      <button class="btn-danger" onclick="confirmDel()">Fshi</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+<script src="pash-data.js"></script>
+<script>
+let editId    = null;
+let deleteId  = null;
+let payMenyra = 'dore';
+
+function setMenyra(m){
+  payMenyra = m;
+  document.getElementById('btn-banke').className = 'status-btn' + (m==='banke' ? ' active-banke' : '');
+  document.getElementById('btn-dore').className  = 'status-btn' + (m==='dore'  ? ' active-dore'  : '');
+}
+
+const ALL_KATS = ['Paga','Qira','Utilities','Transport','Mirëmbajtje','Marketing','Kosto Operative','Të Tjera'];
+const KAT_COLORS={'Paga':'#9b45d4','Qira':'#e07b30','Utilities':'#1a9e6e','Transport':'#1a7fc1',
+  'Mirëmbajtje':'#c8003e','Marketing':'#4361ee','Kosto Operative':'#888','Të Tjera':'#aaa'};
+const KAT_ICONS={'Paga':'ri-group-line','Qira':'ri-building-line','Utilities':'ri-flashlight-line',
+  'Transport':'ri-truck-line','Mirëmbajtje':'ri-tools-line','Marketing':'ri-megaphone-line',
+  'Kosto Operative':'ri-settings-line','Të Tjera':'ri-more-line'};
+
+function hlSearch(text,q){
+  if(!q) return esc(text);
+  const i=text.toLowerCase().indexOf(q.toLowerCase());
+  if(i<0) return esc(text);
+  return esc(text.slice(0,i))+'<mark>'+esc(text.slice(i,i+q.length))+'</mark>'+esc(text.slice(i+q.length));
+}
+
+/* ── Autocomplete: kategoria ─────────────────────────────────── */
+function onKatInput(q){
+  const dd=document.getElementById('ac-kat-dd');
+  const ql=q.toLowerCase().trim();
+
+  /* Merge fixed list + used categories from history */
+  const usedKats=[...new Set(DB.shpenzime.map(x=>x.kategoria).filter(Boolean))];
+  const allKats=[...new Set([...ALL_KATS,...usedKats])];
+  const matches=ql?allKats.filter(k=>k.toLowerCase().includes(ql)):allKats;
+
+  if(!matches.length&&!ql){ dd.classList.remove('open'); return; }
+  let html='<div class="ac-group">Kategoritë</div>';
+  html+=matches.slice(0,10).map(k=>{
+    const col=KAT_COLORS[k]||'#888';
+    const ico=KAT_ICONS[k]||'ri-more-line';
+    return `<div class="ac-opt" data-val="${esc(k)}">
+      <i class="${ico}" style="color:${col};margin-right:7px"></i>${hlSearch(k,q)}
+    </div>`;
+  }).join('');
+
+  if(ql&&!allKats.some(k=>k.toLowerCase()===ql)){
+    html+=`<div class="ac-opt new-item" data-val="${esc(q)}">
+      <i class="ri-add-circle-line" style="margin-right:6px"></i>Shto kategori "${esc(q)}"
+    </div>`;
+  }
+  dd.innerHTML=html; dd.classList.add('open');
+
+  dd.querySelectorAll('.ac-opt').forEach(el=>{
+    el.addEventListener('mousedown',e=>{
+      e.preventDefault();
+      document.getElementById('f-kat-input').value=el.dataset.val;
+      dd.classList.remove('open');
+    });
+  });
+}
+
+/* ── Autocomplete: përshkrimi nga historia ───────────────────── */
+function onPershkrimInput(q){
+  const dd=document.getElementById('ac-pershkrim-dd');
+  const ql=q.toLowerCase().trim();
+  if(!ql){ dd.classList.remove('open'); return; }
+
+  const prev=[...new Set(DB.shpenzime.map(x=>x.pershkrim).filter(Boolean))];
+  const matches=prev.filter(p=>p.toLowerCase().includes(ql));
+  if(!matches.length){ dd.classList.remove('open'); return; }
+
+  let html='<div class="ac-group">Nga historia</div>';
+  html+=matches.slice(0,6).map(p=>`<div class="ac-opt" data-val="${esc(p)}">${hlSearch(p,q)}</div>`).join('');
+  dd.innerHTML=html; dd.classList.add('open');
+  dd.querySelectorAll('.ac-opt').forEach(el=>{
+    el.addEventListener('mousedown',e=>{
+      e.preventDefault();
+      document.getElementById('f-pershkrim').value=el.dataset.val;
+      dd.classList.remove('open');
+    });
+  });
+}
+
+/* ── Modal ───────────────────────────────────────────────────── */
+function openModal(){
+  editId=null;
+  document.getElementById('modal-title').textContent='Shpenzim i Ri';
+  document.getElementById('f-shuma').value='';
+  document.getElementById('f-shuma').style.color='var(--text)';
+  document.getElementById('f-kat-input').value='';
+  document.getElementById('f-pershkrim').value='';
+  document.getElementById('f-data').value=todayISO();
+  document.getElementById('f-notes').value='';
+  setMenyra('dore');
+  document.getElementById('modal-bd').classList.add('open');
+  setTimeout(()=>document.getElementById('f-shuma').focus(),80);
+}
+
+function openEdit(id){
+  const x=DB.shpenzime.find(s=>s.id===id); if(!x) return;
+  editId=id;
+  document.getElementById('modal-title').textContent='Edito Shpenzimin';
+  document.getElementById('f-shuma').value=x.shuma||'';
+  document.getElementById('f-shuma').style.color=x.shuma?'var(--accent)':'var(--text)';
+  document.getElementById('f-kat-input').value=x.kategoria||'';
+  document.getElementById('f-pershkrim').value=x.pershkrim||'';
+  document.getElementById('f-data').value=x.data||'';
+  document.getElementById('f-notes').value=x.notes||'';
+  setMenyra(x.menyra_pages||'dore');
+  document.getElementById('modal-bd').classList.add('open');
+}
+
+function closeModal(){ document.getElementById('modal-bd').classList.remove('open'); editId=null; }
+
+function saveShpenzim(){
+  const shuma=parseFloat(document.getElementById('f-shuma').value)||0;
+  if(shuma<=0){ toast('⚠ Vendos shumën — e vetmja e detyrueshme.'); document.getElementById('f-shuma').focus(); return; }
+
+  const kategoria=document.getElementById('f-kat-input').value.trim()||'Pa kategori';
+  const pershkrim=document.getElementById('f-pershkrim').value.trim();
+  const data=document.getElementById('f-data').value||todayISO();
+  const notes=document.getElementById('f-notes').value.trim();
+
+  let list=DB.shpenzime;
+  if(editId){
+    const idx=list.findIndex(x=>x.id===editId);
+    if(idx>=0) list[idx]={...list[idx],kategoria,data,pershkrim,shuma,menyra_pages:payMenyra,notes};
+    toast('✓ Shpenzimi u përditësua.');
+  } else {
+    list.push({id:genId(),kategoria,data,pershkrim,shuma,menyra_pages:payMenyra,notes,created:new Date().toISOString()});
+    toast('✓ Shpenzimi u shtua.');
+  }
+  DB.shpenzime=list;
+  closeModal(); renderStats(); renderList();
+}
+
+/* ── Stats ───────────────────────────────────────────────────── */
+function renderStats(){
+  const all=DB.shpenzime;
+  const now=new Date();
+  const thisMonth=all.filter(x=>{const d=new Date(x.data);return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear();});
+  const totalAll=all.reduce((s,x)=>s+(x.shuma||0),0);
+  const totalMonth=thisMonth.reduce((s,x)=>s+(x.shuma||0),0);
+  const bycat={}; all.forEach(x=>{bycat[x.kategoria]=(bycat[x.kategoria]||0)+(x.shuma||0);});
+  const topCat=Object.entries(bycat).sort((a,b)=>b[1]-a[1])[0];
+  document.getElementById('stats-strip').innerHTML=`
+    <div class="period-card"><div class="pc-header"><div class="pc-icon red"><i class="ri-wallet-3-line"></i></div><span class="pc-label">Ky Muaj</span></div><div class="pc-val red">${fmtL(totalMonth)}</div></div>
+    <div class="period-card"><div class="pc-header"><div class="pc-icon blue"><i class="ri-calendar-line"></i></div><span class="pc-label">Totali Gjithsej</span></div><div class="pc-val">${fmtL(totalAll)}</div></div>
+    <div class="period-card"><div class="pc-header"><div class="pc-icon orange"><i class="ri-bar-chart-line"></i></div><span class="pc-label">Nr. Shpenzimesh</span></div><div class="pc-val">${all.length}</div></div>
+    <div class="period-card"><div class="pc-header"><div class="pc-icon green"><i class="ri-price-tag-3-line"></i></div><span class="pc-label">Kategoria Kryesore</span></div><div class="pc-val" style="font-size:14px">${topCat?esc(topCat[0]):'—'}</div></div>`;
+}
+
+/* ── List ────────────────────────────────────────────────────── */
+
+function renderList(){
+  const q=document.getElementById('search').value.toLowerCase();
+  const kat=document.getElementById('filter-kat').value;
+  const menyra=document.getElementById('filter-menyra').value;
+  let list=DB.shpenzime.filter(x=>{
+    if(kat&&x.kategoria!==kat) return false;
+    if(menyra&&(x.menyra_pages||'dore')!==menyra) return false;
+    if(!DP.matches(x.data)) return false;
+    if(q&&!(x.pershkrim||'').toLowerCase().includes(q)&&!(x.kategoria||'').toLowerCase().includes(q)) return false;
+    return true;
+  });
+  const sort=document.getElementById('filter-sort').value;
+  if(sort==='date-desc') list.sort((a,b)=>new Date(b.data)-new Date(a.data));
+  else if(sort==='date-asc') list.sort((a,b)=>new Date(a.data)-new Date(b.data));
+  else if(sort==='val-desc') list.sort((a,b)=>(b.shuma||0)-(a.shuma||0));
+  else if(sort==='val-asc')  list.sort((a,b)=>(a.shuma||0)-(b.shuma||0));
+
+  const total=list.reduce((s,x)=>s+(x.shuma||0),0);
+  document.getElementById('list-total').textContent=`${list.length} rekorde · ${fmtL(total)}`;
+
+  const wrap=document.getElementById('list-wrap');
+  if(!list.length){
+    wrap.innerHTML='<div class="empty"><i class="ri-wallet-3-line"></i>Nuk ka shpenzime.<br>Shtyp <strong>Shpenzim i Ri</strong> për të filluar.</div>';
+    return;
+  }
+  const rows=list.map(x=>{
+    const color=KAT_COLORS[x.kategoria]||'#888';
+    const icon=KAT_ICONS[x.kategoria]||'ri-more-line';
+    return `<tr>
+      <td class="td-nr">${x.data?fmtDate(x.data):'—'}</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div style="width:28px;height:28px;border-radius:7px;background:${color}18;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <i class="${icon}" style="font-size:14px;color:${color}"></i>
+          </div>
+          <div>
+            <div class="td-name">${esc(x.pershkrim||'Pa përshkrim')}</div>
+            <div class="td-sub">${esc(x.kategoria||'Pa kategori')}</div>
+          </div>
+        </div>
+      </td>
+      <td class="td-amt" style="color:var(--accent)">${fmtL(x.shuma)}</td>
+      <td><span class="badge badge-menyra">${(x.menyra_pages||'dore')==='banke'?'<i class="ri-bank-line"></i> Bankë':'<i class="ri-hand-coin-line"></i> Dorë'}</span></td>
+      <td>${x.notes?`<span style="font-size:11px;color:var(--muted)">${esc(x.notes)}</span>`:''}</td>
+      <td>
+        <div style="display:flex;gap:6px;justify-content:flex-end;">
+          <button class="btn-icon" onclick="openEdit('${x.id}')"><i class="ri-edit-line"></i></button>
+          <button class="btn-icon danger" onclick="askDel('${x.id}')"><i class="ri-delete-bin-line"></i></button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+  wrap.innerHTML=`<table>
+    <thead><tr><th>Data</th><th>Përshkrimi / Kategoria</th><th>Shuma</th><th>Mënyra</th><th>Shënime</th><th></th></tr></thead>
+    <tbody>${rows}</tbody>
+  </table>`;
+}
+
+/* Delete */
+function askDel(id){ deleteId=id; document.getElementById('conf-bd').classList.add('open'); }
+function closeConf(){ document.getElementById('conf-bd').classList.remove('open'); deleteId=null; }
+function confirmDel(){
+  DB.shpenzime=DB.shpenzime.filter(x=>x.id!==deleteId);
+  closeConf(); toast('Shpenzimi u fshi.'); renderStats(); renderList();
+}
+
+/* Close dropdowns on outside click */
+document.addEventListener('click',e=>{
+  if(!e.target.closest('.ac-wrap')) document.querySelectorAll('.ac-dd.open').forEach(d=>d.classList.remove('open'));
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){ closeModal(); closeConf(); }
+  if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){
+    if(document.getElementById('modal-bd').classList.contains('open')) saveShpenzim();
+  }
+});
+
+DP.onchange = renderList;
+renderStats();
+renderList();
+</script>
+</body>
+</html>

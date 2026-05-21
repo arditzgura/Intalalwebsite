@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PASH — Zërat</title>
+<link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="pash.css">
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-badge"><i class="ri-line-chart-fill"></i></div>
+    <div class="logo-text">PASH<small>Pasqyra Financiare</small></div>
+  </div>
+  <nav class="sidebar-nav">
+    <a class="nav-item" href="index.html"><i class="ri-dashboard-2-line"></i>Paneli</a>
+    <a class="nav-item" href="shpenzime.html"><i class="ri-wallet-3-line"></i>Shpenzime</a>
+    <a class="nav-item" href="blerjet.html"><i class="ri-shopping-bag-line"></i>Blerjet</a>
+    <a class="nav-item" href="furnitoret.html"><i class="ri-user-2-line"></i>Furnitorët</a>
+    <a class="nav-item active" href="zerat.html"><i class="ri-price-tag-3-line"></i>Zërat</a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="sf-avatar">P</div>
+    <div><span class="sf-name">PASH</span><span class="sf-label">Sistemi</span></div>
+  </div>
+</aside>
+
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-user">
+      <div class="topbar-label">SEKSIONI</div>
+      <div class="topbar-name">Zërat e Blerjes</div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="list-head">
+      <div>
+        <div class="page-title">Zërat</div>
+        <div class="page-sub">Regjistro materialet dhe artikujt e blerjes (lëndë e parë, aksesore)</div>
+      </div>
+      <button class="btn-primary" onclick="openModal()"><i class="ri-add-line"></i> Zër i Ri</button>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
+      <div class="search-wrap">
+        <i class="ri-search-line"></i>
+        <input class="search-input" id="search" placeholder="Kërko zërin..." oninput="renderList()" style="width:240px">
+      </div>
+      <select id="filter-kat" onchange="renderList()" style="background:var(--white);border:0.5px solid var(--border);border-radius:7px;padding:8px 12px;font-family:'Switzer',sans-serif;font-size:12px;outline:none;">
+        <option value="">Të gjitha kategoritë</option>
+        <option value="Lëndë e Parë">Lëndë e Parë</option>
+        <option value="Aksesore">Aksesore</option>
+        <option value="Tjetër">Tjetër</option>
+      </select>
+      <span id="list-count" style="font-size:12px;color:var(--muted);font-weight:500;"></span>
+      <div class="view-toggle" style="margin-left:auto">
+        <button class="vt-btn" id="vt-grid" onclick="setView('grid')" title="Rrjet"><i class="ri-layout-grid-line"></i></button>
+        <button class="vt-btn active" id="vt-row" onclick="setView('row')" title="Rreshta"><i class="ri-list-check"></i></button>
+      </div>
+    </div>
+
+    <div id="list-wrap"></div>
+  </div>
+</div>
+
+<!-- ── Add/Edit Modal ────────────────────────────────────────── -->
+<div class="modal-backdrop" id="modal-bd" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="modal-title">Zër i Ri</h2>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label>Emri i Zërit *</label>
+        <input type="text" id="f-emri" placeholder="p.sh. Pambuk 100%, Ziper Nr.5, Boje e Zezë...">
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Kategoria *</label>
+          <select id="f-kat">
+            <option value="Lëndë e Parë">Lëndë e Parë</option>
+            <option value="Aksesore">Aksesore</option>
+            <option value="Tjetër">Tjetër</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Njësia e Matjes</label>
+          <select id="f-njesia">
+            <option>cope</option><option>kg</option><option>g</option>
+            <option>m</option><option>m²</option><option>litra</option>
+            <option>pako</option><option>set</option><option>orë</option><option>tjetër</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label>Çmimi Standard (L) — opsional</label>
+        <input type="number" id="f-cmimi" min="0" step="0.01" placeholder="0.00">
+      </div>
+      <div class="field">
+        <label>Furnitori Kryesor — opsional</label>
+        <select id="f-furnitori">
+          <option value="">— Asnjë —</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Shënime</label>
+        <textarea id="f-notes" placeholder="Specifikimet, kodi i produktit, ngjyra..."></textarea>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-secondary" onclick="closeModal()">Anulo</button>
+      <button class="btn-primary" onclick="saveZeri()"><i class="ri-save-line"></i> Ruaj</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Confirm delete ────────────────────────────────────────── -->
+<div class="modal-backdrop confirm-modal" id="conf-bd" onclick="if(event.target===this)closeConf()">
+  <div class="modal" style="max-width:360px">
+    <div class="modal-head"><h2>Fshi Zërin</h2><button class="modal-close" onclick="closeConf()">✕</button></div>
+    <div class="confirm-body">Jeni të sigurt? Ky zër do të hiqet nga lista. Blerjet ekzistuese nuk preken.</div>
+    <div class="modal-foot">
+      <button class="btn-secondary" onclick="closeConf()">Anulo</button>
+      <button class="btn-danger" onclick="confirmDel()">Fshi</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+<script src="pash-data.js"></script>
+<script>
+let editId   = null;
+let deleteId = null;
+let viewMode = localStorage.getItem('pash_zer_view') || 'row';
+
+const KAT_ICON  = {'Lëndë e Parë':'ri-drop-line','Aksesore':'ri-tools-line','Tjetër':'ri-price-tag-3-line'};
+const KAT_COLOR = {'Lëndë e Parë':'var(--accent)','Aksesore':'var(--blue)','Tjetër':'var(--orange)'};
+const KAT_DIM   = {'Lëndë e Parë':'var(--accent-dim)','Aksesore':'var(--blue-dim)','Tjetër':'var(--orange-dim)'};
+const KAT_BADGE = {'Lëndë e Parë':'badge-accent','Aksesore':'badge-blue','Tjetër':'badge-orange'};
+
+function setView(v){
+  viewMode = v;
+  localStorage.setItem('pash_zer_view', v);
+  document.getElementById('vt-grid').classList.toggle('active', v==='grid');
+  document.getElementById('vt-row').classList.toggle('active',  v==='row');
+  renderList();
+}
+
+function renderList(){
+  const q   = document.getElementById('search').value.toLowerCase();
+  const kat = document.getElementById('filter-kat').value;
+  let list  = DB.zerat.filter(z => {
+    if(kat && z.kategoria !== kat) return false;
+    if(q && !z.emri.toLowerCase().includes(q)) return false;
+    return true;
+  }).sort((a,b) => a.emri.localeCompare(b.emri));
+
+  document.getElementById('list-count').textContent = list.length + ' zëra';
+  const wrap = document.getElementById('list-wrap');
+
+  if(!list.length){
+    wrap.innerHTML = '<div class="empty"><i class="ri-price-tag-3-line"></i>Nuk ka zëra.<br>Shtyp <strong>Zër i Ri</strong> për të shtuar.</div>';
+    return;
+  }
+
+  if(viewMode === 'grid'){
+    wrap.innerHTML = '<div class="list-grid">' + list.map(z => {
+      const total   = zeriTotal(z.id);
+      const nrBlerje = DB.blerjet.filter(b => (b.items||[]).some(it => it.zeri_id===z.id)).length;
+      const icon    = KAT_ICON[z.kategoria]  || 'ri-price-tag-3-line';
+      const color   = KAT_COLOR[z.kategoria] || 'var(--muted)';
+      const dim     = KAT_DIM[z.kategoria]   || 'var(--surface)';
+      return `<div class="list-card" onclick="openModal('${z.id}')">
+        <div class="lc-top">
+          <div class="lc-avatar" style="background:${dim};color:${color}"><i class="${icon}"></i></div>
+          <div>
+            <div class="lc-name">${esc(z.emri)}</div>
+            <div class="lc-sub">${esc(z.kategoria||'—')} · ${esc(z.njesia||'cope')}</div>
+          </div>
+        </div>
+        <div class="lc-stats">
+          <div><div class="lc-stat-lbl">Vlerë Totale</div><div class="lc-stat-val">${fmtL(total)}</div></div>
+          <div><div class="lc-stat-lbl">Nr. Blerje</div><div class="lc-stat-val">${nrBlerje}</div></div>
+          ${z.cmimi?`<div><div class="lc-stat-lbl">Çmimi Std.</div><div class="lc-stat-val">${fmtL(z.cmimi)}</div></div>`:''}
+        </div>
+      </div>`;
+    }).join('') + '</div>';
+    return;
+  }
+
+  /* ── Row / table view ─────────────────────────────────────── */
+  const rows = list.map(z => {
+    const total    = zeriTotal(z.id);
+    const nrBlerje = DB.blerjet.filter(b => (b.items||[]).some(it => it.zeri_id===z.id)).length;
+    const icon     = KAT_ICON[z.kategoria]  || 'ri-price-tag-3-line';
+    const color    = KAT_COLOR[z.kategoria] || 'var(--muted)';
+    const dim      = KAT_DIM[z.kategoria]   || 'var(--surface)';
+    const badgeCls = KAT_BADGE[z.kategoria] || '';
+    const furn     = z.furnitori_id ? DB.furnitoret.find(f => f.id===z.furnitori_id) : null;
+    return `<tr class="rt-row">
+      <td class="rt-name-cell" onclick="openModal('${z.id}')" title="Edito">
+        <div class="rt-avatar" style="background:${dim};color:${color}"><i class="${icon}"></i></div>
+        <div>
+          <div class="rt-name">${esc(z.emri)}</div>
+          <div class="rt-sub">${furn ? esc(furn.emri) : ''}</div>
+        </div>
+      </td>
+      <td><span class="badge ${badgeCls}" style="font-size:10px">${esc(z.kategoria||'—')}</span></td>
+      <td class="rt-num" style="color:var(--muted)">${esc(z.njesia||'cope')}</td>
+      <td class="rt-num">${z.cmimi ? fmtL(z.cmimi) : '—'}</td>
+      <td class="rt-num">${fmtL(total)}</td>
+      <td class="rt-num">${nrBlerje}</td>
+      <td class="rt-actions">
+        <button class="btn-icon" onclick="openModal('${z.id}')" title="Edito"><i class="ri-edit-line"></i></button>
+        <button class="btn-icon danger" onclick="askDel('${z.id}')" title="Fshi"><i class="ri-delete-bin-line"></i></button>
+      </td>
+    </tr>`;
+  }).join('');
+
+  wrap.innerHTML = `<table class="rt-table">
+    <thead>
+      <tr>
+        <th class="rt-th-name">Zëri</th>
+        <th class="rt-th-num">Kategoria</th>
+        <th class="rt-th-num">Njësia</th>
+        <th class="rt-th-num">Çmimi Std.</th>
+        <th class="rt-th-num">Vlerë Totale</th>
+        <th class="rt-th-num">Nr. Blerje</th>
+        <th style="width:80px"></th>
+      </tr>
+    </thead>
+    <tbody>${rows}</tbody>
+  </table>`;
+}
+
+function populateFurnitorSelect(val=''){
+  const sel = document.getElementById('f-furnitori');
+  sel.innerHTML = '<option value="">— Asnjë —</option>' +
+    DB.furnitoret.map(f => `<option value="${f.id}" ${f.id===val?'selected':''}>${esc(f.emri)}</option>`).join('');
+}
+
+function openModal(id){
+  editId = id || null;
+  populateFurnitorSelect();
+  if(id){
+    const z = DB.zerat.find(x => x.id === id);
+    if(!z) return;
+    document.getElementById('modal-title').textContent = 'Edito Zërin';
+    document.getElementById('f-emri').value   = z.emri      || '';
+    document.getElementById('f-kat').value    = z.kategoria || 'Lëndë e Parë';
+    document.getElementById('f-njesia').value = z.njesia    || 'cope';
+    document.getElementById('f-cmimi').value  = z.cmimi     || '';
+    document.getElementById('f-notes').value  = z.notes     || '';
+    populateFurnitorSelect(z.furnitori_id || '');
+  } else {
+    document.getElementById('modal-title').textContent = 'Zër i Ri';
+    ['f-emri','f-cmimi','f-notes'].forEach(i => document.getElementById(i).value = '');
+    document.getElementById('f-kat').value    = 'Lëndë e Parë';
+    document.getElementById('f-njesia').value = 'cope';
+  }
+  document.getElementById('modal-bd').classList.add('open');
+  setTimeout(() => document.getElementById('f-emri').focus(), 80);
+}
+function closeModal(){ document.getElementById('modal-bd').classList.remove('open'); editId = null; }
+
+function saveZeri(){
+  const emri = document.getElementById('f-emri').value.trim();
+  if(!emri){ toast('⚠ Shkruaj emrin e zërit.'); return; }
+  const obj = {
+    emri,
+    kategoria:    document.getElementById('f-kat').value,
+    njesia:       document.getElementById('f-njesia').value,
+    cmimi:        parseFloat(document.getElementById('f-cmimi').value) || 0,
+    furnitori_id: document.getElementById('f-furnitori').value || null,
+    notes:        document.getElementById('f-notes').value.trim()
+  };
+  let list = DB.zerat;
+  if(editId){
+    const idx = list.findIndex(x => x.id === editId);
+    if(idx >= 0) list[idx] = {...list[idx], ...obj};
+    toast('✓ Zëri u përditësua.');
+  } else {
+    list.push({id: genId(), created: new Date().toISOString(), ...obj});
+    toast('✓ Zëri u shtua.');
+  }
+  DB.zerat = list;
+  closeModal();
+  renderList();
+}
+
+function askDel(id){ deleteId = id; document.getElementById('conf-bd').classList.add('open'); }
+function closeConf(){ document.getElementById('conf-bd').classList.remove('open'); deleteId = null; }
+function confirmDel(){
+  DB.zerat = DB.zerat.filter(x => x.id !== deleteId);
+  closeConf(); toast('Zëri u fshi.'); renderList();
+}
+
+document.addEventListener('keydown', e => { if(e.key === 'Escape'){ closeModal(); closeConf(); } });
+
+renderList();
+</script>
+</body>
+</html>

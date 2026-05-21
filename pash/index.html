@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PASH — Paneli</title>
+<link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="pash.css">
+</head>
+<body>
+
+<!-- ── Sidebar ──────────────────────────────────────────────── -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-badge"><i class="ri-line-chart-fill"></i></div>
+    <div class="logo-text">PASH<small>Pasqyra Financiare</small></div>
+  </div>
+  <nav class="sidebar-nav">
+    <a class="nav-item active" href="index.html"><i class="ri-dashboard-2-line"></i>Paneli</a>
+    <a class="nav-item" href="shpenzime.html"><i class="ri-wallet-3-line"></i>Shpenzime</a>
+    <a class="nav-item" href="blerjet.html"><i class="ri-shopping-bag-line"></i>Blerjet</a>
+    <a class="nav-item" href="furnitoret.html"><i class="ri-user-2-line"></i>Furnitorët</a>
+    <a class="nav-item" href="zerat.html"><i class="ri-price-tag-3-line"></i>Zërat</a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="sf-avatar" id="sf-av">A</div>
+    <div><span class="sf-name" id="sf-name">PASH</span><span class="sf-label">Sistemi</span></div>
+  </div>
+</aside>
+
+<!-- ── Main ──────────────────────────────────────────────────── -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-user">
+      <div class="topbar-label">I KYÇUR SI</div>
+      <div class="topbar-name" id="tb-name">—</div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="page-title">Paneli</div>
+    <div class="page-sub">Pasqyra e Blerjes dhe Shpenzimeve</div>
+
+    <!-- Stats banner -->
+    <div class="stats-banner">
+      <div class="banner-row">
+        <div class="banner-icon-box"><i class="ri-line-chart-fill"></i></div>
+        <div>
+          <div class="banner-heading">PASQYRA E AKUMULUAR</div>
+          <div class="banner-heading"><small>QË NGA FILLIMI I PËRDORIMIT TË APLIKACIONIT</small></div>
+        </div>
+      </div>
+      <div class="banner-grid">
+        <div class="banner-card">
+          <div class="banner-card-lbl">Blerje Totale (LEK)</div>
+          <div class="banner-card-val white" id="bn-blerje">0</div>
+          <div class="banner-card-sub" id="bn-blerje-sub">0 blerje totale</div>
+        </div>
+        <div class="banner-card">
+          <div class="banner-card-lbl">Shpenzime Totale (LEK)</div>
+          <div class="banner-card-val green" id="bn-shpenzime">0</div>
+          <div class="banner-card-sub">operative + blerje</div>
+        </div>
+        <div class="banner-card">
+          <div class="banner-card-lbl">Paguar Gjithsej (LEK)</div>
+          <div class="banner-card-val orange" id="bn-paguar">0</div>
+          <div class="banner-card-sub">vlera e paguar deri tani</div>
+        </div>
+        <div class="banner-card">
+          <div class="banner-card-lbl">Detyrime të Mbetura</div>
+          <div class="banner-card-val red" id="bn-detyrime">0</div>
+          <div class="banner-card-sub">borxhi aktual jashtë</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Period filter -->
+    <div class="period-row">
+      <div class="period-icon-box"><i class="ri-filter-3-line"></i></div>
+      <div class="period-tabs">
+        <button class="period-tab" data-p="all" onclick="setPeriod(this,'all')">Gjithë kohës</button>
+        <button class="period-tab" data-p="today" onclick="setPeriod(this,'today')">Ditore</button>
+        <button class="period-tab active" data-p="month" onclick="setPeriod(this,'month')">Muaji</button>
+        <button class="period-tab" data-p="year" onclick="setPeriod(this,'year')">Viti</button>
+      </div>
+      <div class="period-right">
+        <div class="period-info">
+          <small>Periudha operative</small>
+          <strong id="period-label">—</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- Period cards -->
+    <div class="period-cards">
+      <div class="period-card">
+        <div class="pc-header"><div class="pc-icon blue"><i class="ri-shopping-bag-line"></i></div><span class="pc-label">Blerje Periudhës</span></div>
+        <div class="pc-val" id="pc-blerje">0 L</div>
+      </div>
+      <div class="period-card">
+        <div class="pc-header"><div class="pc-icon red"><i class="ri-wallet-3-line"></i></div><span class="pc-label">Shpenzime Operative</span></div>
+        <div class="pc-val red" id="pc-shpenzime">0 L</div>
+      </div>
+      <div class="period-card">
+        <div class="pc-header"><div class="pc-icon green"><i class="ri-checkbox-circle-line"></i></div><span class="pc-label">Paguar Periudhës</span></div>
+        <div class="pc-val green" id="pc-paguar">0 L</div>
+      </div>
+      <div class="period-card">
+        <div class="pc-header"><div class="pc-icon orange"><i class="ri-time-line"></i></div><span class="pc-label">Pa Paguar</span></div>
+        <div class="pc-val orange" id="pc-pa-paguar">0 L</div>
+      </div>
+    </div>
+
+    <!-- Bottom grid -->
+    <div class="bottom-grid">
+      <!-- Recent purchases -->
+      <div class="card">
+        <div class="card-head">
+          <span class="card-title">Blerjet e Fundit të Periudhës</span>
+          <span class="count-badge" id="tbl-count">0 dokumente</span>
+        </div>
+        <div id="tbl-body"></div>
+      </div>
+
+      <!-- Analysis -->
+      <div class="analysis-card">
+        <div class="analysis-title"><div class="at-icon"><i class="ri-bar-chart-grouped-line"></i></div>ANALIZA E SHPEJTË</div>
+        <div id="analysis-body">
+          <p style="font-size:12px;color:var(--muted)">Nuk ka të dhëna ende.</p>
+        </div>
+        <div class="analysis-note" id="analysis-note"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script src="pash-data.js"></script>
+<script>
+/* ── Period state ───────────────────────────────────────────── */
+let activePeriod = 'month';
+const now = new Date();
+
+function setPeriod(el, p){
+  activePeriod = p;
+  document.querySelectorAll('.period-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  renderDashboard();
+}
+
+function inPeriod(iso){
+  const d = new Date(iso);
+  if(activePeriod === 'all')   return true;
+  if(activePeriod === 'today') return d.toDateString() === now.toDateString();
+  if(activePeriod === 'month') return d.getMonth()===now.getMonth() && d.getFullYear()===now.getFullYear();
+  if(activePeriod === 'year')  return d.getFullYear() === now.getFullYear();
+  return true;
+}
+
+function periodLabelStr(){
+  if(activePeriod==='all')   return 'Gjithë kohës';
+  if(activePeriod==='today') return fmtDate(todayISO());
+  if(activePeriod==='month') return monthLabel(now.getFullYear(), now.getMonth());
+  if(activePeriod==='year')  return String(now.getFullYear());
+  return '';
+}
+
+/* ── Dashboard render ───────────────────────────────────────── */
+function renderDashboard(){
+  const blerjet   = DB.blerjet;
+  const shpenzime = DB.shpenzime;
+
+  /* Banner — all time */
+  const allBlerje  = blerjet.reduce((s,b)=>s+(b.totali||0),0);
+  const allSh      = shpenzime.reduce((s,x)=>s+(x.shuma||0),0);
+  const allPaguar  = blerjet.filter(b=>b.statusi==='paguar').reduce((s,b)=>s+(b.totali||0),0);
+  const allDetyrim = blerjet.filter(b=>b.statusi==='pa_paguar').reduce((s,b)=>s+(b.totali||0),0);
+
+  document.getElementById('bn-blerje').textContent     = fmtL(allBlerje);
+  document.getElementById('bn-blerje-sub').textContent = blerjet.length + ' blerje totale';
+  document.getElementById('bn-shpenzime').textContent  = fmtL(allBlerje + allSh);
+  document.getElementById('bn-paguar').textContent     = fmtL(allPaguar);
+  document.getElementById('bn-detyrime').textContent   = fmtL(allDetyrim);
+
+  /* Period label */
+  document.getElementById('period-label').textContent = periodLabelStr();
+
+  /* Period cards */
+  const pb  = blerjet.filter(b=>inPeriod(b.data));
+  const psh = shpenzime.filter(x=>inPeriod(x.data));
+  const pbTotal  = pb.reduce((s,b)=>s+(b.totali||0),0);
+  const pshTotal = psh.reduce((s,x)=>s+(x.shuma||0),0);
+  const ppaguar  = pb.filter(b=>b.statusi==='paguar').reduce((s,b)=>s+(b.totali||0),0);
+  const ppapag   = pb.filter(b=>b.statusi==='pa_paguar').reduce((s,b)=>s+(b.totali||0),0);
+
+  document.getElementById('pc-blerje').textContent     = fmtL(pbTotal);
+  document.getElementById('pc-shpenzime').textContent  = fmtL(pshTotal);
+  document.getElementById('pc-paguar').textContent     = fmtL(ppaguar);
+  document.getElementById('pc-pa-paguar').textContent  = fmtL(ppapag);
+
+  /* Table */
+  const tbl = document.getElementById('tbl-body');
+  const sorted = [...pb].sort((a,b)=>new Date(b.data)-new Date(a.data)).slice(0,12);
+  document.getElementById('tbl-count').textContent = pb.length + ' dokumente';
+
+  if(!sorted.length){
+    tbl.innerHTML = '<div class="empty"><i class="ri-shopping-bag-line"></i>Nuk ka blerje për këtë periudhë.</div>';
+  } else {
+    const furnitoret = DB.furnitoret;
+    const rows = sorted.map(b=>{
+      const f = furnitoret.find(x=>x.id===b.furnitori_id);
+      const fname = f ? f.emri : (b.furnitor_emri||'—');
+      const stCls = b.statusi==='paguar' ? 'paguar' : 'pa-paguar';
+      const stLbl = b.statusi==='paguar' ? 'E Paguar' : 'Pa Paguar';
+      return `<tr onclick="location.href='blerjet.html'">
+        <td class="td-nr">${b.nr||'—'}</td>
+        <td class="td-name">${esc(fname)}</td>
+        <td>${fmtL(b.totali)}</td>
+        <td><span class="badge ${stCls}">${stLbl}</span></td>
+      </tr>`;
+    }).join('');
+    tbl.innerHTML=`<table><thead><tr><th>Nr.</th><th>Furnitori</th><th>Totali</th><th>Statusi</th></tr></thead><tbody>${rows}</tbody></table>`;
+  }
+
+  /* Analysis */
+  renderAnalysis(pb, pshTotal, pbTotal);
+}
+
+function renderAnalysis(pb, pshTotal, pbTotal){
+  const total = pbTotal + pshTotal;
+  const paguar = pb.filter(b=>b.statusi==='paguar').reduce((s,b)=>s+(b.totali||0),0);
+
+  /* Category breakdown */
+  const bycat = {};
+  pb.forEach(b=>(b.items||[]).forEach(it=>{
+    const cat = it.kategoria || 'Blerje';
+    bycat[cat] = (bycat[cat]||0) + (it.totali||0);
+  }));
+  const entries = Object.entries(bycat).sort((a,b)=>b[1]-a[1]);
+  const catMax = entries.length ? entries[0][1] : 1;
+
+  const colors = {'Lëndë e Parë':'#c8003e','Aksesore':'#4361ee','Tjetër':'#f5a623'};
+
+  let html = '';
+  if(total > 0){
+    const pctPaguar = Math.round((paguar / (pbTotal||1)) * 100);
+    html += `<div class="analysis-row">
+      <div class="ar-head"><span>Pjesa e paguar (periudhë)</span></div>
+      <div class="ar-track"><div class="ar-fill" style="width:${pctPaguar}%;background:var(--blue)"></div></div>
+      <div class="ar-val" style="color:var(--blue)">${pctPaguar}%</div>
+    </div>`;
+  }
+
+  entries.slice(0,4).forEach(([cat,val])=>{
+    const pct = Math.round((val/catMax)*100);
+    const col = colors[cat]||'#6b7280';
+    html += `<div class="analysis-row">
+      <div class="ar-head"><span>${esc(cat)}</span></div>
+      <div class="ar-track"><div class="ar-fill" style="width:${pct}%;background:${col}"></div></div>
+      <div class="ar-val">${fmtL(val)}</div>
+    </div>`;
+  });
+
+  if(!html) html = '<p style="font-size:12px;color:var(--muted)">Nuk ka të dhëna për periudhën.</p>';
+  document.getElementById('analysis-body').innerHTML = html;
+
+  const note = total > 0
+    ? `* Totali i periudhës: <strong>${fmtL(total)}</strong> (blerje + operative)`
+    : '* Shto blerje dhe shpenzime për të parë analizën.';
+  document.getElementById('analysis-note').innerHTML = note;
+}
+
+renderDashboard();
+</script>
+</body>
+</html>

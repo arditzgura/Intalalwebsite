@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PASH — Furnitorët</title>
+<link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="pash.css">
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-badge"><i class="ri-line-chart-fill"></i></div>
+    <div class="logo-text">PASH<small>Pasqyra Financiare</small></div>
+  </div>
+  <nav class="sidebar-nav">
+    <a class="nav-item" href="index.html"><i class="ri-dashboard-2-line"></i>Paneli</a>
+    <a class="nav-item" href="shpenzime.html"><i class="ri-wallet-3-line"></i>Shpenzime</a>
+    <a class="nav-item" href="blerjet.html"><i class="ri-shopping-bag-line"></i>Blerjet</a>
+    <a class="nav-item active" href="furnitoret.html"><i class="ri-user-2-line"></i>Furnitorët</a>
+    <a class="nav-item" href="zerat.html"><i class="ri-price-tag-3-line"></i>Zërat</a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="sf-avatar">P</div>
+    <div><span class="sf-name">PASH</span><span class="sf-label">Sistemi</span></div>
+  </div>
+</aside>
+
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-user">
+      <div class="topbar-label">SEKSIONI</div>
+      <div class="topbar-name">Furnitorët</div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="list-head">
+      <div>
+        <div class="page-title">Furnitorët</div>
+        <div class="page-sub">Regjistro furnitorët dhe shiko historikun e blerjeve me secilin</div>
+      </div>
+      <button class="btn-primary" onclick="openModal()"><i class="ri-add-line"></i> Furnitor i Ri</button>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+      <div class="search-wrap">
+        <i class="ri-search-line"></i>
+        <input class="search-input" id="search" placeholder="Kërko furnitor..." oninput="renderList()" style="width:240px">
+      </div>
+      <span id="list-count" style="font-size:12px;color:var(--muted);font-weight:500;"></span>
+      <div class="view-toggle" style="margin-left:auto">
+        <button class="vt-btn" id="vt-grid" onclick="setView('grid')" title="Rrjet"><i class="ri-layout-grid-line"></i></button>
+        <button class="vt-btn active" id="vt-row" onclick="setView('row')" title="Rreshta"><i class="ri-list-check"></i></button>
+      </div>
+    </div>
+
+    <div id="list-wrap"></div>
+  </div>
+</div>
+
+<!-- ── Add/Edit Modal ────────────────────────────────────────── -->
+<div class="modal-backdrop" id="modal-bd" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="modal-title">Furnitor i Ri</h2>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label>Emri i Furnitorit *</label>
+        <input type="text" id="f-emri" placeholder="p.sh. Tekstile Tirana SH.P.K." required>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Telefon</label>
+          <input type="tel" id="f-tel" placeholder="+355 6X XXX XXXX">
+        </div>
+        <div class="field">
+          <label>Email</label>
+          <input type="email" id="f-email" placeholder="info@furnitori.al">
+        </div>
+      </div>
+      <div class="field">
+        <label>Adresa</label>
+        <input type="text" id="f-adresa" placeholder="Rruga, Qyteti...">
+      </div>
+      <div class="field">
+        <label>NIPT / Nr. Biznesit</label>
+        <input type="text" id="f-nipt" placeholder="L12345678A">
+      </div>
+      <div class="field">
+        <label>Shënime</label>
+        <textarea id="f-notes" placeholder="Kushte pagese, terma kontrate..."></textarea>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-secondary" onclick="closeModal()">Anulo</button>
+      <button class="btn-primary" onclick="saveFurnitor()"><i class="ri-save-line"></i> Ruaj</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Confirm delete ────────────────────────────────────────── -->
+<div class="modal-backdrop confirm-modal" id="conf-bd" onclick="if(event.target===this)closeConf()">
+  <div class="modal" style="max-width:360px">
+    <div class="modal-head"><h2>Fshi Furnitorin</h2><button class="modal-close" onclick="closeConf()">✕</button></div>
+    <div class="confirm-body">Jeni të sigurt? Të gjitha blerjet e lidhura do të humbasin lidhjen me këtë furnitor.</div>
+    <div class="modal-foot">
+      <button class="btn-secondary" onclick="closeConf()">Anulo</button>
+      <button class="btn-danger" onclick="confirmDel()">Fshi</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+<script src="pash-data.js"></script>
+<script>
+let editId   = null;
+let deleteId = null;
+let viewMode = localStorage.getItem('pash_furn_view')||'row';
+
+function setView(v){
+  viewMode = v;
+  localStorage.setItem('pash_furn_view', v);
+  document.getElementById('vt-grid').classList.toggle('active', v==='grid');
+  document.getElementById('vt-row').classList.toggle('active',  v==='row');
+  renderList();
+}
+
+function renderList(){
+  const q = document.getElementById('search').value.toLowerCase();
+  let list = DB.furnitoret.filter(f => !q || f.emri.toLowerCase().includes(q));
+  list = list.sort((a,b) => a.emri.localeCompare(b.emri));
+
+  document.getElementById('list-count').textContent = list.length + ' furnitorë';
+  const wrap = document.getElementById('list-wrap');
+
+  if(!list.length){
+    wrap.innerHTML = '<div class="empty"><i class="ri-user-2-line"></i>Nuk ka furnitorë.<br>Shtyp <strong>Furnitor i Ri</strong> për të shtuar.</div>';
+    return;
+  }
+
+  if(viewMode === 'grid'){
+    wrap.innerHTML = '<div class="list-grid">' + list.map(f => {
+      const total    = furnitorTotal(f.id);
+      const paguar   = furnitorPaguar(f.id);
+      const papaguar = total - paguar;
+      const nrBlerje = DB.blerjet.filter(b => b.furnitori_id === f.id).length;
+      return `<div class="list-card" onclick="openModal('${f.id}')">
+        <div class="lc-top">
+          <div class="lc-avatar">${initials(f.emri)}</div>
+          <div>
+            <div class="lc-name">${esc(f.emri)}</div>
+            <div class="lc-sub">${f.tel?'<i class="ri-phone-line"></i> '+esc(f.tel):''}${f.nipt?' · '+esc(f.nipt):''}</div>
+          </div>
+        </div>
+        <div class="lc-stats">
+          <div><div class="lc-stat-lbl">Blerje Totale</div><div class="lc-stat-val">${fmtL(total)}</div></div>
+          <div><div class="lc-stat-lbl">Pa Paguar</div><div class="lc-stat-val ${papaguar>0?'red':''}">${fmtL(papaguar)}</div></div>
+          <div><div class="lc-stat-lbl">Nr. Blerje</div><div class="lc-stat-val">${nrBlerje}</div></div>
+        </div>
+      </div>`;
+    }).join('') + '</div>';
+    return;
+  }
+
+  /* ── Row / table view ─────────────────────────────────────── */
+  const rows = list.map(f => {
+    const total    = furnitorTotal(f.id);
+    const paguar   = furnitorPaguar(f.id);
+    const papaguar = total - paguar;
+    const nrBlerje = DB.blerjet.filter(b => b.furnitori_id === f.id).length;
+    return `<tr class="rt-row">
+      <td class="rt-name-cell" onclick="openModal('${f.id}')" title="Edito">
+        <div class="rt-avatar">${initials(f.emri)}</div>
+        <div>
+          <div class="rt-name">${esc(f.emri)}</div>
+          <div class="rt-sub">${f.tel ? esc(f.tel) : ''}${f.nipt ? (f.tel?' · ':'')+esc(f.nipt) : ''}</div>
+        </div>
+      </td>
+      <td class="rt-num">${fmtL(total)}</td>
+      <td class="rt-num ${papaguar>0?'red':''}">${fmtL(papaguar)}</td>
+      <td class="rt-num green">${fmtL(paguar)}</td>
+      <td class="rt-num">${nrBlerje}</td>
+      <td class="rt-actions">
+        <button class="btn-icon" onclick="openModal('${f.id}')" title="Edito"><i class="ri-edit-line"></i></button>
+        <button class="btn-icon danger" onclick="askDel('${f.id}')" title="Fshi"><i class="ri-delete-bin-line"></i></button>
+      </td>
+    </tr>`;
+  }).join('');
+
+  wrap.innerHTML = `<table class="rt-table">
+    <thead>
+      <tr>
+        <th class="rt-th-name">Furnitori</th>
+        <th class="rt-th-num">Blerje Totale</th>
+        <th class="rt-th-num">Pa Paguar</th>
+        <th class="rt-th-num">Paguar</th>
+        <th class="rt-th-num">Nr. Blerje</th>
+        <th style="width:80px"></th>
+      </tr>
+    </thead>
+    <tbody>${rows}</tbody>
+  </table>`;
+}
+
+function openModal(id){
+  editId = id || null;
+  if(id){
+    const f = DB.furnitoret.find(x => x.id === id);
+    if(!f) return;
+    document.getElementById('modal-title').textContent = 'Edito Furnitorin';
+    document.getElementById('f-emri').value   = f.emri   || '';
+    document.getElementById('f-tel').value    = f.tel    || '';
+    document.getElementById('f-email').value  = f.email  || '';
+    document.getElementById('f-adresa').value = f.adresa || '';
+    document.getElementById('f-nipt').value   = f.nipt   || '';
+    document.getElementById('f-notes').value  = f.notes  || '';
+  } else {
+    document.getElementById('modal-title').textContent = 'Furnitor i Ri';
+    ['f-emri','f-tel','f-email','f-adresa','f-nipt','f-notes'].forEach(i => document.getElementById(i).value = '');
+  }
+  document.getElementById('modal-bd').classList.add('open');
+  setTimeout(() => document.getElementById('f-emri').focus(), 80);
+}
+function closeModal(){ document.getElementById('modal-bd').classList.remove('open'); editId = null; }
+
+function saveFurnitor(){
+  const emri = document.getElementById('f-emri').value.trim();
+  if(!emri){ toast('⚠ Shkruaj emrin e furnitorit.'); return; }
+  const obj = {
+    emri,
+    tel:    document.getElementById('f-tel').value.trim(),
+    email:  document.getElementById('f-email').value.trim(),
+    adresa: document.getElementById('f-adresa').value.trim(),
+    nipt:   document.getElementById('f-nipt').value.trim(),
+    notes:  document.getElementById('f-notes').value.trim()
+  };
+  let list = DB.furnitoret;
+  if(editId){
+    const idx = list.findIndex(x => x.id === editId);
+    if(idx >= 0) list[idx] = {...list[idx], ...obj};
+    toast('✓ Furnitori u përditësua.');
+  } else {
+    list.push({id: genId(), created: new Date().toISOString(), ...obj});
+    toast('✓ Furnitori u shtua.');
+  }
+  DB.furnitoret = list;
+  closeModal();
+  renderList();
+}
+
+function askDel(id){ deleteId = id; document.getElementById('conf-bd').classList.add('open'); }
+function closeConf(){ document.getElementById('conf-bd').classList.remove('open'); deleteId = null; }
+function confirmDel(){
+  DB.furnitoret = DB.furnitoret.filter(x => x.id !== deleteId);
+  closeConf(); toast('Furnitori u fshi.'); renderList();
+}
+
+document.addEventListener('keydown', e => { if(e.key === 'Escape'){ closeModal(); closeConf(); } });
+
+renderList();
+</script>
+</body>
+</html>
