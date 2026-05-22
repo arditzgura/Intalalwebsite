@@ -74,12 +74,6 @@
           </div>
         </div>
       </div>
-      <select id="filter-sort" onchange="renderList()" style="background:var(--white);border:0.5px solid var(--border);border-radius:7px;padding:8px 12px;font-family:'Switzer',sans-serif;font-size:12px;outline:none;">
-        <option value="date-desc">Data ↓ (i ri)</option>
-        <option value="date-asc">Data ↑ (i vjetër)</option>
-        <option value="val-desc">Vlera ↓ (më e madhe)</option>
-        <option value="val-asc">Vlera ↑ (më e vogël)</option>
-      </select>
       <span id="list-total" style="margin-left:auto;font-size:12px;font-weight:600;color:var(--muted);"></span>
     </div>
 
@@ -240,6 +234,14 @@ let deleteId    = null;
 let viewId      = null;
 let payStatus   = 'paguar';
 let payMenyra   = 'dore';
+let sortCol     = 'data';
+let sortDir     = 'desc';
+
+function setSort(col){
+  if(sortCol===col) sortDir = sortDir==='asc'?'desc':'asc';
+  else { sortCol=col; sortDir=col==='data'?'desc':'asc'; }
+  renderList();
+}
 
 /* Furnitor AC state */
 let acFurnitorId   = null;   // selected id
@@ -722,11 +724,15 @@ function renderList(){
     }
     return true;
   });
-  const sort=document.getElementById('filter-sort').value;
-  if(sort==='date-desc') list.sort((a,b)=>new Date(b.data)-new Date(a.data));
-  else if(sort==='date-asc') list.sort((a,b)=>new Date(a.data)-new Date(b.data));
-  else if(sort==='val-desc') list.sort((a,b)=>(b.totali||0)-(a.totali||0));
-  else if(sort==='val-asc')  list.sort((a,b)=>(a.totali||0)-(b.totali||0));
+  if(sortCol==='furnitor') list.sort((a,b)=>{
+    const fa=furnitoret.find(x=>x.id===a.furnitori_id);
+    const fb=furnitoret.find(x=>x.id===b.furnitori_id);
+    const na=(fa?fa.emri:a.furnitor_emri||'').toLowerCase();
+    const nb=(fb?fb.emri:b.furnitor_emri||'').toLowerCase();
+    return sortDir==='asc'?na.localeCompare(nb):nb.localeCompare(na);
+  });
+  else if(sortCol==='data') list.sort((a,b)=>sortDir==='asc'?new Date(a.data)-new Date(b.data):new Date(b.data)-new Date(a.data));
+  else if(sortCol==='totali') list.sort((a,b)=>sortDir==='asc'?(a.totali||0)-(b.totali||0):(b.totali||0)-(a.totali||0));
 
   const total=list.reduce((s,b)=>s+(b.totali||0),0);
   document.getElementById('list-total').textContent=`${list.length} rekorde · ${fmtL(total)}`;
@@ -758,8 +764,16 @@ function renderList(){
       </td>
     </tr>`;
   }).join('');
+  const si=(col)=>sortCol===col?`<span class="sort-arrow">${sortDir==='asc'?'↑':'↓'}</span>`:'<span class="sort-arrow muted">↕</span>';
   wrap.innerHTML=`<table>
-    <thead><tr><th>Nr.</th><th>Furnitori / Kategoria</th><th>Data</th><th>Totali</th><th>Statusi</th><th></th></tr></thead>
+    <thead><tr>
+      <th>Nr.</th>
+      <th class="th-sort" onclick="setSort('furnitor')">Furnitori / Kategoria ${si('furnitor')}</th>
+      <th class="th-sort" onclick="setSort('data')">Data ${si('data')}</th>
+      <th class="th-sort" onclick="setSort('totali')">Totali ${si('totali')}</th>
+      <th>Statusi</th>
+      <th></th>
+    </tr></thead>
     <tbody>${rows}</tbody>
   </table>`;
 }

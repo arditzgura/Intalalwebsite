@@ -77,12 +77,6 @@
           </div>
         </div>
       </div>
-      <select id="filter-sort" onchange="renderList()" style="background:var(--white);border:0.5px solid var(--border);border-radius:7px;padding:8px 12px;font-family:'Switzer',sans-serif;font-size:12px;outline:none;">
-        <option value="date-desc">Data ↓ (i ri)</option>
-        <option value="date-asc">Data ↑ (i vjetër)</option>
-        <option value="val-desc">Vlera ↓ (më e madhe)</option>
-        <option value="val-asc">Vlera ↑ (më e vogël)</option>
-      </select>
       <span id="list-total" style="margin-left:auto;font-size:12px;font-weight:600;color:var(--muted);"></span>
     </div>
 
@@ -185,6 +179,14 @@
 let editId    = null;
 let deleteId  = null;
 let payMenyra = 'dore';
+let sortCol   = 'data';
+let sortDir   = 'desc';
+
+function setSort(col){
+  if(sortCol===col) sortDir = sortDir==='asc'?'desc':'asc';
+  else { sortCol=col; sortDir=col==='data'?'desc':'asc'; }
+  renderList();
+}
 
 function setMenyra(m){
   payMenyra = m;
@@ -346,11 +348,9 @@ function renderList(){
     if(q&&!(x.pershkrim||'').toLowerCase().includes(q)&&!(x.kategoria||'').toLowerCase().includes(q)) return false;
     return true;
   });
-  const sort=document.getElementById('filter-sort').value;
-  if(sort==='date-desc') list.sort((a,b)=>new Date(b.data)-new Date(a.data));
-  else if(sort==='date-asc') list.sort((a,b)=>new Date(a.data)-new Date(b.data));
-  else if(sort==='val-desc') list.sort((a,b)=>(b.shuma||0)-(a.shuma||0));
-  else if(sort==='val-asc')  list.sort((a,b)=>(a.shuma||0)-(b.shuma||0));
+  if(sortCol==='data')  list.sort((a,b)=>sortDir==='asc'?new Date(a.data)-new Date(b.data):new Date(b.data)-new Date(a.data));
+  else if(sortCol==='pershkrim') list.sort((a,b)=>{const na=(a.pershkrim||'').toLowerCase(),nb=(b.pershkrim||'').toLowerCase();return sortDir==='asc'?na.localeCompare(nb):nb.localeCompare(na);});
+  else if(sortCol==='shuma') list.sort((a,b)=>sortDir==='asc'?(a.shuma||0)-(b.shuma||0):(b.shuma||0)-(a.shuma||0));
 
   const total=list.reduce((s,x)=>s+(x.shuma||0),0);
   document.getElementById('list-total').textContent=`${list.length} rekorde · ${fmtL(total)}`;
@@ -388,7 +388,12 @@ function renderList(){
     </tr>`;
   }).join('');
   wrap.innerHTML=`<table>
-    <thead><tr><th>Data</th><th>Përshkrimi / Kategoria</th><th>Shuma</th><th>Mënyra</th><th>Shënime</th><th></th></tr></thead>
+    <thead><tr>
+      <th class="th-sort" onclick="setSort('data')">Data ${sortCol==='data'?`<span class="sort-arrow">${sortDir==='asc'?'↑':'↓'}</span>`:'<span class="sort-arrow muted">↕</span>'}</th>
+      <th class="th-sort" onclick="setSort('pershkrim')">Përshkrimi / Kategoria ${sortCol==='pershkrim'?`<span class="sort-arrow">${sortDir==='asc'?'↑':'↓'}</span>`:'<span class="sort-arrow muted">↕</span>'}</th>
+      <th class="th-sort" onclick="setSort('shuma')">Shuma ${sortCol==='shuma'?`<span class="sort-arrow">${sortDir==='asc'?'↑':'↓'}</span>`:'<span class="sort-arrow muted">↕</span>'}</th>
+      <th>Mënyra</th><th>Shënime</th><th></th>
+    </tr></thead>
     <tbody>${rows}</tbody>
   </table>`;
 }
