@@ -262,39 +262,34 @@ function openView(fid){
     return;
   }
 
+  const TH = `style="text-align:left;padding:7px 10px;font-size:10px;letter-spacing:1px;color:var(--muted);font-weight:600;text-transform:uppercase;border-bottom:1px solid var(--border)"`;
+
   const rows = blerjet.map(b=>{
-    const st  = b.statusi==='paguar';
+    const st    = b.statusi==='paguar';
     const items = (b.items||[]).map(it=>esc(it.zeri_emri||'—')).join(', ') || '—';
     return `<tr>
-      <td class="td-nr" style="font-size:12px;">${b.nr||'—'}</td>
-      <td style="font-size:12px;">${b.data?fmtDate(b.data):'—'}</td>
-      <td style="font-size:12px;color:var(--muted);max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${items}</td>
+      <td>
+        <div class="td-name">${items}</div>
+        <div class="td-sub">Blerja #${b.nr||'—'} &nbsp;·&nbsp; ${b.data?fmtDate(b.data):'—'}</div>
+      </td>
       <td class="td-amt" style="color:var(--accent);font-weight:700;">${fmtL(b.totali)}</td>
       <td><span class="badge ${st?'paguar':'pa-paguar'}">${st?'E Paguar':'Pa Paguar'}</span></td>
       <td><span class="badge badge-menyra">${(b.menyra_pages||'dore')==='banke'?'<i class="ri-bank-line"></i> Bankë':'<i class="ri-hand-coin-line"></i> Dorë'}</span></td>
-      <td onclick="event.stopPropagation()">
-        <div style="display:flex;gap:5px;justify-content:flex-end;">
-          <button class="btn-icon" onclick="closeView();location.href='blerjet.html'"><i class="ri-eye-line"></i></button>
-        </div>
-      </td>
     </tr>`;
   }).join('');
 
   document.getElementById('view-body').innerHTML = strip + `
     <table style="width:100%">
       <thead><tr>
-        <th style="text-align:left;padding:7px 10px;font-size:10px;letter-spacing:1px;color:var(--muted);font-weight:600;text-transform:uppercase;border-bottom:1px solid var(--border)">Nr.</th>
-        <th style="text-align:left;padding:7px 10px;font-size:10px;letter-spacing:1px;color:var(--muted);font-weight:600;text-transform:uppercase;border-bottom:1px solid var(--border)">Data</th>
-        <th style="text-align:left;padding:7px 10px;font-size:10px;letter-spacing:1px;color:var(--muted);font-weight:600;text-transform:uppercase;border-bottom:1px solid var(--border)">Zërat</th>
-        <th style="text-align:left;padding:7px 10px;font-size:10px;letter-spacing:1px;color:var(--muted);font-weight:600;text-transform:uppercase;border-bottom:1px solid var(--border)">Totali</th>
-        <th style="text-align:left;padding:7px 10px;font-size:10px;letter-spacing:1px;color:var(--muted);font-weight:600;text-transform:uppercase;border-bottom:1px solid var(--border)">Statusi</th>
-        <th style="text-align:left;padding:7px 10px;font-size:10px;letter-spacing:1px;color:var(--muted);font-weight:600;text-transform:uppercase;border-bottom:1px solid var(--border)">Mënyra</th>
-        <th style="border-bottom:1px solid var(--border)"></th>
+        <th ${TH}>Emërtimi / Data</th>
+        <th ${TH}>Vlera</th>
+        <th ${TH}>Statusi</th>
+        <th ${TH}>Mënyra</th>
       </tr></thead>
       <tbody>${rows}</tbody>
     </table>
     <div class="grand-total" style="margin-top:12px;">
-      <span class="grand-total-lbl">TOTALI (${blerjet.length} blerje)</span>
+      <span class="grand-total-lbl">TOTALI (${blerjet.length} veprime)</span>
       <span class="grand-total-val">${fmtL(total)}</span>
     </div>`;
 
