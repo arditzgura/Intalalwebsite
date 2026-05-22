@@ -81,10 +81,16 @@
     <div class="period-row">
       <div class="period-icon-box"><i class="ri-filter-3-line"></i></div>
       <div class="period-tabs">
-        <button class="period-tab" data-p="all" onclick="setPeriod(this,'all')">Gjithë kohës</button>
+        <button class="period-tab active" data-p="all"   onclick="setPeriod(this,'all')">Gjithë kohës</button>
         <button class="period-tab" data-p="today" onclick="setPeriod(this,'today')">Ditore</button>
-        <button class="period-tab active" data-p="month" onclick="setPeriod(this,'month')">Muaji</button>
-        <button class="period-tab" data-p="year" onclick="setPeriod(this,'year')">Viti</button>
+        <button class="period-tab" data-p="month" onclick="setPeriod(this,'month')">Muaji</button>
+        <button class="period-tab" data-p="year"  onclick="setPeriod(this,'year')">Viti</button>
+      </div>
+      <!-- Mënyra filter -->
+      <div style="display:flex;gap:5px;margin-left:12px;">
+        <button class="period-tab active" id="mf-all"   onclick="setMenyra(this,'')">Të gjitha</button>
+        <button class="period-tab" id="mf-banke" onclick="setMenyra(this,'banke')"><i class="ri-bank-line"></i> Bankë</button>
+        <button class="period-tab" id="mf-dore"  onclick="setMenyra(this,'dore')"><i class="ri-hand-coin-line"></i> Dorë</button>
       </div>
       <div class="period-right">
         <div class="period-info">
@@ -94,23 +100,32 @@
       </div>
     </div>
 
-    <!-- Period cards -->
-    <div class="period-cards">
+    <!-- Period cards — 5 karta -->
+    <div class="period-cards" style="grid-template-columns:repeat(5,1fr);">
       <div class="period-card">
-        <div class="pc-header"><div class="pc-icon blue"><i class="ri-shopping-bag-line"></i></div><span class="pc-label">Blerje Periudhës</span></div>
+        <div class="pc-header"><div class="pc-icon blue"><i class="ri-shopping-bag-line"></i></div><span class="pc-label">Blerjet e Periudhës</span></div>
         <div class="pc-val" id="pc-blerje">0 L</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px;" id="pc-blerje-sub"></div>
       </div>
       <div class="period-card">
-        <div class="pc-header"><div class="pc-icon red"><i class="ri-wallet-3-line"></i></div><span class="pc-label">Shpenzime Operative</span></div>
+        <div class="pc-header"><div class="pc-icon red"><i class="ri-wallet-3-line"></i></div><span class="pc-label">Shpenzimet e Periudhës</span></div>
         <div class="pc-val red" id="pc-shpenzime">0 L</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px;" id="pc-shpenzime-sub"></div>
+      </div>
+      <div class="period-card" style="border:1.5px solid var(--border);">
+        <div class="pc-header"><div class="pc-icon" style="background:#6b21a820"><i class="ri-funds-line" style="color:#7c3aed"></i></div><span class="pc-label">Blerje + Shpenzime</span></div>
+        <div class="pc-val" style="color:#7c3aed" id="pc-total">0 L</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px;" id="pc-total-sub"></div>
       </div>
       <div class="period-card">
-        <div class="pc-header"><div class="pc-icon green"><i class="ri-checkbox-circle-line"></i></div><span class="pc-label">Paguar Periudhës</span></div>
+        <div class="pc-header"><div class="pc-icon green"><i class="ri-checkbox-circle-line"></i></div><span class="pc-label">Paguar</span></div>
         <div class="pc-val green" id="pc-paguar">0 L</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px;" id="pc-paguar-sub"></div>
       </div>
       <div class="period-card">
         <div class="pc-header"><div class="pc-icon orange"><i class="ri-time-line"></i></div><span class="pc-label">Pa Paguar</span></div>
         <div class="pc-val orange" id="pc-pa-paguar">0 L</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px;" id="pc-papaguar-sub"></div>
       </div>
     </div>
 
@@ -141,13 +156,21 @@
 
 <script src="pash-data.js"></script>
 <script>
-/* �"?�"? Period state �"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"? */
-let activePeriod = 'month';
+/* ── Period + Mënyra state ───────────────────────────────────── */
+let activePeriod = 'all';
+let activeMenyra = '';
 const now = new Date();
 
 function setPeriod(el, p){
   activePeriod = p;
-  document.querySelectorAll('.period-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.period-tab[data-p]').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  renderDashboard();
+}
+
+function setMenyra(el, m){
+  activeMenyra = m;
+  ['mf-all','mf-banke','mf-dore'].forEach(id=>document.getElementById(id).classList.remove('active'));
   el.classList.add('active');
   renderDashboard();
 }
@@ -169,16 +192,23 @@ function periodLabelStr(){
   return '';
 }
 
-/* �"?�"? Dashboard render �"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"? */
+/* ── Dashboard render ────────────────────────────────────────── */
+function inMenyra(rec){
+  if(!activeMenyra) return true;
+  return (rec.menyra_pages||'dore') === activeMenyra;
+}
+
 function renderDashboard(){
   const blerjet   = DB.blerjet;
   const shpenzime = DB.shpenzime;
 
-  /* Banner — all time */
+  /* Banner — all time (no menyra filter, totals always) */
   const allBlerje  = blerjet.reduce((s,b)=>s+(b.totali||0),0);
   const allSh      = shpenzime.reduce((s,x)=>s+(x.shuma||0),0);
-  const allPaguar  = blerjet.filter(b=>b.statusi==='paguar').reduce((s,b)=>s+(b.totali||0),0);
-  const allDetyrim = blerjet.filter(b=>b.statusi==='pa_paguar').reduce((s,b)=>s+(b.totali||0),0);
+  const allPaguar  = blerjet.filter(b=>b.statusi==='paguar').reduce((s,b)=>s+(b.totali||0),0)
+                   + shpenzime.filter(x=>x.statusi!=='pa_paguar').reduce((s,x)=>s+(x.shuma||0),0);
+  const allDetyrim = blerjet.filter(b=>b.statusi==='pa_paguar').reduce((s,b)=>s+(b.totali||0),0)
+                   + shpenzime.filter(x=>x.statusi==='pa_paguar').reduce((s,x)=>s+(x.shuma||0),0);
 
   document.getElementById('bn-blerje').textContent     = fmtL(allBlerje);
   document.getElementById('bn-blerje-sub').textContent = blerjet.length + ' blerje totale';
@@ -189,18 +219,34 @@ function renderDashboard(){
   /* Period label */
   document.getElementById('period-label').textContent = periodLabelStr();
 
-  /* Period cards */
-  const pb  = blerjet.filter(b=>inPeriod(b.data));
-  const psh = shpenzime.filter(x=>inPeriod(x.data));
+  /* Filtered lists */
+  const pb  = blerjet.filter(b=>inPeriod(b.data) && inMenyra(b));
+  const psh = shpenzime.filter(x=>inPeriod(x.data) && inMenyra(x));
+
   const pbTotal  = pb.reduce((s,b)=>s+(b.totali||0),0);
   const pshTotal = psh.reduce((s,x)=>s+(x.shuma||0),0);
-  const ppaguar  = pb.filter(b=>b.statusi==='paguar').reduce((s,b)=>s+(b.totali||0),0);
-  const ppapag   = pb.filter(b=>b.statusi==='pa_paguar').reduce((s,b)=>s+(b.totali||0),0);
+  const combined = pbTotal + pshTotal;
 
-  document.getElementById('pc-blerje').textContent     = fmtL(pbTotal);
-  document.getElementById('pc-shpenzime').textContent  = fmtL(pshTotal);
-  document.getElementById('pc-paguar').textContent     = fmtL(ppaguar);
-  document.getElementById('pc-pa-paguar').textContent  = fmtL(ppapag);
+  /* Paguar = blerjet paguar + shpenzime paguar */
+  const ppaguarB  = pb.filter(b=>b.statusi==='paguar').reduce((s,b)=>s+(b.totali||0),0);
+  const ppaguarSh = psh.filter(x=>x.statusi!=='pa_paguar').reduce((s,x)=>s+(x.shuma||0),0);
+  const ppaguar   = ppaguarB + ppaguarSh;
+
+  /* Pa paguar = blerjet pa_paguar + shpenzime pa_paguar */
+  const ppapagB   = pb.filter(b=>b.statusi==='pa_paguar').reduce((s,b)=>s+(b.totali||0),0);
+  const ppapagSh  = psh.filter(x=>x.statusi==='pa_paguar').reduce((s,x)=>s+(x.shuma||0),0);
+  const ppapag    = ppapagB + ppapagSh;
+
+  document.getElementById('pc-blerje').textContent       = fmtL(pbTotal);
+  document.getElementById('pc-blerje-sub').textContent   = pb.length + ' blerje';
+  document.getElementById('pc-shpenzime').textContent    = fmtL(pshTotal);
+  document.getElementById('pc-shpenzime-sub').textContent= psh.length + ' shpenzime';
+  document.getElementById('pc-total').textContent        = fmtL(combined);
+  document.getElementById('pc-total-sub').textContent    = (pb.length+psh.length) + ' veprime gjithsej';
+  document.getElementById('pc-paguar').textContent       = fmtL(ppaguar);
+  document.getElementById('pc-paguar-sub').textContent   = combined>0 ? Math.round(ppaguar/combined*100)+'% e totalit' : '';
+  document.getElementById('pc-pa-paguar').textContent    = fmtL(ppapag);
+  document.getElementById('pc-papaguar-sub').textContent = combined>0 ? Math.round(ppapag/combined*100)+'% e totalit' : '';
 
   /* Table */
   const tbl = document.getElementById('tbl-body');
@@ -216,23 +262,25 @@ function renderDashboard(){
       const fname = f ? f.emri : (b.furnitor_emri||'—');
       const stCls = b.statusi==='paguar' ? 'paguar' : 'pa-paguar';
       const stLbl = b.statusi==='paguar' ? 'E Paguar' : 'Pa Paguar';
+      const mLbl  = (b.menyra_pages||'dore')==='banke'?'<i class="ri-bank-line"></i> Bankë':'<i class="ri-hand-coin-line"></i> Dorë';
       return `<tr onclick="location.href='blerjet.html'">
         <td class="td-nr">${b.nr||'—'}</td>
         <td class="td-name">${esc(fname)}</td>
         <td>${fmtL(b.totali)}</td>
-        <td><span class="badge ${stCls}">${stLbl}</span></td>
+        <td><span class="badge ${stCls}">${stLbl}</span><span class="badge badge-menyra" style="margin-left:4px">${mLbl}</span></td>
       </tr>`;
     }).join('');
-    tbl.innerHTML=`<table><thead><tr><th>Nr.</th><th>Furnitori</th><th>Totali</th><th>Statusi</th></tr></thead><tbody>${rows}</tbody></table>`;
+    tbl.innerHTML=`<table><thead><tr><th>Nr.</th><th>Furnitori</th><th>Totali</th><th>Statusi / Mënyra</th></tr></thead><tbody>${rows}</tbody></table>`;
   }
 
   /* Analysis */
-  renderAnalysis(pb, pshTotal, pbTotal);
+  renderAnalysis(pb, psh, pshTotal, pbTotal);
 }
 
-function renderAnalysis(pb, pshTotal, pbTotal){
+function renderAnalysis(pb, psh, pshTotal, pbTotal){
   const total = pbTotal + pshTotal;
-  const paguar = pb.filter(b=>b.statusi==='paguar').reduce((s,b)=>s+(b.totali||0),0);
+  const paguar = pb.filter(b=>b.statusi==='paguar').reduce((s,b)=>s+(b.totali||0),0)
+               + psh.filter(x=>x.statusi!=='pa_paguar').reduce((s,x)=>s+(x.shuma||0),0);
 
   /* Category breakdown */
   const bycat = {};
