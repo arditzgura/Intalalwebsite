@@ -179,6 +179,20 @@
   </div>
 </div>
 
+<!-- View Modal -->
+<div class="modal-backdrop" id="view-bd" onclick="if(event.target===this)closeView()">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="view-title">Historia</h2>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <button class="btn-secondary" style="padding:6px 12px;font-size:11px;" onclick="editFromView()"><i class="ri-edit-line"></i> Edito</button>
+        <button class="modal-close" onclick="closeView()">&#x2715;</button>
+      </div>
+    </div>
+    <div class="modal-body" id="view-body"></div>
+  </div>
+</div>
+
 <!-- Confirm delete -->
 <div class="modal-backdrop confirm-modal" id="conf-bd" onclick="if(event.target===this)closeConf()">
   <div class="modal" style="max-width:360px">
@@ -382,7 +396,7 @@ function renderList(){
     const color=KAT_COLORS[x.kategoria]||'#888';
     const icon=KAT_ICONS[x.kategoria]||'ri-more-line';
     const st=x.statusi==='paguar'||!x.statusi;
-    return `<tr onclick="openEdit('${x.id}')">
+    return `<tr onclick="openView('${x.id}')" style="cursor:pointer;">
       <td>
         <div style="display:flex;align-items:center;gap:8px;">
           <div style="width:30px;height:30px;border-radius:7px;background:${color}18;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
@@ -424,6 +438,73 @@ function renderList(){
   </table>`;
 }
 
+/* ── View ────────────────────────────────────────────────────── */
+let viewId = null;
+
+function openView(id){
+  const x = DB.shpenzime.find(s=>s.id===id); if(!x) return;
+  viewId = id;
+  const emri = x.pershkrim || 'Pa përshkrim';
+  const color = KAT_COLORS[x.kategoria]||'#888';
+  const icon  = KAT_ICONS[x.kategoria]||'ri-more-line';
+
+  /* All entries with same name (case-insensitive) */
+  const historia = DB.shpenzime
+    .filter(s=>(s.pershkrim||'').toLowerCase()===(emri).toLowerCase())
+    .sort((a,b)=>new Date(b.data)-new Date(a.data));
+
+  const totalHistoria = historia.reduce((s,h)=>s+(h.shuma||0),0);
+
+  const rows = historia.map(h=>{
+    const st = h.statusi==='paguar'||!h.statusi;
+    const isCurrent = h.id===id;
+    return `<tr style="${isCurrent?'background:var(--surface);':''}">
+      <td style="font-size:13px;font-weight:${isCurrent?700:400}">${h.data?fmtDate(h.data):'—'}</td>
+      <td class="td-amt" style="color:var(--accent);font-weight:700">${fmtL(h.shuma)}</td>
+      <td><span class="badge ${st?'paguar':'pa-paguar'}">${st?'E Paguar':'Pa Paguar'}</span></td>
+      <td><span class="badge badge-menyra">${(h.menyra_pages||'dore')==='banke'?'<i class="ri-bank-line"></i> Bankë':'<i class="ri-hand-coin-line"></i> Dorë'}</span></td>
+      <td onclick="event.stopPropagation()">
+        <div style="display:flex;gap:5px;justify-content:flex-end;">
+          <button class="btn-icon" onclick="closeView();openEdit('${h.id}')"><i class="ri-edit-line"></i></button>
+          <button class="btn-icon danger" onclick="closeView();askDel('${h.id}')"><i class="ri-delete-bin-line"></i></button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('view-title').innerHTML = `
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div style="width:34px;height:34px;border-radius:8px;background:${color}20;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <i class="${icon}" style="font-size:16px;color:${color}"></i>
+      </div>
+      <div>
+        <div style="font-size:15px;font-weight:700">${esc(emri)}</div>
+        <div style="font-size:11px;font-weight:400;color:var(--muted);margin-top:1px">${esc(x.kategoria||'Pa kategori')}</div>
+      </div>
+    </div>`;
+
+  document.getElementById('view-body').innerHTML = `
+    <table style="width:100%">
+      <thead><tr>
+        <th style="text-align:left;padding:8px 10px;font-size:10px;letter-spacing:1px;color:var(--muted);font-weight:600;text-transform:uppercase;border-bottom:1px solid var(--border)">Data</th>
+        <th style="text-align:left;padding:8px 10px;font-size:10px;letter-spacing:1px;color:var(--muted);font-weight:600;text-transform:uppercase;border-bottom:1px solid var(--border)">Shuma</th>
+        <th style="text-align:left;padding:8px 10px;font-size:10px;letter-spacing:1px;color:var(--muted);font-weight:600;text-transform:uppercase;border-bottom:1px solid var(--border)">Statusi</th>
+        <th style="text-align:left;padding:8px 10px;font-size:10px;letter-spacing:1px;color:var(--muted);font-weight:600;text-transform:uppercase;border-bottom:1px solid var(--border)">Mënyra</th>
+        <th style="border-bottom:1px solid var(--border)"></th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <div class="grand-total" style="margin-top:12px;">
+      <span class="grand-total-lbl">TOTALI (${historia.length} veprime)</span>
+      <span class="grand-total-val">${fmtL(totalHistoria)}</span>
+    </div>`;
+
+  document.getElementById('view-bd').classList.add('open');
+}
+
+function closeView(){ document.getElementById('view-bd').classList.remove('open'); viewId=null; }
+function editFromView(){ const id=viewId; closeView(); openEdit(id); }
+
 /* Delete */
 function askDel(id){ deleteId=id; document.getElementById('conf-bd').classList.add('open'); }
 function closeConf(){ document.getElementById('conf-bd').classList.remove('open'); deleteId=null; }
@@ -437,7 +518,7 @@ document.addEventListener('click',e=>{
   if(!e.target.closest('.ac-wrap')) document.querySelectorAll('.ac-dd.open').forEach(d=>d.classList.remove('open'));
 });
 document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'){ closeModal(); closeConf(); }
+  if(e.key==='Escape'){ closeModal(); closeView(); closeConf(); }
   if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){
     if(document.getElementById('modal-bd').classList.contains('open')) saveShpenzim();
   }
