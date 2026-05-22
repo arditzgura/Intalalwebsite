@@ -63,7 +63,21 @@
   </div>
 </div>
 
-<!-- �"?�"? Add/Edit Modal �"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"? -->
+<!-- View Modal -->
+<div class="modal-backdrop" id="view-bd" onclick="if(event.target===this)closeView()">
+  <div class="modal wide">
+    <div class="modal-head">
+      <h2 id="view-title">Historia e Blerjeve</h2>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <button class="btn-secondary" style="padding:6px 12px;font-size:11px;" onclick="editFromView()"><i class="ri-edit-line"></i> Edito</button>
+        <button class="modal-close" onclick="closeView()">&#x2715;</button>
+      </div>
+    </div>
+    <div class="modal-body" id="view-body"></div>
+  </div>
+</div>
+
+<!-- Add/Edit Modal -->
 <div class="modal-backdrop" id="modal-bd" onclick="if(event.target===this)closeModal()">
   <div class="modal">
     <div class="modal-head">
@@ -151,7 +165,7 @@ function renderList(){
       const paguar   = furnitorPaguar(f.id);
       const papaguar = total - paguar;
       const nrBlerje = DB.blerjet.filter(b => b.furnitori_id === f.id).length;
-      return `<div class="list-card" onclick="openModal('${f.id}')">
+      return `<div class="list-card" onclick="openView('${f.id}')" style="cursor:pointer;">
         <div class="lc-top">
           <div class="lc-avatar">${initials(f.emri)}</div>
           <div>
@@ -176,7 +190,7 @@ function renderList(){
     const papaguar = total - paguar;
     const nrBlerje = DB.blerjet.filter(b => b.furnitori_id === f.id).length;
     return `<tr class="rt-row">
-      <td class="rt-name-cell" onclick="openModal('${f.id}')" title="Edito">
+      <td class="rt-name-cell" onclick="openView('${f.id}')" title="Shiko historinë" style="cursor:pointer;">
         <div class="rt-avatar">${initials(f.emri)}</div>
         <div>
           <div class="rt-name">${esc(f.emri)}</div>
@@ -208,6 +222,87 @@ function renderList(){
     <tbody>${rows}</tbody>
   </table>`;
 }
+
+/* ── View: historia e blerjeve të furnitorit ─────────────────── */
+let viewId = null;
+
+function openView(fid){
+  const f = DB.furnitoret.find(x => x.id === fid); if(!f) return;
+  viewId = fid;
+
+  const blerjet = DB.blerjet
+    .filter(b => b.furnitori_id === fid)
+    .sort((a,b) => new Date(b.data) - new Date(a.data));
+
+  const total    = blerjet.reduce((s,b)=>s+(b.totali||0),0);
+  const paguar   = blerjet.filter(b=>b.statusi==='paguar').reduce((s,b)=>s+(b.totali||0),0);
+  const papaguar = total - paguar;
+
+  document.getElementById('view-title').innerHTML = `
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div class="rt-avatar" style="width:36px;height:36px;font-size:14px;flex-shrink:0;">${initials(f.emri)}</div>
+      <div>
+        <div style="font-size:15px;font-weight:700">${esc(f.emri)}</div>
+        <div style="font-size:11px;font-weight:400;color:var(--muted);margin-top:1px;">${[f.tel,f.nipt].filter(Boolean).map(esc).join(' · ')||'—'}</div>
+      </div>
+    </div>`;
+
+  /* Summary strip */
+  const strip = `
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;">
+      <div class="period-card"><div class="pc-header"><div class="pc-icon blue"><i class="ri-shopping-bag-line"></i></div><span class="pc-label">Blerje Totale</span></div><div class="pc-val">${fmtL(total)}</div></div>
+      <div class="period-card"><div class="pc-header"><div class="pc-icon green"><i class="ri-checkbox-circle-line"></i></div><span class="pc-label">E Paguar</span></div><div class="pc-val green">${fmtL(paguar)}</div></div>
+      <div class="period-card"><div class="pc-header"><div class="pc-icon orange"><i class="ri-time-line"></i></div><span class="pc-label">Pa Paguar</span></div><div class="pc-val ${papaguar>0?'orange':''}">${fmtL(papaguar)}</div></div>
+    </div>`;
+
+  if(!blerjet.length){
+    document.getElementById('view-body').innerHTML = strip +
+      '<div class="empty"><i class="ri-shopping-bag-line"></i>Nuk ka blerje të regjistruara për këtë furnitor.</div>';
+    document.getElementById('view-bd').classList.add('open');
+    return;
+  }
+
+  const rows = blerjet.map(b=>{
+    const st  = b.statusi==='paguar';
+    const items = (b.items||[]).map(it=>esc(it.zeri_emri||'—')).join(', ') || '—';
+    return `<tr>
+      <td class="td-nr" style="font-size:12px;">${b.nr||'—'}</td>
+      <td style="font-size:12px;">${b.data?fmtDate(b.data):'—'}</td>
+      <td style="font-size:12px;color:var(--muted);max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${items}</td>
+      <td class="td-amt" style="color:var(--accent);font-weight:700;">${fmtL(b.totali)}</td>
+      <td><span class="badge ${st?'paguar':'pa-paguar'}">${st?'E Paguar':'Pa Paguar'}</span></td>
+      <td><span class="badge badge-menyra">${(b.menyra_pages||'dore')==='banke'?'<i class="ri-bank-line"></i> Bankë':'<i class="ri-hand-coin-line"></i> Dorë'}</span></td>
+      <td onclick="event.stopPropagation()">
+        <div style="display:flex;gap:5px;justify-content:flex-end;">
+          <button class="btn-icon" onclick="closeView();location.href='blerjet.html'"><i class="ri-eye-line"></i></button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('view-body').innerHTML = strip + `
+    <table style="width:100%">
+      <thead><tr>
+        <th style="text-align:left;padding:7px 10px;font-size:10px;letter-spacing:1px;color:var(--muted);font-weight:600;text-transform:uppercase;border-bottom:1px solid var(--border)">Nr.</th>
+        <th style="text-align:left;padding:7px 10px;font-size:10px;letter-spacing:1px;color:var(--muted);font-weight:600;text-transform:uppercase;border-bottom:1px solid var(--border)">Data</th>
+        <th style="text-align:left;padding:7px 10px;font-size:10px;letter-spacing:1px;color:var(--muted);font-weight:600;text-transform:uppercase;border-bottom:1px solid var(--border)">Zërat</th>
+        <th style="text-align:left;padding:7px 10px;font-size:10px;letter-spacing:1px;color:var(--muted);font-weight:600;text-transform:uppercase;border-bottom:1px solid var(--border)">Totali</th>
+        <th style="text-align:left;padding:7px 10px;font-size:10px;letter-spacing:1px;color:var(--muted);font-weight:600;text-transform:uppercase;border-bottom:1px solid var(--border)">Statusi</th>
+        <th style="text-align:left;padding:7px 10px;font-size:10px;letter-spacing:1px;color:var(--muted);font-weight:600;text-transform:uppercase;border-bottom:1px solid var(--border)">Mënyra</th>
+        <th style="border-bottom:1px solid var(--border)"></th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <div class="grand-total" style="margin-top:12px;">
+      <span class="grand-total-lbl">TOTALI (${blerjet.length} blerje)</span>
+      <span class="grand-total-val">${fmtL(total)}</span>
+    </div>`;
+
+  document.getElementById('view-bd').classList.add('open');
+}
+
+function closeView(){ document.getElementById('view-bd').classList.remove('open'); viewId=null; }
+function editFromView(){ const id=viewId; closeView(); openModal(id); }
 
 function openModal(id){
   editId = id || null;
@@ -262,7 +357,7 @@ function confirmDel(){
   closeConf(); toast('Furnitori u fshi.'); renderList();
 }
 
-document.addEventListener('keydown', e => { if(e.key === 'Escape'){ closeModal(); closeConf(); } });
+document.addEventListener('keydown', e => { if(e.key === 'Escape'){ closeModal(); closeView(); closeConf(); } });
 
 renderList();
 autoBackup();
