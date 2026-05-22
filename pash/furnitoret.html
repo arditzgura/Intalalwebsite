@@ -137,6 +137,17 @@
 let editId   = null;
 let deleteId = null;
 let viewMode = localStorage.getItem('pash_furn_view')||'row';
+let sortCol  = 'emri';
+let sortDir  = 'asc';
+
+function setSort(col){
+  if(sortCol===col) sortDir = sortDir==='asc'?'desc':'asc';
+  else { sortCol=col; sortDir = col==='emri'?'asc':'desc'; }
+  renderList();
+}
+const si = col => sortCol===col
+  ? `<span class="sort-arrow">${sortDir==='asc'?'↑':'↓'}</span>`
+  : '<span class="sort-arrow muted">↕</span>';
 
 function setView(v){
   viewMode = v;
@@ -149,7 +160,18 @@ function setView(v){
 function renderList(){
   const q = document.getElementById('search').value.toLowerCase();
   let list = DB.furnitoret.filter(f => !q || f.emri.toLowerCase().includes(q));
-  list = list.sort((a,b) => a.emri.localeCompare(b.emri));
+  list = list.map(f => {
+    const total    = furnitorTotal(f.id);
+    const paguar   = furnitorPaguar(f.id);
+    const papaguar = total - paguar;
+    const nrBlerje = DB.blerjet.filter(b => b.furnitori_id === f.id).length;
+    return {...f, _total:total, _paguar:paguar, _papaguar:papaguar, _nr:nrBlerje};
+  });
+  if(sortCol==='emri')     list.sort((a,b)=>sortDir==='asc'?a.emri.localeCompare(b.emri):b.emri.localeCompare(a.emri));
+  else if(sortCol==='total')    list.sort((a,b)=>sortDir==='asc'?a._total-b._total:b._total-a._total);
+  else if(sortCol==='papaguar') list.sort((a,b)=>sortDir==='asc'?a._papaguar-b._papaguar:b._papaguar-a._papaguar);
+  else if(sortCol==='paguar')   list.sort((a,b)=>sortDir==='asc'?a._paguar-b._paguar:b._paguar-a._paguar);
+  else if(sortCol==='nr')       list.sort((a,b)=>sortDir==='asc'?a._nr-b._nr:b._nr-a._nr);
 
   document.getElementById('list-count').textContent = list.length + ' furnitorë';
   const wrap = document.getElementById('list-wrap');
@@ -161,10 +183,7 @@ function renderList(){
 
   if(viewMode === 'grid'){
     wrap.innerHTML = '<div class="list-grid">' + list.map(f => {
-      const total    = furnitorTotal(f.id);
-      const paguar   = furnitorPaguar(f.id);
-      const papaguar = total - paguar;
-      const nrBlerje = DB.blerjet.filter(b => b.furnitori_id === f.id).length;
+      const total=f._total, paguar=f._paguar, papaguar=f._papaguar, nrBlerje=f._nr;
       return `<div class="list-card" onclick="openView('${f.id}')" style="cursor:pointer;">
         <div class="lc-top">
           <div class="lc-avatar">${initials(f.emri)}</div>
@@ -183,12 +202,9 @@ function renderList(){
     return;
   }
 
-  /* �"?�"? Row / table view �"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"? */
+  /* ── Row / table view ─────────────────────────────────────── */
   const rows = list.map(f => {
-    const total    = furnitorTotal(f.id);
-    const paguar   = furnitorPaguar(f.id);
-    const papaguar = total - paguar;
-    const nrBlerje = DB.blerjet.filter(b => b.furnitori_id === f.id).length;
+    const {_total:total, _paguar:paguar, _papaguar:papaguar, _nr:nrBlerje} = f;
     return `<tr class="rt-row">
       <td class="rt-name-cell" onclick="openView('${f.id}')" title="Shiko historinë" style="cursor:pointer;">
         <div class="rt-avatar">${initials(f.emri)}</div>
@@ -211,11 +227,11 @@ function renderList(){
   wrap.innerHTML = `<table class="rt-table">
     <thead>
       <tr>
-        <th class="rt-th-name">Furnitori</th>
-        <th class="rt-th-num">Blerje Totale</th>
-        <th class="rt-th-num">Pa Paguar</th>
-        <th class="rt-th-num">Paguar</th>
-        <th class="rt-th-num">Nr. Blerje</th>
+        <th class="rt-th-name th-sort" onclick="setSort('emri')">Furnitori ${si('emri')}</th>
+        <th class="rt-th-num th-sort" onclick="setSort('total')">Blerje Totale ${si('total')}</th>
+        <th class="rt-th-num th-sort" onclick="setSort('papaguar')">Pa Paguar ${si('papaguar')}</th>
+        <th class="rt-th-num th-sort" onclick="setSort('paguar')">Paguar ${si('paguar')}</th>
+        <th class="rt-th-num th-sort" onclick="setSort('nr')">Nr. Blerje ${si('nr')}</th>
         <th style="width:80px"></th>
       </tr>
     </thead>

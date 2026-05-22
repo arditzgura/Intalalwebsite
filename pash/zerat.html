@@ -139,6 +139,17 @@
 let editId   = null;
 let deleteId = null;
 let viewMode = localStorage.getItem('pash_zer_view') || 'row';
+let sortCol  = 'emri';
+let sortDir  = 'asc';
+
+function setSort(col){
+  if(sortCol===col) sortDir = sortDir==='asc'?'desc':'asc';
+  else { sortCol=col; sortDir = col==='emri'||col==='kat'?'asc':'desc'; }
+  renderList();
+}
+const si = col => sortCol===col
+  ? `<span class="sort-arrow">${sortDir==='asc'?'↑':'↓'}</span>`
+  : '<span class="sort-arrow muted">↕</span>';
 
 const KAT_ICON  = {'Lëndë e Parë':'ri-drop-line','Aksesore':'ri-tools-line','Tjetër':'ri-price-tag-3-line'};
 const KAT_COLOR = {'Lëndë e Parë':'var(--accent)','Aksesore':'var(--blue)','Tjetër':'var(--orange)'};
@@ -160,7 +171,16 @@ function renderList(){
     if(kat && z.kategoria !== kat) return false;
     if(q && !z.emri.toLowerCase().includes(q)) return false;
     return true;
-  }).sort((a,b) => a.emri.localeCompare(b.emri));
+  }).map(z => {
+    const total    = zeriTotal(z.id);
+    const nrBlerje = DB.blerjet.filter(b=>(b.items||[]).some(it=>it.zeri_id===z.id)).length;
+    return {...z, _total:total, _nr:nrBlerje};
+  });
+  if(sortCol==='emri')  list.sort((a,b)=>sortDir==='asc'?a.emri.localeCompare(b.emri):b.emri.localeCompare(a.emri));
+  else if(sortCol==='kat')   list.sort((a,b)=>sortDir==='asc'?(a.kategoria||'').localeCompare(b.kategoria||''):(b.kategoria||'').localeCompare(a.kategoria||''));
+  else if(sortCol==='cmimi') list.sort((a,b)=>sortDir==='asc'?(a.cmimi||0)-(b.cmimi||0):(b.cmimi||0)-(a.cmimi||0));
+  else if(sortCol==='total') list.sort((a,b)=>sortDir==='asc'?a._total-b._total:b._total-a._total);
+  else if(sortCol==='nr')    list.sort((a,b)=>sortDir==='asc'?a._nr-b._nr:b._nr-a._nr);
 
   document.getElementById('list-count').textContent = list.length + ' zëra';
   const wrap = document.getElementById('list-wrap');
@@ -172,8 +192,7 @@ function renderList(){
 
   if(viewMode === 'grid'){
     wrap.innerHTML = '<div class="list-grid">' + list.map(z => {
-      const total   = zeriTotal(z.id);
-      const nrBlerje = DB.blerjet.filter(b => (b.items||[]).some(it => it.zeri_id===z.id)).length;
+      const total=z._total, nrBlerje=z._nr;
       const icon    = KAT_ICON[z.kategoria]  || 'ri-price-tag-3-line';
       const color   = KAT_COLOR[z.kategoria] || 'var(--muted)';
       const dim     = KAT_DIM[z.kategoria]   || 'var(--surface)';
@@ -195,10 +214,9 @@ function renderList(){
     return;
   }
 
-  /* �"?�"? Row / table view �"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"? */
+  /* ── Row / table view ─────────────────────────────────────── */
   const rows = list.map(z => {
-    const total    = zeriTotal(z.id);
-    const nrBlerje = DB.blerjet.filter(b => (b.items||[]).some(it => it.zeri_id===z.id)).length;
+    const total=z._total, nrBlerje=z._nr;
     const icon     = KAT_ICON[z.kategoria]  || 'ri-price-tag-3-line';
     const color    = KAT_COLOR[z.kategoria] || 'var(--muted)';
     const dim      = KAT_DIM[z.kategoria]   || 'var(--surface)';
@@ -227,12 +245,12 @@ function renderList(){
   wrap.innerHTML = `<table class="rt-table">
     <thead>
       <tr>
-        <th class="rt-th-name">Zëri</th>
-        <th class="rt-th-num">Kategoria</th>
+        <th class="rt-th-name th-sort" onclick="setSort('emri')">Zëri ${si('emri')}</th>
+        <th class="rt-th-num th-sort" onclick="setSort('kat')">Kategoria ${si('kat')}</th>
         <th class="rt-th-num">Njësia</th>
-        <th class="rt-th-num">Çmimi Std.</th>
-        <th class="rt-th-num">Vlerë Totale</th>
-        <th class="rt-th-num">Nr. Blerje</th>
+        <th class="rt-th-num th-sort" onclick="setSort('cmimi')">Çmimi Std. ${si('cmimi')}</th>
+        <th class="rt-th-num th-sort" onclick="setSort('total')">Vlerë Totale ${si('total')}</th>
+        <th class="rt-th-num th-sort" onclick="setSort('nr')">Nr. Blerje ${si('nr')}</th>
         <th style="width:80px"></th>
       </tr>
     </thead>
