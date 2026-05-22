@@ -444,22 +444,26 @@ let viewId = null;
 function openView(id){
   const x = DB.shpenzime.find(s=>s.id===id); if(!x) return;
   viewId = id;
-  const emri = x.pershkrim || 'Pa përshkrim';
-  const color = KAT_COLORS[x.kategoria]||'#888';
-  const icon  = KAT_ICONS[x.kategoria]||'ri-more-line';
+  const kat   = x.kategoria || 'Pa kategori';
+  const color = KAT_COLORS[kat]||'#888';
+  const icon  = KAT_ICONS[kat]||'ri-more-line';
 
-  /* All entries with same name (case-insensitive) */
+  /* All entries with same category */
   const historia = DB.shpenzime
-    .filter(s=>(s.pershkrim||'').toLowerCase()===(emri).toLowerCase())
+    .filter(s=>(s.kategoria||'Pa kategori')===kat)
     .sort((a,b)=>new Date(b.data)-new Date(a.data));
 
-  const totalHistoria = historia.reduce((s,h)=>s+(h.shuma||0),0);
+  const totalHistoria  = historia.reduce((s,h)=>s+(h.shuma||0),0);
+  const papaguarTotal  = historia.filter(h=>h.statusi==='pa_paguar').reduce((s,h)=>s+(h.shuma||0),0);
 
   const rows = historia.map(h=>{
     const st = h.statusi==='paguar'||!h.statusi;
     const isCurrent = h.id===id;
     return `<tr style="${isCurrent?'background:var(--surface);':''}">
-      <td style="font-size:13px;font-weight:${isCurrent?700:400}">${h.data?fmtDate(h.data):'—'}</td>
+      <td>
+        <div style="font-size:13px;font-weight:600;color:var(--text)">${esc(h.pershkrim||'Pa përshkrim')}</div>
+        <div style="font-size:11px;color:var(--muted)">${h.data?fmtDate(h.data):'—'}</div>
+      </td>
       <td class="td-amt" style="color:var(--accent);font-weight:700">${fmtL(h.shuma)}</td>
       <td><span class="badge ${st?'paguar':'pa-paguar'}">${st?'E Paguar':'Pa Paguar'}</span></td>
       <td><span class="badge badge-menyra">${(h.menyra_pages||'dore')==='banke'?'<i class="ri-bank-line"></i> Bankë':'<i class="ri-hand-coin-line"></i> Dorë'}</span></td>
@@ -478,15 +482,16 @@ function openView(id){
         <i class="${icon}" style="font-size:16px;color:${color}"></i>
       </div>
       <div>
-        <div style="font-size:15px;font-weight:700">${esc(emri)}</div>
-        <div style="font-size:11px;font-weight:400;color:var(--muted);margin-top:1px">${esc(x.kategoria||'Pa kategori')}</div>
+        <div style="font-size:15px;font-weight:700">${esc(kat)}</div>
+        <div style="font-size:11px;font-weight:400;color:var(--muted);margin-top:1px">${historia.length} veprime</div>
       </div>
     </div>`;
 
   document.getElementById('view-body').innerHTML = `
+    ${papaguarTotal>0?`<div style="background:#fff3cd;border:1px solid #ffc107;border-radius:8px;padding:9px 13px;font-size:12px;color:#856404;margin-bottom:12px;display:flex;align-items:center;gap:7px;"><i class="ri-time-line"></i> Pa paguar: <strong>${fmtL(papaguarTotal)}</strong></div>`:''}
     <table style="width:100%">
       <thead><tr>
-        <th style="text-align:left;padding:8px 10px;font-size:10px;letter-spacing:1px;color:var(--muted);font-weight:600;text-transform:uppercase;border-bottom:1px solid var(--border)">Data</th>
+        <th style="text-align:left;padding:8px 10px;font-size:10px;letter-spacing:1px;color:var(--muted);font-weight:600;text-transform:uppercase;border-bottom:1px solid var(--border)">Emërtimi / Data</th>
         <th style="text-align:left;padding:8px 10px;font-size:10px;letter-spacing:1px;color:var(--muted);font-weight:600;text-transform:uppercase;border-bottom:1px solid var(--border)">Shuma</th>
         <th style="text-align:left;padding:8px 10px;font-size:10px;letter-spacing:1px;color:var(--muted);font-weight:600;text-transform:uppercase;border-bottom:1px solid var(--border)">Statusi</th>
         <th style="text-align:left;padding:8px 10px;font-size:10px;letter-spacing:1px;color:var(--muted);font-weight:600;text-transform:uppercase;border-bottom:1px solid var(--border)">Mënyra</th>
