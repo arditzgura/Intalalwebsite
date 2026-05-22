@@ -53,6 +53,70 @@ function toast(msg){
 }
 
 /* ══════════════════════════════════════════════════════════════
+   BACKUP — export / import / auto-daily
+   ══════════════════════════════════════════════════════════════ */
+
+function exportBackup(silent=false){
+  const payload = {
+    version: 1,
+    exported: new Date().toISOString(),
+    data: {
+      furnitoret: DB.furnitoret,
+      zerat:      DB.zerat,
+      blerjet:    DB.blerjet,
+      shpenzime:  DB.shpenzime
+    }
+  };
+  const json = JSON.stringify(payload, null, 2);
+  const blob = new Blob([json], {type:'application/json'});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  const d    = new Date();
+  const date = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  a.href     = url;
+  a.download = `PASH_backup_${date}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  localStorage.setItem('pash_last_backup', date);
+  if(!silent) toast('✓ Backup u ruajt: PASH_backup_'+date+'.json');
+}
+
+function importBackup(file){
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const p = JSON.parse(e.target.result);
+      if(!p.data) throw new Error('Format i gabuar');
+      if(p.data.furnitoret) DB.furnitoret = p.data.furnitoret;
+      if(p.data.zerat)      DB.zerat      = p.data.zerat;
+      if(p.data.blerjet)    DB.blerjet    = p.data.blerjet;
+      if(p.data.shpenzime)  DB.shpenzime  = p.data.shpenzime;
+      toast('✓ Të dhënat u restauruan nga backup.');
+      setTimeout(()=>location.reload(), 1200);
+    } catch(err){
+      toast('⚠ Skedari i backup-it është i pavlefshëm.');
+    }
+  };
+  reader.readAsText(file);
+}
+
+function autoBackup(){
+  const today = todayISO();
+  const last  = localStorage.getItem('pash_last_backup');
+  if(last === today) return; // tashmë u bë sot
+  /* Backup vetëm nëse ka të dhëna */
+  const hasData = DB.blerjet.length || DB.shpenzime.length || DB.furnitoret.length;
+  if(!hasData) return;
+  /* Vonesë e vogël që faqja të ngarkohet plotësisht */
+  setTimeout(()=>{
+    exportBackup(true);
+    toast('💾 Auto-backup ditor u ruajt në Downloads.');
+  }, 2000);
+}
+
+/* ══════════════════════════════════════════════════════════════
    DATE PICKER COMPONENT
    ══════════════════════════════════════════════════════════════ */
 const DP = {

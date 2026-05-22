@@ -20,6 +20,10 @@
     <a class="nav-item" href="furnitoret.html"><i class="ri-user-2-line"></i>Furnitorët</a>
     <a class="nav-item active" href="zerat.html"><i class="ri-price-tag-3-line"></i>Zërat</a>
   </nav>
+  <div class="sidebar-backup">
+    <button class="sb-btn" onclick="exportBackup()" title="Shkarko backup JSON"><i class="ri-download-2-line"></i> Backup</button>
+    <label class="sb-btn" title="Ngarko backup JSON"><i class="ri-upload-2-line"></i> Restore<input type="file" accept=".json" style="display:none" onchange="importBackup(this.files[0])"></label>
+  </div>
   <div class="sidebar-footer">
     <div class="sf-avatar">P</div>
     <div><span class="sf-name">PASH</span><span class="sf-label">Sistemi</span></div>
@@ -65,12 +69,12 @@
   </div>
 </div>
 
-<!-- ── Add/Edit Modal ────────────────────────────────────────── -->
+<!-- �"?�"? Add/Edit Modal �"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"? -->
 <div class="modal-backdrop" id="modal-bd" onclick="if(event.target===this)closeModal()">
   <div class="modal">
     <div class="modal-head">
       <h2 id="modal-title">Zër i Ri</h2>
-      <button class="modal-close" onclick="closeModal()">✕</button>
+      <button class="modal-close" onclick="closeModal()">�o.</button>
     </div>
     <div class="modal-body">
       <div class="field">
@@ -96,7 +100,7 @@
         </div>
       </div>
       <div class="field">
-        <label>Çmimi Standard (L) — opsional</label>
+        <label>�?mimi Standard (L) — opsional</label>
         <input type="number" id="f-cmimi" min="0" step="0.01" placeholder="0.00">
       </div>
       <div class="field">
@@ -117,10 +121,10 @@
   </div>
 </div>
 
-<!-- ── Confirm delete ────────────────────────────────────────── -->
+<!-- �"?�"? Confirm delete �"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"? -->
 <div class="modal-backdrop confirm-modal" id="conf-bd" onclick="if(event.target===this)closeConf()">
   <div class="modal" style="max-width:360px">
-    <div class="modal-head"><h2>Fshi Zërin</h2><button class="modal-close" onclick="closeConf()">✕</button></div>
+    <div class="modal-head"><h2>Fshi Zërin</h2><button class="modal-close" onclick="closeConf()">�o.</button></div>
     <div class="confirm-body">Jeni të sigurt? Ky zër do të hiqet nga lista. Blerjet ekzistuese nuk preken.</div>
     <div class="modal-foot">
       <button class="btn-secondary" onclick="closeConf()">Anulo</button>
@@ -184,14 +188,14 @@ function renderList(){
         <div class="lc-stats">
           <div><div class="lc-stat-lbl">Vlerë Totale</div><div class="lc-stat-val">${fmtL(total)}</div></div>
           <div><div class="lc-stat-lbl">Nr. Blerje</div><div class="lc-stat-val">${nrBlerje}</div></div>
-          ${z.cmimi?`<div><div class="lc-stat-lbl">Çmimi Std.</div><div class="lc-stat-val">${fmtL(z.cmimi)}</div></div>`:''}
+          ${z.cmimi?`<div><div class="lc-stat-lbl">�?mimi Std.</div><div class="lc-stat-val">${fmtL(z.cmimi)}</div></div>`:''}
         </div>
       </div>`;
     }).join('') + '</div>';
     return;
   }
 
-  /* ── Row / table view ─────────────────────────────────────── */
+  /* �"?�"? Row / table view �"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"? */
   const rows = list.map(z => {
     const total    = zeriTotal(z.id);
     const nrBlerje = DB.blerjet.filter(b => (b.items||[]).some(it => it.zeri_id===z.id)).length;
@@ -226,7 +230,7 @@ function renderList(){
         <th class="rt-th-name">Zëri</th>
         <th class="rt-th-num">Kategoria</th>
         <th class="rt-th-num">Njësia</th>
-        <th class="rt-th-num">Çmimi Std.</th>
+        <th class="rt-th-num">�?mimi Std.</th>
         <th class="rt-th-num">Vlerë Totale</th>
         <th class="rt-th-num">Nr. Blerje</th>
         <th style="width:80px"></th>
@@ -268,7 +272,7 @@ function closeModal(){ document.getElementById('modal-bd').classList.remove('ope
 
 function saveZeri(){
   const emri = document.getElementById('f-emri').value.trim();
-  if(!emri){ toast('⚠ Shkruaj emrin e zërit.'); return; }
+  if(!emri){ toast('�s� Shkruaj emrin e zërit.'); return; }
   const obj = {
     emri,
     kategoria:    document.getElementById('f-kat').value,
@@ -281,10 +285,10 @@ function saveZeri(){
   if(editId){
     const idx = list.findIndex(x => x.id === editId);
     if(idx >= 0) list[idx] = {...list[idx], ...obj};
-    toast('✓ Zëri u përditësua.');
+    toast('�o" Zëri u përditësua.');
   } else {
     list.push({id: genId(), created: new Date().toISOString(), ...obj});
-    toast('✓ Zëri u shtua.');
+    toast('�o" Zëri u shtua.');
   }
   DB.zerat = list;
   closeModal();
@@ -301,6 +305,8 @@ function confirmDel(){
 document.addEventListener('keydown', e => { if(e.key === 'Escape'){ closeModal(); closeConf(); } });
 
 renderList();
+autoBackup();
 </script>
 </body>
 </html>
+

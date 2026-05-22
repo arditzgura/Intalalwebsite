@@ -20,6 +20,10 @@
     <a class="nav-item" href="furnitoret.html"><i class="ri-user-2-line"></i>Furnitorët</a>
     <a class="nav-item" href="zerat.html"><i class="ri-price-tag-3-line"></i>Zërat</a>
   </nav>
+  <div class="sidebar-backup">
+    <button class="sb-btn" onclick="exportBackup()" title="Shkarko backup JSON"><i class="ri-download-2-line"></i> Backup</button>
+    <label class="sb-btn" title="Ngarko backup JSON"><i class="ri-upload-2-line"></i> Restore<input type="file" accept=".json" style="display:none" onchange="importBackup(this.files[0])"></label>
+  </div>
   <div class="sidebar-footer">
     <div class="sf-avatar">P</div>
     <div><span class="sf-name">PASH</span><span class="sf-label">Sistemi</span></div>
@@ -66,9 +70,9 @@
         </button>
         <div class="dp-popup" id="dp-popup">
           <div class="dp-nav">
-            <button class="dp-nav-btn" onclick="DP.nav(-1)">↑</button>
+            <button class="dp-nav-btn" onclick="DP.nav(-1)">�?'</button>
             <button class="dp-title" id="dp-title" onclick="DP.toggleMode()">—</button>
-            <button class="dp-nav-btn" onclick="DP.nav(1)">↓</button>
+            <button class="dp-nav-btn" onclick="DP.nav(1)">—</button>
           </div>
           <div id="dp-body"></div>
           <div class="dp-footer">
@@ -84,14 +88,14 @@
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════════════════════════
+<!-- �.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.�
      SHPENZIM I RI MODAL
-══════════════════════════════════════════════════════════════ -->
+�.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.� -->
 <div class="modal-backdrop" id="modal-bd" onclick="if(event.target===this)closeModal()">
   <div class="modal">
     <div class="modal-head">
       <h2 id="modal-title">Shpenzim i Ri</h2>
-      <button class="modal-close" onclick="closeModal()">✕</button>
+      <button class="modal-close" onclick="closeModal()">�o.</button>
     </div>
     <div class="modal-body">
 
@@ -164,7 +168,7 @@
 <!-- Confirm delete -->
 <div class="modal-backdrop confirm-modal" id="conf-bd" onclick="if(event.target===this)closeConf()">
   <div class="modal" style="max-width:360px">
-    <div class="modal-head"><h2>Fshi Shpenzimin</h2><button class="modal-close" onclick="closeConf()">✕</button></div>
+    <div class="modal-head"><h2>Fshi Shpenzimin</h2><button class="modal-close" onclick="closeConf()">�o.</button></div>
     <div class="confirm-body">Jeni të sigurt? Ky veprim nuk mund të kthehet.</div>
     <div class="modal-foot">
       <button class="btn-secondary" onclick="closeConf()">Anulo</button>
@@ -208,7 +212,7 @@ function hlSearch(text,q){
   return esc(text.slice(0,i))+'<mark>'+esc(text.slice(i,i+q.length))+'</mark>'+esc(text.slice(i+q.length));
 }
 
-/* ── Autocomplete: kategoria ─────────────────────────────────── */
+/* �"?�"? Autocomplete: kategoria �"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"? */
 function onKatInput(q){
   const dd=document.getElementById('ac-kat-dd');
   const ql=q.toLowerCase().trim();
@@ -244,7 +248,7 @@ function onKatInput(q){
   });
 }
 
-/* ── Autocomplete: përshkrimi nga historia ───────────────────── */
+/* �"?�"? Autocomplete: përshkrimi nga historia �"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"? */
 function onPershkrimInput(q){
   const dd=document.getElementById('ac-pershkrim-dd');
   const ql=q.toLowerCase().trim();
@@ -266,7 +270,7 @@ function onPershkrimInput(q){
   });
 }
 
-/* ── Modal ───────────────────────────────────────────────────── */
+/* �"?�"? Modal �"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"? */
 function openModal(){
   editId=null;
   document.getElementById('modal-title').textContent='Shpenzim i Ri';
@@ -299,7 +303,7 @@ function closeModal(){ document.getElementById('modal-bd').classList.remove('ope
 
 function saveShpenzim(){
   const shuma=parseFloat(document.getElementById('f-shuma').value)||0;
-  if(shuma<=0){ toast('⚠ Vendos shumën — e vetmja e detyrueshme.'); document.getElementById('f-shuma').focus(); return; }
+  if(shuma<=0){ toast('�s� Vendos shumën — e vetmja e detyrueshme.'); document.getElementById('f-shuma').focus(); return; }
 
   const kategoria=document.getElementById('f-kat-input').value.trim()||'Pa kategori';
   const pershkrim=document.getElementById('f-pershkrim').value.trim();
@@ -310,16 +314,16 @@ function saveShpenzim(){
   if(editId){
     const idx=list.findIndex(x=>x.id===editId);
     if(idx>=0) list[idx]={...list[idx],kategoria,data,pershkrim,shuma,menyra_pages:payMenyra,notes};
-    toast('✓ Shpenzimi u përditësua.');
+    toast('�o" Shpenzimi u përditësua.');
   } else {
     list.push({id:genId(),kategoria,data,pershkrim,shuma,menyra_pages:payMenyra,notes,created:new Date().toISOString()});
-    toast('✓ Shpenzimi u shtua.');
+    toast('�o" Shpenzimi u shtua.');
   }
   DB.shpenzime=list;
   closeModal(); renderStats(); renderList();
 }
 
-/* ── Stats ───────────────────────────────────────────────────── */
+/* �"?�"? Stats �"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"? */
 function renderStats(){
   const all=DB.shpenzime;
   const now=new Date();
@@ -335,7 +339,7 @@ function renderStats(){
     <div class="period-card"><div class="pc-header"><div class="pc-icon green"><i class="ri-price-tag-3-line"></i></div><span class="pc-label">Kategoria Kryesore</span></div><div class="pc-val" style="font-size:14px">${topCat?esc(topCat[0]):'—'}</div></div>`;
 }
 
-/* ── List ────────────────────────────────────────────────────── */
+/* �"?�"? List �"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"? */
 
 function renderList(){
   const q=document.getElementById('search').value.toLowerCase();
@@ -389,9 +393,9 @@ function renderList(){
   }).join('');
   wrap.innerHTML=`<table>
     <thead><tr>
-      <th class="th-sort" onclick="setSort('data')">Data ${sortCol==='data'?`<span class="sort-arrow">${sortDir==='asc'?'↑':'↓'}</span>`:'<span class="sort-arrow muted">↕</span>'}</th>
-      <th class="th-sort" onclick="setSort('pershkrim')">Përshkrimi / Kategoria ${sortCol==='pershkrim'?`<span class="sort-arrow">${sortDir==='asc'?'↑':'↓'}</span>`:'<span class="sort-arrow muted">↕</span>'}</th>
-      <th class="th-sort" onclick="setSort('shuma')">Shuma ${sortCol==='shuma'?`<span class="sort-arrow">${sortDir==='asc'?'↑':'↓'}</span>`:'<span class="sort-arrow muted">↕</span>'}</th>
+      <th class="th-sort" onclick="setSort('data')">Data ${sortCol==='data'?`<span class="sort-arrow">${sortDir==='asc'?'�?'':'—'}</span>`:'<span class="sort-arrow muted">�?.</span>'}</th>
+      <th class="th-sort" onclick="setSort('pershkrim')">Përshkrimi / Kategoria ${sortCol==='pershkrim'?`<span class="sort-arrow">${sortDir==='asc'?'�?'':'—'}</span>`:'<span class="sort-arrow muted">�?.</span>'}</th>
+      <th class="th-sort" onclick="setSort('shuma')">Shuma ${sortCol==='shuma'?`<span class="sort-arrow">${sortDir==='asc'?'�?'':'—'}</span>`:'<span class="sort-arrow muted">�?.</span>'}</th>
       <th>Mënyra</th><th>Shënime</th><th></th>
     </tr></thead>
     <tbody>${rows}</tbody>
@@ -420,6 +424,8 @@ document.addEventListener('keydown',e=>{
 DP.onchange = renderList;
 renderStats();
 renderList();
+autoBackup();
 </script>
 </body>
 </html>
+

@@ -20,6 +20,10 @@
     <a class="nav-item" href="furnitoret.html"><i class="ri-user-2-line"></i>Furnitorët</a>
     <a class="nav-item" href="zerat.html"><i class="ri-price-tag-3-line"></i>Zërat</a>
   </nav>
+  <div class="sidebar-backup">
+    <button class="sb-btn" onclick="exportBackup()" title="Shkarko backup JSON"><i class="ri-download-2-line"></i> Backup</button>
+    <label class="sb-btn" title="Ngarko backup JSON"><i class="ri-upload-2-line"></i> Restore<input type="file" accept=".json" style="display:none" onchange="importBackup(this.files[0])"></label>
+  </div>
   <div class="sidebar-footer">
     <div class="sf-avatar">P</div>
     <div><span class="sf-name">PASH</span><span class="sf-label">Sistemi</span></div>
@@ -63,9 +67,9 @@
         </button>
         <div class="dp-popup" id="dp-popup">
           <div class="dp-nav">
-            <button class="dp-nav-btn" onclick="DP.nav(-1)">↑</button>
+            <button class="dp-nav-btn" onclick="DP.nav(-1)">�?'</button>
             <button class="dp-title" id="dp-title" onclick="DP.toggleMode()">—</button>
-            <button class="dp-nav-btn" onclick="DP.nav(1)">↓</button>
+            <button class="dp-nav-btn" onclick="DP.nav(1)">—</button>
           </div>
           <div id="dp-body"></div>
           <div class="dp-footer">
@@ -81,14 +85,14 @@
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════════════════════════
+<!-- �.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.�
      BLERJE E RE / EDITO MODAL
-══════════════════════════════════════════════════════════════ -->
+�.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.� -->
 <div class="modal-backdrop" id="modal-bd" onclick="if(event.target===this)closeModal()">
   <div class="modal wide">
     <div class="modal-head">
       <h2 id="modal-title">Blerje e Re</h2>
-      <button class="modal-close" onclick="closeModal()">✕</button>
+      <button class="modal-close" onclick="closeModal()">�o.</button>
     </div>
     <div class="modal-body">
 
@@ -128,7 +132,7 @@
               <th style="width:15%">Kategoria</th>
               <th style="width:11%">Sasia</th>
               <th style="width:10%">Njësia</th>
-              <th style="width:14%">Çmimi (L)</th>
+              <th style="width:14%">�?mimi (L)</th>
               <th style="width:12%;text-align:right;padding-right:8px">Totali *</th>
               <th style="width:4%"></th>
             </tr>
@@ -201,7 +205,7 @@
       <div style="display:flex;gap:8px;align-items:center;">
         <button class="btn-secondary" style="padding:6px 12px;font-size:11px;" onclick="editFromView()"><i class="ri-edit-line"></i> Edito</button>
         <button class="btn-secondary" style="padding:6px 12px;font-size:11px;color:var(--accent);border-color:var(--accent);" onclick="deleteFromView()"><i class="ri-delete-bin-line"></i> Fshi</button>
-        <button class="modal-close" onclick="closeView()">✕</button>
+        <button class="modal-close" onclick="closeView()">�o.</button>
       </div>
     </div>
     <div class="modal-body" id="view-body"></div>
@@ -211,7 +215,7 @@
 <!-- Confirm delete -->
 <div class="modal-backdrop confirm-modal" id="conf-bd" onclick="if(event.target===this)closeConf()">
   <div class="modal" style="max-width:360px">
-    <div class="modal-head"><h2>Fshi Blerjen</h2><button class="modal-close" onclick="closeConf()">✕</button></div>
+    <div class="modal-head"><h2>Fshi Blerjen</h2><button class="modal-close" onclick="closeConf()">�o.</button></div>
     <div class="confirm-body">Jeni të sigurt? Ky veprim nuk mund të kthehet.</div>
     <div class="modal-foot">
       <button class="btn-secondary" onclick="closeConf()">Anulo</button>
@@ -223,9 +227,9 @@
 <div id="toast"></div>
 <script src="pash-data.js"></script>
 <script>
-/* ══════════════════════════════════════════════════════════════
+/* �.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.�
    STATE
-══════════════════════════════════════════════════════════════ */
+�.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.� */
 const NJESIA_OPT = ['cope','kg','g','m','m²','litra','pako','set','orë','ditë','tjetër'];
 const KAT_OPT   = ['Lëndë e Parë','Aksesore','Tjetër'];
 
@@ -253,9 +257,9 @@ let qaZeriName   = '';
 let qaZeriRowEl  = null;
 let qaZeriKat    = 'Lëndë e Parë';
 
-/* ══════════════════════════════════════════════════════════════
+/* �.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.�
    AUTOCOMPLETE — FURNITORI
-══════════════════════════════════════════════════════════════ */
+�.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.� */
 function renderFurnitorWrap(){
   const wrap = document.getElementById('f-furnitori-wrap');
   if(acFurnitorId || acFurnitorName){
@@ -343,7 +347,7 @@ function confirmAddFurnitor(){
   acFurnitorId=newF.id; acFurnitorName=newF.emri;
   hideQAFurnitor();
   renderFurnitorWrap();
-  toast(`✓ Furnitori "${newF.emri}" u shtua.`);
+  toast(`�o" Furnitori "${newF.emri}" u shtua.`);
 }
 
 /* Auto-fill zërat linked to the selected furnitor */
@@ -374,12 +378,12 @@ function autoFillZeratFromFurnitor(furnitorId){
     totali:    z.cmimi     || 0
   }));
   calcTotal();
-  toast(`✓ U plotësuan ${linked.length} zëra nga ky furnitor.`);
+  toast(`�o" U plotësuan ${linked.length} zëra nga ky furnitor.`);
 }
 
-/* ══════════════════════════════════════════════════════════════
-   AUTOCOMPLETE — ZËRI (per row)
-══════════════════════════════════════════════════════════════ */
+/* �.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.�
+   AUTOCOMPLETE — Z�<RI (per row)
+�.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.� */
 function hlSearch(text, q){
   if(!q) return esc(text);
   const i=text.toLowerCase().indexOf(q.toLowerCase());
@@ -525,12 +529,12 @@ function confirmAddZeri(){
   }
   document.getElementById('qa-zeri').classList.remove('open');
   qaZeriName=''; qaZeriRowEl=null;
-  toast(`✓ Zëri "${newZ.emri}" u shtua.`);
+  toast(`�o" Zëri "${newZ.emri}" u shtua.`);
 }
 
-/* ══════════════════════════════════════════════════════════════
+/* �.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.�
    ITEM ROWS
-══════════════════════════════════════════════════════════════ */
+�.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.� */
 function clearItems(){ document.getElementById('items-body').innerHTML=''; }
 
 function addRow(it=null){
@@ -561,9 +565,9 @@ function calcTotal(){
   document.getElementById('grand-total').textContent=fmtL(grand);
 }
 
-/* ══════════════════════════════════════════════════════════════
+/* �.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.�
    STATUS / MODAL
-══════════════════════════════════════════════════════════════ */
+�.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.� */
 function setStatus(s){
   payStatus=s;
   document.getElementById('btn-paguar').className='status-btn'+(s==='paguar'?' active-paguar':'');
@@ -613,9 +617,9 @@ function closeModal(){
   editId=null;
 }
 
-/* ══════════════════════════════════════════════════════════════
+/* �.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.�
    SAVE
-══════════════════════════════════════════════════════════════ */
+�.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.� */
 function saveBlerje(){
   /* Collect items — only rows with at least a totali > 0 */
   const items=[];
@@ -638,7 +642,7 @@ function saveBlerje(){
   });
 
   if(!hasAmount && items.length===0){
-    toast('⚠ Vendos të paktën një çmim/shumë.'); return;
+    toast('�s� Vendos të paktën një çmim/shumë.'); return;
   }
 
   const totali=items.reduce((s,i)=>s+(i.totali||0),0);
@@ -650,18 +654,18 @@ function saveBlerje(){
   if(editId){
     const idx=blerjet.findIndex(x=>x.id===editId);
     if(idx>=0) blerjet[idx]={...blerjet[idx],furnitori_id:acFurnitorId||null,furnitor_emri:acFurnitorName||'',data,items,totali,statusi:payStatus,menyra_pages:payMenyra,notes};
-    toast('✓ Blerja u përditësua.');
+    toast('�o" Blerja u përditësua.');
   } else {
     blerjet.push({id:genId(),nr:nextNr(blerjet),furnitori_id:acFurnitorId||null,furnitor_emri:acFurnitorName||'',data,items,totali,statusi:payStatus,menyra_pages:payMenyra,notes,created:new Date().toISOString()});
-    toast('✓ Blerja u shtua.');
+    toast('�o" Blerja u shtua.');
   }
   DB.blerjet=blerjet;
   closeModal(); renderList();
 }
 
-/* ══════════════════════════════════════════════════════════════
+/* �.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.�
    VIEW
-══════════════════════════════════════════════════════════════ */
+�.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.� */
 function openView(id){
   const b=DB.blerjet.find(x=>x.id===id); if(!b) return;
   viewId=id;
@@ -680,10 +684,10 @@ function openView(id){
       <div><div style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;font-weight:600">FURNITORI</div><div style="font-size:15px;font-weight:700">${esc(fname)}</div></div>
       <div><div style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;font-weight:600">DATA</div><div style="font-size:15px;font-weight:700">${fmtDate(b.data)}</div></div>
       <div><div style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;font-weight:600">STATUSI</div><span class="badge ${st?'paguar':'pa-paguar'}" style="margin-top:2px;display:inline-flex">${st?'E Paguar':'Pa Paguar'}</span></div>
-      <div><div style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;font-weight:600">MËNYRA</div><span class="badge badge-menyra" style="margin-top:2px;display:inline-flex">${(b.menyra_pages||'dore')==='banke'?'<i class="ri-bank-line"></i> Me Bankë':'<i class="ri-hand-coin-line"></i> Në Dorë'}</span></div>
+      <div><div style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;font-weight:600">M�<NYRA</div><span class="badge badge-menyra" style="margin-top:2px;display:inline-flex">${(b.menyra_pages||'dore')==='banke'?'<i class="ri-bank-line"></i> Me Bankë':'<i class="ri-hand-coin-line"></i> Në Dorë'}</span></div>
     </div>
     <table class="items-table" style="margin-bottom:12px;">
-      <thead><tr><th>Zëri</th><th>Kategoria</th><th>Sasia</th><th>Çmimi</th><th style="text-align:right">Totali</th></tr></thead>
+      <thead><tr><th>Zëri</th><th>Kategoria</th><th>Sasia</th><th>�?mimi</th><th style="text-align:right">Totali</th></tr></thead>
       <tbody>${itemRows}</tbody>
     </table>
     <div class="grand-total"><span class="grand-total-lbl">TOTALI</span><span class="grand-total-val">${fmtL(b.totali)}</span></div>
@@ -702,9 +706,9 @@ function confirmDel(){
   closeConf(); toast('Blerja u fshi.'); renderList();
 }
 
-/* ══════════════════════════════════════════════════════════════
+/* �.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.�
    LIST
-══════════════════════════════════════════════════════════════ */
+�.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.� */
 
 function renderList(){
   const q=document.getElementById('search').value.toLowerCase();
@@ -764,7 +768,7 @@ function renderList(){
       </td>
     </tr>`;
   }).join('');
-  const si=(col)=>sortCol===col?`<span class="sort-arrow">${sortDir==='asc'?'↑':'↓'}</span>`:'<span class="sort-arrow muted">↕</span>';
+  const si=(col)=>sortCol===col?`<span class="sort-arrow">${sortDir==='asc'?'�?'':'—'}</span>`:'<span class="sort-arrow muted">�?.</span>';
   wrap.innerHTML=`<table>
     <thead><tr>
       <th>Nr.</th>
@@ -791,6 +795,8 @@ document.addEventListener('keydown',e=>{
 
 DP.onchange = renderList;
 renderList();
+autoBackup();
 </script>
 </body>
 </html>
+

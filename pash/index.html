@@ -8,7 +8,7 @@
 </head>
 <body>
 
-<!-- ── Sidebar ──────────────────────────────────────────────── -->
+<!-- �"?�"? Sidebar �"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"? -->
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-logo">
     <div class="logo-badge"><i class="ri-line-chart-fill"></i></div>
@@ -21,17 +21,21 @@
     <a class="nav-item" href="furnitoret.html"><i class="ri-user-2-line"></i>Furnitorët</a>
     <a class="nav-item" href="zerat.html"><i class="ri-price-tag-3-line"></i>Zërat</a>
   </nav>
+  <div class="sidebar-backup">
+    <button class="sb-btn" onclick="exportBackup()" title="Shkarko backup JSON"><i class="ri-download-2-line"></i> Backup</button>
+    <label class="sb-btn" title="Ngarko backup JSON"><i class="ri-upload-2-line"></i> Restore<input type="file" accept=".json" style="display:none" onchange="importBackup(this.files[0])"></label>
+  </div>
   <div class="sidebar-footer">
     <div class="sf-avatar" id="sf-av">A</div>
     <div><span class="sf-name" id="sf-name">PASH</span><span class="sf-label">Sistemi</span></div>
   </div>
 </aside>
 
-<!-- ── Main ──────────────────────────────────────────────────── -->
+<!-- �"?�"? Main �"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"? -->
 <div class="main">
   <div class="topbar">
     <div class="topbar-user">
-      <div class="topbar-label">I KYÇUR SI</div>
+      <div class="topbar-label">I KY�?UR SI</div>
       <div class="topbar-name" id="tb-name">—</div>
     </div>
   </div>
@@ -46,7 +50,7 @@
         <div class="banner-icon-box"><i class="ri-line-chart-fill"></i></div>
         <div>
           <div class="banner-heading">PASQYRA E AKUMULUAR</div>
-          <div class="banner-heading"><small>QË NGA FILLIMI I PËRDORIMIT TË APLIKACIONIT</small></div>
+          <div class="banner-heading"><small>Q�< NGA FILLIMI I P�<RDORIMIT T�< APLIKACIONIT</small></div>
         </div>
       </div>
       <div class="banner-grid">
@@ -123,7 +127,7 @@
 
       <!-- Analysis -->
       <div class="analysis-card">
-        <div class="analysis-title"><div class="at-icon"><i class="ri-bar-chart-grouped-line"></i></div>ANALIZA E SHPEJTË</div>
+        <div class="analysis-title"><div class="at-icon"><i class="ri-bar-chart-grouped-line"></i></div>ANALIZA E SHPEJT�<</div>
         <div id="analysis-body">
           <p style="font-size:12px;color:var(--muted)">Nuk ka të dhëna ende.</p>
         </div>
@@ -137,7 +141,7 @@
 
 <script src="pash-data.js"></script>
 <script>
-/* ── Period state ───────────────────────────────────────────── */
+/* �"?�"? Period state �"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"? */
 let activePeriod = 'month';
 const now = new Date();
 
@@ -165,7 +169,7 @@ function periodLabelStr(){
   return '';
 }
 
-/* ── Dashboard render ───────────────────────────────────────── */
+/* �"?�"? Dashboard render �"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"? */
 function renderDashboard(){
   const blerjet   = DB.blerjet;
   const shpenzime = DB.shpenzime;
@@ -271,6 +275,8 @@ function renderAnalysis(pb, pshTotal, pbTotal){
 }
 
 renderDashboard();
+autoBackup();
 </script>
 </body>
 </html>
+

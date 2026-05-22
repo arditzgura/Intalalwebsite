@@ -20,6 +20,10 @@
     <a class="nav-item active" href="furnitoret.html"><i class="ri-user-2-line"></i>Furnitorët</a>
     <a class="nav-item" href="zerat.html"><i class="ri-price-tag-3-line"></i>Zërat</a>
   </nav>
+  <div class="sidebar-backup">
+    <button class="sb-btn" onclick="exportBackup()" title="Shkarko backup JSON"><i class="ri-download-2-line"></i> Backup</button>
+    <label class="sb-btn" title="Ngarko backup JSON"><i class="ri-upload-2-line"></i> Restore<input type="file" accept=".json" style="display:none" onchange="importBackup(this.files[0])"></label>
+  </div>
   <div class="sidebar-footer">
     <div class="sf-avatar">P</div>
     <div><span class="sf-name">PASH</span><span class="sf-label">Sistemi</span></div>
@@ -59,12 +63,12 @@
   </div>
 </div>
 
-<!-- ── Add/Edit Modal ────────────────────────────────────────── -->
+<!-- �"?�"? Add/Edit Modal �"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"? -->
 <div class="modal-backdrop" id="modal-bd" onclick="if(event.target===this)closeModal()">
   <div class="modal">
     <div class="modal-head">
       <h2 id="modal-title">Furnitor i Ri</h2>
-      <button class="modal-close" onclick="closeModal()">✕</button>
+      <button class="modal-close" onclick="closeModal()">�o.</button>
     </div>
     <div class="modal-body">
       <div class="field">
@@ -101,10 +105,10 @@
   </div>
 </div>
 
-<!-- ── Confirm delete ────────────────────────────────────────── -->
+<!-- �"?�"? Confirm delete �"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"? -->
 <div class="modal-backdrop confirm-modal" id="conf-bd" onclick="if(event.target===this)closeConf()">
   <div class="modal" style="max-width:360px">
-    <div class="modal-head"><h2>Fshi Furnitorin</h2><button class="modal-close" onclick="closeConf()">✕</button></div>
+    <div class="modal-head"><h2>Fshi Furnitorin</h2><button class="modal-close" onclick="closeConf()">�o.</button></div>
     <div class="confirm-body">Jeni të sigurt? Të gjitha blerjet e lidhura do të humbasin lidhjen me këtë furnitor.</div>
     <div class="modal-foot">
       <button class="btn-secondary" onclick="closeConf()">Anulo</button>
@@ -165,7 +169,7 @@ function renderList(){
     return;
   }
 
-  /* ── Row / table view ─────────────────────────────────────── */
+  /* �"?�"? Row / table view �"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"? */
   const rows = list.map(f => {
     const total    = furnitorTotal(f.id);
     const paguar   = furnitorPaguar(f.id);
@@ -228,7 +232,7 @@ function closeModal(){ document.getElementById('modal-bd').classList.remove('ope
 
 function saveFurnitor(){
   const emri = document.getElementById('f-emri').value.trim();
-  if(!emri){ toast('⚠ Shkruaj emrin e furnitorit.'); return; }
+  if(!emri){ toast('�s� Shkruaj emrin e furnitorit.'); return; }
   const obj = {
     emri,
     tel:    document.getElementById('f-tel').value.trim(),
@@ -241,10 +245,10 @@ function saveFurnitor(){
   if(editId){
     const idx = list.findIndex(x => x.id === editId);
     if(idx >= 0) list[idx] = {...list[idx], ...obj};
-    toast('✓ Furnitori u përditësua.');
+    toast('�o" Furnitori u përditësua.');
   } else {
     list.push({id: genId(), created: new Date().toISOString(), ...obj});
-    toast('✓ Furnitori u shtua.');
+    toast('�o" Furnitori u shtua.');
   }
   DB.furnitoret = list;
   closeModal();
@@ -261,6 +265,8 @@ function confirmDel(){
 document.addEventListener('keydown', e => { if(e.key === 'Escape'){ closeModal(); closeConf(); } });
 
 renderList();
+autoBackup();
 </script>
 </body>
 </html>
+
