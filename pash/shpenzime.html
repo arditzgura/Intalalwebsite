@@ -188,7 +188,7 @@ let sortDir   = 'desc';
 
 function setSort(col){
   if(sortCol===col) sortDir = sortDir==='asc'?'desc':'asc';
-  else { sortCol=col; sortDir=col==='data'?'desc':'asc'; }
+  else { sortCol=col; sortDir='desc'; }
   renderList();
 }
 
@@ -393,9 +393,9 @@ function renderList(){
   }).join('');
   wrap.innerHTML=`<table>
     <thead><tr>
-      <th class="th-sort" onclick="setSort('data')">Data ${sortCol==='data'?`<span class="sort-arrow">${sortDir==='asc'?'�?'':'—'}</span>`:'<span class="sort-arrow muted">�?.</span>'}</th>
-      <th class="th-sort" onclick="setSort('pershkrim')">Përshkrimi / Kategoria ${sortCol==='pershkrim'?`<span class="sort-arrow">${sortDir==='asc'?'�?'':'—'}</span>`:'<span class="sort-arrow muted">�?.</span>'}</th>
-      <th class="th-sort" onclick="setSort('shuma')">Shuma ${sortCol==='shuma'?`<span class="sort-arrow">${sortDir==='asc'?'�?'':'—'}</span>`:'<span class="sort-arrow muted">�?.</span>'}</th>
+      <th class="th-sort" onclick="setSort('data')">Data ${sortCol==='data'?`<span class="sort-arrow">${sortDir==='asc'?'↑':'↓'}</span>`:'<span class="sort-arrow muted">↕</span>'}</th>
+      <th class="th-sort" onclick="setSort('pershkrim')">Përshkrimi / Kategoria ${sortCol==='pershkrim'?`<span class="sort-arrow">${sortDir==='asc'?'↑':'↓'}</span>`:'<span class="sort-arrow muted">↕</span>'}</th>
+      <th class="th-sort" onclick="setSort('shuma')">Shuma ${sortCol==='shuma'?`<span class="sort-arrow">${sortDir==='asc'?'↑':'↓'}</span>`:'<span class="sort-arrow muted">↕</span>'}</th>
       <th>Mënyra</th><th>Shënime</th><th></th>
     </tr></thead>
     <tbody>${rows}</tbody>

@@ -768,7 +768,7 @@ function renderList(){
       </td>
     </tr>`;
   }).join('');
-  const si=(col)=>sortCol===col?`<span class="sort-arrow">${sortDir==='asc'?'�?'':'—'}</span>`:'<span class="sort-arrow muted">�?.</span>';
+  const si=(col)=>sortCol===col?`<span class="sort-arrow">${sortDir==='asc'?'↑':'↓'}</span>`:'<span class="sort-arrow muted">↕</span>';
   wrap.innerHTML=`<table>
     <thead><tr>
       <th>Nr.</th>
