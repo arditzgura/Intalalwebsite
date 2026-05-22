@@ -340,23 +340,6 @@ function saveShpenzim(){
   closeModal(); renderStats(); renderList();
 }
 
-/* ── Stats ───────────────────────────────────────────────────── */
-function renderStats(){
-  const all=DB.shpenzime;
-  const now=new Date();
-  const thisMonth=all.filter(x=>{const d=new Date(x.data);return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear();});
-  const totalAll=all.reduce((s,x)=>s+(x.shuma||0),0);
-  const totalMonth=thisMonth.reduce((s,x)=>s+(x.shuma||0),0);
-  const papaguar=all.filter(x=>x.statusi==='pa_paguar').reduce((s,x)=>s+(x.shuma||0),0);
-  const bycat={}; all.forEach(x=>{bycat[x.kategoria]=(bycat[x.kategoria]||0)+(x.shuma||0);});
-  const topCat=Object.entries(bycat).sort((a,b)=>b[1]-a[1])[0];
-  document.getElementById('stats-strip').innerHTML=`
-    <div class="period-card"><div class="pc-header"><div class="pc-icon red"><i class="ri-wallet-3-line"></i></div><span class="pc-label">Ky Muaj</span></div><div class="pc-val red">${fmtL(totalMonth)}</div></div>
-    <div class="period-card"><div class="pc-header"><div class="pc-icon blue"><i class="ri-calendar-line"></i></div><span class="pc-label">Totali Gjithsej</span></div><div class="pc-val">${fmtL(totalAll)}</div></div>
-    <div class="period-card"><div class="pc-header"><div class="pc-icon orange"><i class="ri-time-line"></i></div><span class="pc-label">Pa Paguar</span></div><div class="pc-val ${papaguar>0?'red':''}">${fmtL(papaguar)}</div></div>
-    <div class="period-card"><div class="pc-header"><div class="pc-icon green"><i class="ri-price-tag-3-line"></i></div><span class="pc-label">Kategoria Kryesore</span></div><div class="pc-val" style="font-size:14px">${topCat?esc(topCat[0]):'—'}</div></div>`;
-}
-
 /* ── List ────────────────────────────────────────────────────── */
 function renderList(){
   const q=document.getElementById('search').value.toLowerCase();
@@ -376,6 +359,15 @@ function renderList(){
   else if(sortCol==='shuma') list.sort((a,b)=>sortDir==='asc'?(a.shuma||0)-(b.shuma||0):(b.shuma||0)-(a.shuma||0));
 
   const total=list.reduce((s,x)=>s+(x.shuma||0),0);
+  const papaguar=list.filter(x=>x.statusi==='pa_paguar').reduce((s,x)=>s+(x.shuma||0),0);
+  const paguar=list.filter(x=>x.statusi!=='pa_paguar').reduce((s,x)=>s+(x.shuma||0),0);
+  const bycat={}; list.forEach(x=>{bycat[x.kategoria]=(bycat[x.kategoria]||0)+(x.shuma||0);});
+  const topCat=Object.entries(bycat).sort((a,b)=>b[1]-a[1])[0];
+  document.getElementById('stats-strip').innerHTML=`
+    <div class="period-card"><div class="pc-header"><div class="pc-icon red"><i class="ri-wallet-3-line"></i></div><span class="pc-label">Totali Filtruar</span></div><div class="pc-val red">${fmtL(total)}</div></div>
+    <div class="period-card"><div class="pc-header"><div class="pc-icon green"><i class="ri-checkbox-circle-line"></i></div><span class="pc-label">E Paguar</span></div><div class="pc-val">${fmtL(paguar)}</div></div>
+    <div class="period-card"><div class="pc-header"><div class="pc-icon orange"><i class="ri-time-line"></i></div><span class="pc-label">Pa Paguar</span></div><div class="pc-val ${papaguar>0?'red':''}">${fmtL(papaguar)}</div></div>
+    <div class="period-card"><div class="pc-header"><div class="pc-icon blue"><i class="ri-price-tag-3-line"></i></div><span class="pc-label">Kategoria Kryesore</span></div><div class="pc-val" style="font-size:14px">${topCat?esc(topCat[0]):'—'}</div></div>`;
   document.getElementById('list-total').textContent=`${list.length} rekorde · ${fmtL(total)}`;
 
   const wrap=document.getElementById('list-wrap');
@@ -452,7 +444,6 @@ document.addEventListener('keydown',e=>{
 });
 
 DP.onchange = renderList;
-renderStats();
 renderList();
 autoBackup();
 </script>

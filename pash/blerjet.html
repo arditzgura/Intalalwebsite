@@ -46,6 +46,8 @@
       <button class="btn-primary" onclick="openModal()"><i class="ri-add-line"></i> Blerje e Re</button>
     </div>
 
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px;" id="stats-strip"></div>
+
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;">
       <div class="search-wrap">
         <i class="ri-search-line"></i>
@@ -739,6 +741,14 @@ function renderList(){
   else if(sortCol==='totali') list.sort((a,b)=>sortDir==='asc'?(a.totali||0)-(b.totali||0):(b.totali||0)-(a.totali||0));
 
   const total=list.reduce((s,b)=>s+(b.totali||0),0);
+  const totalPaguar=list.filter(b=>b.statusi==='paguar').reduce((s,b)=>s+(b.totali||0),0);
+  const totalPapaguar=list.filter(b=>b.statusi==='pa_paguar').reduce((s,b)=>s+(b.totali||0),0);
+  const furnCnt=new Set(list.map(b=>b.furnitori_id||b.furnitor_emri).filter(Boolean)).size;
+  document.getElementById('stats-strip').innerHTML=`
+    <div class="period-card"><div class="pc-header"><div class="pc-icon blue"><i class="ri-shopping-bag-line"></i></div><span class="pc-label">Totali Filtruar</span></div><div class="pc-val">${fmtL(total)}</div></div>
+    <div class="period-card"><div class="pc-header"><div class="pc-icon green"><i class="ri-checkbox-circle-line"></i></div><span class="pc-label">E Paguar</span></div><div class="pc-val">${fmtL(totalPaguar)}</div></div>
+    <div class="period-card"><div class="pc-header"><div class="pc-icon orange"><i class="ri-time-line"></i></div><span class="pc-label">Pa Paguar</span></div><div class="pc-val ${totalPapaguar>0?'red':''}">${fmtL(totalPapaguar)}</div></div>
+    <div class="period-card"><div class="pc-header"><div class="pc-icon red"><i class="ri-user-2-line"></i></div><span class="pc-label">Furnitorë</span></div><div class="pc-val">${furnCnt}</div></div>`;
   document.getElementById('list-total').textContent=`${list.length} rekorde · ${fmtL(total)}`;
 
   const wrap=document.getElementById('list-wrap');
