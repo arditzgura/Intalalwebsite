@@ -140,79 +140,106 @@
     }
     .showcase-card {
       cursor: pointer;
-      background: #fff;
-      border-radius: 6px;
+      border-radius: 12px;
       overflow: hidden;
-      box-shadow: 0 1px 8px rgba(0,0,0,.06);
-      transition: box-shadow .25s, transform .25s;
-    }
-    .showcase-card:hover { box-shadow: 0 5px 18px rgba(0,0,0,.11); transform: translateY(-2px); }
-    /* Desktop: portrait card, image fills */
-    .showcase-img-wrap {
       position: relative;
-      overflow: hidden;
       aspect-ratio: 3 / 4;
-      background: var(--surface-gray);
+      background: #1a1a1a;
+      transition: transform .3s ease, box-shadow .3s ease;
+    }
+    .showcase-card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(0,0,0,.18); }
+    .showcase-img-wrap {
+      position: absolute;
+      inset: 0;
     }
     .showcase-img-wrap img {
       width: 100%; height: 100%; object-fit: cover; display: block;
-      transition: transform 0.5s ease;
+      transition: transform 0.6s ease;
     }
-    .showcase-card:hover .showcase-img-wrap img { transform: scale(1.04); }
-    /* Mobile: portrait 2/3, image fills completely */
-    @media (max-width: 700px) {
-      .showcase-img-wrap {
-        aspect-ratio: 2 / 3;
-      }
-      .showcase-img-wrap img {
-        object-fit: cover;
-      }
-    }
-    .showcase-cat-label {
+    .showcase-card:hover .showcase-img-wrap img { transform: scale(1.05); }
+    /* Gradient overlay */
+    .showcase-img-wrap::after {
+      content: '';
       position: absolute;
-      top: 10px; left: 10px;
-      background: rgba(255,255,255,.93);
-      backdrop-filter: blur(4px);
-      border-radius: 4px;
-      padding: 4px 9px;
-      font-size: 9px;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(0,0,0,.35) 0%, rgba(0,0,0,.1) 40%, rgba(0,0,0,.55) 70%, rgba(0,0,0,.82) 100%);
+    }
+    /* Top row: brand + number */
+    .showcase-top {
+      position: absolute;
+      top: 16px; left: 16px; right: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 3;
+    }
+    .showcase-brand {
+      font-size: 8px;
       font-weight: 700;
-      letter-spacing: 1.5px;
+      letter-spacing: 2px;
       text-transform: uppercase;
-      color: var(--black);
-      z-index: 2;
+      color: rgba(255,255,255,.8);
     }
+    .showcase-num {
+      font-size: 10px;
+      letter-spacing: 1px;
+      color: rgba(255,255,255,.6);
+      font-style: italic;
+    }
+    /* Bottom info */
     .showcase-body {
-      padding: clamp(9px, 0.85vw, 14px);
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 20px 18px 18px;
+      z-index: 3;
     }
-    @media (max-width: 700px) {
-      .showcase-body { padding: 10px 12px; }
+    .showcase-body-eyebrow {
+      font-size: 8px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.6);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
+    .showcase-body-eyebrow::before { content: '—'; }
     .showcase-body-name {
-      font-size: clamp(11px, 0.85vw, 13px);
-      font-weight: 600;
-      letter-spacing: -0.2px;
-      color: var(--black);
-      margin-bottom: 3px;
-    }
-    .showcase-body-desc {
-      font-size: clamp(10px, 0.7vw, 11px);
-      line-height: 1.5;
-      color: var(--muted);
-      margin-bottom: 8px;
+      font-size: clamp(22px, 2.2vw, 30px);
+      font-weight: 400;
+      font-style: italic;
+      letter-spacing: -0.5px;
+      color: #fff;
+      margin-bottom: 14px;
+      line-height: 1;
+      font-family: Georgia, 'Times New Roman', serif;
     }
     .showcase-body-cta {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
       font-size: 9px;
-      font-weight: 600;
-      letter-spacing: 1.5px;
+      font-weight: 700;
+      letter-spacing: 1.8px;
       text-transform: uppercase;
-      color: var(--black);
-      border-bottom: 0.5px solid var(--black);
-      padding-bottom: 1px;
-      transition: opacity .15s;
+      color: rgba(255,255,255,.85);
+      border-bottom: 0.5px solid rgba(255,255,255,.4);
+      padding-bottom: 2px;
+      transition: color .15s, border-color .15s;
     }
-    .showcase-card:hover .showcase-body-cta { opacity: .5; }
+    .showcase-card:hover .showcase-body-cta { color: #fff; border-color: rgba(255,255,255,.8); }
+    /* Sub-label below card */
+    .showcase-sublabel {
+      margin-top: 10px;
+      font-size: 11px;
+      color: var(--black);
+    }
+    .showcase-sublabel strong { font-weight: 600; }
+    .showcase-sublabel span { color: var(--muted); }
+    @media (max-width: 700px) {
+      .showcase-card { aspect-ratio: 2 / 3; border-radius: 8px; }
+      .showcase-body-name { font-size: 22px; }
+    }
 
     /* ── About ──────────────────────────────────────────────────── */
     .about-section {
@@ -1138,16 +1165,23 @@
         var desc = data && data.kategoriSettings && data.kategoriSettings.kryesoreDesc && data.kategoriSettings.kryesoreDesc[kat]
           ? data.kategoriSettings.kryesoreDesc[kat]
           : 'Zbulo koleksionin e plotë të ' + kat.toLowerCase() + ' me cilësi të lartë prodhimi shqiptar.';
-        html += '<div class="showcase-card" onclick="location.href=\''+href+'\'">'
+        var num = '№ 0'+(i+1);
+        html += '<div onclick="location.href=\''+href+'\'">'
+          +'<div class="showcase-card">'
           +'<div class="showcase-img-wrap">'
-          +(img ? '<img src="'+img+'" alt="'+kat+'" loading="lazy">' : '<div style="width:100%;height:100%;background:#e8e8e8;"></div>')
-          +'<div class="showcase-cat-label">'+kat+'</div>'
+          +(img ? '<img src="'+img+'" alt="'+kat+'" loading="lazy">' : '')
+          +'</div>'
+          +'<div class="showcase-top">'
+          +'<span class="showcase-brand">Intal Underwear</span>'
+          +'<span class="showcase-num">'+num+'</span>'
           +'</div>'
           +'<div class="showcase-body">'
+          +'<p class="showcase-body-eyebrow">Koleksioni</p>'
           +'<p class="showcase-body-name">'+kat+'</p>'
-          +'<p class="showcase-body-desc">'+desc+'</p>'
-          +'<span class="showcase-body-cta">Zbulo Koleksionin</span>'
+          +'<span class="showcase-body-cta">Zbulo Koleksionin &rarr;</span>'
           +'</div>'
+          +'</div>'
+          +'<div class="showcase-sublabel"><strong>'+kat+'</strong> <span>&middot; '+desc+'</span></div>'
           +'</div>';
       });
       grid.innerHTML = html || '<p style="color:var(--muted);font-size:13px;">Nuk ka kategori. Shto nga paneli admin.</p>';
