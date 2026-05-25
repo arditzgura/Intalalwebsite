@@ -77,27 +77,62 @@
       </div>
     </div>
 
-    <!-- Period filter -->
-    <div class="period-row">
+    <!-- Period filter row 1: period tabs + sub-selectors -->
+    <div class="period-row" style="flex-wrap:wrap;gap:8px;">
       <div class="period-icon-box"><i class="ri-filter-3-line"></i></div>
       <div class="period-tabs">
-        <button class="period-tab active" data-p="all"   onclick="setPeriod(this,'all')">Gjithë kohës</button>
-        <button class="period-tab" data-p="today" onclick="setPeriod(this,'today')">Ditore</button>
-        <button class="period-tab" data-p="month" onclick="setPeriod(this,'month')">Muaji</button>
-        <button class="period-tab" data-p="year"  onclick="setPeriod(this,'year')">Viti</button>
+        <button class="period-tab active" id="pt-all"    onclick="setPeriod('all')">Gjithë kohës</button>
+        <button class="period-tab"        id="pt-month"  onclick="setPeriod('month')">Mujore</button>
+        <button class="period-tab"        id="pt-year"   onclick="setPeriod('year')">Vjetore</button>
+        <button class="period-tab"        id="pt-manual" onclick="setPeriod('manual')"><i class="ri-calendar-line"></i> Manual</button>
       </div>
+
+      <!-- Month picker (shown when Mujore active) -->
+      <div id="picker-month" style="display:none;align-items:center;gap:6px;">
+        <select id="sel-month" onchange="renderDashboard()" style="background:var(--white);border:0.5px solid var(--border);border-radius:7px;padding:6px 10px;font-family:'Switzer',sans-serif;font-size:12px;outline:none;"></select>
+        <select id="sel-month-year" onchange="renderDashboard()" style="background:var(--white);border:0.5px solid var(--border);border-radius:7px;padding:6px 10px;font-family:'Switzer',sans-serif;font-size:12px;outline:none;"></select>
+      </div>
+
+      <!-- Year picker (shown when Vjetore active) -->
+      <div id="picker-year" style="display:none;align-items:center;gap:6px;">
+        <select id="sel-year" onchange="renderDashboard()" style="background:var(--white);border:0.5px solid var(--border);border-radius:7px;padding:6px 10px;font-family:'Switzer',sans-serif;font-size:12px;outline:none;"></select>
+      </div>
+
+      <!-- Manual date picker (shown when Manual active) -->
+      <div class="dp-wrap" id="dp-wrap" style="display:none;">
+        <button class="dp-trigger" id="dp-trigger" onclick="DP.toggle()">
+          <i class="ri-calendar-line"></i><span id="dp-label">Zgjidh datën</span>
+        </button>
+        <div class="dp-popup" id="dp-popup">
+          <div class="dp-nav">
+            <button class="dp-nav-btn" onclick="DP.nav(-1)">&#9664;</button>
+            <button class="dp-title" id="dp-title" onclick="DP.toggleMode()">—</button>
+            <button class="dp-nav-btn" onclick="DP.nav(1)">&#9654;</button>
+          </div>
+          <div id="dp-body"></div>
+          <div class="dp-footer">
+            <button class="dp-clear" onclick="DP.clear()">Pastro</button>
+            <button class="dp-today" onclick="DP.today()">Sot</button>
+          </div>
+        </div>
+      </div>
+
       <!-- Mënyra filter -->
-      <div style="display:flex;gap:5px;margin-left:12px;">
+      <div style="display:flex;gap:5px;margin-left:auto;">
         <button class="period-tab active" id="mf-all"   onclick="setMenyra(this,'')">Të gjitha</button>
         <button class="period-tab" id="mf-banke" onclick="setMenyra(this,'banke')"><i class="ri-bank-line"></i> Bankë</button>
         <button class="period-tab" id="mf-dore"  onclick="setMenyra(this,'dore')"><i class="ri-hand-coin-line"></i> Dorë</button>
       </div>
-      <div class="period-right">
-        <div class="period-info">
-          <small>Periudha operative</small>
-          <strong id="period-label">—</strong>
-        </div>
-      </div>
+
+      <div style="font-size:11px;color:var(--muted);font-weight:600;white-space:nowrap;padding:4px 0;" id="period-label"></div>
+    </div>
+
+    <!-- Type filter row -->
+    <div style="display:flex;align-items:center;gap:6px;margin-bottom:14px;margin-top:-6px;">
+      <span style="font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);font-weight:600;margin-right:4px;">Shfaq:</span>
+      <button class="period-tab active" id="tf-all"       onclick="setType(this,'')">Të gjitha</button>
+      <button class="period-tab"        id="tf-blerje"    onclick="setType(this,'blerje')"><i class="ri-shopping-bag-line"></i> Blerjet</button>
+      <button class="period-tab"        id="tf-shpenzime" onclick="setType(this,'shpenzime')"><i class="ri-wallet-3-line"></i> Shpenzimet</button>
     </div>
 
     <!-- Period cards — 5 karta -->
@@ -131,10 +166,10 @@
 
     <!-- Bottom grid -->
     <div class="bottom-grid">
-      <!-- Recent purchases -->
+      <!-- Veprimet e fundit -->
       <div class="card">
         <div class="card-head">
-          <span class="card-title">Blerjet e Fundit të Periudhës</span>
+          <span class="card-title" id="tbl-title">Veprimet e Fundit</span>
           <span class="count-badge" id="tbl-count">0 dokumente</span>
         </div>
         <div id="tbl-body"></div>
@@ -156,15 +191,39 @@
 
 <script src="pash-data.js"></script>
 <script>
-/* ── Period + Mënyra state ───────────────────────────────────── */
-let activePeriod = 'all';
-let activeMenyra = '';
+/* ── State ───────────────────────────────────────────────────── */
 const now = new Date();
+let activePeriod = 'all';   // 'all'|'month'|'year'|'manual'
+let activeMenyra = '';
+let activeType   = '';      // ''|'blerje'|'shpenzime'
 
-function setPeriod(el, p){
+/* ── Build year/month selects ────────────────────────────────── */
+function buildSelects(){
+  const allDates = [...DB.blerjet.map(b=>b.data), ...DB.shpenzime.map(x=>x.data)].filter(Boolean);
+  const years = [...new Set(allDates.map(d=>new Date(d).getFullYear()))].sort((a,b)=>b-a);
+  if(!years.length) years.push(now.getFullYear());
+
+  const selMY = document.getElementById('sel-month-year');
+  const selY  = document.getElementById('sel-year');
+  [selMY, selY].forEach(sel=>{
+    const cur = sel.value || String(now.getFullYear());
+    sel.innerHTML = years.map(y=>`<option value="${y}" ${String(y)===cur?'selected':''}>${y}</option>`).join('');
+  });
+
+  const selM = document.getElementById('sel-month');
+  const curM = selM.value || String(now.getMonth());
+  selM.innerHTML = MONTHS_SQ.map((n,i)=>`<option value="${i}" ${String(i)===curM?'selected':''}>${n}</option>`).join('');
+}
+
+/* ── Period tabs ─────────────────────────────────────────────── */
+function setPeriod(p){
   activePeriod = p;
-  document.querySelectorAll('.period-tab[data-p]').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');
+  ['pt-all','pt-month','pt-year','pt-manual'].forEach(id=>document.getElementById(id).classList.remove('active'));
+  document.getElementById('pt-'+p).classList.add('active');
+  document.getElementById('picker-month').style.display = p==='month' ? 'flex' : 'none';
+  document.getElementById('picker-year').style.display  = p==='year'  ? 'flex' : 'none';
+  document.getElementById('dp-wrap').style.display      = p==='manual'? 'flex' : 'none';
+  if(p==='month'||p==='year') buildSelects();
   renderDashboard();
 }
 
@@ -175,34 +234,54 @@ function setMenyra(el, m){
   renderDashboard();
 }
 
+function setType(el, t){
+  activeType = t;
+  ['tf-all','tf-blerje','tf-shpenzime'].forEach(id=>document.getElementById(id).classList.remove('active'));
+  el.classList.add('active');
+  renderDashboard();
+}
+
+/* ── Period matching ─────────────────────────────────────────── */
 function inPeriod(iso){
+  if(!iso) return activePeriod==='all';
   const d = new Date(iso);
-  if(activePeriod === 'all')   return true;
-  if(activePeriod === 'today') return d.toDateString() === now.toDateString();
-  if(activePeriod === 'month') return d.getMonth()===now.getMonth() && d.getFullYear()===now.getFullYear();
-  if(activePeriod === 'year')  return d.getFullYear() === now.getFullYear();
+  if(activePeriod==='all')    return true;
+  if(activePeriod==='month'){
+    const m = parseInt(document.getElementById('sel-month').value);
+    const y = parseInt(document.getElementById('sel-month-year').value);
+    return d.getMonth()===m && d.getFullYear()===y;
+  }
+  if(activePeriod==='year'){
+    const y = parseInt(document.getElementById('sel-year').value);
+    return d.getFullYear()===y;
+  }
+  if(activePeriod==='manual') return DP.matches(iso);
   return true;
 }
 
 function periodLabelStr(){
-  if(activePeriod==='all')   return 'Gjithë kohës';
-  if(activePeriod==='today') return fmtDate(todayISO());
-  if(activePeriod==='month') return monthLabel(now.getFullYear(), now.getMonth());
-  if(activePeriod==='year')  return String(now.getFullYear());
+  if(activePeriod==='all')    return 'Gjithë kohës';
+  if(activePeriod==='month'){
+    const m=parseInt(document.getElementById('sel-month').value||now.getMonth());
+    const y=parseInt(document.getElementById('sel-month-year').value||now.getFullYear());
+    return MONTHS_SQ[m]+' '+y;
+  }
+  if(activePeriod==='year')   return document.getElementById('sel-year').value||String(now.getFullYear());
+  if(activePeriod==='manual') return document.getElementById('dp-label').textContent||'—';
   return '';
 }
 
-/* ── Dashboard render ────────────────────────────────────────── */
 function inMenyra(rec){
   if(!activeMenyra) return true;
-  return (rec.menyra_pages||'dore') === activeMenyra;
+  return (rec.menyra_pages||'dore')===activeMenyra;
 }
 
+/* ── Dashboard render ────────────────────────────────────────── */
 function renderDashboard(){
   const blerjet   = DB.blerjet;
   const shpenzime = DB.shpenzime;
 
-  /* Banner — all time (no menyra filter, totals always) */
+  /* Banner — all time */
   const allBlerje  = blerjet.reduce((s,b)=>s+(b.totali||0),0);
   const allSh      = shpenzime.reduce((s,x)=>s+(x.shuma||0),0);
   const allPaguar  = blerjet.filter(b=>b.statusi==='paguar').reduce((s,b)=>s+(b.totali||0),0)
@@ -211,117 +290,144 @@ function renderDashboard(){
                    + shpenzime.filter(x=>x.statusi==='pa_paguar').reduce((s,x)=>s+(x.shuma||0),0);
 
   document.getElementById('bn-blerje').textContent     = fmtL(allBlerje);
-  document.getElementById('bn-blerje-sub').textContent = blerjet.length + ' blerje totale';
-  document.getElementById('bn-shpenzime').textContent  = fmtL(allBlerje + allSh);
+  document.getElementById('bn-blerje-sub').textContent = blerjet.length+' blerje totale';
+  document.getElementById('bn-shpenzime').textContent  = fmtL(allBlerje+allSh);
   document.getElementById('bn-paguar').textContent     = fmtL(allPaguar);
   document.getElementById('bn-detyrime').textContent   = fmtL(allDetyrim);
-
-  /* Period label */
-  document.getElementById('period-label').textContent = periodLabelStr();
+  document.getElementById('period-label').textContent  = periodLabelStr();
 
   /* Filtered lists */
-  const pb  = blerjet.filter(b=>inPeriod(b.data) && inMenyra(b));
-  const psh = shpenzime.filter(x=>inPeriod(x.data) && inMenyra(x));
+  const pb  = blerjet.filter(b=>inPeriod(b.data)&&inMenyra(b));
+  const psh = shpenzime.filter(x=>inPeriod(x.data)&&inMenyra(x));
 
   const pbTotal  = pb.reduce((s,b)=>s+(b.totali||0),0);
   const pshTotal = psh.reduce((s,x)=>s+(x.shuma||0),0);
-  const combined = pbTotal + pshTotal;
-
-  /* Paguar = blerjet paguar + shpenzime paguar */
+  const combined = pbTotal+pshTotal;
   const ppaguarB  = pb.filter(b=>b.statusi==='paguar').reduce((s,b)=>s+(b.totali||0),0);
   const ppaguarSh = psh.filter(x=>x.statusi!=='pa_paguar').reduce((s,x)=>s+(x.shuma||0),0);
-  const ppaguar   = ppaguarB + ppaguarSh;
-
-  /* Pa paguar = blerjet pa_paguar + shpenzime pa_paguar */
   const ppapagB   = pb.filter(b=>b.statusi==='pa_paguar').reduce((s,b)=>s+(b.totali||0),0);
   const ppapagSh  = psh.filter(x=>x.statusi==='pa_paguar').reduce((s,x)=>s+(x.shuma||0),0);
-  const ppapag    = ppapagB + ppapagSh;
+  const ppaguar   = ppaguarB+ppaguarSh;
+  const ppapag    = ppapagB+ppapagSh;
 
-  document.getElementById('pc-blerje').textContent       = fmtL(pbTotal);
-  document.getElementById('pc-blerje-sub').textContent   = pb.length + ' blerje';
-  document.getElementById('pc-shpenzime').textContent    = fmtL(pshTotal);
-  document.getElementById('pc-shpenzime-sub').textContent= psh.length + ' shpenzime';
-  document.getElementById('pc-total').textContent        = fmtL(combined);
-  document.getElementById('pc-total-sub').textContent    = (pb.length+psh.length) + ' veprime gjithsej';
-  document.getElementById('pc-paguar').textContent       = fmtL(ppaguar);
-  document.getElementById('pc-paguar-sub').textContent   = combined>0 ? Math.round(ppaguar/combined*100)+'% e totalit' : '';
-  document.getElementById('pc-pa-paguar').textContent    = fmtL(ppapag);
-  document.getElementById('pc-papaguar-sub').textContent = combined>0 ? Math.round(ppapag/combined*100)+'% e totalit' : '';
+  document.getElementById('pc-blerje').textContent        = fmtL(pbTotal);
+  document.getElementById('pc-blerje-sub').textContent    = pb.length+' blerje';
+  document.getElementById('pc-shpenzime').textContent     = fmtL(pshTotal);
+  document.getElementById('pc-shpenzime-sub').textContent = psh.length+' shpenzime';
+  document.getElementById('pc-total').textContent         = fmtL(combined);
+  document.getElementById('pc-total-sub').textContent     = (pb.length+psh.length)+' veprime';
+  document.getElementById('pc-paguar').textContent        = fmtL(ppaguar);
+  document.getElementById('pc-paguar-sub').textContent    = combined>0?Math.round(ppaguar/combined*100)+'% e totalit':'';
+  document.getElementById('pc-pa-paguar').textContent     = fmtL(ppapag);
+  document.getElementById('pc-papaguar-sub').textContent  = combined>0?Math.round(ppapag/combined*100)+'% e totalit':'';
 
-  /* Table */
+  /* ── Table: filtered by activeType ──────────────────────────── */
+  const furnitoret = DB.furnitoret;
   const tbl = document.getElementById('tbl-body');
-  const sorted = [...pb].sort((a,b)=>new Date(b.data)-new Date(a.data)).slice(0,12);
-  document.getElementById('tbl-count').textContent = pb.length + ' dokumente';
 
-  if(!sorted.length){
-    tbl.innerHTML = '<div class="empty"><i class="ri-shopping-bag-line"></i>Nuk ka blerje për këtë periudhë.</div>';
+  /* Build unified list */
+  let unified = [];
+  if(activeType===''||activeType==='blerje'){
+    pb.forEach(b=>{
+      const f=furnitoret.find(x=>x.id===b.furnitori_id);
+      unified.push({
+        _type:'blerje', _date:b.data,
+        emertimi: f?f.emri:(b.furnitor_emri||'—'),
+        sub: (b.items||[]).map(i=>i.zeri_emri||'').filter(Boolean).join(', ')||'—',
+        vlera:b.totali||0, statusi:b.statusi||'paguar', menyra:b.menyra_pages||'dore',
+        href:'blerjet.html'
+      });
+    });
+  }
+  if(activeType===''||activeType==='shpenzime'){
+    psh.forEach(x=>{
+      unified.push({
+        _type:'shpenzim', _date:x.data,
+        emertimi: x.pershkrim||'Pa përshkrim',
+        sub: x.kategoria||'Pa kategori',
+        vlera:x.shuma||0, statusi:x.statusi||'paguar', menyra:x.menyra_pages||'dore',
+        href:'shpenzime.html'
+      });
+    });
+  }
+  unified.sort((a,b)=>new Date(b._date)-new Date(a._date));
+
+  const typeLabels = {'':' Veprimet','blerje':' Blerjet','shpenzime':' Shpenzimet'};
+  document.getElementById('tbl-title').textContent = typeLabels[activeType]+' e Fundit';
+  document.getElementById('tbl-count').textContent = unified.length+' dokumente';
+
+  if(!unified.length){
+    tbl.innerHTML='<div class="empty"><i class="ri-inbox-line"></i>Nuk ka veprime për këtë periudhë.</div>';
   } else {
-    const furnitoret = DB.furnitoret;
-    const rows = sorted.map(b=>{
-      const f = furnitoret.find(x=>x.id===b.furnitori_id);
-      const fname = f ? f.emri : (b.furnitor_emri||'—');
-      const stCls = b.statusi==='paguar' ? 'paguar' : 'pa-paguar';
-      const stLbl = b.statusi==='paguar' ? 'E Paguar' : 'Pa Paguar';
-      const mLbl  = (b.menyra_pages||'dore')==='banke'?'<i class="ri-bank-line"></i> Bankë':'<i class="ri-hand-coin-line"></i> Dorë';
-      return `<tr onclick="location.href='blerjet.html'">
-        <td class="td-nr">${b.nr||'—'}</td>
-        <td class="td-name">${esc(fname)}</td>
-        <td>${fmtL(b.totali)}</td>
-        <td><span class="badge ${stCls}">${stLbl}</span><span class="badge badge-menyra" style="margin-left:4px">${mLbl}</span></td>
+    const rows = unified.slice(0,20).map(r=>{
+      const st   = r.statusi==='paguar';
+      const mLbl = r.menyra==='banke'?'<i class="ri-bank-line"></i> Bankë':'<i class="ri-hand-coin-line"></i> Dorë';
+      const typeBadge = r._type==='blerje'
+        ? '<span style="font-size:9px;font-weight:700;color:var(--blue);background:var(--blue-dim);padding:2px 6px;border-radius:4px;letter-spacing:.5px">BLERJE</span>'
+        : '<span style="font-size:9px;font-weight:700;color:var(--accent);background:var(--accent-dim);padding:2px 6px;border-radius:4px;letter-spacing:.5px">SHPENZIM</span>';
+      return `<tr onclick="location.href='${r.href}'" style="cursor:pointer;">
+        <td>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div>${typeBadge}</div>
+            <div>
+              <div class="td-name">${esc(r.emertimi)}</div>
+              <div class="td-sub">${esc(r.sub)}</div>
+            </div>
+          </div>
+        </td>
+        <td style="font-size:12px;white-space:nowrap;">${r._date?fmtDate(r._date):'—'}</td>
+        <td class="td-amt" style="color:var(--accent);font-weight:700;">${fmtL(r.vlera)}</td>
+        <td>
+          <span class="badge ${st?'paguar':'pa-paguar'}">${st?'E Paguar':'Pa Paguar'}</span>
+          <span class="badge badge-menyra" style="margin-left:4px">${mLbl}</span>
+        </td>
       </tr>`;
     }).join('');
-    tbl.innerHTML=`<table><thead><tr><th>Nr.</th><th>Furnitori</th><th>Totali</th><th>Statusi / Mënyra</th></tr></thead><tbody>${rows}</tbody></table>`;
+    tbl.innerHTML=`<table><thead><tr>
+      <th>Emërtimi / Lloji</th><th>Data</th><th>Vlera</th><th>Statusi / Mënyra</th>
+    </tr></thead><tbody>${rows}</tbody></table>`;
   }
 
-  /* Analysis */
   renderAnalysis(pb, psh, pshTotal, pbTotal);
 }
 
 function renderAnalysis(pb, psh, pshTotal, pbTotal){
-  const total = pbTotal + pshTotal;
+  const total  = pbTotal+pshTotal;
   const paguar = pb.filter(b=>b.statusi==='paguar').reduce((s,b)=>s+(b.totali||0),0)
                + psh.filter(x=>x.statusi!=='pa_paguar').reduce((s,x)=>s+(x.shuma||0),0);
-
-  /* Category breakdown */
-  const bycat = {};
+  const bycat  = {};
   pb.forEach(b=>(b.items||[]).forEach(it=>{
-    const cat = it.kategoria || 'Blerje';
-    bycat[cat] = (bycat[cat]||0) + (it.totali||0);
+    const cat=it.kategoria||'Blerje'; bycat[cat]=(bycat[cat]||0)+(it.totali||0);
   }));
   const entries = Object.entries(bycat).sort((a,b)=>b[1]-a[1]);
-  const catMax = entries.length ? entries[0][1] : 1;
+  const catMax  = entries.length?entries[0][1]:1;
+  const colors  = {'Lëndë e Parë':'#c8003e','Aksesore':'#4361ee','Tjetër':'#f5a623'};
 
-  const colors = {'Lëndë e Parë':'#c8003e','Aksesore':'#4361ee','Tjetër':'#f5a623'};
-
-  let html = '';
-  if(total > 0){
-    const pctPaguar = Math.round((paguar / (pbTotal||1)) * 100);
-    html += `<div class="analysis-row">
+  let html='';
+  if(total>0){
+    const pct=Math.round((paguar/(pbTotal||1))*100);
+    html+=`<div class="analysis-row">
       <div class="ar-head"><span>Pjesa e paguar (periudhë)</span></div>
-      <div class="ar-track"><div class="ar-fill" style="width:${pctPaguar}%;background:var(--blue)"></div></div>
-      <div class="ar-val" style="color:var(--blue)">${pctPaguar}%</div>
+      <div class="ar-track"><div class="ar-fill" style="width:${pct}%;background:var(--blue)"></div></div>
+      <div class="ar-val" style="color:var(--blue)">${pct}%</div>
     </div>`;
   }
-
   entries.slice(0,4).forEach(([cat,val])=>{
-    const pct = Math.round((val/catMax)*100);
-    const col = colors[cat]||'#6b7280';
-    html += `<div class="analysis-row">
+    const pct=Math.round((val/catMax)*100);
+    html+=`<div class="analysis-row">
       <div class="ar-head"><span>${esc(cat)}</span></div>
-      <div class="ar-track"><div class="ar-fill" style="width:${pct}%;background:${col}"></div></div>
+      <div class="ar-track"><div class="ar-fill" style="width:${pct}%;background:${colors[cat]||'#6b7280'}"></div></div>
       <div class="ar-val">${fmtL(val)}</div>
     </div>`;
   });
-
-  if(!html) html = '<p style="font-size:12px;color:var(--muted)">Nuk ka të dhëna për periudhën.</p>';
-  document.getElementById('analysis-body').innerHTML = html;
-
-  const note = total > 0
-    ? `* Totali i periudhës: <strong>${fmtL(total)}</strong> (blerje + operative)`
-    : '* Shto blerje dhe shpenzime për të parë analizën.';
-  document.getElementById('analysis-note').innerHTML = note;
+  if(!html) html='<p style="font-size:12px;color:var(--muted)">Nuk ka të dhëna për periudhën.</p>';
+  document.getElementById('analysis-body').innerHTML=html;
+  document.getElementById('analysis-note').innerHTML=total>0
+    ?`* Totali i periudhës: <strong>${fmtL(total)}</strong> (blerje + operative)`
+    :'* Shto blerje dhe shpenzime për të parë analizën.';
 }
 
+DP.onchange = renderDashboard;
 renderDashboard();
 autoBackup();
 </script>
