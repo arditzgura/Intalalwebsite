@@ -72,6 +72,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);height:100vh;
       <button class="tab" onclick="switchTab('about',this)">About</button>
       <button class="tab" onclick="switchTab('services',this)">Shërbimet</button>
       <button class="tab" onclick="switchTab('contact',this)">Kontakt</button>
+      <button class="tab" onclick="switchTab('kategorite',this)">Kategoritë</button>
     </div>
 
     <!-- TAB: HERO -->
@@ -138,6 +139,13 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);height:100vh;
       <div class="field"><label>Titulli</label><input type="text" id="svc-heading" oninput="liveUpdate()"></div>
       <p class="section-title">Shërbimet (3 karta)</p>
       <div id="svc-cards-wrap"></div>
+    </div>
+
+    <!-- TAB: KATEGORITE -->
+    <div class="tab-content" id="tab-kategorite">
+      <p class="section-title">Foto Cover — Kategoritë</p>
+      <p style="font-size:11px;color:var(--muted);margin-bottom:14px;">Kliko mbi imazhin e çdo kategorie për të ndërruar foton cover që shfaqet në homepage.</p>
+      <div id="kat-cover-list"></div>
     </div>
 
     <!-- TAB: CONTACT -->
@@ -413,6 +421,62 @@ function switchTab(id, btn){
   document.querySelectorAll('.tab-content').forEach(function(t){t.classList.remove('active');});
   btn.classList.add('active');
   document.getElementById('tab-'+id).classList.add('active');
+  if(id==='kategorite') loadKatCovers();
+}
+
+/* ── FOTO COVER KATEGORIVE ── */
+var _katSettings = {kryesore:[], kryesoreFoto:{}};
+
+async function loadKatCovers(){
+  var el = document.getElementById('kat-cover-list');
+  el.innerHTML = '<p style="font-size:11px;color:var(--muted);">Duke ngarkuar...</p>';
+  try {
+    var raw = await sbGet('kategorisettings');
+    if(raw) _katSettings = JSON.parse(raw);
+    if(!_katSettings.kryesoreFoto) _katSettings.kryesoreFoto = {};
+  } catch(e){}
+  renderKatCovers();
+}
+
+function renderKatCovers(){
+  var el = document.getElementById('kat-cover-list');
+  var kats = (_katSettings.kryesore||[]).filter(function(k){ return k.toLowerCase()!=='pelhura'; });
+  if(!kats.length){ el.innerHTML='<p style="font-size:11px;color:var(--muted);">Nuk ka kategori.</p>'; return; }
+  el.innerHTML = kats.map(function(k){
+    var foto = (_katSettings.kryesoreFoto||{})[k]||'';
+    return '<div style="margin-bottom:14px;">'
+      +'<label style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--black);display:block;margin-bottom:6px;">'+k+'</label>'
+      +'<div onclick="document.getElementById(\'kc-inp-'+k.replace(/\s/g,'_')+'\').click()" style="position:relative;height:120px;border-radius:4px;overflow:hidden;background:#f0f0f0;border:.5px dashed #ccc;cursor:pointer;display:flex;align-items:center;justify-content:center;" id="kc-wrap-'+k.replace(/\s/g,'_')+'">'
+      +(foto?'<img src="'+foto+'" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">':'')
+      +'<span style="position:relative;z-index:2;font-size:11px;color:'+(foto?'#fff':'var(--muted)')+';background:'+(foto?'rgba(0,0,0,.45)':'transparent')+';padding:4px 10px;border-radius:20px;">'+(foto?'&#128247; Ndrysho foton':'&#128247; Ngarko foto cover')+'</span>'
+      +'<input type="file" id="kc-inp-'+k.replace(/\s/g,'_')+'" accept="image/*" style="display:none" onchange="uploadKatCover(\''+k+'\',this)">'
+      +'</div>'
+      +(foto?'<button onclick="removeKatCover(\''+k+'\')" style="margin-top:4px;background:none;border:none;color:#e00;font-size:10px;cursor:pointer;">Hiq foton</button>':'')
+      +'</div>';
+  }).join('');
+}
+
+async function uploadKatCover(k, inp){
+  if(!inp.files||!inp.files[0]) return;
+  var file = inp.files[0];
+  var wrapId = 'kc-wrap-'+k.replace(/\s/g,'_');
+  document.getElementById(wrapId).innerHTML='<span style="font-size:11px;color:var(--muted);">Duke ngarkuar...</span>';
+  var key = 'kat-foto-'+k.toLowerCase().replace(/\s/g,'-')+'-'+Date.now();
+  var url = await sbUploadImg(file, key);
+  if(!url){ alert('Gabim gjatë ngarkimit!'); renderKatCovers(); return; }
+  if(!_katSettings.kryesoreFoto) _katSettings.kryesoreFoto={};
+  _katSettings.kryesoreFoto[k] = url;
+  await sbSet('kategorisettings', JSON.stringify(_katSettings));
+  renderKatCovers();
+  refreshPreview();
+}
+
+async function removeKatCover(k){
+  if(!_katSettings.kryesoreFoto) return;
+  delete _katSettings.kryesoreFoto[k];
+  await sbSet('kategorisettings', JSON.stringify(_katSettings));
+  renderKatCovers();
+  refreshPreview();
 }
 
 fillForm();
