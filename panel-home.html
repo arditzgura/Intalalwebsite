@@ -143,9 +143,10 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);height:100vh;
 
     <!-- TAB: KATEGORITE -->
     <div class="tab-content" id="tab-kategorite">
-      <p class="section-title">Foto Cover — Kategoritë</p>
-      <p style="font-size:11px;color:var(--muted);margin-bottom:14px;">Kliko mbi imazhin e çdo kategorie për të ndërruar foton cover që shfaqet në homepage.</p>
+      <p class="section-title">Renditja &amp; Foto Cover</p>
+      <p style="font-size:11px;color:var(--muted);margin-bottom:14px;">Zvarrit &#9776; për të rivendosur rendin. Kliko imazhin për të ndërruar foton cover.</p>
       <div id="kat-cover-list"></div>
+      <button onclick="saveKatOrder()" style="margin-top:10px;width:100%;background:#111;color:#fff;border:none;border-radius:4px;padding:10px;font-size:11px;font-weight:700;letter-spacing:1px;cursor:pointer;">RUAJ RENDITJEN</button>
     </div>
 
     <!-- TAB: CONTACT -->
@@ -444,16 +445,53 @@ function renderKatCovers(){
   if(!kats.length){ el.innerHTML='<p style="font-size:11px;color:var(--muted);">Nuk ka kategori.</p>'; return; }
   el.innerHTML = kats.map(function(k){
     var foto = (_katSettings.kryesoreFoto||{})[k]||'';
-    return '<div style="margin-bottom:14px;">'
-      +'<label style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--black);display:block;margin-bottom:6px;">'+k+'</label>'
-      +'<div onclick="document.getElementById(\'kc-inp-'+k.replace(/\s/g,'_')+'\').click()" style="position:relative;height:120px;border-radius:4px;overflow:hidden;background:#f0f0f0;border:.5px dashed #ccc;cursor:pointer;display:flex;align-items:center;justify-content:center;" id="kc-wrap-'+k.replace(/\s/g,'_')+'">'
-      +(foto?'<img src="'+foto+'" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">':'')
-      +'<span style="position:relative;z-index:2;font-size:11px;color:'+(foto?'#fff':'var(--muted)')+';background:'+(foto?'rgba(0,0,0,.45)':'transparent')+';padding:4px 10px;border-radius:20px;">'+(foto?'&#128247; Ndrysho foton':'&#128247; Ngarko foto cover')+'</span>'
-      +'<input type="file" id="kc-inp-'+k.replace(/\s/g,'_')+'" accept="image/*" style="display:none" onchange="uploadKatCover(\''+k+'\',this)">'
+    var kid = k.replace(/\s/g,'_');
+    return '<div class="kat-row" draggable="true" data-kat="'+k+'" style="display:flex;align-items:center;gap:10px;margin-bottom:10px;background:#f8f8f8;border:1px solid var(--border);border-radius:6px;padding:8px 10px;cursor:default;">'
+      +'<span class="drag-handle" style="font-size:18px;color:#bbb;cursor:grab;flex-shrink:0;line-height:1;">&#9776;</span>'
+      +'<div onclick="document.getElementById(\'kc-inp-'+kid+'\').click()" style="position:relative;width:72px;height:56px;border-radius:4px;overflow:hidden;background:#e8e8e8;border:.5px dashed #ccc;cursor:pointer;flex-shrink:0;" id="kc-wrap-'+kid+'">'
+      +(foto?'<img src="'+foto+'" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">':'<span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:18px;">&#128247;</span>')
+      +'<input type="file" id="kc-inp-'+kid+'" accept="image/*" style="display:none" onchange="uploadKatCover(\''+k+'\',this)">'
       +'</div>'
-      +(foto?'<button onclick="removeKatCover(\''+k+'\')" style="margin-top:4px;background:none;border:none;color:#e00;font-size:10px;cursor:pointer;">Hiq foton</button>':'')
+      +'<div style="flex:1;min-width:0;">'
+      +'<div style="font-size:12px;font-weight:700;color:var(--black);margin-bottom:2px;">'+k+'</div>'
+      +'<div onclick="document.getElementById(\'kc-inp-'+kid+'\').click()" style="font-size:10px;color:#C8003E;cursor:pointer;">'+(foto?'Ndrysho foton':'Ngarko foto cover')+'</div>'
+      +'</div>'
+      +(foto?'<button onclick="removeKatCover(\''+k+'\')" style="background:none;border:none;color:#e00;font-size:18px;cursor:pointer;padding:0;flex-shrink:0;" title="Hiq foton">&#215;</button>':'')
       +'</div>';
   }).join('');
+  initDrag();
+}
+
+function initDrag(){
+  var list = document.getElementById('kat-cover-list');
+  var items = list.querySelectorAll('.kat-row');
+  var dragged = null;
+  items.forEach(function(row){
+    row.addEventListener('dragstart',function(){ dragged=row; row.style.opacity='.4'; });
+    row.addEventListener('dragend',function(){ row.style.opacity='1'; dragged=null; });
+    row.addEventListener('dragover',function(e){ e.preventDefault(); });
+    row.addEventListener('drop',function(e){
+      e.preventDefault();
+      if(dragged&&dragged!==row){
+        var all=Array.from(list.querySelectorAll('.kat-row'));
+        var fromIdx=all.indexOf(dragged), toIdx=all.indexOf(row);
+        if(fromIdx<toIdx) row.after(dragged); else row.before(dragged);
+      }
+    });
+  });
+}
+
+async function saveKatOrder(){
+  var rows = document.querySelectorAll('#kat-cover-list .kat-row');
+  var newOrder = Array.from(rows).map(function(r){ return r.getAttribute('data-kat'); });
+  /* Ruaj kategorite pelhura nëse ekzistojnë (në fund) */
+  var hasPel = (_katSettings.kryesore||[]).some(function(k){ return k.toLowerCase()==='pelhura'; });
+  _katSettings.kryesore = hasPel ? newOrder.concat(['Pelhura']) : newOrder;
+  await sbSet('kategorisettings', JSON.stringify(_katSettings));
+  refreshPreview();
+  var btn = document.querySelector('#tab-kategorite button');
+  btn.textContent='✓ Ruajtur!';
+  setTimeout(function(){ btn.textContent='RUAJ RENDITJEN'; },1800);
 }
 
 async function uploadKatCover(k, inp){
