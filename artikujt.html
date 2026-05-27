@@ -845,7 +845,10 @@
     function renderDetInfo(){
       var a=_det.articles[_det.artIdx];
       var sub=Array.isArray(a.sub)?a.sub.join(', '):(a.sub||'');
-      var kat=Array.isArray(a.kat)?a.kat.join(', '):(a.kat||'');
+      var isStinore=(Array.isArray(a.sub)?a.sub:[a.sub||'']).some(function(s){ return (s||'').toLowerCase()==='stinore'; });
+      var stinoreKats=['vere','dimer','verë','dimër'];
+      var katArr=artKatArr(a).filter(function(k){ return isStinore||!stinoreKats.includes((k||'').toLowerCase()); });
+      var kat=katArr.join(', ');
       document.getElementById('art-detail-kat').textContent=kat+(sub?' · '+sub:'');
       document.getElementById('art-detail-name').textContent=a.name||'';
       document.getElementById('art-detail-code').textContent=a.code?'KOD: '+a.code:'';
