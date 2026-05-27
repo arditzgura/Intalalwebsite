@@ -564,8 +564,22 @@
           row2+='</div>';
         }
       }
+      /* ruaj scroll-in e row1 para rikrijimt */
+      var oldRow1=bar.querySelector('.dfc-row');
+      var savedScroll=oldRow1?oldRow1.scrollLeft:0;
       bar.innerHTML=row1+row2;
       bar.style.display='block';
+      /* rikthe scroll-in ose scroll tek butoni aktiv */
+      var newRow1=bar.querySelector('.dfc-row');
+      if(newRow1){
+        var activeBtn=newRow1.querySelector('.dfc.active');
+        if(activeBtn){
+          /* scroll butoni aktiv në qendër të shiritit */
+          newRow1.scrollLeft=activeBtn.offsetLeft - newRow1.offsetWidth/2 + activeBtn.offsetWidth/2;
+        } else {
+          newRow1.scrollLeft=savedScroll;
+        }
+      }
       syncWrapH();
     }
 
