@@ -217,7 +217,7 @@ let sortDir   = 'desc';
 
 function setSort(col){
   if(sortCol===col) sortDir = sortDir==='asc'?'desc':'asc';
-  else { sortCol=col; sortDir='desc'; }
+  else { sortCol=col; sortDir='asc'; }
   renderList();
 }
 
