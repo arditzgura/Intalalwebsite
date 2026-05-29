@@ -368,7 +368,7 @@ function renderList(){
     if(q&&!(x.pershkrim||'').toLowerCase().includes(q)&&!(x.kategoria||'').toLowerCase().includes(q)) return false;
     return true;
   });
-  if(sortCol==='data')      list.sort((a,b)=>sortDir==='asc'?new Date(a.data)-new Date(b.data):new Date(b.data)-new Date(a.data));
+  if(sortCol==='data')      list.sort((a,b)=>{const da=new Date(a.data||a.created||0),db=new Date(b.data||b.created||0);return sortDir==='asc'?da-db:db-da;});
   else if(sortCol==='emertimi') list.sort((a,b)=>{const na=(a.pershkrim||'').toLowerCase(),nb=(b.pershkrim||'').toLowerCase();return sortDir==='asc'?na.localeCompare(nb):nb.localeCompare(na);});
   else if(sortCol==='shuma') list.sort((a,b)=>sortDir==='asc'?(a.shuma||0)-(b.shuma||0):(b.shuma||0)-(a.shuma||0));
 

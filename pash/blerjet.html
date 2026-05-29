@@ -737,7 +737,7 @@ function renderList(){
     const nb=(fb?fb.emri:b.furnitor_emri||'').toLowerCase();
     return sortDir==='asc'?na.localeCompare(nb):nb.localeCompare(na);
   });
-  else if(sortCol==='data') list.sort((a,b)=>sortDir==='asc'?new Date(a.data)-new Date(b.data):new Date(b.data)-new Date(a.data));
+  else if(sortCol==='data') list.sort((a,b)=>{const da=new Date(a.data||a.created||0),db=new Date(b.data||b.created||0);return sortDir==='asc'?da-db:db-da;});
   else if(sortCol==='totali') list.sort((a,b)=>sortDir==='asc'?(a.totali||0)-(b.totali||0):(b.totali||0)-(a.totali||0));
 
   const total=list.reduce((s,b)=>s+(b.totali||0),0);
