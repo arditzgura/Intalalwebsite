@@ -105,11 +105,16 @@
     <div class="modal-body">
       <div class="field">
         <label>Përshkrimi <span style="color:var(--accent);font-size:10px;">*</span></label>
-        <input type="text" id="fh-pershkrim" autocomplete="off"
-          style="background:var(--surface);border:0.5px solid var(--border);border-radius:7px;
-                 padding:9px 12px;font-family:'Switzer',sans-serif;font-size:13px;
-                 color:var(--text);outline:none;width:100%;transition:border-color .15s"
-          placeholder="p.sh. Arkëtim shitje, Pagesë klient...">
+        <div class="ac-wrap">
+          <input type="text" id="fh-pershkrim" autocomplete="off"
+            style="background:var(--surface);border:0.5px solid var(--border);border-radius:7px;
+                   padding:9px 12px;font-family:'Switzer',sans-serif;font-size:13px;
+                   color:var(--text);outline:none;width:100%;transition:border-color .15s"
+            placeholder="p.sh. Arkëtim shitje, Pagesë klient..."
+            oninput="acPershkrim('fh-pershkrim','ac-hyrje-dd',this.value)"
+            onfocus="acPershkrim('fh-pershkrim','ac-hyrje-dd',this.value)">
+          <div class="ac-dd" id="ac-hyrje-dd"></div>
+        </div>
       </div>
       <div class="field-row">
         <div class="field">
@@ -147,11 +152,16 @@
     <div class="modal-body">
       <div class="field">
         <label>Përshkrimi <span style="color:var(--accent);font-size:10px;">*</span></label>
-        <input type="text" id="fd-pershkrim" autocomplete="off"
-          style="background:var(--surface);border:0.5px solid var(--border);border-radius:7px;
-                 padding:9px 12px;font-family:'Switzer',sans-serif;font-size:13px;
-                 color:var(--text);outline:none;width:100%;transition:border-color .15s"
-          placeholder="p.sh. Blerje mallra, Pagë punonjës...">
+        <div class="ac-wrap">
+          <input type="text" id="fd-pershkrim" autocomplete="off"
+            style="background:var(--surface);border:0.5px solid var(--border);border-radius:7px;
+                   padding:9px 12px;font-family:'Switzer',sans-serif;font-size:13px;
+                   color:var(--text);outline:none;width:100%;transition:border-color .15s"
+            placeholder="p.sh. Blerje mallra, Pagë punonjës..."
+            oninput="acPershkrim('fd-pershkrim','ac-dalje-dd',this.value)"
+            onfocus="acPershkrim('fd-pershkrim','ac-dalje-dd',this.value)">
+          <div class="ac-dd" id="ac-dalje-dd"></div>
+        </div>
       </div>
       <div class="field-row">
         <div class="field">
@@ -226,6 +236,28 @@ function setTypeFlt(t){
   document.getElementById('tf-hyrje').className = 'tf-btn' + (t==='hyrje' ? ' tf-active tf-hyrje' : '');
   document.getElementById('tf-dalje').className = 'tf-btn' + (t==='dalje' ? ' tf-active tf-dalje' : '');
   renderList();
+}
+
+/* ── Autocomplete përshkrimi ─────────────────────────────────── */
+function acPershkrim(inputId, ddId, q){
+  const dd = document.getElementById(ddId);
+  const ql = q.toLowerCase().trim();
+  const prev = [...new Set(DB.arka.map(x=>x.pershkrim).filter(Boolean))];
+  const matches = ql ? prev.filter(p=>p.toLowerCase().includes(ql)) : prev.slice(0,8);
+  if(!matches.length){ dd.classList.remove('open'); return; }
+  let html = '<div class="ac-group">Nga historia</div>';
+  html += matches.slice(0,8).map(p=>{
+    const hi = ql ? p.replace(new RegExp('('+ql.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi'),'<mark>$1</mark>') : esc(p);
+    return `<div class="ac-opt" data-val="${esc(p)}">${hi}</div>`;
+  }).join('');
+  dd.innerHTML = html; dd.classList.add('open');
+  dd.querySelectorAll('.ac-opt').forEach(el=>{
+    el.addEventListener('mousedown', e=>{
+      e.preventDefault();
+      document.getElementById(inputId).value = el.dataset.val;
+      dd.classList.remove('open');
+    });
+  });
 }
 
 /* ── Modal ───────────────────────────────────────────────────── */
@@ -402,6 +434,13 @@ function renderList(){
 
 DP.onchange = renderList;
 renderList();
+
+document.addEventListener('click', e=>{
+  ['ac-hyrje-dd','ac-dalje-dd'].forEach(id=>{
+    const dd = document.getElementById(id);
+    if(dd && !dd.closest('.ac-wrap').contains(e.target)) dd.classList.remove('open');
+  });
+});
 </script>
 
 <style>
