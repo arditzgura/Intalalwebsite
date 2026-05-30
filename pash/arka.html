@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PASH — Arka</title>
+<link href="remixicon/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="pash.css">
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-badge"><i class="ri-line-chart-fill"></i></div>
+    <div class="logo-text">PASH<small>Pasqyra Financiare</small></div>
+  </div>
+  <nav class="sidebar-nav">
+    <a class="nav-item" href="index.html"><i class="ri-dashboard-2-line"></i>Paneli</a>
+    <a class="nav-item" href="shpenzime.html"><i class="ri-wallet-3-line"></i>Shpenzime</a>
+    <a class="nav-item" href="blerjet.html"><i class="ri-shopping-bag-line"></i>Blerjet</a>
+    <a class="nav-item active" href="arka.html"><i class="ri-safe-line"></i>Arka</a>
+    <a class="nav-item" href="furnitoret.html"><i class="ri-user-2-line"></i>Furnitorët</a>
+    <a class="nav-item" href="zerat.html"><i class="ri-price-tag-3-line"></i>Zërat</a>
+  </nav>
+  <div class="sidebar-backup">
+    <button class="sb-btn" onclick="exportBackup()" title="Shkarko backup JSON"><i class="ri-download-2-line"></i> Backup</button>
+    <label class="sb-btn" title="Ngarko backup JSON"><i class="ri-upload-2-line"></i> Restore<input type="file" accept=".json" style="display:none" onchange="importBackup(this.files[0])"></label>
+  </div>
+  <div class="sidebar-footer">
+    <div class="sf-avatar">P</div>
+    <div><span class="sf-name">PASH</span><span class="sf-label">Sistemi</span></div>
+  </div>
+</aside>
+
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-user">
+      <div class="topbar-label">SEKSIONI</div>
+      <div class="topbar-name">Arka — Lëvizjet e Parasë</div>
+    </div>
+  </div>
+  <div class="content">
+    <div class="list-head">
+      <div>
+        <div class="page-title">Arka</div>
+        <div class="page-sub">Regjistro hyrjet dhe daljet e parasë në arkë</div>
+      </div>
+      <div style="display:flex;gap:10px;">
+        <button class="btn-hyrje" onclick="openModal('hyrje')"><i class="ri-arrow-down-circle-line"></i> Hyrje në Arkë</button>
+        <button class="btn-dalje" onclick="openModal('dalje')"><i class="ri-arrow-up-circle-line"></i> Dalje nga Arka</button>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px;" id="stats-strip"></div>
+
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;">
+      <div class="search-wrap">
+        <i class="ri-search-line"></i>
+        <input class="search-input" id="search" placeholder="Kërko veprim..." oninput="renderList()">
+      </div>
+      <!-- Lloji filter -->
+      <div style="display:flex;gap:6px;">
+        <button id="tf-all"    class="tf-btn tf-active" onclick="setTypeFlt('')">Të gjitha</button>
+        <button id="tf-hyrje"  class="tf-btn"           onclick="setTypeFlt('hyrje')"><i class="ri-arrow-down-circle-line"></i> Hyrje</button>
+        <button id="tf-dalje"  class="tf-btn"           onclick="setTypeFlt('dalje')"><i class="ri-arrow-up-circle-line"></i> Dalje</button>
+      </div>
+      <!-- Mënyra filter (only meaningful for dalje but keeps UI consistent) -->
+      <select id="filter-menyra" onchange="renderList()" style="background:var(--white);border:0.5px solid var(--border);border-radius:7px;padding:8px 12px;font-family:'Switzer',sans-serif;font-size:12px;outline:none;">
+        <option value="">Të gjitha mënyrat</option>
+        <option value="banke">Me Bankë</option>
+        <option value="dore">Në Dorë</option>
+      </select>
+      <div class="dp-wrap" id="dp-wrap">
+        <button class="dp-trigger" id="dp-trigger" onclick="DP.toggle()">
+          <i class="ri-calendar-line"></i><span id="dp-label">Të gjithë datat</span>
+        </button>
+        <div class="dp-popup" id="dp-popup">
+          <div class="dp-nav">
+            <button class="dp-nav-btn" onclick="DP.nav(-1)">&#9664;</button>
+            <button class="dp-title" id="dp-title" onclick="DP.toggleMode()">—</button>
+            <button class="dp-nav-btn" onclick="DP.nav(1)">&#9654;</button>
+          </div>
+          <div id="dp-body"></div>
+          <div class="dp-footer">
+            <button class="dp-clear" onclick="DP.clear()">Pastro</button>
+            <button class="dp-today" onclick="DP.today()">Sot</button>
+          </div>
+        </div>
+      </div>
+      <span id="list-total" style="margin-left:auto;font-size:12px;font-weight:600;color:var(--muted);"></span>
+    </div>
+
+    <div class="card" id="list-wrap"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     HYRJE MODAL
+═══════════════════════════════════════════════════════════════ -->
+<div class="modal-backdrop" id="modal-hyrje-bd" onclick="if(event.target===this)closeModal('hyrje')">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="modal-hyrje-title" style="color:var(--green,#1a9e6e)"><i class="ri-arrow-down-circle-line"></i> Hyrje në Arkë</h2>
+      <button class="modal-close" onclick="closeModal('hyrje')">&#x2715;</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label>Përshkrimi <span style="color:var(--accent);font-size:10px;">*</span></label>
+        <input type="text" id="fh-pershkrim" autocomplete="off"
+          style="background:var(--surface);border:0.5px solid var(--border);border-radius:7px;
+                 padding:9px 12px;font-family:'Switzer',sans-serif;font-size:13px;
+                 color:var(--text);outline:none;width:100%;transition:border-color .15s"
+          placeholder="p.sh. Arkëtim shitje, Pagesë klient...">
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Data</label>
+          <input type="date" id="fh-data">
+        </div>
+        <div class="field">
+          <label>Shuma (L) <span style="color:var(--accent);font-size:10px;">*</span></label>
+          <input type="number" id="fh-shuma" min="0" step="0.01" placeholder="0.00"
+            style="font-size:16px;font-weight:600;padding:9px 12px;color:var(--green,#1a9e6e)"
+            oninput="this.style.color=parseFloat(this.value)>0?'var(--green,#1a9e6e)':'var(--text)'">
+        </div>
+      </div>
+      <div class="field">
+        <label>Shënime <span style="color:var(--muted);font-size:9px;text-transform:none;letter-spacing:0">(opsional)</span></label>
+        <textarea id="fh-notes" placeholder="Detaje shtesë..." style="min-height:52px"></textarea>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-secondary" onclick="closeModal('hyrje')">Anulo</button>
+      <button class="btn-hyrje" onclick="saveArka('hyrje')"><i class="ri-save-line"></i> Ruaj Hyrjen</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     DALJE MODAL
+═══════════════════════════════════════════════════════════════ -->
+<div class="modal-backdrop" id="modal-dalje-bd" onclick="if(event.target===this)closeModal('dalje')">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="modal-dalje-title" style="color:var(--accent)"><i class="ri-arrow-up-circle-line"></i> Dalje nga Arka</h2>
+      <button class="modal-close" onclick="closeModal('dalje')">&#x2715;</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label>Përshkrimi <span style="color:var(--accent);font-size:10px;">*</span></label>
+        <input type="text" id="fd-pershkrim" autocomplete="off"
+          style="background:var(--surface);border:0.5px solid var(--border);border-radius:7px;
+                 padding:9px 12px;font-family:'Switzer',sans-serif;font-size:13px;
+                 color:var(--text);outline:none;width:100%;transition:border-color .15s"
+          placeholder="p.sh. Blerje mallra, Pagë punonjës...">
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Data</label>
+          <input type="date" id="fd-data">
+        </div>
+        <div class="field">
+          <label>Shuma (L) <span style="color:var(--accent);font-size:10px;">*</span></label>
+          <input type="number" id="fd-shuma" min="0" step="0.01" placeholder="0.00"
+            style="font-size:16px;font-weight:600;padding:9px 12px;"
+            oninput="this.style.color=parseFloat(this.value)>0?'var(--accent)':'var(--text)'">
+        </div>
+      </div>
+      <!-- Lloji i daljes: Bankë / Dorë -->
+      <div class="field">
+        <label>Lloji i Daljes <span style="color:var(--muted);font-size:9px;text-transform:none;letter-spacing:0">(opsional)</span></label>
+        <div class="status-toggle">
+          <button class="status-btn active-dore" id="btn-dore" onclick="setDMenyra('dore')"><i class="ri-hand-coin-line"></i> Në Dorë</button>
+          <button class="status-btn" id="btn-banke" onclick="setDMenyra('banke')"><i class="ri-bank-line"></i> Me Bankë</button>
+        </div>
+      </div>
+      <div class="field">
+        <label>Shënime <span style="color:var(--muted);font-size:9px;text-transform:none;letter-spacing:0">(opsional)</span></label>
+        <textarea id="fd-notes" placeholder="Detaje shtesë..." style="min-height:52px"></textarea>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-secondary" onclick="closeModal('dalje')">Anulo</button>
+      <button class="btn-dalje" onclick="saveArka('dalje')"><i class="ri-save-line"></i> Ruaj Daljen</button>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm delete -->
+<div class="modal-backdrop confirm-modal" id="conf-bd" onclick="if(event.target===this)closeConf()">
+  <div class="modal" style="max-width:360px">
+    <div class="modal-head"><h2>Fshi Veprimin</h2><button class="modal-close" onclick="closeConf()">&#x2715;</button></div>
+    <div class="confirm-body">Jeni të sigurt? Ky veprim nuk mund të kthehet.</div>
+    <div class="modal-foot">
+      <button class="btn-secondary" onclick="closeConf()">Anulo</button>
+      <button class="btn-danger" onclick="confirmDel()">Fshi</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+<script src="pash-data.js"></script>
+<script>
+let editId   = null;
+let editLloji= null;
+let deleteId = null;
+let dMenyra  = 'dore';
+let typeFlt  = '';
+let sortCol  = 'data';
+let sortDir  = 'desc';
+
+function setSort(col){
+  if(sortCol===col) sortDir = sortDir==='asc'?'desc':'asc';
+  else { sortCol=col; sortDir='asc'; }
+  renderList();
+}
+
+function setDMenyra(m){
+  dMenyra=m;
+  document.getElementById('btn-dore').className  = 'status-btn' + (m==='dore'  ? ' active-dore'  : '');
+  document.getElementById('btn-banke').className = 'status-btn' + (m==='banke' ? ' active-banke' : '');
+}
+
+function setTypeFlt(t){
+  typeFlt=t;
+  document.getElementById('tf-all').className   = 'tf-btn' + (t===''      ? ' tf-active' : '');
+  document.getElementById('tf-hyrje').className = 'tf-btn' + (t==='hyrje' ? ' tf-active tf-hyrje' : '');
+  document.getElementById('tf-dalje').className = 'tf-btn' + (t==='dalje' ? ' tf-active tf-dalje' : '');
+  renderList();
+}
+
+/* ── Modal ───────────────────────────────────────────────────── */
+function openModal(lloji, id){
+  if(id){
+    // Edit mode
+    const x=DB.arka.find(a=>a.id===id); if(!x) return;
+    editId=id; editLloji=lloji;
+    if(lloji==='hyrje'){
+      document.getElementById('modal-hyrje-title').innerHTML='<i class="ri-edit-line"></i> Edito Hyrjen';
+      document.getElementById('fh-pershkrim').value=x.pershkrim||'';
+      document.getElementById('fh-data').value=x.data||'';
+      document.getElementById('fh-shuma').value=x.shuma||'';
+      document.getElementById('fh-shuma').style.color=x.shuma?'var(--green,#1a9e6e)':'var(--text)';
+      document.getElementById('fh-notes').value=x.notes||'';
+    } else {
+      document.getElementById('modal-dalje-title').innerHTML='<i class="ri-edit-line"></i> Edito Daljen';
+      document.getElementById('fd-pershkrim').value=x.pershkrim||'';
+      document.getElementById('fd-data').value=x.data||'';
+      document.getElementById('fd-shuma').value=x.shuma||'';
+      document.getElementById('fd-shuma').style.color=x.shuma?'var(--accent)':'var(--text)';
+      document.getElementById('fd-notes').value=x.notes||'';
+      setDMenyra(x.menyra||'dore');
+    }
+  } else {
+    // New mode
+    editId=null; editLloji=lloji;
+    if(lloji==='hyrje'){
+      document.getElementById('modal-hyrje-title').innerHTML='<i class="ri-arrow-down-circle-line"></i> Hyrje në Arkë';
+      document.getElementById('fh-pershkrim').value='';
+      document.getElementById('fh-data').value=todayISO();
+      document.getElementById('fh-shuma').value='';
+      document.getElementById('fh-shuma').style.color='var(--green,#1a9e6e)';
+      document.getElementById('fh-notes').value='';
+    } else {
+      document.getElementById('modal-dalje-title').innerHTML='<i class="ri-arrow-up-circle-line"></i> Dalje nga Arka';
+      document.getElementById('fd-pershkrim').value='';
+      document.getElementById('fd-data').value=todayISO();
+      document.getElementById('fd-shuma').value='';
+      document.getElementById('fd-shuma').style.color='var(--text)';
+      document.getElementById('fd-notes').value='';
+      setDMenyra('dore');
+    }
+  }
+  document.getElementById(`modal-${lloji}-bd`).classList.add('open');
+  setTimeout(()=>document.getElementById(lloji==='hyrje'?'fh-pershkrim':'fd-pershkrim').focus(),80);
+}
+
+function closeModal(lloji){
+  document.getElementById(`modal-${lloji}-bd`).classList.remove('open');
+  editId=null; editLloji=null;
+}
+
+function saveArka(lloji){
+  const isH = lloji==='hyrje';
+  const pfx = isH ? 'fh' : 'fd';
+  const pershkrim = document.getElementById(`${pfx}-pershkrim`).value.trim();
+  if(!pershkrim){ toast('Shkruaj përshkrimin — e detyrueshme.'); document.getElementById(`${pfx}-pershkrim`).focus(); return; }
+  const shuma = parseFloat(document.getElementById(`${pfx}-shuma`).value)||0;
+  if(shuma<=0){ toast('Vendos shumën — e detyrueshme.'); document.getElementById(`${pfx}-shuma`).focus(); return; }
+  const data  = document.getElementById(`${pfx}-data`).value||todayISO();
+  const notes = document.getElementById(`${pfx}-notes`).value.trim();
+  const menyra = isH ? null : dMenyra;
+
+  let list=DB.arka;
+  if(editId){
+    const idx=list.findIndex(a=>a.id===editId);
+    if(idx>=0) list[idx]={...list[idx],pershkrim,data,shuma,menyra,notes};
+    toast(`${isH?'Hyrja':'Dalja'} u përditësua.`);
+  } else {
+    list.push({id:genId(),lloji,pershkrim,data,shuma,menyra,notes,created:new Date().toISOString()});
+    toast(`${isH?'Hyrja':'Dalja'} u shtua.`);
+  }
+  DB.arka=list;
+  closeModal(lloji); renderList();
+}
+
+/* ── Delete ──────────────────────────────────────────────────── */
+function askDel(id){
+  deleteId=id;
+  document.getElementById('conf-bd').classList.add('open');
+}
+function closeConf(){ document.getElementById('conf-bd').classList.remove('open'); deleteId=null; }
+function confirmDel(){
+  if(!deleteId) return;
+  DB.arka=DB.arka.filter(a=>a.id!==deleteId);
+  closeConf(); toast('Veprimi u fshi.'); renderList();
+}
+
+/* ── List ────────────────────────────────────────────────────── */
+function renderList(){
+  const q      = document.getElementById('search').value.toLowerCase();
+  const menyra = document.getElementById('filter-menyra').value;
+  let list=DB.arka.filter(x=>{
+    if(typeFlt && x.lloji!==typeFlt) return false;
+    if(menyra){
+      if(x.lloji==='hyrje') return false; // hyrjet nuk kanë mënyra
+      if((x.menyra||'dore')!==menyra) return false;
+    }
+    if(!DP.matches(x.data)) return false;
+    if(q&&!(x.pershkrim||'').toLowerCase().includes(q)) return false;
+    return true;
+  });
+
+  if(sortCol==='data')      list.sort((a,b)=>{const da=new Date(a.data||a.created||0),db=new Date(b.data||b.created||0);return sortDir==='asc'?da-db:db-da;});
+  else if(sortCol==='emertimi') list.sort((a,b)=>{const na=(a.pershkrim||'').toLowerCase(),nb=(b.pershkrim||'').toLowerCase();return sortDir==='asc'?na.localeCompare(nb):nb.localeCompare(na);});
+  else if(sortCol==='shuma') list.sort((a,b)=>sortDir==='asc'?(a.shuma||0)-(b.shuma||0):(b.shuma||0)-(a.shuma||0));
+
+  const hyrjeTotal  = list.filter(x=>x.lloji==='hyrje').reduce((s,x)=>s+(x.shuma||0),0);
+  const daljeTotal  = list.filter(x=>x.lloji==='dalje').reduce((s,x)=>s+(x.shuma||0),0);
+  const balanca     = hyrjeTotal - daljeTotal;
+
+  document.getElementById('stats-strip').innerHTML=`
+    <div class="period-card"><div class="pc-header"><div class="pc-icon ${balanca>=0?'green':'red'}"><i class="ri-safe-line"></i></div><span class="pc-label">Balanca</span></div><div class="pc-val ${balanca>=0?'':'red'}">${fmtL(balanca)}</div></div>
+    <div class="period-card"><div class="pc-header"><div class="pc-icon green"><i class="ri-arrow-down-circle-line"></i></div><span class="pc-label">Hyrje Totale</span></div><div class="pc-val" style="color:#1a9e6e">${fmtL(hyrjeTotal)}</div></div>
+    <div class="period-card"><div class="pc-header"><div class="pc-icon red"><i class="ri-arrow-up-circle-line"></i></div><span class="pc-label">Dalje Totale</span></div><div class="pc-val red">${fmtL(daljeTotal)}</div></div>
+    <div class="period-card"><div class="pc-header"><div class="pc-icon blue"><i class="ri-list-check"></i></div><span class="pc-label">Nr. Veprimeve</span></div><div class="pc-val">${list.length}</div></div>`;
+
+  document.getElementById('list-total').textContent=`${list.length} rekorde · Balanca: ${fmtL(balanca)}`;
+
+  const wrap=document.getElementById('list-wrap');
+  if(!list.length){
+    wrap.innerHTML='<div class="empty"><i class="ri-safe-line"></i>Nuk ka veprime në arkë.<br>Shtyp <strong>Hyrje në Arkë</strong> ose <strong>Dalje nga Arka</strong> për të filluar.</div>';
+    return;
+  }
+
+  const si=(col)=>sortCol===col?`<span class="sort-arrow">${sortDir==='asc'?'↑':'↓'}</span>`:'<span class="sort-arrow muted">↕</span>';
+
+  const rows=list.map(x=>{
+    const isH = x.lloji==='hyrje';
+    const menyraLabel = isH
+      ? '<span style="color:var(--muted);font-size:11px;">—</span>'
+      : (x.menyra||'dore')==='banke'
+        ? '<span class="badge badge-menyra"><i class="ri-bank-line"></i> Bankë</span>'
+        : '<span class="badge badge-menyra"><i class="ri-hand-coin-line"></i> Dorë</span>';
+    return `<tr onclick="openModal('${x.lloji}','${x.id}')" style="cursor:pointer;">
+      <td>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div style="width:30px;height:30px;border-radius:7px;background:${isH?'#1a9e6e18':'var(--accent-bg,#fee)'};display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <i class="${isH?'ri-arrow-down-circle-line':'ri-arrow-up-circle-line'}" style="font-size:15px;color:${isH?'#1a9e6e':'var(--accent)'}"></i>
+          </div>
+          <div>
+            <div class="td-name">${esc(x.pershkrim||'Pa përshkrim')}</div>
+          </div>
+        </div>
+      </td>
+      <td>${x.data?fmtDate(x.data):'—'}</td>
+      <td class="td-amt" style="color:${isH?'#1a9e6e':'var(--accent)'};">${isH?'+':'−'}${fmtL(x.shuma)}</td>
+      <td>
+        <span class="badge ${isH?'paguar':'pa-paguar'}">${isH?'Hyrje':'Dalje'}</span>
+      </td>
+      <td>${menyraLabel}</td>
+      <td onclick="event.stopPropagation()">
+        <div style="display:flex;gap:6px;justify-content:flex-end;">
+          <button class="btn-icon" onclick="openModal('${x.lloji}','${x.id}')"><i class="ri-edit-line"></i></button>
+          <button class="btn-icon danger" onclick="askDel('${x.id}')"><i class="ri-delete-bin-line"></i></button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+
+  wrap.innerHTML=`<table>
+    <thead><tr>
+      <th class="th-sort" onclick="setSort('emertimi')">Përshkrimi ${si('emertimi')}</th>
+      <th class="th-sort" onclick="setSort('data')">Data ${si('data')}</th>
+      <th class="th-sort" onclick="setSort('shuma')">Shuma ${si('shuma')}</th>
+      <th>Lloji</th>
+      <th>Mënyra</th>
+      <th></th>
+    </tr></thead>
+    <tbody>${rows}</tbody>
+  </table>`;
+}
+
+DP.onchange = renderList;
+renderList();
+</script>
+
+<style>
+/* ── Arka-specific buttons ─────────────────────────────────── */
+.btn-hyrje {
+  display:inline-flex;align-items:center;gap:6px;
+  padding:9px 18px;border-radius:8px;border:none;cursor:pointer;
+  font-family:'Switzer',sans-serif;font-size:13px;font-weight:600;
+  background:#1a9e6e;color:#fff;transition:background .15s;
+}
+.btn-hyrje:hover{ background:#158557; }
+.btn-dalje {
+  display:inline-flex;align-items:center;gap:6px;
+  padding:9px 18px;border-radius:8px;border:none;cursor:pointer;
+  font-family:'Switzer',sans-serif;font-size:13px;font-weight:600;
+  background:var(--accent,#c8003e);color:#fff;transition:background .15s;
+}
+.btn-dalje:hover{ filter:brightness(0.88); }
+/* Type filter pills */
+.tf-btn {
+  padding:7px 14px;border-radius:7px;border:0.5px solid var(--border);
+  background:var(--white);color:var(--muted);font-family:'Switzer',sans-serif;
+  font-size:12px;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;gap:5px;
+  transition:all .15s;
+}
+.tf-btn.tf-active         { background:var(--surface);color:var(--text);border-color:var(--text); font-weight:600; }
+.tf-btn.tf-active.tf-hyrje{ background:#e8f9f3;color:#1a9e6e;border-color:#1a9e6e; }
+.tf-btn.tf-active.tf-dalje{ background:var(--accent-bg,#fee2ec);color:var(--accent);border-color:var(--accent); }
+</style>
+</body>
+</html>

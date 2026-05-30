@@ -14,6 +14,8 @@ const DB = {
   set blerjet(v){ localStorage.setItem('pash_blerjet',JSON.stringify(v)) },
   get shpenzime(){ return JSON.parse(localStorage.getItem('pash_shpenzime')||'[]') },
   set shpenzime(v){ localStorage.setItem('pash_shpenzime',JSON.stringify(v)) },
+  get arka(){ return JSON.parse(localStorage.getItem('pash_arka')||'[]') },
+  set arka(v){ localStorage.setItem('pash_arka',JSON.stringify(v)) },
 };
 
 function genId(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,6) }
@@ -64,7 +66,8 @@ function exportBackup(silent=false){
       furnitoret: DB.furnitoret,
       zerat:      DB.zerat,
       blerjet:    DB.blerjet,
-      shpenzime:  DB.shpenzime
+      shpenzime:  DB.shpenzime,
+      arka:       DB.arka
     }
   };
   const json = JSON.stringify(payload, null, 2);
@@ -93,6 +96,7 @@ function importBackup(file){
       if(p.data.zerat)      DB.zerat      = p.data.zerat;
       if(p.data.blerjet)    DB.blerjet    = p.data.blerjet;
       if(p.data.shpenzime)  DB.shpenzime  = p.data.shpenzime;
+      if(p.data.arka)       DB.arka       = p.data.arka;
       toast('✓ Të dhënat u restauruan nga backup.');
       setTimeout(()=>location.reload(), 1200);
     } catch(err){
