@@ -438,8 +438,8 @@ function renderList(){
       <td>${menyraLabel}</td>
       <td onclick="event.stopPropagation()">
         <div style="display:flex;gap:6px;justify-content:flex-end;">
-          <button class="btn-icon" onclick="openModal('${x.lloji}','${x.id}')" title="Edito"><i class="ri-edit-line"></i></button>
           <button class="btn-icon" onclick="dupArka('${x.id}')" title="Dubliko"><i class="ri-file-copy-line"></i></button>
+          <button class="btn-icon" onclick="openModal('${x.lloji}','${x.id}')" title="Edito"><i class="ri-edit-line"></i></button>
           <button class="btn-icon danger" onclick="askDel('${x.id}')" title="Fshi"><i class="ri-delete-bin-line"></i></button>
         </div>
       </td>
