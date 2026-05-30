@@ -620,6 +620,25 @@ function closeModal(){
   editId=null;
 }
 
+function dupBlerje(id){
+  const b=DB.blerjet.find(x=>x.id===id); if(!b) return;
+  editId=null;
+  const f=b.furnitori_id?DB.furnitoret.find(x=>x.id===b.furnitori_id):null;
+  acFurnitorId=b.furnitori_id||null;
+  acFurnitorName=f?f.emri:(b.furnitor_emri||'');
+  document.getElementById('modal-title').textContent='Dubliko Blerjen';
+  document.getElementById('f-data').value=todayISO();
+  document.getElementById('f-notes').value=b.notes||'';
+  setStatus(b.statusi||'paguar');
+  setMenyra(b.menyra_pages||'dore');
+  clearItems();
+  (b.items||[]).forEach(it=>addRow(it));
+  calcTotal();
+  hideQAFurnitor(); cancelQAZeri();
+  renderFurnitorWrap();
+  document.getElementById('modal-bd').classList.add('open');
+}
+
 /* �.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.�
    SAVE
 �.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.� */
@@ -773,8 +792,9 @@ function renderList(){
       </td>
       <td onclick="event.stopPropagation()">
         <div style="display:flex;gap:6px;justify-content:flex-end;">
-          <button class="btn-icon" onclick="openEdit('${b.id}')"><i class="ri-edit-line"></i></button>
-          <button class="btn-icon danger" onclick="askDel('${b.id}')"><i class="ri-delete-bin-line"></i></button>
+          <button class="btn-icon" onclick="dupBlerje('${b.id}')" title="Dubliko"><i class="ri-file-copy-line"></i></button>
+          <button class="btn-icon" onclick="openEdit('${b.id}')" title="Edito"><i class="ri-edit-line"></i></button>
+          <button class="btn-icon danger" onclick="askDel('${b.id}')" title="Fshi"><i class="ri-delete-bin-line"></i></button>
         </div>
       </td>
     </tr>`;

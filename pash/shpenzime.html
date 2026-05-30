@@ -332,6 +332,22 @@ function openEdit(id){
 
 function closeModal(){ document.getElementById('modal-bd').classList.remove('open'); editId=null; }
 
+function dupShpenzim(id){
+  const x=DB.shpenzime.find(s=>s.id===id); if(!x) return;
+  editId=null;
+  document.getElementById('modal-title').textContent='Dubliko Shpenzimin';
+  document.getElementById('f-pershkrim').value=x.pershkrim||'';
+  document.getElementById('f-shuma').value=x.shuma||'';
+  document.getElementById('f-shuma').style.color=x.shuma?'var(--accent)':'var(--text)';
+  document.getElementById('f-kat-input').value=x.kategoria||'';
+  document.getElementById('f-data').value=todayISO();
+  document.getElementById('f-notes').value=x.notes||'';
+  setStatus(x.statusi||'paguar');
+  setMenyra(x.menyra_pages||'dore');
+  document.getElementById('modal-bd').classList.add('open');
+  setTimeout(()=>document.getElementById('f-shuma').focus(),80);
+}
+
 function saveShpenzim(){
   const pershkrim=document.getElementById('f-pershkrim').value.trim();
   if(!pershkrim){ toast('Shkruaj emërtimin — e detyrueshme.'); document.getElementById('f-pershkrim').focus(); return; }
@@ -419,8 +435,9 @@ function renderList(){
       </td>
       <td onclick="event.stopPropagation()">
         <div style="display:flex;gap:6px;justify-content:flex-end;">
-          <button class="btn-icon" onclick="openEdit('${x.id}')"><i class="ri-edit-line"></i></button>
-          <button class="btn-icon danger" onclick="askDel('${x.id}')"><i class="ri-delete-bin-line"></i></button>
+          <button class="btn-icon" onclick="dupShpenzim('${x.id}')" title="Dubliko"><i class="ri-file-copy-line"></i></button>
+          <button class="btn-icon" onclick="openEdit('${x.id}')" title="Edito"><i class="ri-edit-line"></i></button>
+          <button class="btn-icon danger" onclick="askDel('${x.id}')" title="Fshi"><i class="ri-delete-bin-line"></i></button>
         </div>
       </td>
     </tr>`;
@@ -470,8 +487,9 @@ function openView(id){
       <td><span class="badge badge-menyra">${(h.menyra_pages||'dore')==='banke'?'<i class="ri-bank-line"></i> Bankë':'<i class="ri-hand-coin-line"></i> Dorë'}</span></td>
       <td onclick="event.stopPropagation()">
         <div style="display:flex;gap:5px;justify-content:flex-end;">
-          <button class="btn-icon" onclick="closeView();openEdit('${h.id}')"><i class="ri-edit-line"></i></button>
-          <button class="btn-icon danger" onclick="closeView();askDel('${h.id}')"><i class="ri-delete-bin-line"></i></button>
+          <button class="btn-icon" onclick="closeView();dupShpenzim('${h.id}')" title="Dubliko"><i class="ri-file-copy-line"></i></button>
+          <button class="btn-icon" onclick="closeView();openEdit('${h.id}')" title="Edito"><i class="ri-edit-line"></i></button>
+          <button class="btn-icon danger" onclick="closeView();askDel('${h.id}')" title="Fshi"><i class="ri-delete-bin-line"></i></button>
         </div>
       </td>
     </tr>`;
