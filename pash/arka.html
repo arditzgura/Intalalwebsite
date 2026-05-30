@@ -347,6 +347,32 @@ function confirmDel(){
   closeConf(); toast('Veprimi u fshi.'); renderList();
 }
 
+/* ── Duplicate ───────────────────────────────────────────────── */
+function dupArka(id){
+  const x = DB.arka.find(a=>a.id===id); if(!x) return;
+  const lloji = x.lloji;
+  // Open modal in "new" mode but pre-fill with source data
+  editId = null; editLloji = lloji;
+  if(lloji==='hyrje'){
+    document.getElementById('modal-hyrje-title').innerHTML='<i class="ri-file-copy-line"></i> Dubliko Hyrjen';
+    document.getElementById('fh-pershkrim').value = x.pershkrim||'';
+    document.getElementById('fh-data').value      = todayISO();
+    document.getElementById('fh-shuma').value     = x.shuma||'';
+    document.getElementById('fh-shuma').style.color = x.shuma?'var(--green,#1a9e6e)':'var(--text)';
+    document.getElementById('fh-notes').value     = x.notes||'';
+  } else {
+    document.getElementById('modal-dalje-title').innerHTML='<i class="ri-file-copy-line"></i> Dubliko Daljen';
+    document.getElementById('fd-pershkrim').value = x.pershkrim||'';
+    document.getElementById('fd-data').value      = todayISO();
+    document.getElementById('fd-shuma').value     = x.shuma||'';
+    document.getElementById('fd-shuma').style.color = x.shuma?'var(--accent)':'var(--text)';
+    document.getElementById('fd-notes').value     = x.notes||'';
+    setDMenyra(x.menyra||'dore');
+  }
+  document.getElementById(`modal-${lloji}-bd`).classList.add('open');
+  setTimeout(()=>document.getElementById(lloji==='hyrje'?'fh-shuma':'fd-shuma').focus(),80);
+}
+
 /* ── List ────────────────────────────────────────────────────── */
 function renderList(){
   const q      = document.getElementById('search').value.toLowerCase();
@@ -412,8 +438,9 @@ function renderList(){
       <td>${menyraLabel}</td>
       <td onclick="event.stopPropagation()">
         <div style="display:flex;gap:6px;justify-content:flex-end;">
-          <button class="btn-icon" onclick="openModal('${x.lloji}','${x.id}')"><i class="ri-edit-line"></i></button>
-          <button class="btn-icon danger" onclick="askDel('${x.id}')"><i class="ri-delete-bin-line"></i></button>
+          <button class="btn-icon" onclick="openModal('${x.lloji}','${x.id}')" title="Edito"><i class="ri-edit-line"></i></button>
+          <button class="btn-icon" onclick="dupArka('${x.id}')" title="Dubliko"><i class="ri-file-copy-line"></i></button>
+          <button class="btn-icon danger" onclick="askDel('${x.id}')" title="Fshi"><i class="ri-delete-bin-line"></i></button>
         </div>
       </td>
     </tr>`;
