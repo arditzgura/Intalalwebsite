@@ -24,8 +24,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://cdn.jsdelivr.net">
   <link rel="preconnect" href="https://qucwmmizqxudxvolfwkx.supabase.co">
-  <link rel="preload" href="fonts/Switzer-Regular.otf" as="font" type="font/otf" crossorigin>
-  <link rel="preload" href="fonts/Switzer-Medium.otf" as="font" type="font/otf" crossorigin>
   <!-- Preload hero image nga cache me prioritet maksimal -->
   <script>
   try{
@@ -47,8 +45,19 @@
   <!-- Ikonat ngarkohen pas render-it kryesor -->
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet" media="print" onload="this.media='all'">
   <noscript><link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet"></noscript>
-  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/main.css" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="css/main.css"></noscript>
   <link rel="icon" type="image/png" href="favicon.png">
+  <!-- Critical CSS inline — navbar + hero (above-fold) -->
+  <style>
+    :root{--black:#0a0a0a;--white:#ffffff;--border:#d1d5dc;--muted:#6a7282;--navbar-h:clamp(42px,4.2vw,55px);--side:clamp(20px,5vw,60px);}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{font-family:'Switzer',sans-serif;background:#fff;color:#0a0a0a;padding-top:var(--navbar-h);}
+    .navbar{position:fixed;top:0;left:0;right:0;z-index:100;width:100%;height:var(--navbar-h);background:#fff;border-bottom:0.5px solid #d1d5dc;padding:0 var(--side);transform:translateY(0);}
+    .navbar-inner{display:flex;align-items:center;justify-content:space-between;height:100%;}
+    .navbar-brand{font-size:clamp(10px,1vw,13px);font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#0a0a0a;text-decoration:none;}
+  </style>
   <style>
     /* ── Hero ──────────────────────────────────────────────────── */
     .hero {
