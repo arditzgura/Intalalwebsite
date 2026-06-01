@@ -421,6 +421,11 @@
 
   <!-- ── Hero ────────────────────────────────────────────────── -->
   <section class="hero" aria-label="Hero">
+  <!-- LCP img: ngarkohet menjëherë, vendoset si background nga JS -->
+  <img id="hero-lcp-img"
+    src="https://qucwmmizqxudxvolfwkx.supabase.co/storage/v1/object/public/foto-artikujt/page-images/home-hero-bgImage.webp"
+    fetchpriority="high" decoding="async" aria-hidden="true"
+    alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;">
     <div class="hero-content">
       <p class="hero-eyebrow">Prodhim Shqiptar</p>
       <h1 class="hero-heading">Fabrike Prodhimi të Brëndshem</h1>
@@ -1026,8 +1031,8 @@
   </script>
 
   <!-- GSAP + ScrollTrigger -->
-  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
   <script>
     (() => {
       gsap.registerPlugin(ScrollTrigger);
