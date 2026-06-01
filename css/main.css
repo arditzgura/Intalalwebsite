@@ -3,24 +3,24 @@
    ============================================================ */
 
 /* ── Switzer font-face declarations ───────────────────────── */
-@font-face { font-family: 'Switzer'; src: url('../fonts/Switzer-Thin.otf') format('opentype'); font-weight: 100; font-style: normal; }
-@font-face { font-family: 'Switzer'; src: url('../fonts/Switzer-ThinItalic.otf') format('opentype'); font-weight: 100; font-style: italic; }
-@font-face { font-family: 'Switzer'; src: url('../fonts/Switzer-Extralight.otf') format('opentype'); font-weight: 200; font-style: normal; }
-@font-face { font-family: 'Switzer'; src: url('../fonts/Switzer-ExtralightItalic.otf') format('opentype'); font-weight: 200; font-style: italic; }
-@font-face { font-family: 'Switzer'; src: url('../fonts/Switzer-Light.otf') format('opentype'); font-weight: 300; font-style: normal; }
-@font-face { font-family: 'Switzer'; src: url('../fonts/Switzer-LightItalic.otf') format('opentype'); font-weight: 300; font-style: italic; }
-@font-face { font-family: 'Switzer'; src: url('../fonts/Switzer-Regular.otf') format('opentype'); font-weight: 400; font-style: normal; }
-@font-face { font-family: 'Switzer'; src: url('../fonts/Switzer-Italic.otf') format('opentype'); font-weight: 400; font-style: italic; }
-@font-face { font-family: 'Switzer'; src: url('../fonts/Switzer-Medium.otf') format('opentype'); font-weight: 500; font-style: normal; }
-@font-face { font-family: 'Switzer'; src: url('../fonts/Switzer-MediumItalic.otf') format('opentype'); font-weight: 500; font-style: italic; }
-@font-face { font-family: 'Switzer'; src: url('../fonts/Switzer-Semibold.otf') format('opentype'); font-weight: 600; font-style: normal; }
-@font-face { font-family: 'Switzer'; src: url('../fonts/Switzer-SemiboldItalic.otf') format('opentype'); font-weight: 600; font-style: italic; }
-@font-face { font-family: 'Switzer'; src: url('../fonts/Switzer-Bold.otf') format('opentype'); font-weight: 700; font-style: normal; }
-@font-face { font-family: 'Switzer'; src: url('../fonts/Switzer-BoldItalic.otf') format('opentype'); font-weight: 700; font-style: italic; }
-@font-face { font-family: 'Switzer'; src: url('../fonts/Switzer-Extrabold.otf') format('opentype'); font-weight: 800; font-style: normal; }
-@font-face { font-family: 'Switzer'; src: url('../fonts/Switzer-ExtraboldItalic.otf') format('opentype'); font-weight: 800; font-style: italic; }
-@font-face { font-family: 'Switzer'; src: url('../fonts/Switzer-Black.otf') format('opentype'); font-weight: 900; font-style: normal; }
-@font-face { font-family: 'Switzer'; src: url('../fonts/Switzer-BlackItalic.otf') format('opentype'); font-weight: 900; font-style: italic; }
+@font-face { font-family: 'Switzer'; src: url('../fonts/Switzer-Thin.otf') format('opentype'); font-weight: 100; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Switzer'; src: url('../fonts/Switzer-ThinItalic.otf') format('opentype'); font-weight: 100; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Switzer'; src: url('../fonts/Switzer-Extralight.otf') format('opentype'); font-weight: 200; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Switzer'; src: url('../fonts/Switzer-ExtralightItalic.otf') format('opentype'); font-weight: 200; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Switzer'; src: url('../fonts/Switzer-Light.otf') format('opentype'); font-weight: 300; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Switzer'; src: url('../fonts/Switzer-LightItalic.otf') format('opentype'); font-weight: 300; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Switzer'; src: url('../fonts/Switzer-Regular.otf') format('opentype'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Switzer'; src: url('../fonts/Switzer-Italic.otf') format('opentype'); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Switzer'; src: url('../fonts/Switzer-Medium.otf') format('opentype'); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Switzer'; src: url('../fonts/Switzer-MediumItalic.otf') format('opentype'); font-weight: 500; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Switzer'; src: url('../fonts/Switzer-Semibold.otf') format('opentype'); font-weight: 600; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Switzer'; src: url('../fonts/Switzer-SemiboldItalic.otf') format('opentype'); font-weight: 600; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Switzer'; src: url('../fonts/Switzer-Bold.otf') format('opentype'); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Switzer'; src: url('../fonts/Switzer-BoldItalic.otf') format('opentype'); font-weight: 700; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Switzer'; src: url('../fonts/Switzer-Extrabold.otf') format('opentype'); font-weight: 800; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Switzer'; src: url('../fonts/Switzer-ExtraboldItalic.otf') format('opentype'); font-weight: 800; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Switzer'; src: url('../fonts/Switzer-Black.otf') format('opentype'); font-weight: 900; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Switzer'; src: url('../fonts/Switzer-BlackItalic.otf') format('opentype'); font-weight: 900; font-style: italic; font-display: swap; }
 
 /* ── Design tokens ─────────────────────────────────────────── */
 :root {

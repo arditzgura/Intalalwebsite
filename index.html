@@ -24,6 +24,14 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://cdn.jsdelivr.net">
   <link rel="preconnect" href="https://qucwmmizqxudxvolfwkx.supabase.co">
+  <!-- Preload hero image nga cache (para çdo gjëje tjetër) -->
+  <script>
+  try{
+    var _hd=JSON.parse(localStorage.getItem('intal_home_v1')||'{}');
+    var _hi=_hd&&_hd.hero&&_hd.hero.bgImage;
+    if(_hi){var _pl=document.createElement('link');_pl.rel='preload';_pl.as='image';_pl.href=_hi;document.head.appendChild(_pl);}
+  }catch(e){}
+  </script>
   <!-- Ikonat ngarkohen pas render-it kryesor -->
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet" media="print" onload="this.media='all'">
   <noscript><link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet"></noscript>
