@@ -1031,9 +1031,11 @@
   </script>
 
   <!-- GSAP + ScrollTrigger -->
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
   <script>
+    function _initGsap(){
+      if(typeof gsap==='undefined'||typeof ScrollTrigger==='undefined') return;
     (() => {
       gsap.registerPlugin(ScrollTrigger);
       const ease = 'power3.out';
@@ -1108,6 +1110,12 @@
         });
       }
     })();
+    } /* end _initGsap */
+    /* thirr pasi GSAP të jetë ngarkuar */
+    if(typeof gsap!=='undefined') _initGsap();
+    else document.addEventListener('DOMContentLoaded', function(){
+      var _gi=setInterval(function(){ if(typeof gsap!=='undefined'&&typeof ScrollTrigger!=='undefined'){ clearInterval(_gi); _initGsap(); } },50);
+    });
   </script>
 
   <script>
