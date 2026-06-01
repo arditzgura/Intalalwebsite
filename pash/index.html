@@ -197,6 +197,14 @@ const now = new Date();
 let activePeriod = 'all';   // 'all'|'month'|'year'|'manual'
 let activeMenyra = '';
 let activeType   = '';      // ''|'blerje'|'shpenzime'
+let tblSortCol   = 'data';
+let tblSortDir   = 'desc';
+
+function setTblSort(col){
+  if(tblSortCol===col) tblSortDir = tblSortDir==='asc'?'desc':'asc';
+  else { tblSortCol=col; tblSortDir='asc'; }
+  renderDash();
+}
 
 /* ── Build year/month selects ────────────────────────────────── */
 function buildSelects(){
@@ -351,7 +359,8 @@ function renderDashboard(){
       });
     });
   }
-  unified.sort((a,b)=>new Date(b._date)-new Date(a._date));
+  if(tblSortCol==='data')  unified.sort((a,b)=>{const da=new Date(a._date||0),db=new Date(b._date||0);return tblSortDir==='asc'?da-db:db-da;});
+  else if(tblSortCol==='vlera') unified.sort((a,b)=>tblSortDir==='asc'?a.vlera-b.vlera:b.vlera-a.vlera);
 
   const typeLabels = {'':' Veprimet','blerje':' Blerjet','shpenzime':' Shpenzimet'};
   document.getElementById('tbl-title').textContent = typeLabels[activeType]+' e Fundit';
@@ -384,8 +393,12 @@ function renderDashboard(){
         </td>
       </tr>`;
     }).join('');
+    const si=(col)=>tblSortCol===col?`<span class="sort-arrow">${tblSortDir==='asc'?'↑':'↓'}</span>`:'<span class="sort-arrow muted">↕</span>';
     tbl.innerHTML=`<table><thead><tr>
-      <th>Emërtimi / Lloji</th><th>Data</th><th>Vlera</th><th>Statusi / Mënyra</th>
+      <th>Emërtimi / Lloji</th>
+      <th class="th-sort" onclick="setTblSort('data')" style="cursor:pointer;">Data ${si('data')}</th>
+      <th class="th-sort" onclick="setTblSort('vlera')" style="cursor:pointer;">Vlera ${si('vlera')}</th>
+      <th>Statusi / Mënyra</th>
     </tr></thead><tbody>${rows}</tbody></table>`;
   }
 
