@@ -423,7 +423,7 @@
         return '#'+h.split('/').map(function(p){ try{ return encodeURIComponent(decodeURIComponent(p)); }catch(e){ return p; } }).join('/');
       });
       if(navigator.share){
-        navigator.share({url:safeUrl,title:title||'Intal Underwear'}).catch(function(){ window._showShareModal(safeUrl,title); });
+        navigator.share({url:safeUrl}).catch(function(){ window._showShareModal(safeUrl,title); });
       } else {
         window._showShareModal(safeUrl,title||'Intal Underwear');
       }

@@ -284,7 +284,7 @@ window._copyShareUrl = function(url) {
 
 window.shareUrl = window.shareUrl || function(url, title) {
   if (navigator.share) {
-    navigator.share({url: url, title: title || 'Intal Underwear'}).catch(function() { window._showShareModal(url, title); });
+    navigator.share({url: url}).catch(function() { window._showShareModal(url, title); });
   } else {
     window._showShareModal(url, title || 'Intal Underwear');
   }
