@@ -238,6 +238,58 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 })();
 
+/* ── Share modal ────────────────────────────────────────────── */
+window._showShareModal = function(url, title) {
+  var ex = document.getElementById('share-modal');
+  if (ex) ex.remove();
+  var wa = 'https://wa.me/?text=' + encodeURIComponent(url);
+  var fb = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url);
+  var m = document.createElement('div');
+  m.id = 'share-modal';
+  m.style.cssText = 'position:fixed;inset:0;z-index:99999;display:flex;align-items:flex-end;justify-content:center;background:rgba(0,0,0,.45);';
+  m.innerHTML = '<div style="background:#fff;border-radius:16px 16px 0 0;width:100%;max-width:480px;padding:24px 20px 32px;">'
+    + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">'
+    + '<span style="font-size:13px;font-weight:600;letter-spacing:.5px;">Shpërndaj</span>'
+    + '<button onclick="document.getElementById(\'share-modal\').remove()" style="background:none;border:none;font-size:22px;cursor:pointer;color:#888;line-height:1;">&#215;</button>'
+    + '</div>'
+    + '<div style="display:flex;gap:16px;margin-bottom:20px;">'
+    + '<a href="' + wa + '" target="_blank" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;text-decoration:none;">'
+    + '<div style="width:52px;height:52px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;">'
+    + '<svg width="26" height="26" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.528 5.855L0 24l6.335-1.505A11.942 11.942 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.885 0-3.65-.515-5.17-1.41l-.37-.22-3.76.894.945-3.658-.242-.378A9.937 9.937 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>'
+    + '</div><span style="font-size:11px;color:#333;">WhatsApp</span></a>'
+    + '<a href="' + fb + '" target="_blank" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;text-decoration:none;">'
+    + '<div style="width:52px;height:52px;border-radius:50%;background:#1877F2;display:flex;align-items:center;justify-content:center;">'
+    + '<svg width="26" height="26" viewBox="0 0 24 24" fill="#fff"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.791-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.513c-1.491 0-1.956.93-1.956 1.886v2.268h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>'
+    + '</div><span style="font-size:11px;color:#333;">Facebook</span></a>'
+    + '<div onclick="window._copyShareUrl(\'' + url.replace(/\\/g,'\\\\').replace(/'/g,"\\'") + '\')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;">'
+    + '<div style="width:52px;height:52px;border-radius:50%;background:#f0f0f0;display:flex;align-items:center;justify-content:center;">'
+    + '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>'
+    + '</div><span id="copy-lbl" style="font-size:11px;color:#333;">Kopjo linkun</span></div>'
+    + '</div>'
+    + '<div style="font-size:10px;color:#aaa;word-break:break-all;text-align:center;">' + url + '</div>'
+    + '</div>';
+  m.addEventListener('click', function(e) { if (e.target === m) m.remove(); });
+  document.body.appendChild(m);
+};
+
+window._copyShareUrl = function(url) {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(url).then(function() {
+      var l = document.getElementById('copy-lbl');
+      if (l) { l.textContent = 'U kopjua ✓'; l.style.color = '#25D366'; }
+      setTimeout(function() { var m = document.getElementById('share-modal'); if (m) m.remove(); }, 1200);
+    });
+  } else { window.prompt('Kopjo linkun:', url); }
+};
+
+window.shareUrl = window.shareUrl || function(url, title) {
+  if (navigator.share) {
+    navigator.share({url: url, title: title || 'Intal Underwear'}).catch(function() { window._showShareModal(url, title); });
+  } else {
+    window._showShareModal(url, title || 'Intal Underwear');
+  }
+};
+
 /* ── Menu drawer ────────────────────────────────────────────── */
 function openMenuDrawer() {
   document.getElementById('menuDrawer').classList.add('open');
