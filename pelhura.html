@@ -268,16 +268,13 @@
   <script src="js/sb.js"></script>
   <script>
   window.shareUrl=function(url,title){
-    if(navigator.share){ navigator.share({url:url,title:title||'Intal Underwear'}); }
-    else {
-      navigator.clipboard.writeText(url).catch(function(){});
-      var t=document.getElementById('share-toast');
-      if(!t){ t=document.createElement('div'); t.id='share-toast';
-        t.style.cssText='position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#111;color:#fff;padding:8px 18px;border-radius:20px;font-size:12px;z-index:99999;pointer-events:none;opacity:0;transition:opacity .2s;';
-        document.body.appendChild(t); }
-      t.textContent='Linku u kopjua ✓'; t.style.opacity='1';
-      setTimeout(function(){ t.style.opacity='0'; },2000);
-    }
+    var t=document.getElementById('share-toast');
+    if(!t){ t=document.createElement('div'); t.id='share-toast';
+      t.style.cssText='position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#111;color:#fff;padding:8px 18px;border-radius:20px;font-size:12px;z-index:99999;pointer-events:none;opacity:0;transition:opacity .2s;';
+      document.body.appendChild(t); }
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(url).then(function(){ t.textContent='Linku u kopjua ✓'; t.style.opacity='1'; setTimeout(function(){ t.style.opacity='0'; },2000); }).catch(function(){ window.prompt('Kopjo linkun:',url); });
+    } else { window.prompt('Kopjo linkun:',url); }
   };
   </script>
   <script>

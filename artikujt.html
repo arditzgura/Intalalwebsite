@@ -423,21 +423,19 @@
       var safeUrl=url.replace(/#(.*)$/,function(_,h){
         return '#'+h.split('/').map(function(p){ try{ return encodeURIComponent(decodeURIComponent(p)); }catch(e){ return p; } }).join('/');
       });
-      if(navigator.share){ navigator.share({url:safeUrl,title:title||'Intal Underwear'}); }
-      else{
-        var toast=function(){
-          var t=document.getElementById('share-toast');
-          if(!t){ t=document.createElement('div'); t.id='share-toast';
-            t.style.cssText='position:fixed;bottom:32px;left:50%;transform:translateX(-50%);background:#111;color:#fff;padding:8px 20px;border-radius:20px;font-size:11px;letter-spacing:1px;z-index:99999;pointer-events:none;transition:opacity .3s;';
-            document.body.appendChild(t); }
-          t.textContent='Linku u kopjua ✓'; t.style.opacity='1';
-          setTimeout(function(){ t.style.opacity='0'; },2000);
-        };
-        if(navigator.clipboard&&navigator.clipboard.writeText){
-          navigator.clipboard.writeText(safeUrl).then(toast).catch(function(){ window.prompt('Kopjo linkun:',safeUrl); });
-        } else {
-          window.prompt('Kopjo linkun:',safeUrl);
-        }
+      var toast=function(){
+        var t=document.getElementById('share-toast');
+        if(!t){ t=document.createElement('div'); t.id='share-toast';
+          t.style.cssText='position:fixed;bottom:32px;left:50%;transform:translateX(-50%);background:#111;color:#fff;padding:8px 20px;border-radius:20px;font-size:11px;letter-spacing:1px;z-index:99999;pointer-events:none;transition:opacity .3s;';
+          document.body.appendChild(t); }
+        t.textContent='Linku u kopjua ✓'; t.style.opacity='1';
+        setTimeout(function(){ t.style.opacity='0'; },2000);
+      };
+      /* gjithmonë clipboard — navigator.share nuk tregon OG preview në WhatsApp */
+      if(navigator.clipboard&&navigator.clipboard.writeText){
+        navigator.clipboard.writeText(safeUrl).then(toast).catch(function(){ window.prompt('Kopjo linkun:',safeUrl); });
+      } else {
+        window.prompt('Kopjo linkun:',safeUrl);
       }
     };
 
