@@ -431,8 +431,9 @@
         t.textContent='Linku u kopjua ✓'; t.style.opacity='1';
         setTimeout(function(){ t.style.opacity='0'; },2000);
       };
-      /* gjithmonë clipboard — navigator.share nuk tregon OG preview në WhatsApp */
-      if(navigator.clipboard&&navigator.clipboard.writeText){
+      if(navigator.share){
+        navigator.share({url:safeUrl,title:title||'Intal Underwear'}).catch(function(){});
+      } else if(navigator.clipboard&&navigator.clipboard.writeText){
         navigator.clipboard.writeText(safeUrl).then(toast).catch(function(){ window.prompt('Kopjo linkun:',safeUrl); });
       } else {
         window.prompt('Kopjo linkun:',safeUrl);

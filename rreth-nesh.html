@@ -786,6 +786,7 @@
 function rrShare(){
   var url='https://intalal.com/rreth-nesh';
   var title='Rreth Nesh — Intal Underwear';
+  if(navigator.share){ navigator.share({url:url,title:title}); return; }
   if(navigator.clipboard&&navigator.clipboard.writeText){
     navigator.clipboard.writeText(url).then(function(){
       var t=document.getElementById('rr-toast');
