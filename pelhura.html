@@ -72,10 +72,12 @@
     .art-det-info { flex:1; overflow-y:auto; padding:24px 28px 12px; }
     .ph-arr { position:absolute; top:50%; transform:translateY(-50%); background:rgba(255,255,255,.88); border:none; border-radius:50%; width:36px; height:36px; cursor:pointer; font-size:17px; display:flex; align-items:center; justify-content:center; z-index:5; box-shadow:0 2px 8px rgba(0,0,0,.18); }
     .ph-arr.l { left:10px; } .ph-arr.r { right:10px; }
-    #art-nav-bar { display:flex; align-items:center; justify-content:space-between; padding:8px 12px; background:#111; flex-shrink:0; }
-    .art-nav-btn { background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.25); color:#fff; border-radius:3px; padding:4px 11px; font-size:11px; font-weight:600; cursor:pointer; transition:background .15s; }
-    .art-nav-btn:hover:not(:disabled) { background:rgba(255,255,255,.25); }
+    .art-nav-btn { position:fixed; background:none; border:none; color:#aaa; width:32px; height:32px; font-size:26px; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:color .15s; z-index:9100; padding:0; }
+    .art-nav-btn:hover:not(:disabled) { color:#555; }
     .art-nav-btn:disabled { opacity:.25; cursor:default; }
+    .art-nav-btn.prev { top:calc(50% - min(410px,46vh) - 20px); left:calc(50% - min(630px,48vw) + 14px); }
+    .art-nav-btn.next { top:calc(50% - min(410px,46vh) - 20px); right:calc(50% - min(630px,48vw) + 14px); }
+    @media(max-width:700px){ .art-nav-btn { top:16px !important; } .art-nav-btn.prev { left:14px; } .art-nav-btn.next { right:14px; } }
     #art-det-thumbs { position:absolute; bottom:0; left:0; right:0; display:flex; gap:5px; padding:8px 12px; background:linear-gradient(transparent,rgba(0,0,0,.6)); overflow-x:auto; scrollbar-width:none; }
     #art-det-thumbs::-webkit-scrollbar { display:none; }
     .det-th { width:46px; height:46px; border-radius:3px; object-fit:cover; border:2px solid transparent; cursor:pointer; flex-shrink:0; transition:border-color .15s,opacity .15s; display:block; opacity:.7; }
@@ -401,11 +403,16 @@
       var idx=((_det.photoIdx%Math.max(photos.length,1))+photos.length)%Math.max(photos.length,1);
       _det.photoIdx=idx;
       var total=_det.articles.length, ai=_det.artIdx;
-      var nav='<div id="art-nav-bar">'
-        +'<button class="art-nav-btn" onclick="prevDet()" '+(ai>0?'':'disabled')+'>&#8592; Para</button>'
-        +'<span style="font-size:11px;color:rgba(255,255,255,.5);letter-spacing:1px;">'+(ai+1)+' / '+total+'</span>'
-        +'<button class="art-nav-btn" onclick="nextDet()" '+(ai<total-1?'':'disabled')+'>Pas &#8594;</button>'
-        +'</div>';
+      /* shto shigjetat jashtë popup-it si në artikujt */
+      document.querySelectorAll('.art-nav-btn').forEach(function(b){b.remove();});
+      var bPrev=document.createElement('button');
+      bPrev.className='art-nav-btn prev'; bPrev.innerHTML='&#8592;'; bPrev.disabled=ai<=0;
+      bPrev.onclick=function(){ prevDet(); };
+      var bNext=document.createElement('button');
+      bNext.className='art-nav-btn next'; bNext.innerHTML='&#8594;'; bNext.disabled=ai>=total-1;
+      bNext.onclick=function(){ nextDet(); };
+      document.body.appendChild(bPrev); document.body.appendChild(bNext);
+      var nav='';
       var mi=photos.length?'<img src="'+photos[idx]+'" style="max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;display:block;cursor:pointer;" onclick="setPI('+(idx+1)+')">':'<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:60px;background:#f0f0f0;">&#129525;</div>';
       var aL=photos.length>1?'<button class="ph-arr l" onclick="setPI('+(idx-1)+')">&#8592;</button>':'';
       var aR=photos.length>1?'<button class="ph-arr r" onclick="setPI('+(idx+1)+')">&#8594;</button>':'';
@@ -468,6 +475,7 @@
     };
     window.closeArtDetail=function(){
       document.getElementById('art-detail-overlay').style.display='none';
+      document.querySelectorAll('.art-nav-btn').forEach(function(b){b.remove();});
       floatBtns(true);
       /* Reset OG meta tags to page defaults */
       updatePageOg('Pelhura — Intal Underwear','Pëlhurat tona premium — material cilësor për prodhim të brendëshmes. Intal Albania, Tiranë.','https://intalal.com/og_image.png',window.location.href);
