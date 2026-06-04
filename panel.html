@@ -2918,14 +2918,38 @@ async function handlePhotos(type,e){
 }
 function renderThumbs(type){
   var arr=type==='art'?artPhotos:pelPhotos;
-  if(!arr.length){document.getElementById(type+'-thumbs').innerHTML='';return;}
-  document.getElementById(type+'-thumbs').innerHTML=arr.map(function(p,i){
-    return '<div class="thumb-wrap"><img src="'+p.src+'">'
+  var el=document.getElementById(type+'-thumbs');
+  if(!arr.length){el.innerHTML='';return;}
+  el.innerHTML=arr.map(function(p,i){
+    return '<div class="thumb-wrap" draggable="true" data-idx="'+i+'" data-type="'+type+'">'
+      +'<img src="'+p.src+'">'
       +'<button class="crop-th" title="Crop/Resize" onclick="openCrop(\''+type+'\','+i+')">&#9986;</button>'
       +'<button class="del-th" onclick="delThumb(\''+type+'\','+i+')">x</button>'
       +(p.main?'<span class="main-th-badge">Kryesore</span>':'<button class="set-main-th" onclick="setMainThumb(\''+type+'\','+i+')">Kryesore</button>')
       +'</div>';
   }).join('');
+  /* Drag-and-drop reorder */
+  var thumbs=el.querySelectorAll('.thumb-wrap');
+  var dragFrom=null;
+  thumbs.forEach(function(th){
+    th.addEventListener('dragstart',function(e){
+      dragFrom=parseInt(th.dataset.idx);
+      th.style.opacity='.4';
+      e.dataTransfer.effectAllowed='move';
+    });
+    th.addEventListener('dragend',function(){ th.style.opacity='1'; dragFrom=null; });
+    th.addEventListener('dragover',function(e){ e.preventDefault(); th.style.outline='2px solid var(--pink)'; });
+    th.addEventListener('dragleave',function(){ th.style.outline=''; });
+    th.addEventListener('drop',function(e){
+      e.preventDefault(); th.style.outline='';
+      var dragTo=parseInt(th.dataset.idx);
+      if(dragFrom===null||dragFrom===dragTo) return;
+      var a=type==='art'?artPhotos:pelPhotos;
+      var moved=a.splice(dragFrom,1)[0];
+      a.splice(dragTo,0,moved);
+      renderThumbs(type);
+    });
+  });
 }
 function delThumb(type,i){var arr=type==='art'?artPhotos:pelPhotos;arr.splice(i,1);if(arr.length&&!arr.find(function(p){return p.main;}))arr[0].main=true;renderThumbs(type);}
 function setMainThumb(type,i){var arr=type==='art'?artPhotos:pelPhotos;arr.forEach(function(p,j){p.main=j===i;});renderThumbs(type);}
