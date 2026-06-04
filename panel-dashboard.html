@@ -43,7 +43,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);min-height:10
 <div class="top-bar">
   <div class="logo">intal</div>
   <span class="info">PANEL ADMIN</span>
-  <button class="logout" onclick="sessionStorage.removeItem('intal_logged');location.href='index.html'">
+  <button class="logout" onclick="localStorage.removeItem('intal_admin');localStorage.removeItem('intal_logged');location.href='index.html'">
     <i class="ri-logout-box-line"></i> Dil
   </button>
 </div>
@@ -103,7 +103,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);min-height:10
     </div>
   </a>
 
-  <a class="card" href="panel.html" onclick="sessionStorage.setItem('intal_logged','1')">
+  <a class="card" href="panel.html" onclick="localStorage.setItem('intal_logged','1')">
     <div class="card-thumb" style="background:#111;display:flex;align-items:center;justify-content:center;">
       <div style="text-align:center;color:#555;">
         <i class="ri-database-2-line" style="font-size:36px;display:block;margin-bottom:6px;"></i>
@@ -141,7 +141,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);min-height:10
 </div>
 
 <script>
-if(!sessionStorage.getItem('intal_logged')) location.href='index.html';
+if(!localStorage.getItem('intal_admin')&&!localStorage.getItem('intal_logged')) location.href='index.html';
 </script>
 </body>
 </html>

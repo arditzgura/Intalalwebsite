@@ -54,7 +54,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);height:100vh;
   <div class="logo">intal</div>
   <span class="title">PELHURA — Faqja Publike</span>
   <div class="actions">
-    <a class="btn-back" href="panel-dashboard.html" onclick="sessionStorage.setItem('intal_logged','1')">← Dashboard</a>
+    <a class="btn-back" href="panel-dashboard.html" onclick="localStorage.setItem('intal_logged','1')">← Dashboard</a>
     <button class="btn-save" onclick="saveAll()">Ruaj &amp; Refresh</button>
   </div>
 </div>
@@ -106,7 +106,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);height:100vh;
 </div>
 
 <script>
-if(!sessionStorage.getItem('intal_logged')) location.href='index.html';
+if(!localStorage.getItem('intal_admin')&&!localStorage.getItem('intal_logged')) location.href='index.html';
 
 var KEY = 'intal_pel_page_v1';
 var _deb = null;

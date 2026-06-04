@@ -1095,7 +1095,7 @@ tr.drag-over{border-top:2.5px solid var(--pink);}
     <div class="admin-nav">
       <div class="admin-logo"><div class="alb"><span>intal</span><small>ADMIN</small></div><span class="a-title">Panel Administrimi</span></div>
       <div style="display:flex;align-items:center;gap:10px;">
-        <a href="panel-dashboard.html" onclick="sessionStorage.setItem('intal_logged','1')" style="font-size:11px;color:#aaa;text-decoration:none;border:1px solid #444;padding:5px 12px;border-radius:5px;letter-spacing:.5px;transition:all .2s;" onmouseover="this.style.color='#fff';this.style.borderColor='#fff'" onmouseout="this.style.color='#aaa';this.style.borderColor='#444'">← Dashboard</a>
+        <a href="panel-dashboard.html" onclick="localStorage.setItem('intal_logged','1')" style="font-size:11px;color:#aaa;text-decoration:none;border:1px solid #444;padding:5px 12px;border-radius:5px;letter-spacing:.5px;transition:all .2s;" onmouseover="this.style.color='#fff';this.style.borderColor='#fff'" onmouseout="this.style.color='#aaa';this.style.borderColor='#444'">← Dashboard</a>
         <button class="logout-btn" onclick="doLogout()">Dal</button>
       </div>
     </div>
@@ -2556,11 +2556,11 @@ function doLogin(){
     showToast('Kredenciale të gabuara!',true);
     return;
   }
+  localStorage.setItem('intal_admin','1');
   document.getElementById('login-screen').style.display='none';
   document.getElementById('admin-ui').style.display='block';
   document.getElementById('admin-bar').style.display='flex';
   document.body.classList.add('admin-bar-visible');
-  /* Anulo popup-in "Na Kontakto" për sesionin admin */
   popupShown=true;
   if(popupTimer) clearTimeout(popupTimer);
   document.getElementById('contact-popup').style.display='none';
@@ -2568,6 +2568,7 @@ function doLogin(){
 }
 /* Enter on login fields handled via onkeydown inline */
 function doLogout(){
+  localStorage.removeItem('intal_admin');
   document.getElementById('admin-ui').style.display='none';
   document.getElementById('login-screen').style.display='flex';
   document.getElementById('l-pass').value='';
@@ -4499,7 +4500,7 @@ function renderPublicMaps(){
 var popupShown=false;
 var popupTimer=null;
 /* Set popupShown=true immediately if coming from admin dashboard */
-if(sessionStorage.getItem('intal_logged')==='1') popupShown=true;
+if(localStorage.getItem('intal_logged')==='1') popupShown=true;
 function initContactPopup(){
   if(popupShown) return;
   if(document.body.classList.contains('admin-bar-visible')) return;
@@ -4824,19 +4825,16 @@ function showToast(msg,err){
 </div>
 <script>
 (function(){
-  if(sessionStorage.getItem('intal_logged')==='1'){
-    sessionStorage.removeItem('intal_logged');
+  if(localStorage.getItem('intal_admin')==='1'||localStorage.getItem('intal_logged')==='1'){
+    localStorage.removeItem('intal_logged');
     document.getElementById('login-screen').style.display='none';
     document.getElementById('admin-ui').style.display='block';
     document.getElementById('admin-bar').style.display='flex';
     document.body.classList.add('admin-bar-visible');
-    /* Fsheh popup-in e kontaktit — jemi nga admin */
     popupShown=true;
     if(popupTimer) clearTimeout(popupTimer);
     document.getElementById('contact-popup').style.display='none';
     initAdmin();
-    var pt=sessionStorage.getItem('intal_panel_tab');
-    if(pt){ sessionStorage.removeItem('intal_panel_tab'); setTimeout(function(){ var btn=document.querySelector('.atab[data-tab="'+pt+'"]'); if(btn) btn.click(); },300); }
   }
 })();
 

@@ -212,7 +212,7 @@
 <script>
 (function(){
   // Auth check
-  if(!sessionStorage.getItem('intal_logged')){ location.href='index.html'; return; }
+  if(!localStorage.getItem('intal_admin')&&!localStorage.getItem('intal_logged')){ location.href='index.html'; return; }
 
   var DEFAULTS = {
     hero: { eyebrow:'Na Njihni', heading:'Rreth Intal', bgImage:'' },
