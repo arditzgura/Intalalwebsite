@@ -324,9 +324,10 @@
         var pa=hasM?' data-photos=\''+JSON.stringify(photos).replace(/'/g,'&#39;')+'\'':'';
         var imgEl=img0?'<img src="'+img0+'" data-idx="0" style="width:100%;height:100%;object-fit:cover;display:block;">'
           :'<div style="width:100%;height:100%;background:#e0e0e0;display:flex;align-items:center;justify-content:center;font-size:40px;">&#129525;</div>';
+        var hoverAttr=hasM?' onmouseenter="hoverEnter(this)" onmouseleave="hoverLeave(this)"':'';
         var arr=hasM?'<button class="art-card-arr l" onclick="cardStep(event,this,-1)">&#8592;</button><button class="art-card-arr r" onclick="cardStep(event,this,1)">&#8594;</button>':'';
         return '<div class="art-card" onclick="openDet(\''+a.id+'\')">'
-          +'<div class="art-card-img-wrap"'+pa+'>'+imgEl+arr+'</div>'
+          +'<div class="art-card-img-wrap"'+pa+hoverAttr+'>'+imgEl+arr+'</div>'
           +'<div style="padding:12px 14px 16px;">'
           +'<p style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:3px;">'+(Array.isArray(a.kat)?a.kat.join(', '):(a.kat||''))+'</p>'
           +'<p style="font-size:14px;font-weight:500;letter-spacing:-0.2px;color:var(--black);">'+a.name+'</p>'
@@ -362,6 +363,16 @@
       updatePageOg(label+' — Intal Underwear','Pëlhurat tona premium — '+label+'. Material cilësor për prodhim të brendëshmes. Intal Albania.',firstPhotoFromList(filtered),window.location.href);
     };
 
+    window.hoverEnter=function(wrap){
+      var ps=JSON.parse(wrap.dataset.photos||'[]'); if(ps.length<2) return;
+      var img=wrap.querySelector('img'); if(!img) return;
+      img.dataset.idx=1; img.src=ps[1];
+    };
+    window.hoverLeave=function(wrap){
+      var ps=JSON.parse(wrap.dataset.photos||'[]'); if(!ps.length) return;
+      var img=wrap.querySelector('img'); if(!img) return;
+      img.dataset.idx=0; img.src=ps[0];
+    };
     window.cardStep=function(e,btn,dir){
       e.stopPropagation();
       var w=btn.parentElement; var ps=JSON.parse(w.dataset.photos||'[]'); if(!ps.length) return;
