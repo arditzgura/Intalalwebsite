@@ -3100,9 +3100,12 @@ function saveArt(){
     var row=document.querySelector('#art-tbl tr[data-id="'+savedId+'"]');
     if(row){
       row.scrollIntoView({behavior:'smooth',block:'center'});
-      row.style.transition='background .3s';
-      row.style.background='#FFF0F4';
-      setTimeout(function(){row.style.background='';},1800);
+      row.style.transition='none';
+      row.style.background='#FFD6E0';
+      setTimeout(function(){
+        row.style.transition='background 1.5s ease';
+        row.style.background='';
+      },600);
     }
   },150);
 }
