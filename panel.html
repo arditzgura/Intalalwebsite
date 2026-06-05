@@ -3646,6 +3646,7 @@ function nDots(ngjyrat,sz){
 var _currentKat='', _currentNenKat='';
 
 function hashRouter(){
+  if(document.body.classList.contains('admin-bar-visible')) return;
   var hash=window.location.hash.replace('#','');
   var parts=hash?hash.split('/'):[]; 
   if(!parts.length||parts[0]===''){
@@ -3861,7 +3862,7 @@ window.addEventListener('hashchange',function(){
   if(_suppressHashChange){_suppressHashChange=false;return;}
   hashRouter();
 });
-window.addEventListener('popstate',function(){hashRouter();});
+window.addEventListener('popstate',function(){ if(!document.body.classList.contains('admin-bar-visible')) hashRouter(); });
 
 function renderPublic(){
   if(document.body.classList.contains('admin-bar-visible')) return;
