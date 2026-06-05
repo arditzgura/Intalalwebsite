@@ -212,7 +212,7 @@
 <script>
 (function(){
   // Auth check
-  var _a=false;try{_a=localStorage.getItem('intal_admin')==='1'||localStorage.getItem('intal_logged')==='1';}catch(e){} try{if(sessionStorage.getItem('intal_admin')==='1')_a=true;}catch(e){} if(!_a){ location.href='index.html'; return; }
+  function _ga(){try{if(localStorage.getItem('intal_admin')==='1'||localStorage.getItem('intal_logged')==='1')return true;}catch(e){} try{if(sessionStorage.getItem('intal_admin')==='1')return true;}catch(e){} try{if(document.cookie.indexOf('intal_admin=1')>-1)return true;}catch(e){} return false;} if(!_ga()){ location.href='index.html'; return; }
 
   var DEFAULTS = {
     hero: { eyebrow:'Na Njihni', heading:'Rreth Intal', bgImage:'' },

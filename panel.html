@@ -1679,6 +1679,18 @@ var adresat=[];
 var analytics={pageViews:0,artClicks:{},searchQueries:[],contactLeads:[],popupLeads:[],lastVisit:null};
 var ADMIN_PASS = 'arditiintal';
 var ADMIN_USER = 'intalalbania';
+/* Auth helpers — punojnë edhe në mobile private mode */
+function _setAdmin(v){
+  try{localStorage.setItem('intal_admin',v);}catch(e){}
+  try{sessionStorage.setItem('intal_admin',v);}catch(e){}
+  try{document.cookie='intal_admin='+v+';path=/;max-age='+( v==='1'?86400*30:0);}catch(e){}
+}
+function _getAdmin(){
+  try{if(localStorage.getItem('intal_admin')==='1') return true;}catch(e){}
+  try{if(sessionStorage.getItem('intal_admin')==='1') return true;}catch(e){}
+  try{if(document.cookie.indexOf('intal_admin=1')>-1) return true;}catch(e){}
+  return false;
+}
 var artikujt = [], pelhurat = [];
 var settings = {name:'Intal Albania',tel:'+355 6X XXX XXXX',email:'info@intalalbania.com',addr:'Tirane, Shqiperi',year:'2008',exp:'15+'};
 var heroSettings = {bg:'',logo:'',badge:'PRODHIM SHQIPTAR',title:'',desc:''};
@@ -2556,8 +2568,7 @@ function doLogin(){
     showToast('Kredenciale të gabuara!',true);
     return;
   }
-  try{localStorage.setItem('intal_admin','1');}catch(e){}
-  try{sessionStorage.setItem('intal_admin','1');}catch(e){}
+  _setAdmin('1');
   document.getElementById('login-screen').style.display='none';
   document.getElementById('admin-ui').style.display='block';
   document.getElementById('admin-bar').style.display='flex';
@@ -2569,8 +2580,7 @@ function doLogin(){
 }
 /* Enter on login fields handled via onkeydown inline */
 function doLogout(){
-  try{localStorage.removeItem('intal_admin');}catch(e){}
-  try{sessionStorage.removeItem('intal_admin');}catch(e){}
+  _setAdmin('0');
   document.getElementById('admin-ui').style.display='none';
   document.getElementById('login-screen').style.display='flex';
   document.getElementById('l-pass').value='';
@@ -4854,9 +4864,7 @@ function showToast(msg,err){
 </div>
 <script>
 (function(){
-  var _ladmin=false;try{_ladmin=localStorage.getItem('intal_admin')==='1'||localStorage.getItem('intal_logged')==='1';}catch(e){}
-  var _sadmin=false;try{_sadmin=sessionStorage.getItem('intal_admin')==='1';}catch(e){}
-  if(_ladmin||_sadmin){
+  if(_getAdmin()){
     try{localStorage.removeItem('intal_logged');}catch(e){};
     document.getElementById('login-screen').style.display='none';
     document.getElementById('admin-ui').style.display='block';

@@ -43,7 +43,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);min-height:10
 <div class="top-bar">
   <div class="logo">intal</div>
   <span class="info">PANEL ADMIN</span>
-  <button class="logout" onclick="localStorage.removeItem('intal_admin');localStorage.removeItem('intal_logged');location.href='index.html'">
+  <button class="logout" onclick="localStorage.removeItem('intal_admin');localStorage.removeItem('intal_logged');document.cookie='intal_admin=0;path=/;max-age=0';location.href='index.html'">
     <i class="ri-logout-box-line"></i> Dil
   </button>
 </div>
@@ -141,7 +141,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);min-height:10
 </div>
 
 <script>
-var _a=false;try{_a=localStorage.getItem('intal_admin')==='1'||localStorage.getItem('intal_logged')==='1';}catch(e){} try{if(sessionStorage.getItem('intal_admin')==='1')_a=true;}catch(e){} if(!_a) location.href='index.html';
+function _ga(){try{if(localStorage.getItem('intal_admin')==='1'||localStorage.getItem('intal_logged')==='1')return true;}catch(e){} try{if(sessionStorage.getItem('intal_admin')==='1')return true;}catch(e){} try{if(document.cookie.indexOf('intal_admin=1')>-1)return true;}catch(e){} return false;} if(!_ga()) location.href='index.html';
 </script>
 </body>
 </html>
