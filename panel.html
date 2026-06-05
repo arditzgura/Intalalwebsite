@@ -1679,16 +1679,17 @@ var adresat=[];
 var analytics={pageViews:0,artClicks:{},searchQueries:[],contactLeads:[],popupLeads:[],lastVisit:null};
 var ADMIN_PASS = 'arditiintal';
 var ADMIN_USER = 'intalalbania';
-/* Auth helpers — punojnë edhe në mobile private mode */
+/* Auth helpers — thjeshtë dhe të qëndrueshëm */
+var _adminActive = false;
 function _setAdmin(v){
-  try{localStorage.setItem('intal_admin',v);}catch(e){}
+  _adminActive = (v==='1');
   try{sessionStorage.setItem('intal_admin',v);}catch(e){}
-  try{document.cookie='intal_admin='+v+';path=/;max-age='+( v==='1'?86400*30:0);}catch(e){}
+  try{localStorage.setItem('intal_admin',v);}catch(e){}
 }
 function _getAdmin(){
-  try{if(localStorage.getItem('intal_admin')==='1') return true;}catch(e){}
+  if(_adminActive) return true;
   try{if(sessionStorage.getItem('intal_admin')==='1') return true;}catch(e){}
-  try{if(document.cookie.indexOf('intal_admin=1')>-1) return true;}catch(e){}
+  try{if(localStorage.getItem('intal_admin')==='1') return true;}catch(e){}
   return false;
 }
 var artikujt = [], pelhurat = [];
@@ -3646,7 +3647,7 @@ function nDots(ngjyrat,sz){
 var _currentKat='', _currentNenKat='';
 
 function hashRouter(){
-  if(document.body.classList.contains('admin-bar-visible')) return;
+  if(_adminActive) return;
   var hash=window.location.hash.replace('#','');
   var parts=hash?hash.split('/'):[]; 
   if(!parts.length||parts[0]===''){
@@ -3695,7 +3696,7 @@ function filterPelV(kat,btn){
 
 function showView(name){
   /* Mos ndërhyj nëse admin është aktiv */
-  if(document.body.classList.contains('admin-bar-visible')) return;
+  if(_adminActive) return;
   document.querySelectorAll('.view').forEach(function(v){v.classList.remove('active');});
   var el=document.getElementById('view-'+name);
   if(el) el.classList.add('active');
@@ -3862,10 +3863,10 @@ window.addEventListener('hashchange',function(){
   if(_suppressHashChange){_suppressHashChange=false;return;}
   hashRouter();
 });
-window.addEventListener('popstate',function(){ if(!document.body.classList.contains('admin-bar-visible')) hashRouter(); });
+window.addEventListener('popstate',function(){ if(!_adminActive) hashRouter(); });
 
 function renderPublic(){
-  if(document.body.classList.contains('admin-bar-visible')) return;
+  if(_adminActive) return;
   document.getElementById('pub-biz-name').textContent=settings.name||'Intal Albania';
   applyHeroSettings();
   document.getElementById('pub-tel').textContent=settings.tel||'';
