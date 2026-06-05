@@ -2570,14 +2570,8 @@ function doLogin(){
     return;
   }
   _setAdmin('1');
-  document.getElementById('login-screen').style.display='none';
-  document.getElementById('admin-ui').style.display='block';
-  document.getElementById('admin-bar').style.display='flex';
-  document.body.classList.add('admin-bar-visible');
-  popupShown=true;
-  if(popupTimer) clearTimeout(popupTimer);
-  document.getElementById('contact-popup').style.display='none';
-  initAdmin();
+  /* Ridirektoj te dashboard — shmang konfliktin publike/admin në panel.html */
+  window.location.href='panel-dashboard.html';
 }
 /* Enter on login fields handled via onkeydown inline */
 function doLogout(){
