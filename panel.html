@@ -3693,10 +3693,11 @@ function filterPelV(kat,btn){
 }
 
 function showView(name){
+  /* Mos ndërhyj nëse admin është aktiv */
+  if(document.body.classList.contains('admin-bar-visible')) return;
   document.querySelectorAll('.view').forEach(function(v){v.classList.remove('active');});
   var el=document.getElementById('view-'+name);
   if(el) el.classList.add('active');
-  // Show/hide nenkat filter bar
   var nfb=document.getElementById('nenkat-filter-bar');
   if(nfb) nfb.style.display=name==='nenkat'?'flex':'none';
   window.scrollTo({top:0,behavior:'smooth'});
@@ -3863,6 +3864,7 @@ window.addEventListener('hashchange',function(){
 window.addEventListener('popstate',function(){hashRouter();});
 
 function renderPublic(){
+  if(document.body.classList.contains('admin-bar-visible')) return;
   document.getElementById('pub-biz-name').textContent=settings.name||'Intal Albania';
   applyHeroSettings();
   document.getElementById('pub-tel').textContent=settings.tel||'';
