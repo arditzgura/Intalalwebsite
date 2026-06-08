@@ -1688,6 +1688,7 @@ function _setAdmin(v){
 }
 function _getAdmin(){
   if(_adminActive) return true;
+  if(window.location.hash==='#admin') return true;
   try{if(sessionStorage.getItem('intal_admin')==='1') return true;}catch(e){}
   try{if(localStorage.getItem('intal_admin')==='1') return true;}catch(e){}
   return false;
