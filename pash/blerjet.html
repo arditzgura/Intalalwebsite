@@ -54,6 +54,9 @@
         <i class="ri-search-line"></i>
         <input class="search-input" id="search" placeholder="Kërko furnitor, zër..." oninput="renderList()">
       </div>
+      <select id="filter-furnitor" onchange="renderList()" style="background:var(--white);border:0.5px solid var(--border);border-radius:7px;padding:8px 12px;font-family:'Switzer',sans-serif;font-size:12px;outline:none;">
+        <option value="">Të gjithë furnitorët</option>
+      </select>
       <select id="filter-status" onchange="renderList()" style="background:var(--white);border:0.5px solid var(--border);border-radius:7px;padding:8px 12px;font-family:'Switzer',sans-serif;font-size:12px;outline:none;">
         <option value="">Të gjitha statuset</option>
         <option value="paguar">E Paguar</option>
@@ -204,12 +207,8 @@
 <div class="modal-backdrop" id="view-bd" onclick="if(event.target===this)closeView()">
   <div class="modal wide">
     <div class="modal-head">
-      <h2 id="view-title">Blerja #—</h2>
-      <div style="display:flex;gap:8px;align-items:center;">
-        <button class="btn-secondary" style="padding:6px 12px;font-size:11px;" onclick="editFromView()"><i class="ri-edit-line"></i> Edito</button>
-        <button class="btn-secondary" style="padding:6px 12px;font-size:11px;color:var(--accent);border-color:var(--accent);" onclick="deleteFromView()"><i class="ri-delete-bin-line"></i> Fshi</button>
-        <button class="modal-close" onclick="closeView()">�o.</button>
-      </div>
+      <h2 id="view-title">—</h2>
+      <button class="modal-close" onclick="closeView()">&#x2715;</button>
     </div>
     <div class="modal-body" id="view-body"></div>
   </div>
@@ -691,29 +690,61 @@ function saveBlerje(){
 function openView(id){
   const b=DB.blerjet.find(x=>x.id===id); if(!b) return;
   viewId=id;
-  const f=DB.furnitoret.find(x=>x.id===b.furnitori_id);
+  const furnitoret=DB.furnitoret;
+  const f=furnitoret.find(x=>x.id===b.furnitori_id);
   const fname=f?f.emri:(b.furnitor_emri||'—');
-  const st=b.statusi==='paguar';
-  const itemRows=(b.items||[]).map(it=>`<tr>
-    <td>${esc(it.zeri_emri||'—')}</td><td>${esc(it.kategoria||'—')}</td>
-    <td>${it.sasia||'—'} ${it.njesia||''}</td>
-    <td>${it.cmimi?fmtL(it.cmimi):'—'}</td>
-    <td style="font-weight:700;text-align:right">${fmtL(it.totali)}</td>
-  </tr>`).join('');
-  document.getElementById('view-title').textContent=`Blerja #${b.nr}`;
+
+  // All purchases from same supplier
+  const historia=DB.blerjet
+    .filter(x=>(b.furnitori_id ? x.furnitori_id===b.furnitori_id : x.furnitor_emri===b.furnitor_emri))
+    .sort((a,c)=>new Date(c.data||c.created||0)-new Date(a.data||a.created||0));
+
+  const totalH  =historia.reduce((s,x)=>s+(x.totali||0),0);
+  const paguarH =historia.filter(x=>x.statusi==='paguar').reduce((s,x)=>s+(x.totali||0),0);
+  const papagH  =historia.filter(x=>x.statusi==='pa_paguar').reduce((s,x)=>s+(x.totali||0),0);
+
+  const rows=historia.map(h=>{
+    const st=h.statusi==='paguar';
+    const isCurrent=h.id===id;
+    const zerat=(h.items||[]).map(i=>i.zeri_emri||'').filter(Boolean).join(', ')||'—';
+    return `<tr style="${isCurrent?'background:var(--surface);':''}">
+      <td style="font-size:11px;color:var(--muted);font-weight:600">#${h.nr||'—'}</td>
+      <td>
+        <div style="font-size:13px;font-weight:600;color:var(--text)">${h.data?fmtDate(h.data):'—'}</div>
+        <div style="font-size:11px;color:var(--muted)">${esc(zerat)}</div>
+      </td>
+      <td class="td-amt" style="color:var(--accent);font-weight:700">${fmtL(h.totali)}</td>
+      <td>
+        <span class="badge ${st?'paguar':'pa-paguar'}">${st?'E Paguar':'Pa Paguar'}</span>
+        <span class="badge badge-menyra" style="margin-left:3px">${(h.menyra_pages||'dore')==='banke'?'<i class="ri-bank-line"></i> Bankë':'<i class="ri-hand-coin-line"></i> Dorë'}</span>
+      </td>
+      <td onclick="event.stopPropagation()">
+        <div style="display:flex;gap:5px;justify-content:flex-end;">
+          <button class="btn-icon" onclick="closeView();dupBlerje('${h.id}')" title="Dubliko"><i class="ri-file-copy-line"></i></button>
+          <button class="btn-icon" onclick="closeView();openEdit('${h.id}')" title="Edito"><i class="ri-edit-line"></i></button>
+          <button class="btn-icon danger" onclick="closeView();askDel('${h.id}')" title="Fshi"><i class="ri-delete-bin-line"></i></button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('view-title').textContent=fname;
   document.getElementById('view-body').innerHTML=`
-    <div style="display:flex;gap:20px;flex-wrap:wrap;margin-bottom:16px;">
-      <div><div style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;font-weight:600">FURNITORI</div><div style="font-size:15px;font-weight:700">${esc(fname)}</div></div>
-      <div><div style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;font-weight:600">DATA</div><div style="font-size:15px;font-weight:700">${fmtDate(b.data)}</div></div>
-      <div><div style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;font-weight:600">STATUSI</div><span class="badge ${st?'paguar':'pa-paguar'}" style="margin-top:2px;display:inline-flex">${st?'E Paguar':'Pa Paguar'}</span></div>
-      <div><div style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;font-weight:600">M�<NYRA</div><span class="badge badge-menyra" style="margin-top:2px;display:inline-flex">${(b.menyra_pages||'dore')==='banke'?'<i class="ri-bank-line"></i> Me Bankë':'<i class="ri-hand-coin-line"></i> Në Dorë'}</span></div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;">
+      <div class="period-card"><div class="pc-header"><div class="pc-icon blue"><i class="ri-shopping-bag-line"></i></div><span class="pc-label">Total Blerje</span></div><div class="pc-val">${fmtL(totalH)}</div></div>
+      <div class="period-card"><div class="pc-header"><div class="pc-icon green"><i class="ri-checkbox-circle-line"></i></div><span class="pc-label">E Paguar</span></div><div class="pc-val">${fmtL(paguarH)}</div></div>
+      <div class="period-card"><div class="pc-header"><div class="pc-icon orange"><i class="ri-time-line"></i></div><span class="pc-label">Pa Paguar</span></div><div class="pc-val ${papagH>0?'red':''}">${fmtL(papagH)}</div></div>
     </div>
-    <table class="items-table" style="margin-bottom:12px;">
-      <thead><tr><th>Zëri</th><th>Kategoria</th><th>Sasia</th><th>Çmimi</th><th style="text-align:right">Totali</th></tr></thead>
-      <tbody>${itemRows}</tbody>
-    </table>
-    <div class="grand-total"><span class="grand-total-lbl">TOTALI</span><span class="grand-total-val">${fmtL(b.totali)}</span></div>
-    ${b.notes?`<div style="margin-top:14px;padding:12px;background:var(--surface);border-radius:8px;font-size:12px;color:var(--muted)">${esc(b.notes)}</div>`:''}`;
+    <table>
+      <thead><tr>
+        <th style="width:40px">Nr.</th>
+        <th>Data / Zërat</th>
+        <th>Totali</th>
+        <th>Statusi</th>
+        <th></th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
   document.getElementById('view-bd').classList.add('open');
 }
 function closeView(){ document.getElementById('view-bd').classList.remove('open'); viewId=null; }
@@ -732,16 +763,39 @@ function confirmDel(){
    LIST
 �.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.��.� */
 
+function buildFurnitorFilter(){
+  const sel=document.getElementById('filter-furnitor');
+  const cur=sel.value;
+  const furnitoret=DB.furnitoret;
+  // Collect all unique supplier ids/names used in blerjet
+  const used=[];
+  DB.blerjet.forEach(b=>{
+    const f=furnitoret.find(x=>x.id===b.furnitori_id);
+    const id=b.furnitori_id||'_'+b.furnitor_emri;
+    const emri=f?f.emri:(b.furnitor_emri||'');
+    if(emri&&!used.find(u=>u.id===id)) used.push({id,emri});
+  });
+  used.sort((a,b)=>a.emri.localeCompare(b.emri));
+  sel.innerHTML='<option value="">Të gjithë furnitorët</option>'
+    +used.map(u=>`<option value="${esc(u.id)}" ${cur===u.id?'selected':''}>${esc(u.emri)}</option>`).join('');
+}
+
 function renderList(){
+  buildFurnitorFilter();
   const q=document.getElementById('search').value.toLowerCase();
   const status=document.getElementById('filter-status').value;
   const menyra=document.getElementById('filter-menyra').value;
+  const fltFurn=document.getElementById('filter-furnitor').value;
   const furnitoret=DB.furnitoret;
 
   let list=DB.blerjet.filter(b=>{
     if(status&&b.statusi!==status) return false;
     if(menyra&&(b.menyra_pages||'dore')!==menyra) return false;
     if(!DP.matches(b.data)) return false;
+    if(fltFurn){
+      const bid=b.furnitori_id||'_'+b.furnitor_emri;
+      if(bid!==fltFurn) return false;
+    }
     if(q){
       const f=furnitoret.find(x=>x.id===b.furnitori_id);
       const fname=(f?f.emri:b.furnitor_emri||'').toLowerCase();
