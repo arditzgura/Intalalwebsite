@@ -747,6 +747,40 @@ function openView(id){
     </table>`;
   document.getElementById('view-bd').classList.add('open');
 }
+function openSingle(id){
+  const b=DB.blerjet.find(x=>x.id===id); if(!b) return;
+  viewId=id;
+  const f=DB.furnitoret.find(x=>x.id===b.furnitori_id);
+  const fname=f?f.emri:(b.furnitor_emri||'—');
+  const st=b.statusi==='paguar';
+  const itemRows=(b.items||[]).map(it=>`<tr>
+    <td>${esc(it.zeri_emri||'—')}</td><td>${esc(it.kategoria||'—')}</td>
+    <td>${it.sasia||'—'} ${it.njesia||''}</td>
+    <td>${it.cmimi?fmtL(it.cmimi):'—'}</td>
+    <td style="font-weight:700;text-align:right">${fmtL(it.totali)}</td>
+  </tr>`).join('');
+  document.getElementById('view-title').textContent=`Blerja #${b.nr}`;
+  document.getElementById('view-body').innerHTML=`
+    <div style="display:flex;gap:20px;flex-wrap:wrap;margin-bottom:16px;">
+      <div><div style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;font-weight:600">FURNITORI</div><div style="font-size:15px;font-weight:700">${esc(fname)}</div></div>
+      <div><div style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;font-weight:600">DATA</div><div style="font-size:15px;font-weight:700">${fmtDate(b.data)}</div></div>
+      <div><div style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;font-weight:600">STATUSI</div><span class="badge ${st?'paguar':'pa-paguar'}" style="margin-top:2px;display:inline-flex">${st?'E Paguar':'Pa Paguar'}</span></div>
+      <div><div style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;font-weight:600">MËNYRA</div><span class="badge badge-menyra" style="margin-top:2px;display:inline-flex">${(b.menyra_pages||'dore')==='banke'?'<i class="ri-bank-line"></i> Me Bankë':'<i class="ri-hand-coin-line"></i> Në Dorë'}</span></div>
+    </div>
+    <table class="items-table" style="margin-bottom:12px;">
+      <thead><tr><th>Zëri</th><th>Kategoria</th><th>Sasia</th><th>Çmimi</th><th style="text-align:right">Totali</th></tr></thead>
+      <tbody>${itemRows}</tbody>
+    </table>
+    <div class="grand-total"><span class="grand-total-lbl">TOTALI</span><span class="grand-total-val">${fmtL(b.totali)}</span></div>
+    ${b.notes?`<div style="margin-top:14px;padding:12px;background:var(--surface);border-radius:8px;font-size:12px;color:var(--muted)">${esc(b.notes)}</div>`:''}
+    <div style="display:flex;gap:8px;margin-top:16px;">
+      <button class="btn-secondary" style="padding:6px 14px;font-size:12px;" onclick="closeView();dupBlerje('${b.id}')"><i class="ri-file-copy-line"></i> Dubliko</button>
+      <button class="btn-secondary" style="padding:6px 14px;font-size:12px;" onclick="closeView();openEdit('${b.id}')"><i class="ri-edit-line"></i> Edito</button>
+      <button class="btn-secondary" style="padding:6px 14px;font-size:12px;color:var(--accent);border-color:var(--accent);" onclick="closeView();askDel('${b.id}')"><i class="ri-delete-bin-line"></i> Fshi</button>
+    </div>`;
+  document.getElementById('view-bd').classList.add('open');
+}
+
 function closeView(){ document.getElementById('view-bd').classList.remove('open'); viewId=null; }
 function editFromView(){ const id=viewId; closeView(); openEdit(id); }
 function deleteFromView(){ askDel(viewId); closeView(); }
@@ -835,16 +869,16 @@ function renderList(){
     const fname=f?f.emri:(b.furnitor_emri||'—');
     const st=b.statusi==='paguar';
     const cats=[...new Set((b.items||[]).map(i=>i.kategoria).filter(Boolean))].join(', ');
-    return `<tr onclick="openView('${b.id}')">
-      <td class="td-nr">${b.nr||'—'}</td>
-      <td><div class="td-name">${esc(fname)}</div><div class="td-sub">${cats||'—'}</div></td>
-      <td>${b.data?fmtDate(b.data):'—'}</td>
-      <td class="td-amt" style="color:var(--accent)">${fmtL(b.totali)}</td>
-      <td>
+    return `<tr>
+      <td class="td-nr" onclick="openSingle('${b.id}')" style="cursor:pointer;">${b.nr||'—'}</td>
+      <td onclick="openView('${b.id}')" style="cursor:pointer;"><div class="td-name">${esc(fname)}</div><div class="td-sub">${cats||'—'}</div></td>
+      <td onclick="openSingle('${b.id}')" style="cursor:pointer;">${b.data?fmtDate(b.data):'—'}</td>
+      <td class="td-amt" style="color:var(--accent);cursor:pointer;" onclick="openSingle('${b.id}')">${fmtL(b.totali)}</td>
+      <td onclick="openSingle('${b.id}')" style="cursor:pointer;">
         <span class="badge ${st?'paguar':'pa-paguar'}">${st?'E Paguar':'Pa Paguar'}</span>
         <span class="badge badge-menyra" style="margin-left:4px">${(b.menyra_pages||'dore')==='banke'?'<i class="ri-bank-line"></i> Bankë':'<i class="ri-hand-coin-line"></i> Dorë'}</span>
       </td>
-      <td onclick="event.stopPropagation()">
+      <td>
         <div style="display:flex;gap:6px;justify-content:flex-end;">
           <button class="btn-icon" onclick="dupBlerje('${b.id}')" title="Dubliko"><i class="ri-file-copy-line"></i></button>
           <button class="btn-icon" onclick="openEdit('${b.id}')" title="Edito"><i class="ri-edit-line"></i></button>
