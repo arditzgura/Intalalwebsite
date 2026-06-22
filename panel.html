@@ -1573,11 +1573,17 @@ tr.drag-over{border-top:2.5px solid var(--pink);}
   var SB_URL_P='https://qucwmmizqxudxvolfwkx.supabase.co';
   var SB_KEY_P='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF1Y3dtbWl6cXh1ZHh2b2xmd2t4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQwNjIxODIsImV4cCI6MjA4OTYzODE4Mn0.xp5e-4X2IzgizknjYKmai8qOOrwM-_BO80v_QTI4viw';
   var _promoData=null;
+  var _promoTimer=null;
   function openPromoLink(){if(_promoData&&_promoData.link)window.open(_promoData.link,'_blank');}
-  function closePromoPopup(){document.getElementById('promo-popup-overlay').style.display='none';}
+  function closePromoPopup(){
+    document.getElementById('promo-popup-overlay').style.display='none';
+    if(_promoTimer){clearTimeout(_promoTimer);_promoTimer=null;}
+    try{sessionStorage.setItem('intal_promo_seen','1');}catch(e){}
+  }
   window.openPromoLink=openPromoLink;
   window.closePromoPopup=closePromoPopup;
   async function fetchAndShowPromo(){
+    try{if(sessionStorage.getItem('intal_promo_seen')==='1')return;}catch(e){}
     try{
       var r=await fetch(SB_URL_P+'/rest/v1/konfigurimi?key=eq.promo_v1',{headers:{'apikey':SB_KEY_P,'Authorization':'Bearer '+SB_KEY_P}});
       if(!r.ok) return;
@@ -1595,7 +1601,7 @@ tr.drag-over{border-top:2.5px solid var(--pink);}
     if(!ol||!img) return;
     img.src=_promoData.imgUrl;
     img.style.cursor=_promoData.link?'pointer':'default';
-    setTimeout(function(){ol.style.display='flex';},2000);
+    _promoTimer=setTimeout(function(){ol.style.display='flex';},2000);
   }
   window.addEventListener('load',function(){
     if(!window._adminActive) fetchAndShowPromo();
