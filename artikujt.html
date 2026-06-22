@@ -601,11 +601,23 @@
       }
       /* ruaj pozicionin ekzakt të scroll-it */
       var oldRow1=bar.querySelector('.dfc-row');
-      var savedScroll=oldRow1?oldRow1.scrollLeft:0;
+      var savedScroll1=oldRow1?oldRow1.scrollLeft:0;
+      var oldRow2=bar.querySelector('.dfc-row-sub');
+      var savedScroll2=oldRow2?oldRow2.scrollLeft:0;
       bar.innerHTML=row1+row2;
       bar.style.display='block';
       var newRow1=bar.querySelector('.dfc-row');
-      if(newRow1) newRow1.scrollLeft=savedScroll;
+      if(newRow1) newRow1.scrollLeft=savedScroll1;
+      var newRow2=bar.querySelector('.dfc-row-sub');
+      if(newRow2){
+        var activeBtn=newRow2.querySelector('.dfc-sub.active');
+        if(activeBtn){
+          /* scroll so active button is centered in the row */
+          newRow2.scrollLeft=activeBtn.offsetLeft-(newRow2.clientWidth/2)+(activeBtn.offsetWidth/2);
+        } else {
+          newRow2.scrollLeft=savedScroll2;
+        }
+      }
       syncWrapH();
     }
 
@@ -1151,6 +1163,49 @@
   </a>
 </div>
 
+<!-- PROMO POPUP -->
+<div id="promo-popup-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:5000;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(4px);" onclick="if(event.target===this)closePromoPopup()">
+  <div style="position:relative;max-width:480px;width:100%;animation:promoPopIn .35s cubic-bezier(.34,1.4,.64,1);">
+    <button onclick="closePromoPopup()" style="position:absolute;top:-14px;right:-14px;z-index:2;background:#111;color:#fff;border:none;border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.4);line-height:1;">&#x2715;</button>
+    <div id="promo-popup-img-wrap" style="border-radius:12px;overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,.4);cursor:pointer;" onclick="openPromoLink()">
+      <img id="promo-popup-img" src="" style="width:100%;display:block;max-height:80vh;object-fit:contain;">
+    </div>
+  </div>
+</div>
+<style>@keyframes promoPopIn{from{opacity:0;transform:scale(.85) translateY(20px);}to{opacity:1;transform:scale(1) translateY(0);}}</style>
+<script>
+(function(){
+  var SB_URL_P='https://qucwmmizqxudxvolfwkx.supabase.co';
+  var SB_KEY_P='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF1Y3dtbWl6cXh1ZHh2b2xmd2t4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQwNjIxODIsImV4cCI6MjA4OTYzODE4Mn0.xp5e-4X2IzgizknjYKmai8qOOrwM-_BO80v_QTI4viw';
+  var _promoData=null;
+  function openPromoLink(){if(_promoData&&_promoData.link)window.open(_promoData.link,'_blank');}
+  function closePromoPopup(){document.getElementById('promo-popup-overlay').style.display='none';}
+  window.openPromoLink=openPromoLink;
+  window.closePromoPopup=closePromoPopup;
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')closePromoPopup();});
+  async function fetchAndShowPromo(){
+    try{
+      var r=await fetch(SB_URL_P+'/rest/v1/konfigurimi?key=eq.promo_v1',{headers:{'apikey':SB_KEY_P,'Authorization':'Bearer '+SB_KEY_P}});
+      if(!r.ok) return;
+      var d=await r.json();
+      if(!d||!d.length) return;
+      var p=JSON.parse(d[0].value);
+      if(!p||!p.active||!p.imgUrl) return;
+      _promoData=p;
+      try{localStorage.setItem('intal_promo_v1',JSON.stringify(p));}catch(e){}
+    }catch(e){
+      try{var lp=localStorage.getItem('intal_promo_v1');if(lp){var p=JSON.parse(lp);if(!p||!p.active||!p.imgUrl)return;_promoData=p;}else return;}catch(e2){return;}
+    }
+    var ol=document.getElementById('promo-popup-overlay');
+    var img=document.getElementById('promo-popup-img');
+    if(!ol||!img) return;
+    img.src=_promoData.imgUrl;
+    img.style.cursor=_promoData.link?'pointer':'default';
+    setTimeout(function(){ol.style.display='flex';},2000);
+  }
+  window.addEventListener('load',fetchAndShowPromo);
+})();
+</script>
 
 </body>
 </html>
