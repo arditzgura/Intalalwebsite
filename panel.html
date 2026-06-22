@@ -615,7 +615,7 @@ body{font-family:var(--fb);background:var(--gray);color:var(--text);}
 .crop-btn{padding:8px 18px;border-radius:7px;border:none;font-family:var(--fh);font-size:12px;font-weight:700;cursor:pointer;}
 .crop-btn.cancel{background:var(--light);color:#555;}.crop-btn.apply{background:var(--pink);color:#fff;}
 /* ADMIN */
-#login-screen{display:flex;align-items:center;justify-content:center;min-height:500px;padding:2rem;}
+#login-screen{display:none;}
 .login-box{background:#fff;border-radius:14px;border:1px solid var(--border);padding:2.5rem;width:100%;max-width:360px;text-align:center;}
 .login-logo{background:var(--pink);padding:7px 14px;border-radius:6px;display:inline-block;margin-bottom:1.25rem;}
 .login-logo span{font-family:var(--fh);font-weight:900;font-size:20px;color:#fff;letter-spacing:-1px;}
@@ -626,7 +626,7 @@ body{font-family:var(--fb);background:var(--gray);color:var(--text);}
 .login-box input:focus{outline:none;border-color:var(--pink);}
 .login-btn{width:100%;background:var(--pink);color:#fff;border:none;border-radius:7px;padding:11px;font-family:var(--fh);font-weight:700;font-size:13px;cursor:pointer;}
 .login-err{color:var(--danger);font-size:11px;margin-top:6px;display:none;}
-#admin-ui{display:none;}
+#admin-ui{display:block;}
 .admin-nav{background:var(--black);padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:54px;}
 .admin-logo{display:flex;align-items:center;gap:8px;}
 .alb{background:var(--pink);padding:5px 9px;border-radius:5px;}
@@ -5001,17 +5001,10 @@ function showToast(msg,err){
 </div>
 <script>
 (function(){
-  if(_getAdmin()){
-    try{localStorage.removeItem('intal_logged');}catch(e){};
-    document.getElementById('login-screen').style.display='none';
-    document.getElementById('admin-ui').style.display='block';
-    document.getElementById('admin-bar').style.display='flex';
-    document.body.classList.add('admin-bar-visible');
-    popupShown=true;
-    if(popupTimer) clearTimeout(popupTimer);
-    document.getElementById('contact-popup').style.display='none';
-    initAdmin();
-  }
+  popupShown=true;
+  if(popupTimer) clearTimeout(popupTimer);
+  var cp=document.getElementById('contact-popup'); if(cp) cp.style.display='none';
+  initAdmin();
 })();
 
 /* ── REELS AI ──────────────────────────────────────────────── */
