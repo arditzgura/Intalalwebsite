@@ -2229,7 +2229,7 @@ async function loadData(){
   try{var rs=await sbGetKfg('rrethsettings');if(rs)window.rrethSettings=JSON.parse(rs);}catch(e){}
   try{var ks=await sbGetKfg('kategorisettings');if(ks){kategoriSettings=JSON.parse(ks);if(!kategoriSettings.kryesoreFoto)kategoriSettings.kryesoreFoto={};}}catch(e){}
 }
-function clearIntalCache(){try{localStorage.removeItem('intal_cache_v1');}catch(e){}
+function clearIntalCache(){try{localStorage.removeItem('intal_cache_v1');}catch(e){}}
 
 // -- PROMO --
 var promoSettings={active:false,imgUrl:'',link:''};
@@ -5000,10 +5000,11 @@ function showToast(msg,err){
   </a>
 </div>
 <script>
-(function(){
+(async function(){
   popupShown=true;
   if(popupTimer) clearTimeout(popupTimer);
   var cp=document.getElementById('contact-popup'); if(cp) cp.style.display='none';
+  await loadData();
   initAdmin();
 })();
 
