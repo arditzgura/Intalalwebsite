@@ -96,29 +96,30 @@
     .art-page-hero-heading { font-size:clamp(26px,3.5vw,48px); font-weight:700; color:#fff; letter-spacing:-0.5px; line-height:1.1; }
     .art-page-hero-sub { font-size:13px; color:rgba(255,255,255,.75); max-width:480px; line-height:1.6; margin-top:2px; }
     @media(max-width:700px){
-      /* Overlay — mbush ekranin, popup del nga poshtë */
+      /* Overlay — 4px hapesire nga lart, popup del nga poshtë */
       #art-detail-overlay {
-        padding:0 !important;
+        padding:4px 0 0 !important;
         align-items:flex-end !important;
         overflow:hidden;
       }
 
-      /* Kutia: kolone e vetme, mbush gjithe ekranin */
+      /* Kutia: kolone e vetme, lë 4px nga lart */
       #art-detail-box {
         grid-template-columns:1fr !important;
-        grid-template-rows:63vh 37vh !important;
+        grid-template-rows:63% 37% !important;
         width:100vw !important;
-        height:100vh !important;
+        height:calc(100vh - 4px) !important;
         border-radius:0 !important;
         box-shadow:none !important;
         overflow:hidden !important;
         max-width:100vw !important;
       }
 
-      /* Foto: mbush pa hapesira */
+      /* Foto: lë gridin të kontrollojë lartësinë */
       #art-detail-photos {
         width:100vw !important;
-        height:63vh !important;
+        height:auto !important;
+        min-height:0 !important;
         background:#1a1a1a !important;
         flex-shrink:0 !important;
         position:relative !important;
@@ -134,10 +135,11 @@
       }
       .det-th { width:40px !important; height:40px !important; }
 
-      /* Detaje: 37vh, scroll brenda */
+      /* Detaje: gridin kontrollon lartësinë */
       .art-det-side {
         width:100vw !important;
-        height:37vh !important;
+        height:auto !important;
+        min-height:0 !important;
         display:flex !important;
         flex-direction:column !important;
         overflow:hidden !important;
@@ -170,7 +172,7 @@
 
       /* Butonat nav */
       .art-nav-btn {
-        top:31vh !important;
+        top:calc(31.5vh + 2px) !important;
         transform:translateY(-50%) !important;
         width:36px !important; height:36px !important; font-size:18px !important;
       }
