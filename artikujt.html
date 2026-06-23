@@ -96,46 +96,58 @@
     .art-page-hero-heading { font-size:clamp(26px,3.5vw,48px); font-weight:700; color:#fff; letter-spacing:-0.5px; line-height:1.1; }
     .art-page-hero-sub { font-size:13px; color:rgba(255,255,255,.75); max-width:480px; line-height:1.6; margin-top:2px; }
     @media(max-width:700px){
-      /* Overlay — fiks, 10px hapësirë nga lart */
+      /* Overlay — mbush ekranin, popup del nga poshtë */
       #art-detail-overlay {
-        padding:10px 0 0 0;
-        align-items:flex-start;
+        padding:0 !important;
+        align-items:flex-end !important;
         overflow:hidden;
       }
 
-      /* Kutia: kolonë e vetme — foto 2/3, detaje 1/3 */
+      /* Kutia: kolone e vetme, mbush gjithe ekranin */
       #art-detail-box {
-        grid-template-columns:1fr;
-        grid-template-rows:66dvh calc(34dvh - 10px);
-        width:100vw;
-        height:calc(100dvh - 10px);
-        border-radius:10px 10px 0 0;
-        box-shadow:none;
-        overflow:hidden;
+        grid-template-columns:1fr !important;
+        grid-template-rows:63vh 37vh !important;
+        width:100vw !important;
+        height:100vh !important;
+        border-radius:0 !important;
+        box-shadow:none !important;
+        overflow:hidden !important;
+        max-width:100vw !important;
       }
 
-      /* Foto: 2/3 ekran, mbush pa hapësira të zeza */
+      /* Foto: mbush pa hapesira */
       #art-detail-photos {
-        width:100vw;
-        height:66dvh;
-        background:#1a1a1a;
-        flex-shrink:0;
+        width:100vw !important;
+        height:63vh !important;
+        background:#1a1a1a !important;
+        flex-shrink:0 !important;
+        position:relative !important;
       }
-      #det-main-wrap img { object-fit:cover !important; }
+      #det-main-wrap { position:absolute !important; top:0; left:0; width:100% !important; height:100% !important; flex:none !important; }
+      #det-main-wrap img { object-fit:cover !important; object-position:center center !important; width:100% !important; height:100% !important; }
 
-      /* Detaje: 1/3 ekran, scroll brenda nëse tejkalon */
+      /* Thumbs — mbi foto (absolute) */
+      #art-det-thumbs {
+        position:absolute !important; bottom:0; left:0; right:0;
+        padding:8px 12px !important; gap:6px !important;
+        background:linear-gradient(transparent, rgba(0,0,0,.55)) !important;
+      }
+      .det-th { width:40px !important; height:40px !important; }
+
+      /* Detaje: 37vh, scroll brenda */
       .art-det-side {
-        width:100vw;
-        height:34dvh;
-        display:flex;
-        flex-direction:column;
-        overflow:hidden;
+        width:100vw !important;
+        height:37vh !important;
+        display:flex !important;
+        flex-direction:column !important;
+        overflow:hidden !important;
+        background:#fff !important;
       }
       .art-det-info {
         overflow-y:auto !important;
         padding:12px 20px 6px !important;
         flex:1 !important;
-        min-height:0;
+        min-height:0 !important;
       }
       .art-det-footer {
         padding:8px 16px 20px !important;
@@ -151,24 +163,14 @@
         letter-spacing:.8px !important;
       }
 
-      /* Tekste — lexueshme */
+      /* Tekste */
       #art-detail-name  { font-size:16px !important; margin-bottom:8px !important; line-height:1.25 !important; }
       #art-detail-desc  { font-size:12px !important; line-height:1.6  !important; margin-bottom:12px !important; }
       #art-detail-kat, #art-detail-code { font-size:9px !important; }
 
-      /* Thumbs — mbi foto (absolute), jo ndarës */
-      #art-detail-photos { position:relative !important; }
-      #det-main-wrap { position:absolute !important; top:0; left:0; width:100% !important; height:100% !important; flex:none !important; }
-      #art-det-thumbs {
-        position:absolute !important; bottom:0; left:0; right:0;
-        padding:8px 12px !important; gap:6px !important;
-        background:linear-gradient(transparent, rgba(0,0,0,.55)) !important;
-      }
-      .det-th { width:40px !important; height:40px !important; }
-
-      /* Butonat nav (prev/next artikull) — mes fotos 2/3 */
+      /* Butonat nav */
       .art-nav-btn {
-        top:33dvh !important;
+        top:31vh !important;
         transform:translateY(-50%) !important;
         width:36px !important; height:36px !important; font-size:18px !important;
       }
@@ -184,7 +186,7 @@
       #art-detail-ngjyrat div[style*="border-radius:50%"] { width:20px !important; height:20px !important; }
       #art-detail-ngjyrat span { font-size:9px !important; }
 
-      /* Përbërja */
+      /* Perberja */
       #art-detail-perberja div[style*="padding:7px"] { padding:6px 10px !important; font-size:11px !important; }
 
       /* Etiketa seksionesh */
