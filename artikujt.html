@@ -1220,9 +1220,18 @@
   var _promoData=null;
   var _promoTimer=null;
   var _promoSeen=false;
+  // Refresh-aware cross-page seen state:
+  // on reload → clear sessionStorage so popup shows again
+  // on navigation → respect sessionStorage so popup doesn't reappear
+  try{
+    var _navType=(performance.getEntriesByType('navigation')[0]||{}).type;
+    if(_navType==='reload'){sessionStorage.removeItem('intal_promo_seen');}
+    else if(sessionStorage.getItem('intal_promo_seen')==='1'){_promoSeen=true;}
+  }catch(e){}
   function openPromoLink(){if(_promoData&&_promoData.link){window.open(_promoData.link,'_blank');closePromoPopup();}}
   function closePromoPopup(){
     _promoSeen=true;
+    try{sessionStorage.setItem('intal_promo_seen','1');}catch(e){}
     document.getElementById('promo-popup-overlay').style.display='none';
     if(_promoTimer){clearTimeout(_promoTimer);_promoTimer=null;}
   }
