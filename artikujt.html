@@ -188,6 +188,15 @@
       #art-detail-ngjyrat div[style*="border-radius:50%"] { width:20px !important; height:20px !important; }
       #art-detail-ngjyrat span { font-size:9px !important; }
 
+      /* Ngjyrat + Përbërja — 2 kolona krah njëri-tjetrit */
+      #art-ngjyrat-perberja-row {
+        display:grid !important;
+        grid-template-columns:1fr 1fr !important;
+        gap:12px !important;
+        align-items:start !important;
+      }
+      #art-detail-ngjyrat { margin-bottom:0 !important; }
+
       /* Perberja */
       #art-detail-perberja div[style*="padding:7px"] { padding:6px 10px !important; font-size:11px !important; }
 
@@ -281,11 +290,11 @@
           <!-- Sizes -->
           <div id="art-detail-masat" style="margin-bottom:16px;"></div>
 
-          <!-- Colors -->
-          <div id="art-detail-ngjyrat" style="margin-bottom:16px;"></div>
-
-          <!-- Composition -->
-          <div id="art-detail-perberja"></div>
+          <!-- Colors + Composition row -->
+          <div id="art-ngjyrat-perberja-row">
+            <div id="art-detail-ngjyrat" style="margin-bottom:16px;"></div>
+            <div id="art-detail-perberja"></div>
+          </div>
         </div>
 
         <!-- Footer buttons -->
