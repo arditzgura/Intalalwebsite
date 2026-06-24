@@ -2984,17 +2984,16 @@ function removeSelMasa(i){artSelMasa.splice(i,1);buildDefMasa();renderSelMasa();
 function buildDefPerb(type){
   var el=document.getElementById(type+'-def-perb');
   var sel=type==='art'?artSelPerb:pelSelPerb;
-  el.innerHTML=DEFAULT_MATERIALET.map(function(m,i){
-    return '<div class="def-chip '+(sel.includes(m)?'selected':'')+'" onclick="toggleDefPerb(\''+type+'\',this)">'+m+'<span onclick="event.stopPropagation();removeDefMaterial('+i+')" style="margin-left:4px;opacity:.5;font-size:9px;font-weight:900;" title="Hiq">&#x2715;</span></div>';
+  el.innerHTML=DEFAULT_MATERIALET.map(function(m){
+    return '<div class="def-chip '+(sel.includes(m)?'selected':'')+'" onclick="toggleDefPerb(\''+type+'\',this)" data-mat="'+m+'">'+m+'</div>';
   }).join('');
 }
 function toggleDefPerb(type,chip){
-  var m=chip.textContent.trim();
+  var m=chip.getAttribute('data-mat')||chip.textContent.trim();
   var sel=type==='art'?artSelPerb:pelSelPerb;
   var i=sel.indexOf(m);
   if(i>-1){
     sel.splice(i,1);chip.classList.remove('selected');
-    // Remove from manual perb list too
     var list=document.getElementById(type+'-perb');
     Array.from(list.querySelectorAll('.perb-row')).forEach(function(r){
       var inp=Array.from(r.querySelectorAll('input')).find(function(x){return !x.classList.contains('perb-pct')&&!x.classList.contains('perb-icon-size')&&x.type==='text';});
@@ -3002,19 +3001,24 @@ function toggleDefPerb(type,chip){
     });
   } else {
     sel.push(m);chip.classList.add('selected');
-    // Add row to manual list so user can optionally add %
     var list=document.getElementById(type+'-perb');
-    var row=document.createElement('div'); row.className='perb-row';
-    var uid='pi'+Date.now();
-    var iconHtml=type==='art'
-      ?'<button type="button" class="perb-icon-btn" title="Ngarko ikone" onclick="triggerPerbIcon(this,\''+uid+'\')"><span class="perb-icon-empty">&#128247;</span></button>'
-        +'<input type="file" id="'+uid+'" accept="image/*" style="display:none" onchange="loadPerbIcon(this)">'
-        +'<input type="text" class="perb-icon-size" placeholder="px" value="28" title="Madhesia ikones (px)">':'';
-    row.innerHTML=iconHtml+'<input type="text" style="flex:2;" value="'+m+'" readonly><input type="text" class="perb-pct" placeholder="% (opsional)" style="width:80px;flex:none;"><button class="del-perb" onclick="delDefPerbRow(this,\''+type+'\',\''+m+'\')" >x</button>';
-    list.appendChild(row);
-    // Focus on % field
-    var pctInp=row.querySelector('.perb-pct');
-    if(pctInp) setTimeout(function(){pctInp.focus();},50);
+    // Mos shto rresht nese ekziston
+    var exists=Array.from(list.querySelectorAll('.perb-row')).some(function(r){
+      var inp=Array.from(r.querySelectorAll('input')).find(function(x){return !x.classList.contains('perb-pct')&&!x.classList.contains('perb-icon-size')&&x.type==='text';});
+      return inp&&inp.value.trim()===m;
+    });
+    if(!exists){
+      var row=document.createElement('div'); row.className='perb-row';
+      var uid='pi'+Date.now();
+      var iconHtml=type==='art'
+        ?'<button type="button" class="perb-icon-btn" title="Ngarko ikone" onclick="triggerPerbIcon(this,\''+uid+'\')"><span class="perb-icon-empty">&#128247;</span></button>'
+          +'<input type="file" id="'+uid+'" accept="image/*" style="display:none" onchange="loadPerbIcon(this)">'
+          +'<input type="text" class="perb-icon-size" placeholder="px" value="28" title="Madhesia ikones (px)">':'';
+      row.innerHTML=iconHtml+'<input type="text" style="flex:2;" value="'+m+'" readonly><input type="text" class="perb-pct" placeholder="% (opsional)" style="width:80px;flex:none;"><button class="del-perb" onclick="delDefPerbRow(this,\''+type+'\',\''+m+'\')" >x</button>';
+      list.appendChild(row);
+      var pctInp=row.querySelector('.perb-pct');
+      if(pctInp) setTimeout(function(){pctInp.focus();},50);
+    }
   }
 }
 
@@ -3334,8 +3338,7 @@ function editArt(id){
   artSelMasa=(a.sizes||[]).slice(); buildDefMasa(); renderSelMasa();
   artSelNgjyrat=(a.ngjyrat||[]).slice(); buildDefNgjyrat('art'); renderSelNgjyrat('art');
   var defP=(a.perberja||[]).filter(function(p){return DEFAULT_MATERIALET.includes(p.material);});
-  var manP=(a.perberja||[]).filter(function(p){return !DEFAULT_MATERIALET.includes(p.material);});
-  artSelPerb=defP.map(function(p){return p.material;}); buildDefPerb('art'); setPerb('art-perb',manP);
+  artSelPerb=defP.map(function(p){return p.material;}); buildDefPerb('art'); setPerb('art-perb',a.perberja||[]);
   rebuildArtPelhuraSelect();
   document.getElementById('art-pelhura-id').value=a.pelhuraId||'';
   artCerts=(a.artCerts||[]).slice(); renderArtCertsList();
@@ -3421,8 +3424,7 @@ function editPel(id){
   pelPhotos=(p.photos||[]).slice(); renderThumbs('pel');
   pelSelNgjyrat=(p.ngjyrat||[]).slice(); buildDefNgjyrat('pel'); renderSelNgjyrat('pel');
   var defP=(p.perberja||[]).filter(function(x){return DEFAULT_MATERIALET.includes(x.material);});
-  var manP=(p.perberja||[]).filter(function(x){return !DEFAULT_MATERIALET.includes(x.material);});
-  pelSelPerb=defP.map(function(x){return x.material;}); buildDefPerb('pel'); setPerb('pel-perb',manP);
+  pelSelPerb=defP.map(function(x){return x.material;}); buildDefPerb('pel'); setPerb('pel-perb',p.perberja||[]);
   document.getElementById('pel-preferuar').checked=p.preferuar||false;
   document.getElementById('pel-ftitle').textContent='Ndrysho Pelhuren';
   document.querySelector('#tc-pel .fcard').scrollIntoView({behavior:'smooth'});
