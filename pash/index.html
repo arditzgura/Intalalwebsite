@@ -54,26 +54,21 @@
           <div class="banner-heading"><small>Q�< NGA FILLIMI I P�<RDORIMIT T�< APLIKACIONIT</small></div>
         </div>
       </div>
-      <div class="banner-grid">
+      <div class="banner-grid" style="grid-template-columns:repeat(3,1fr)">
         <div class="banner-card">
-          <div class="banner-card-lbl">Blerje Totale (LEK)</div>
-          <div class="banner-card-val white" id="bn-blerje">0</div>
-          <div class="banner-card-sub" id="bn-blerje-sub">0 blerje totale</div>
+          <div class="banner-card-lbl">Blerje + Shpenzime Totale</div>
+          <div class="banner-card-val white" id="bn-total">0</div>
+          <div class="banner-card-sub" id="bn-total-sub">—</div>
         </div>
         <div class="banner-card">
-          <div class="banner-card-lbl">Shpenzime Totale (LEK)</div>
-          <div class="banner-card-val green" id="bn-shpenzime">0</div>
-          <div class="banner-card-sub">operative + blerje</div>
+          <div class="banner-card-lbl">Hyrje Totale në Arkë</div>
+          <div class="banner-card-val green" id="bn-hyrje">0</div>
+          <div class="banner-card-sub" id="bn-hyrje-sub">—</div>
         </div>
         <div class="banner-card">
-          <div class="banner-card-lbl">Paguar Gjithsej (LEK)</div>
-          <div class="banner-card-val orange" id="bn-paguar">0</div>
-          <div class="banner-card-sub">vlera e paguar deri tani</div>
-        </div>
-        <div class="banner-card">
-          <div class="banner-card-lbl">Detyrime të Mbetura</div>
-          <div class="banner-card-val red" id="bn-detyrime">0</div>
-          <div class="banner-card-sub">borxhi aktual jashtë</div>
+          <div class="banner-card-lbl">Diferenca (Arkë − Shpenzime)</div>
+          <div class="banner-card-val" id="bn-dif">0</div>
+          <div class="banner-card-sub" id="bn-dif-sub">hyrje minus totali</div>
         </div>
       </div>
     </div>
@@ -298,11 +293,18 @@ function renderDashboard(){
   const allDetyrim = blerjet.filter(b=>b.statusi==='pa_paguar').reduce((s,b)=>s+(b.totali||0),0)
                    + shpenzime.filter(x=>x.statusi==='pa_paguar').reduce((s,x)=>s+(x.shuma||0),0);
 
-  document.getElementById('bn-blerje').textContent     = fmtL(allBlerje);
-  document.getElementById('bn-blerje-sub').textContent = blerjet.length+' blerje totale';
-  document.getElementById('bn-shpenzime').textContent  = fmtL(allBlerje+allSh);
-  document.getElementById('bn-paguar').textContent     = fmtL(allPaguar);
-  document.getElementById('bn-detyrime').textContent   = fmtL(allDetyrim);
+  const allTotal  = allBlerje + allSh;
+  const allHyrje  = DB.arka.filter(a=>a.lloji==='hyrje').reduce((s,a)=>s+(a.shuma||0),0);
+  const allDif    = allHyrje - allTotal;
+
+  document.getElementById('bn-total').textContent     = fmtL(allTotal);
+  document.getElementById('bn-total-sub').textContent = blerjet.length+' blerje · '+DB.shpenzime.length+' shpenzime';
+  document.getElementById('bn-hyrje').textContent     = fmtL(allHyrje);
+  document.getElementById('bn-hyrje-sub').textContent = DB.arka.filter(a=>a.lloji==='hyrje').length+' hyrje të regjistruara';
+  const difEl = document.getElementById('bn-dif');
+  difEl.textContent   = (allDif>=0?'+':'')+fmtL(allDif);
+  difEl.className     = 'banner-card-val '+(allDif>=0?'green':'red');
+  document.getElementById('bn-dif-sub').textContent = allDif>=0?'suficit — arkë mbulon shpenzimet':'deficit — shpenzime tejkalojnë arkën';
   document.getElementById('period-label').textContent  = periodLabelStr();
 
   /* Filtered lists */
