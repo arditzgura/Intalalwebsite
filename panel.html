@@ -2182,26 +2182,27 @@ async function sbGetKfg(key){
   return d&&d.length?d[0].value:null;
 }
 
+var CL_CLOUD='djfrquwex';
+var CL_PRESET='intal_upload';
+
 async function uploadToSB(file){
-  var ext=file.name?file.name.split('.').pop():(file.type?file.type.split('/')[1]:'jpg');
-  var name=Date.now()+'-'+Math.random().toString(36).slice(2)+'.'+ext;
-  var r=await fetch(SB_URL+'/storage/v1/object/'+SB_BUCKET+'/'+name,{
-    method:'POST',
-    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':file.type||'image/jpeg'},
-    body:file
-  });
+  var fd=new FormData();
+  fd.append('file',file);
+  fd.append('upload_preset',CL_PRESET);
+  var r=await fetch('https://api.cloudinary.com/v1_1/'+CL_CLOUD+'/image/upload',{method:'POST',body:fd});
   if(!r.ok){var t=await r.text();throw new Error('Upload deshtoi: '+t);}
-  return SB_URL+'/storage/v1/object/public/'+SB_BUCKET+'/'+name;
+  var d=await r.json();
+  return d.secure_url;
 }
 
 async function uploadB64ToSB(b64,filename){
-  // Convert base64 to blob then upload
-  var arr=b64.split(','),mime=arr[0].match(/:(.*?);/)[1];
-  var bstr=atob(arr[1]),n=bstr.length,u8=new Uint8Array(n);
-  for(var i=0;i<n;i++) u8[i]=bstr.charCodeAt(i);
-  var blob=new Blob([u8],{type:mime});
-  blob.name=filename||('img-'+Date.now()+'.jpg');
-  return await uploadToSB(blob);
+  var fd=new FormData();
+  fd.append('file',b64);
+  fd.append('upload_preset',CL_PRESET);
+  var r=await fetch('https://api.cloudinary.com/v1_1/'+CL_CLOUD+'/image/upload',{method:'POST',body:fd});
+  if(!r.ok){var t=await r.text();throw new Error('Upload deshtoi: '+t);}
+  var d=await r.json();
+  return d.secure_url;
 }
 
 async function loadData(){
@@ -3605,12 +3606,9 @@ async function uploadKatFoto(k, inp){
   var file=inp.files[0];
   showToast('Duke ngarkuar foton...');
   try{
-    var key='kat-foto-'+k.toLowerCase().replace(/\s/g,'-')+'-'+Date.now();
-    var {data,error}=await window._supabase.storage.from('foto-artikujt').upload(key,file,{upsert:true,contentType:file.type});
-    if(error) throw error;
-    var {data:urlData}=window._supabase.storage.from('foto-artikujt').getPublicUrl(key);
+    var url=await uploadToSB(file);
     if(!kategoriSettings.kryesoreFoto) kategoriSettings.kryesoreFoto={};
-    kategoriSettings.kryesoreFoto[k]=urlData.publicUrl;
+    kategoriSettings.kryesoreFoto[k]=url;
     await saveKategoriSt();
     renderKatAdminLists(); renderPublic();
     showToast('Foto u ngarkua!');

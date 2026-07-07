@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Migrimi i Fotove — Supabase → Cloudinary</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:system-ui,sans-serif;background:#f5f5f5;padding:24px;color:#1a1a1a;}
+h1{font-size:20px;font-weight:600;margin-bottom:4px;}
+.sub{color:#666;font-size:14px;margin-bottom:24px;}
+.card{background:#fff;border-radius:10px;border:1px solid #e5e5e5;padding:20px;margin-bottom:16px;}
+.btn{background:#C8003E;color:#fff;border:none;border-radius:7px;padding:11px 24px;font-size:14px;font-weight:600;cursor:pointer;}
+.btn:disabled{background:#ccc;cursor:default;}
+.btn-sec{background:#f0f0f0;color:#333;border:none;border-radius:7px;padding:11px 20px;font-size:14px;font-weight:600;cursor:pointer;margin-left:8px;}
+#progress-wrap{display:none;}
+.progress-bar-bg{background:#f0f0f0;border-radius:6px;height:12px;margin:10px 0;}
+.progress-bar{background:#C8003E;height:12px;border-radius:6px;transition:width .3s;}
+#log{max-height:320px;overflow-y:auto;font-size:12px;font-family:monospace;background:#111;color:#eee;border-radius:7px;padding:12px;margin-top:12px;line-height:1.7;}
+.log-ok{color:#4ade80;}
+.log-err{color:#f87171;}
+.log-skip{color:#facc15;}
+.log-info{color:#93c5fd;}
+.stat-row{display:flex;gap:16px;margin-top:12px;}
+.stat{background:#f9f9f9;border-radius:7px;padding:10px 16px;flex:1;text-align:center;}
+.stat-n{font-size:22px;font-weight:700;}
+.stat-l{font-size:11px;color:#888;margin-top:2px;}
+#result-card{display:none;}
+</style>
+</head>
+<body>
+
+<h1>Migrimi i Fotove</h1>
+<p class="sub">Supabase Storage → Cloudinary &nbsp;|&nbsp; <strong>intalal.com</strong></p>
+
+<div class="card">
+  <p style="font-size:14px;margin-bottom:14px;">Ky mjet do të migrojë automatikisht të gjitha fotot nga Supabase Storage te Cloudinary, dhe do të përditësojë URL-ët në databazë.</p>
+  <p style="font-size:13px;color:#888;margin-bottom:16px;">⏱ Koha e pritshme: ~5-10 minuta për 140 artikuj</p>
+  <button class="btn" id="start-btn" onclick="startMigration()">▶ Fillo Migrimin</button>
+  <button class="btn-sec" id="save-btn" onclick="saveResults()" style="display:none;">💾 Ruaj Ndryshimet në Supabase</button>
+</div>
+
+<div class="card" id="progress-wrap">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+    <span style="font-size:14px;font-weight:600;" id="progress-label">Duke migruar...</span>
+    <span style="font-size:13px;color:#666;" id="progress-pct">0%</span>
+  </div>
+  <div class="progress-bar-bg"><div class="progress-bar" id="progress-bar" style="width:0%"></div></div>
+  <div class="stat-row">
+    <div class="stat"><div class="stat-n" id="s-total">0</div><div class="stat-l">Gjithsej Foto</div></div>
+    <div class="stat"><div class="stat-n" style="color:#16a34a" id="s-ok">0</div><div class="stat-l">Migruar</div></div>
+    <div class="stat"><div class="stat-n" style="color:#ca8a04" id="s-skip">0</div><div class="stat-l">Kapërcyer</div></div>
+    <div class="stat"><div class="stat-n" style="color:#dc2626" id="s-err">0</div><div class="stat-l">Gabime</div></div>
+  </div>
+  <div id="log"></div>
+</div>
+
+<div class="card" id="result-card">
+  <p style="font-size:14px;font-weight:600;margin-bottom:8px;">✅ Migrimi përfundoi!</p>
+  <p style="font-size:13px;color:#555;margin-bottom:14px;">Klikoni "Ruaj Ndryshimet" për të shkruar URL-ët e reja të Cloudinary në Supabase.</p>
+  <button class="btn" onclick="saveResults()">💾 Ruaj Ndryshimet në Supabase</button>
+</div>
+
+<script>
+var SB_URL='https://qucwmmizqxudxvolfwkx.supabase.co';
+var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF1Y3dtbWl6cXh1ZHh2b2xmd2t4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQwNjIxODIsImV4cCI6MjA4OTYzODE4Mn0.xp5e-4X2IzgizknjYKmai8qOOrwM-_BO80v_QTI4viw';
+var CL_CLOUD='djfrquwex';
+var CL_PRESET='intal_upload';
+var SB_STORAGE_PREFIX=SB_URL+'/storage/v1/object/public/';
+
+var migratedArt=null, migratedPel=null;
+var stats={total:0,ok:0,skip:0,err:0};
+
+function log(msg,type){
+  var el=document.getElementById('log');
+  var line=document.createElement('div');
+  line.className='log-'+(type||'info');
+  line.textContent=msg;
+  el.appendChild(line);
+  el.scrollTop=el.scrollHeight;
+}
+
+function setProgress(done,total){
+  var pct=total?Math.round(done/total*100):0;
+  document.getElementById('progress-bar').style.width=pct+'%';
+  document.getElementById('progress-pct').textContent=pct+'%';
+  document.getElementById('s-total').textContent=total;
+  document.getElementById('s-ok').textContent=stats.ok;
+  document.getElementById('s-skip').textContent=stats.skip;
+  document.getElementById('s-err').textContent=stats.err;
+}
+
+function isSupabaseUrl(url){
+  return url && typeof url==='string' && url.indexOf(SB_STORAGE_PREFIX)!==-1;
+}
+
+async function migrateUrl(url, label){
+  if(!isSupabaseUrl(url)){
+    log('SKIP '+label+' — jo Supabase URL','skip');
+    stats.skip++;
+    return url;
+  }
+  try{
+    var resp=await fetch(url);
+    if(!resp.ok) throw new Error('HTTP '+resp.status);
+    var blob=await resp.blob();
+    var fd=new FormData();
+    fd.append('file',blob,'photo.webp');
+    fd.append('upload_preset',CL_PRESET);
+    var r=await fetch('https://api.cloudinary.com/v1_1/'+CL_CLOUD+'/image/upload',{method:'POST',body:fd});
+    if(!r.ok){var t=await r.text();throw new Error(t);}
+    var d=await r.json();
+    log('OK '+label,'ok');
+    stats.ok++;
+    return d.secure_url;
+  }catch(e){
+    log('ERR '+label+': '+e.message,'err');
+    stats.err++;
+    return url; // keep original if fails
+  }
+}
+
+async function migratePhotoArr(arr, prefix){
+  if(!arr||!arr.length) return arr;
+  var result=[];
+  for(var i=0;i<arr.length;i++){
+    var p=arr[i];
+    if(typeof p==='string'){
+      result.push(await migrateUrl(p, prefix+'['+i+']'));
+    } else if(p && typeof p==='object'){
+      var src=p.src||p.url||'';
+      var newSrc=await migrateUrl(src, prefix+'['+i+']');
+      result.push(Object.assign({},p,{src:newSrc,url:newSrc}));
+    } else {
+      result.push(p);
+    }
+  }
+  return result;
+}
+
+async function startMigration(){
+  document.getElementById('start-btn').disabled=true;
+  document.getElementById('progress-wrap').style.display='block';
+  document.getElementById('log').innerHTML='';
+  stats={total:0,ok:0,skip:0,err:0};
+
+  log('Duke ngarkuar të dhënat nga Supabase...','info');
+
+  // Load artikujt
+  var artRaw=null, pelRaw=null, ksRaw=null;
+  try{
+    var r=await fetch(SB_URL+'/rest/v1/konfigurimi?key=eq.artikujt',{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
+    var d=await r.json();
+    artRaw=d&&d[0]?JSON.parse(d[0].value):[];
+    log('Ngarkuar '+artRaw.length+' artikuj','info');
+  }catch(e){log('Gabim duke ngarkuar artikujt: '+e.message,'err');return;}
+
+  try{
+    var r=await fetch(SB_URL+'/rest/v1/konfigurimi?key=eq.pelhurat',{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
+    var d=await r.json();
+    pelRaw=d&&d[0]?JSON.parse(d[0].value):[];
+    log('Ngarkuar '+pelRaw.length+' pelhura','info');
+  }catch(e){log('Gabim duke ngarkuar pelhurat: '+e.message,'err');return;}
+
+  try{
+    var r=await fetch(SB_URL+'/rest/v1/konfigurimi?key=eq.kategorisettings',{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
+    var d=await r.json();
+    ksRaw=d&&d[0]?JSON.parse(d[0].value):null;
+  }catch(e){}
+
+  // Count total photos
+  var totalPhotos=0;
+  artRaw.forEach(function(a){if(a.photos) totalPhotos+=a.photos.length;});
+  pelRaw.forEach(function(p){if(p.photos) totalPhotos+=p.photos.length;});
+  if(ksRaw&&ksRaw.kryesoreFoto) totalPhotos+=Object.keys(ksRaw.kryesoreFoto).length;
+  stats.total=totalPhotos;
+  log('Gjithsej '+totalPhotos+' foto për migrim','info');
+
+  var done=0;
+
+  // Migrate artikujt
+  migratedArt=[];
+  for(var i=0;i<artRaw.length;i++){
+    var a=Object.assign({},artRaw[i]);
+    document.getElementById('progress-label').textContent='Artikull: '+(a.emri||a.id||i+1);
+    if(a.photos&&a.photos.length){
+      a.photos=await migratePhotoArr(a.photos,'art/'+( a.emri||i));
+      done+=a.photos.length;
+      setProgress(done,totalPhotos);
+    }
+    migratedArt.push(a);
+  }
+
+  // Migrate pelhurat
+  migratedPel=[];
+  for(var i=0;i<pelRaw.length;i++){
+    var p=Object.assign({},pelRaw[i]);
+    document.getElementById('progress-label').textContent='Pelhure: '+(p.emri||p.id||i+1);
+    if(p.photos&&p.photos.length){
+      p.photos=await migratePhotoArr(p.photos,'pel/'+(p.emri||i));
+      done+=p.photos.length;
+      setProgress(done,totalPhotos);
+    }
+    migratedPel.push(p);
+  }
+
+  // Migrate kategori cover photos
+  if(ksRaw&&ksRaw.kryesoreFoto){
+    document.getElementById('progress-label').textContent='Foto kategorish...';
+    var newFoto={};
+    for(var k in ksRaw.kryesoreFoto){
+      newFoto[k]=await migrateUrl(ksRaw.kryesoreFoto[k],'kat/'+k);
+      done++;
+      setProgress(done,totalPhotos);
+    }
+    ksRaw=Object.assign({},ksRaw,{kryesoreFoto:newFoto});
+  }
+
+  document.getElementById('progress-label').textContent='Migrimi përfundoi!';
+  setProgress(totalPhotos,totalPhotos);
+  log('---','info');
+  log('PËRFUNDOI: '+stats.ok+' migruar, '+stats.skip+' kapërcyer, '+stats.err+' gabime','info');
+
+  document.getElementById('result-card').style.display='block';
+  window._migratedKs=ksRaw;
+}
+
+async function saveResults(){
+  if(!migratedArt||!migratedPel){alert('Fillo migrimin fillimisht!');return;}
+  document.getElementById('save-btn').disabled=true;
+  log('Duke ruajtur në Supabase...','info');
+
+  async function sbPatch(key,value){
+    var check=await fetch(SB_URL+'/rest/v1/konfigurimi?key=eq.'+key,{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
+    var ex=await check.json();
+    var method=ex&&ex.length?'PATCH':'POST';
+    var url=method==='PATCH'?SB_URL+'/rest/v1/konfigurimi?key=eq.'+key:SB_URL+'/rest/v1/konfigurimi';
+    await fetch(url,{method:method,headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({key:key,value:JSON.stringify(value)})});
+  }
+
+  try{
+    await sbPatch('artikujt',migratedArt);
+    log('Artikujt u ruajtën ✓','ok');
+    await sbPatch('pelhurat',migratedPel);
+    log('Pelhurat u ruajtën ✓','ok');
+    if(window._migratedKs){
+      await sbPatch('kategorisettings',window._migratedKs);
+      log('Foto kategorish u ruajtën ✓','ok');
+    }
+    // Clear localStorage cache so pages reload fresh
+    try{localStorage.removeItem('intal_cache_v1');localStorage.removeItem('intal_cache_ts');}catch(e){}
+    log('GATI! Faqja do të shfaqë imazhet nga Cloudinary.','ok');
+    document.getElementById('result-card').innerHTML='<p style="font-size:15px;font-weight:600;color:#16a34a;">✅ Migrimi u ruajt me sukses! Mund ta mbyllni këtë faqe.</p>';
+  }catch(e){
+    log('Gabim duke ruajtur: '+e.message,'err');
+    document.getElementById('save-btn').disabled=false;
+  }
+}
+</script>
+</body>
+</html>
