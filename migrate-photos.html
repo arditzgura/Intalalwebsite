@@ -144,29 +144,51 @@ async function startMigration(){
   document.getElementById('log').innerHTML='';
   stats={total:0,ok:0,skip:0,err:0};
 
-  log('Duke ngarkuar të dhënat nga Supabase...','info');
+  log('Duke ngarkuar të dhënat...','info');
 
-  // Load artikujt
+  // Load artikujt + pelhurat — try localStorage cache first, then Supabase
   var artRaw=null, pelRaw=null, ksRaw=null;
-  try{
-    var r=await fetch(SB_URL+'/rest/v1/konfigurimi?key=eq.artikujt',{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
-    var d=await r.json();
-    artRaw=d&&d[0]?JSON.parse(d[0].value):[];
-    log('Ngarkuar '+artRaw.length+' artikuj','info');
-  }catch(e){log('Gabim duke ngarkuar artikujt: '+e.message,'err');return;}
 
-  try{
-    var r=await fetch(SB_URL+'/rest/v1/konfigurimi?key=eq.pelhurat',{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
+  async function sbFetch(key){
+    var r=await fetch(SB_URL+'/rest/v1/konfigurimi?key=eq.'+key,{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
+    if(!r.ok) throw new Error('HTTP '+r.status);
     var d=await r.json();
-    pelRaw=d&&d[0]?JSON.parse(d[0].value):[];
-    log('Ngarkuar '+pelRaw.length+' pelhura','info');
-  }catch(e){log('Gabim duke ngarkuar pelhurat: '+e.message,'err');return;}
+    log('Supabase '+key+': HTTP '+r.status+', rows: '+(d?d.length:0),'info');
+    return d&&d[0]?JSON.parse(d[0].value):null;
+  }
 
-  try{
-    var r=await fetch(SB_URL+'/rest/v1/konfigurimi?key=eq.kategorisettings',{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
-    var d=await r.json();
-    ksRaw=d&&d[0]?JSON.parse(d[0].value):null;
-  }catch(e){}
+  // Try localStorage first (intal_cache_v1)
+  var cache=null;
+  try{var raw=localStorage.getItem('intal_cache_v1');if(raw) cache=JSON.parse(raw);}catch(e){}
+
+  if(cache&&cache.artikujt&&cache.artikujt.length){
+    artRaw=cache.artikujt;
+    log('Nga localStorage: '+artRaw.length+' artikuj','ok');
+  } else {
+    try{artRaw=await sbFetch('artikujt');log('Nga Supabase: '+(artRaw?artRaw.length:0)+' artikuj','info');}
+    catch(e){log('Gabim artikujt: '+e.message,'err');artRaw=[];}
+  }
+
+  if(cache&&cache.pelhurat&&cache.pelhurat.length){
+    pelRaw=cache.pelhurat;
+    log('Nga localStorage: '+pelRaw.length+' pelhura','ok');
+  } else {
+    try{pelRaw=await sbFetch('pelhurat');log('Nga Supabase: '+(pelRaw?pelRaw.length:0)+' pelhura','info');}
+    catch(e){log('Gabim pelhurat: '+e.message,'err');pelRaw=[];}
+  }
+
+  if(cache&&cache.kategoriSettings){
+    ksRaw=cache.kategoriSettings;
+    log('Nga localStorage: kategoriSettings','ok');
+  } else {
+    try{ksRaw=await sbFetch('kategorisettings');}catch(e){}
+  }
+
+  if(!artRaw||!artRaw.length){
+    log('⚠ Nuk u gjetën artikuj! Hap fillimisht intalal.com/artikujt.html për të ngarkuar cache-in, pastaj kthe këtu.','err');
+    document.getElementById('start-btn').disabled=false;
+    return;
+  }
 
   // Count total photos
   var totalPhotos=0;
