@@ -2206,14 +2206,18 @@ async function uploadB64ToSB(b64,filename){
 }
 
 async function loadData(){
+  /* Fallback: load artikujt/pelhurat/kategorisettings from localStorage cache if Supabase unavailable */
+  var _lsCache=null;
+  try{var _r=localStorage.getItem('intal_cache_v1');if(_r)_lsCache=JSON.parse(_r);}catch(e){}
+
   try{
     var a=await sbGetKfg('artikujt');
-    artikujt=a?JSON.parse(a):[];
-  }catch(e){artikujt=[];}
+    artikujt=a?JSON.parse(a):(_lsCache&&_lsCache.artikujt?_lsCache.artikujt:[]);
+  }catch(e){artikujt=_lsCache&&_lsCache.artikujt?_lsCache.artikujt:[];}
   try{
     var p=await sbGetKfg('pelhurat');
-    pelhurat=p?JSON.parse(p):[];
-  }catch(e){pelhurat=[];}
+    pelhurat=p?JSON.parse(p):(_lsCache&&_lsCache.pelhurat?_lsCache.pelhurat:[]);
+  }catch(e){pelhurat=_lsCache&&_lsCache.pelhurat?_lsCache.pelhurat:[];}
   try{
     var s=await sbGetKfg('settings');
     if(s) settings=JSON.parse(s);
