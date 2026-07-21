@@ -55,6 +55,13 @@ h1{font-size:20px;font-weight:600;margin-bottom:4px;}
   <div id="log"></div>
 </div>
 
+<div class="card">
+  <p style="font-size:14px;font-weight:600;margin-bottom:10px;">🔧 Diagnostikim & Rivendosje Cache</p>
+  <p style="font-size:13px;color:#666;margin-bottom:14px;">Nëse artikujt nuk shfaqen, klikoni këtu për të rivendosur të dhënat nga Supabase.</p>
+  <button class="btn" style="background:#1a56db;" onclick="restoreCache()">↻ Rivendos Cache nga Supabase</button>
+  <div id="restore-log" style="margin-top:12px;font-size:13px;font-family:monospace;background:#111;color:#eee;border-radius:7px;padding:10px;display:none;line-height:1.8;"></div>
+</div>
+
 <div class="card" id="result-card">
   <p style="font-size:14px;font-weight:600;margin-bottom:8px;">✅ Migrimi përfundoi!</p>
   <p style="font-size:13px;color:#555;margin-bottom:14px;">Klikoni "Ruaj Ndryshimet" për të shkruar URL-ët e reja të Cloudinary në Supabase.</p>
@@ -245,6 +252,40 @@ async function startMigration(){
 
   document.getElementById('result-card').style.display='block';
   window._migratedKs=ksRaw;
+}
+
+async function restoreCache(){
+  var el=document.getElementById('restore-log');
+  el.style.display='block';
+  el.innerHTML='';
+  function rlog(msg,color){el.innerHTML+='<span style="color:'+(color||'#93c5fd')+'">'+msg+'</span>\n';}
+
+  rlog('Duke u lidhur me Supabase...');
+  try{
+    var r=await fetch(SB_URL+'/rest/v1/konfigurimi?key=eq.artikujt',{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
+    rlog('HTTP: '+r.status+(r.ok?' ✓':' ✗'),r.ok?'#4ade80':'#f87171');
+    if(!r.ok){rlog('Supabase ende i bllokuar. Provo sërisht pas pak minutash.','#f87171');return;}
+    var d=await r.json();
+    if(!d||!d[0]||!d[0].value){rlog('Të dhënat janë bosh në Supabase!','#f87171');return;}
+    var art=JSON.parse(d[0].value);
+    rlog('Artikuj të gjetur: '+art.length,'#4ade80');
+
+    var r2=await fetch(SB_URL+'/rest/v1/konfigurimi?key=eq.pelhurat',{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
+    var d2=await r2.json();
+    var pel=d2&&d2[0]?JSON.parse(d2[0].value):[];
+    rlog('Pelhura të gjetur: '+pel.length,'#4ade80');
+
+    var r3=await fetch(SB_URL+'/rest/v1/konfigurimi?key=eq.kategorisettings',{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
+    var d3=await r3.json();
+    var ks=d3&&d3[0]?JSON.parse(d3[0].value):null;
+
+    var obj={artikujt:art,pelhurat:pel};
+    if(ks) obj.kategoriSettings=ks;
+    localStorage.setItem('intal_cache_v1',JSON.stringify(obj));
+    localStorage.removeItem('intal_cache_ts');
+    rlog('Cache u rivendos! Duke rifreskuar faqen...','#4ade80');
+    setTimeout(function(){window.location.href='/artikujt.html';},1500);
+  }catch(e){rlog('Gabim: '+e.message,'#f87171');}
 }
 
 async function saveResults(){
