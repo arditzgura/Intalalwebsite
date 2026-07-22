@@ -441,7 +441,7 @@
   <section class="hero" aria-label="Hero">
   <!-- LCP img: ngarkohet menjëherë, vendoset si background nga JS -->
   <img id="hero-lcp-img"
-    src="https://qucwmmizqxudxvolfwkx.supabase.co/storage/v1/object/public/foto-artikujt/page-images/home-hero-bgImage.webp"
+    src="https://intalal.com/storage/v1/object/public/foto-artikujt/page-images/home-hero-bgImage.webp"
     fetchpriority="high" decoding="async" aria-hidden="true"
     alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;">
     <div class="hero-content">
@@ -1153,8 +1153,8 @@
 
     function getPhotoSrc(p){
       if(!p) return '';
-      if(typeof p === 'string') return p;
-      return p.src || p.url || '';
+      if(typeof p === 'string') return sbImgUrl(p);
+      return sbImgUrl(p.src || p.url || '');
     }
 
     function firstPhotoOfCat(artikujt, cat){
@@ -1186,7 +1186,7 @@
       kats = kats.filter(function(k){ return k.toLowerCase() !== 'pelhura'; });
       var html = '';
       kats.forEach(function(kat, i){
-        var img = kryesoreFoto[kat] || firstPhotoOfCat(artikujt, kat) || FALLBACK_IMGS[i % FALLBACK_IMGS.length];
+        var img = sbImgUrl(kryesoreFoto[kat] || firstPhotoOfCat(artikujt, kat) || FALLBACK_IMGS[i % FALLBACK_IMGS.length]);
         var href = kat.toLowerCase()==='pelhura' ? 'pelhura.html' : 'artikujt.html#'+encodeURIComponent(kat.toLowerCase());
         var desc = data && data.kategoriSettings && data.kategoriSettings.kryesoreDesc && data.kategoriSettings.kryesoreDesc[kat]
           ? data.kategoriSettings.kryesoreDesc[kat]
@@ -1706,7 +1706,7 @@
     var ol=document.getElementById('promo-popup-overlay');
     var img=document.getElementById('promo-popup-img');
     if(!ol||!img) return;
-    img.src=_promoData.imgUrl;
+    img.src=sbImgUrl(_promoData.imgUrl);
     img.style.cursor=_promoData.link?'pointer':'default';
     _promoTimer=setTimeout(function(){ol.style.display='flex';},2000);
   }

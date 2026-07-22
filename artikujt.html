@@ -398,7 +398,7 @@
   <script>
   (function(){
     function loadData(){ try{ var r=localStorage.getItem('intal_cache_v1'); if(r) return JSON.parse(r); }catch(e){} return null; }
-    function getPhotoSrc(p){ if(!p) return ''; if(typeof p==='string') return p; return p.src||p.url||''; }
+    function getPhotoSrc(p){ if(!p) return ''; if(typeof p==='string') return sbImgUrl(p); return sbImgUrl(p.src||p.url||''); }
     function artMatchesCat(a,cat){ var s=a.sub; if(!s) return false; if(Array.isArray(s)) return s.some(function(x){ return (x||'').toLowerCase()===cat.toLowerCase(); }); return (s+'').toLowerCase()===cat.toLowerCase(); }
     function artKatArr(a){ var k=a.kat; if(!k) return []; if(Array.isArray(k)) return k; return [k]; }
     function artMatchesKat(a,kat){ return artKatArr(a).some(function(x){ return (x||'').toLowerCase()===kat.toLowerCase(); }); }
@@ -1278,7 +1278,7 @@
     var ol=document.getElementById('promo-popup-overlay');
     var img=document.getElementById('promo-popup-img');
     if(!ol||!img) return;
-    img.src=_promoData.imgUrl;
+    img.src=sbImgUrl(_promoData.imgUrl);
     img.style.cursor=_promoData.link?'pointer':'default';
     _promoTimer=setTimeout(function(){ol.style.display='flex';},2000);
   }

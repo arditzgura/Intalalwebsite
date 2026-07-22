@@ -283,7 +283,7 @@
   <script>
   (function(){
     function loadData(){ try{ var r=localStorage.getItem('intal_cache_v1'); if(r) return JSON.parse(r); }catch(e){} return null; }
-    function getPhotoSrc(p){ if(!p) return ''; if(typeof p==='string') return p; return p.src||p.url||''; }
+    function getPhotoSrc(p){ if(!p) return ''; if(typeof p==='string') return sbImgUrl(p); return sbImgUrl(p.src||p.url||''); }
 
     var _all=[], _filter='te-gjitha';
     var _det={artIdx:0,photoIdx:0,articles:[]};

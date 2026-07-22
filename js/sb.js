@@ -1,5 +1,11 @@
 /* Supabase helpers — shared across all pages */
 
+/* Rewrite Supabase Storage URLs to go through Cloudflare (intalal.com) */
+function sbImgUrl(url) {
+  if (!url || typeof url !== 'string') return url;
+  return url.replace('https://qucwmmizqxudxvolfwkx.supabase.co', 'https://intalal.com');
+}
+
 async function sbUploadImg(file, path) {
   try {
     var bucket = 'foto-artikujt';
