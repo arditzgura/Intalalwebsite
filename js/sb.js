@@ -1,9 +1,9 @@
 /* Supabase helpers — shared across all pages */
 
-/* Rewrite Supabase Storage URLs to go through Cloudflare proxy */
+/* Rewrite Supabase Storage URLs to go through Cloudflare (intalal.com) */
 function sbImgUrl(url) {
   if (!url || typeof url !== 'string') return url;
-  return url; /* proxy not yet configured — return URL unchanged */
+  return url.replace('https://qucwmmizqxudxvolfwkx.supabase.co', 'https://intalal.com');
 }
 
 async function sbUploadImg(file, path) {
