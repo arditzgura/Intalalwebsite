@@ -771,6 +771,14 @@ body {
   flex-direction: column;
   gap: 16px;
 }
+a.menu-drawer-loc {
+  display: block;
+  text-decoration: none;
+  cursor: pointer;
+}
+a.menu-drawer-loc:hover .menu-drawer-loc-addr {
+  color: rgba(255,255,255,1);
+}
 .menu-drawer-loc-name {
   font-family: 'Switzer', sans-serif;
   font-size: 10px;
