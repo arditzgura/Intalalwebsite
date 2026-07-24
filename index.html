@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="sq">
 <head>
   <script>if(location.pathname.endsWith('.html'))history.replaceState(null,'',location.href.replace(/\/index\.html$/,'/').replace(/\.html$/,''));</script>
@@ -25,9 +25,7 @@
   <!-- Preconnect për burime externe -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preconnect" href="https://cdn.jsdelivr.net">
-  <link rel="preconnect" href="https://qucwmmizqxudxvolfwkx.supabase.co">
-  <!-- Preload hero image nga cache me prioritet maksimal -->
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">  <!-- Preload hero image nga cache me prioritet maksimal -->
   <script>
   try{
     var _hd=JSON.parse(localStorage.getItem('intal_home_v1')||'{}');
@@ -809,7 +807,9 @@
 
   <!-- Scripts -->
   <script src="js/main.js"></script>
-  <script src="js/sb.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="js/firebase.js"></script>
 
   <script>
     /* ── Produktet — autocomplete + tag input ───────────────── */
@@ -1669,8 +1669,7 @@
 <style>@keyframes promoPopIn{from{opacity:0;transform:scale(.85) translateY(20px);}to{opacity:1;transform:scale(1) translateY(0);}}</style>
 <script>
 (function(){
-  var SB_URL_P='https://qucwmmizqxudxvolfwkx.supabase.co';
-  var SB_KEY_P='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF1Y3dtbWl6cXh1ZHh2b2xmd2t4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQwNjIxODIsImV4cCI6MjA4OTYzODE4Mn0.xp5e-4X2IzgizknjYKmai8qOOrwM-_BO80v_QTI4viw';
+  var _dbPromo=firebase.firestore();
   var _promoData=null;
   var _promoTimer=null;
   var _promoSeen=false;
@@ -1692,11 +1691,9 @@
   async function fetchAndShowPromo(){
     if(_promoSeen) return;
     try{
-      var r=await fetch(SB_URL_P+'/rest/v1/konfigurimi?key=eq.promo_v1',{headers:{'apikey':SB_KEY_P,'Authorization':'Bearer '+SB_KEY_P}});
-      if(!r.ok) return;
-      var d=await r.json();
-      if(!d||!d.length) return;
-      var p=JSON.parse(d[0].value);
+      var snap=await _dbPromo.collection('konfigurimi').doc('promo_v1').get();
+      if(!snap.exists) return;
+      var p=JSON.parse(snap.data().value);
       if(!p||!p.active||!p.imgUrl) return;
       _promoData=p;
       try{localStorage.setItem('intal_promo_v1',JSON.stringify(p));}catch(e){}

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Migrimi — Supabase → Firebase</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:system-ui,sans-serif;background:#f5f5f5;padding:24px;color:#1a1a1a;}
+h1{font-size:20px;font-weight:600;margin-bottom:4px;}
+.sub{color:#666;font-size:14px;margin-bottom:24px;}
+.card{background:#fff;border-radius:10px;border:1px solid #e5e5e5;padding:20px;margin-bottom:16px;}
+.btn{background:#1a73e8;color:#fff;border:none;border-radius:7px;padding:11px 24px;font-size:14px;font-weight:600;cursor:pointer;}
+.btn:disabled{background:#ccc;cursor:default;}
+.btn-sec{background:#f0f0f0;color:#333;border:none;border-radius:7px;padding:11px 20px;font-size:14px;font-weight:600;cursor:pointer;margin-left:8px;}
+.stat-row{display:flex;gap:16px;margin-top:12px;}
+.stat{background:#f9f9f9;border-radius:7px;padding:10px 16px;flex:1;text-align:center;}
+.stat-n{font-size:22px;font-weight:700;}
+.stat-l{font-size:11px;color:#888;margin-top:2px;}
+#log{max-height:400px;overflow-y:auto;font-size:12px;font-family:monospace;background:#111;color:#eee;border-radius:7px;padding:12px;margin-top:12px;line-height:1.7;}
+.log-ok{color:#4ade80;}
+.log-err{color:#f87171;}
+.log-info{color:#93c5fd;}
+.log-warn{color:#facc15;}
+</style>
+</head>
+<body>
+<h1>Migrimi i të Dhënave — Supabase → Firebase</h1>
+<p class="sub">Lexon nga localStorage cache dhe shkruan në Firestore</p>
+
+<div class="card">
+  <div class="stat-row">
+    <div class="stat"><div class="stat-n" id="s-art">—</div><div class="stat-l">Artikuj</div></div>
+    <div class="stat"><div class="stat-n" id="s-pel">—</div><div class="stat-l">Pelhura</div></div>
+    <div class="stat"><div class="stat-n" id="s-ks">—</div><div class="stat-l">Kategori Settings</div></div>
+    <div class="stat"><div class="stat-n" id="s-an">—</div><div class="stat-l">Analytics</div></div>
+  </div>
+</div>
+
+<div class="card">
+  <button class="btn" id="btn-start" onclick="startMigration()">Fillo Migrimin</button>
+  <button class="btn-sec" onclick="loadPreview()">Kontrollo Cache</button>
+  <div id="log" style="display:none;"></div>
+</div>
+
+<!-- Firebase SDKs (compat version — funksionon pa bundler) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<script>
+var _FB_CONFIG = {
+  apiKey: "AIzaSyCi0nHVXYruuRE33NDOrGLVhRwl0nupUfI",
+  authDomain: "intal-webiste.firebaseapp.com",
+  projectId: "intal-webiste",
+  storageBucket: "intal-webiste.firebasestorage.app",
+  messagingSenderId: "624321141008",
+  appId: "1:624321141008:web:6f80ededf8b727161ced95"
+};
+
+var _SB_URL = 'https://qucwmmizqxudxvolfwkx.supabase.co';
+var _SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF1Y3dtbWl6cXh1ZHh2b2xmd2t4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQwNjIxODIsImV4cCI6MjA4OTYzODE4Mn0.xp5e-4X2IzgizknjYKmai8qOOrwM-_BO80v_QTI4viw';
+
+firebase.initializeApp(_FB_CONFIG);
+var db = firebase.firestore();
+
+var _log = document.getElementById('log');
+function log(msg, cls) {
+  _log.style.display = 'block';
+  _log.innerHTML += '<div class="'+(cls||'log-info')+'">'+msg+'</div>';
+  _log.scrollTop = _log.scrollHeight;
+}
+
+function loadPreview() {
+  var cache = getCache();
+  document.getElementById('s-art').textContent = cache.artikujt ? cache.artikujt.length : 0;
+  document.getElementById('s-pel').textContent = cache.pelhurat ? cache.pelhurat.length : 0;
+  document.getElementById('s-ks').textContent  = cache.kategoriSettings ? Object.keys(cache.kategoriSettings).length + ' kat' : 0;
+  document.getElementById('s-an').textContent  = cache.analytics ? '✓' : '—';
+}
+
+function getCache() {
+  try { return JSON.parse(localStorage.getItem('intal_cache_v1') || '{}'); } catch(e) { return {}; }
+}
+
+async function sbGetDirect(key) {
+  try {
+    var r = await fetch(_SB_URL + '/rest/v1/konfigurimi?key=eq.' + encodeURIComponent(key), {
+      headers: { 'apikey': _SB_KEY, 'Authorization': 'Bearer ' + _SB_KEY }
+    });
+    var d = await r.json();
+    return (d && d[0]) ? d[0].value : null;
+  } catch(e) { return null; }
+}
+
+async function startMigration() {
+  document.getElementById('btn-start').disabled = true;
+  log('Duke filluar migrimin...', 'log-info');
+
+  var cache = getCache();
+  var keys = ['artikujt','pelhurat','kategorisettings','analytics'];
+  var data = {};
+
+  /* Merr nga cache */
+  if (cache.artikujt)        data.artikujt       = JSON.stringify(cache.artikujt);
+  if (cache.pelhurat)        data.pelhurat        = JSON.stringify(cache.pelhurat);
+  if (cache.kategoriSettings) data.kategorisettings = JSON.stringify(cache.kategoriSettings);
+
+  /* Nëse mungon diçka, provo nga Supabase */
+  for (var k of ['artikujt','pelhurat','kategorisettings','analytics']) {
+    if (!data[k]) {
+      log('Mungon në cache, duke provuar Supabase: ' + k, 'log-warn');
+      var v = await sbGetDirect(k);
+      if (v) { data[k] = v; log('✓ Morrëm ' + k + ' nga Supabase', 'log-ok'); }
+      else { log('✗ Nuk u gjet: ' + k, 'log-err'); }
+    }
+  }
+
+  /* Shkruaj në Firestore */
+  var ok = 0, err = 0;
+  for (var key of Object.keys(data)) {
+    try {
+      await db.collection('konfigurimi').doc(key).set({ value: data[key] });
+      log('✓ Shkrova: ' + key, 'log-ok');
+      ok++;
+    } catch(e) {
+      log('✗ Gabim: ' + key + ' — ' + e.message, 'log-err');
+      err++;
+    }
+  }
+
+  /* Analytics nga Supabase nëse nuk ishte në cache */
+  if (!data.analytics) {
+    var an = await sbGetDirect('analytics');
+    if (an) {
+      try {
+        await db.collection('konfigurimi').doc('analytics').set({ value: an });
+        log('✓ Shkrova: analytics', 'log-ok');
+        ok++;
+      } catch(e) { log('✗ Gabim analytics: ' + e.message, 'log-err'); err++; }
+    }
+  }
+
+  log('', '');
+  if (err === 0) {
+    log('🎉 Migrimi përfundoi! ' + ok + ' dokumente u shkruan në Firestore.', 'log-ok');
+    log('Tani mund të ndryshoni fajllat HTML për të përdorur Firebase.', 'log-info');
+  } else {
+    log('Përfundoi me ' + ok + ' ✓ dhe ' + err + ' ✗', 'log-warn');
+  }
+
+  document.getElementById('btn-start').disabled = false;
+  loadPreview();
+}
+
+/* Ngarko preview automatikisht */
+loadPreview();
+</script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="sq">
 <head>
   <script>if(location.pathname.endsWith('.html'))history.replaceState(null,'',location.href.replace(/\/index\.html$/,'/').replace(/\.html$/,''));</script>
@@ -21,9 +21,7 @@
   <meta property="og:image:alt" content="Intal Underwear — Koleksioni i të Brendëshmes" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:image" content="https://intalal.com/og_image.png" />
-  <link rel="preconnect" href="https://cdn.jsdelivr.net">
-  <link rel="preconnect" href="https://qucwmmizqxudxvolfwkx.supabase.co">
-  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet" media="print" onload="this.media='all'">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet" media="print" onload="this.media='all'">
   <noscript><link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet"></noscript>
   <link rel="stylesheet" href="css/main.css">
   <style>
@@ -264,6 +262,9 @@
 
   <!-- Article grid -->
   <div id="dyn-grid"></div>
+  <div id="load-more-wrap" style="display:none;text-align:center;padding:0 0 60px;">
+    <button id="load-more-btn" onclick="loadMoreArts()" style="background:none;border:1.5px solid #1a1a1a;border-radius:4px;padding:11px 36px;font-family:var(--fh);font-size:11px;font-weight:700;letter-spacing:1.5px;cursor:pointer;text-transform:uppercase;">Ngarko më shumë</button>
+  </div>
 
   <!-- Detail popup -->
   <div id="art-detail-overlay">
@@ -394,7 +395,9 @@
 
 
   <script src="js/main.js"></script>
-  <script src="js/sb.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="js/firebase.js"></script>
   <script>
   (function(){
     function loadData(){ try{ var r=localStorage.getItem('intal_cache_v1'); if(r) return JSON.parse(r); }catch(e){} return null; }
@@ -654,12 +657,33 @@
         +'</div></div>';
     }
 
+    var _PG_SIZE = 16;
+    var _pgShown = 0;
+    var _pgList = [];
+    var _pgOpener = 'openDet';
+
+    function _pgRender(append){
+      var grid = document.getElementById('dyn-grid');
+      var wrap = document.getElementById('load-more-wrap');
+      var slice = _pgList.slice(append ? _pgShown : 0, _pgShown + _PG_SIZE);
+      if (!append) {
+        if (!_pgList.length){ grid.innerHTML='<div style="grid-column:1/-1;padding:80px 0;text-align:center;color:var(--muted);font-size:13px;">Nuk ka artikuj për këtë filtër.</div>'; wrap.style.display='none'; _pgShown=0; return; }
+        grid.innerHTML = slice.map(function(a){ return buildCardHtml(a,_pgOpener+'(\''+a.id+'\')'); }).join('');
+        _pgShown = slice.length;
+      } else {
+        grid.innerHTML += slice.map(function(a){ return buildCardHtml(a,_pgOpener+'(\''+a.id+'\')'); }).join('');
+        _pgShown += slice.length;
+      }
+      wrap.style.display = _pgShown < _pgList.length ? 'block' : 'none';
+    }
+
+    window.loadMoreArts = function(){ _pgRender(true); };
+
     function renderGrid(list,filter){
       var show=filter==='te-gjitha'?list:list.filter(function(a){ return artMatchesKat(a,filter); });
       document.getElementById('pg-count').textContent=show.length+' ARTIKUJ';
-      var grid=document.getElementById('dyn-grid');
-      if(!show.length){ grid.innerHTML='<div style="grid-column:1/-1;padding:80px 0;text-align:center;color:var(--muted);font-size:13px;">Nuk ka artikuj për këtë filtër.</div>'; return; }
-      grid.innerHTML=show.map(function(a){ return buildCardHtml(a,'openDet(\''+a.id+'\')'); }).join('');
+      _pgList=show; _pgShown=0; _pgOpener='openDet';
+      _pgRender(false);
     }
 
     function renderGridAll(allList, activeSub, activeKat){
@@ -667,9 +691,8 @@
       if(activeSub&&activeSub!=='te-gjitha') show=show.filter(function(a){ return artMatchesCat(a,activeSub); });
       if(activeKat&&activeKat!=='te-gjitha') show=show.filter(function(a){ return artMatchesKat(a,activeKat); });
       document.getElementById('pg-count').textContent=show.length+' ARTIKUJ';
-      var grid=document.getElementById('dyn-grid');
-      if(!show.length){ grid.innerHTML='<div style="grid-column:1/-1;padding:80px 0;text-align:center;color:var(--muted);font-size:13px;">Nuk ka artikuj për këtë filtër.</div>'; return; }
-      grid.innerHTML=show.map(function(a){ return buildCardHtml(a,'openDetAll(\''+a.id+'\')'); }).join('');
+      _pgList=show; _pgShown=0; _pgOpener='openDetAll';
+      _pgRender(false);
     }
 
     function showCat(cat,filter,data){
@@ -1238,8 +1261,7 @@
 <style>@keyframes promoPopIn{from{opacity:0;transform:scale(.85) translateY(20px);}to{opacity:1;transform:scale(1) translateY(0);}}</style>
 <script>
 (function(){
-  var SB_URL_P='https://qucwmmizqxudxvolfwkx.supabase.co';
-  var SB_KEY_P='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF1Y3dtbWl6cXh1ZHh2b2xmd2t4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQwNjIxODIsImV4cCI6MjA4OTYzODE4Mn0.xp5e-4X2IzgizknjYKmai8qOOrwM-_BO80v_QTI4viw';
+  var _dbPromo=firebase.firestore();
   var _promoData=null;
   var _promoTimer=null;
   var _promoSeen=false;
@@ -1264,11 +1286,9 @@
   async function fetchAndShowPromo(){
     if(_promoSeen) return;
     try{
-      var r=await fetch(SB_URL_P+'/rest/v1/konfigurimi?key=eq.promo_v1',{headers:{'apikey':SB_KEY_P,'Authorization':'Bearer '+SB_KEY_P}});
-      if(!r.ok) return;
-      var d=await r.json();
-      if(!d||!d.length) return;
-      var p=JSON.parse(d[0].value);
+      var snap=await _dbPromo.collection('konfigurimi').doc('promo_v1').get();
+      if(!snap.exists) return;
+      var p=JSON.parse(snap.data().value);
       if(!p||!p.active||!p.imgUrl) return;
       _promoData=p;
       try{localStorage.setItem('intal_promo_v1',JSON.stringify(p));}catch(e){}

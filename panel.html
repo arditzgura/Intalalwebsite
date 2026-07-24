@@ -788,6 +788,9 @@ tr.drag-over{border-top:2.5px solid var(--pink);}
 .toast.show{transform:translateY(0);opacity:1;}
 .toast.err{background:var(--danger);}
 </style>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 </head>
 <body>
 
@@ -1091,7 +1094,7 @@ tr.drag-over{border-top:2.5px solid var(--pink);}
       <div class="login-logo"><span>intal</span><small>ADMIN</small></div>
       <h2>Hyrja ne Panel</h2>
       <p>Vendosni kredencialet e administratorit</p>
-      <input type="text" id="l-user" placeholder="Perdoruesi" autocomplete="off" onkeydown="if(event.key==='Enter')doLogin()">
+      <input type="email" id="l-user" placeholder="Email" autocomplete="email" onkeydown="if(event.key==='Enter')doLogin()">
       <input type="password" id="l-pass" placeholder="Fjalekalimi" onkeydown="if(event.key==='Enter')doLogin()">
       <button type="button" class="login-btn" onclick="doLogin()">Hyr</button>
       <div class="login-err" id="l-err">Kredenciale te gabuara!</div>
@@ -1570,8 +1573,9 @@ tr.drag-over{border-top:2.5px solid var(--pink);}
 </div>
 <script>
 (function(){
-  var SB_URL_P='https://qucwmmizqxudxvolfwkx.supabase.co';
-  var SB_KEY_P='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF1Y3dtbWl6cXh1ZHh2b2xmd2t4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQwNjIxODIsImV4cCI6MjA4OTYzODE4Mn0.xp5e-4X2IzgizknjYKmai8qOOrwM-_BO80v_QTI4viw';
+  var _FB_CFG={apiKey:"AIzaSyCi0nHVXYruuRE33NDOrGLVhRwl0nupUfI",authDomain:"intal-webiste.firebaseapp.com",projectId:"intal-webiste",storageBucket:"intal-webiste.firebasestorage.app",messagingSenderId:"624321141008",appId:"1:624321141008:web:6f80ededf8b727161ced95"};
+  if(!firebase.apps.length) firebase.initializeApp(_FB_CFG);
+  var _dbP=firebase.firestore();
   var _promoData=null;
   var _promoTimer=null;
   var _promoSeen=false;
@@ -1592,11 +1596,9 @@ tr.drag-over{border-top:2.5px solid var(--pink);}
   async function fetchAndShowPromo(){
     if(_promoSeen) return;
     try{
-      var r=await fetch(SB_URL_P+'/rest/v1/konfigurimi?key=eq.promo_v1',{headers:{'apikey':SB_KEY_P,'Authorization':'Bearer '+SB_KEY_P}});
-      if(!r.ok) return;
-      var d=await r.json();
-      if(!d||!d.length) return;
-      var p=JSON.parse(d[0].value);
+      var snap=await _dbP.collection('konfigurimi').doc('promo_v1').get();
+      if(!snap.exists) return;
+      var p=JSON.parse(snap.data().value);
       if(!p||!p.active||!p.imgUrl) return;
       _promoData=p;
       try{localStorage.setItem('intal_promo_v1',JSON.stringify(p));}catch(e){}
@@ -1776,8 +1778,8 @@ function getMatLabel(name) {
 var rrethKat=[];
 var adresat=[];
 var analytics={pageViews:0,artClicks:{},searchQueries:[],contactLeads:[],popupLeads:[],lastVisit:null};
-var ADMIN_PASS = 'arditiintal';
-var ADMIN_USER = 'intalalbania';
+var ADMIN_PASS = '';
+var ADMIN_USER = '';
 /* Auth helpers — thjeshtë dhe të qëndrueshëm */
 var _adminActive = false;
 function _setAdmin(v){
@@ -2157,29 +2159,20 @@ function importBackup(e){
   e.target.value='';
 }
 
-// -- SUPABASE CONFIG --
-var SB_URL='https://qucwmmizqxudxvolfwkx.supabase.co';
-var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF1Y3dtbWl6cXh1ZHh2b2xmd2t4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQwNjIxODIsImV4cCI6MjA4OTYzODE4Mn0.xp5e-4X2IzgizknjYKmai8qOOrwM-_BO80v_QTI4viw';
-var SB_BUCKET='foto-artikujt';
+// -- FIREBASE CONFIG --
+var _FB_CONFIG={apiKey:"AIzaSyCi0nHVXYruuRE33NDOrGLVhRwl0nupUfI",authDomain:"intal-webiste.firebaseapp.com",projectId:"intal-webiste",storageBucket:"intal-webiste.firebasestorage.app",messagingSenderId:"624321141008",appId:"1:624321141008:web:6f80ededf8b727161ced95"};
+if(!firebase.apps.length) firebase.initializeApp(_FB_CONFIG);
+var _db=firebase.firestore();
 
-async function sbGet(table){
-  var r=await fetch(SB_URL+'/rest/v1/'+table+'?order=created_at.asc',{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
-  if(!r.ok) return null;
-  return await r.json();
-}
-async function sbSet(table,data){
-  // upsert single row with key=table name
-  var r=await fetch(SB_URL+'/rest/v1/konfigurimi?key=eq.'+table,{method:'GET',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
-  var exists=r.ok&&(await r.json()).length>0;
-  var method=exists?'PATCH':'POST';
-  var url=exists?SB_URL+'/rest/v1/konfigurimi?key=eq.'+table:SB_URL+'/rest/v1/konfigurimi';
-  await fetch(url,{method:method,headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({key:table,value:data})});
-}
 async function sbGetKfg(key){
-  var r=await fetch(SB_URL+'/rest/v1/konfigurimi?key=eq.'+key,{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
-  if(!r.ok) return null;
-  var d=await r.json();
-  return d&&d.length?d[0].value:null;
+  try{
+    var snap=await _db.collection('konfigurimi').doc(key).get();
+    if(!snap.exists) return null;
+    return snap.data().value||null;
+  }catch(e){return null;}
+}
+async function sbSet(key,data){
+  try{await _db.collection('konfigurimi').doc(key).set({value:data},{merge:true});}catch(e){}
 }
 
 var CL_CLOUD='djfrquwex';
@@ -2718,20 +2711,25 @@ function showAdminLogin(){
 function doLogin(){
   var u=document.getElementById('l-user').value.trim();
   var p=document.getElementById('l-pass').value;
-  if(u!==ADMIN_USER||p!==ADMIN_PASS){
-    var passEl=document.getElementById('l-pass');
-    passEl.style.borderColor='var(--danger)';
-    passEl.value='';
-    setTimeout(function(){passEl.style.borderColor='';},1500);
-    showToast('Kredenciale të gabuara!',true);
-    return;
-  }
-  _setAdmin('1');
-  /* Ridirektoj te dashboard — shmang konfliktin publike/admin në panel.html */
-  window.location.href='panel-dashboard.html';
+  var btn=document.querySelector('.login-btn');
+  if(btn) btn.disabled=true;
+  firebase.auth().signInWithEmailAndPassword(u,p)
+    .then(function(){
+      _setAdmin('1');
+      window.location.href='panel-dashboard.html';
+    })
+    .catch(function(){
+      var passEl=document.getElementById('l-pass');
+      passEl.style.borderColor='var(--danger)';
+      passEl.value='';
+      setTimeout(function(){passEl.style.borderColor='';},1500);
+      showToast('Kredenciale të gabuara!',true);
+      if(btn) btn.disabled=false;
+    });
 }
 /* Enter on login fields handled via onkeydown inline */
 function doLogout(){
+  firebase.auth().signOut().catch(function(){});
   _setAdmin('0');
   document.getElementById('admin-ui').style.display='none';
   document.getElementById('login-screen').style.display='flex';
