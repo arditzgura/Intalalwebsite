@@ -5015,13 +5015,23 @@ function showToast(msg,err){
   </a>
 </div>
 <script>
-(async function(){
+firebase.auth().onAuthStateChanged(async function(user){
+  if(!user){
+    /* Jo i autentikuar — pastro cache dhe shfaq login */
+    localStorage.removeItem('intal_admin');
+    sessionStorage.removeItem('intal_admin');
+    document.getElementById('login-screen').style.display='flex';
+    document.getElementById('admin-ui').style.display='none';
+    return;
+  }
+  /* I autentikuar — ngarko panelin */
+  _setAdmin('1');
   popupShown=true;
   if(popupTimer) clearTimeout(popupTimer);
   var cp=document.getElementById('contact-popup'); if(cp) cp.style.display='none';
   await loadData();
   initAdmin();
-})();
+});
 
 /* ── REELS AI ──────────────────────────────────────────────── */
 var _reelsStore = {}; /* { artIdx: { gemini:{caption,skript,hashtags}, claude:{}, openai:{} } } */
