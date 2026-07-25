@@ -1098,7 +1098,6 @@ tr.drag-over{border-top:2.5px solid var(--pink);}
       <input type="password" id="l-pass" placeholder="Fjalekalimi" onkeydown="if(event.key==='Enter')doLogin()">
       <button type="button" class="login-btn" onclick="doLogin()">Hyr</button>
       <div class="login-err" id="l-err">Kredenciale te gabuara!</div>
-      <p style="font-size:10px;color:#ccc;margin-top:.75rem;">Demo: admin / intal2025</p>
     </div>
   </div>
   <div id="admin-ui">
@@ -2705,6 +2704,7 @@ function showAdminLogin(){
 }
 function doLogin(){
   var u=document.getElementById('l-user').value.trim();
+  if(u && u.indexOf('@')===-1) u=u+'@intalal.com';
   var p=document.getElementById('l-pass').value;
   var btn=document.querySelector('.login-btn');
   if(btn) btn.disabled=true;
