@@ -5011,11 +5011,6 @@ function showToast(msg,err){
 </div>
 <script>
 (async function(){
-  if(!_getAdmin()){
-    document.getElementById('login-screen').style.display='flex';
-    document.getElementById('admin-ui').style.display='none';
-    return;
-  }
   popupShown=true;
   if(popupTimer) clearTimeout(popupTimer);
   var cp=document.getElementById('contact-popup'); if(cp) cp.style.display='none';
