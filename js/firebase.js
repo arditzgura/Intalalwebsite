@@ -36,6 +36,10 @@ async function sbSet(key, value) {
   try {
     var db = _fbInit();
     await db.collection('konfigurimi').doc(key).set({ value: value }, { merge: true });
+    /* Pastro cache-in që faqja publike të marrë të dhënat e reja */
+    if (key === 'artikujt' || key === 'pelhurat' || key === 'kategorisettings') {
+      try { localStorage.removeItem('intal_cache_ts'); } catch(e) {}
+    }
   } catch(e) {}
 }
 
