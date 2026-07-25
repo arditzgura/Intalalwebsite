@@ -45,7 +45,10 @@ var _SB_CACHE_TTL = 6 * 60 * 60 * 1000;
 async function sbSyncCache() {
   try {
     var ts = parseInt(localStorage.getItem('intal_cache_ts') || '0', 10);
-    if (Date.now() - ts < _SB_CACHE_TTL) return false;
+    var existing = {};
+    try { existing = JSON.parse(localStorage.getItem('intal_cache_v1') || '{}'); } catch(e) {}
+    var hasData = existing.artikujt && existing.artikujt.length > 0;
+    if (hasData && Date.now() - ts < _SB_CACHE_TTL) return false;
 
     var art = await sbGet('artikujt');
     var pel = await sbGet('pelhurat');
