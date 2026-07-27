@@ -107,7 +107,7 @@
       /* Kutia: kolone e vetme, lë 4px nga lart */
       #art-detail-box {
         grid-template-columns:1fr !important;
-        grid-template-rows:63% 37% !important;
+        grid-template-rows:55vw 1fr !important;
         width:100vw !important;
         height:calc(100vh - 4px) !important;
         border-radius:10px 10px 0 0 !important;
@@ -116,11 +116,12 @@
         max-width:100vw !important;
       }
 
-      /* Foto: lë gridin të kontrollojë lartësinë */
+      /* Foto: lartësi fikse e njëjtë për të gjithë artikujt */
       #art-detail-photos {
         width:100vw !important;
-        height:auto !important;
+        height:55vw !important;
         min-height:0 !important;
+        max-height:55vw !important;
         background:#fff !important;
         flex-shrink:0 !important;
         position:relative !important;
