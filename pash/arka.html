@@ -128,6 +128,14 @@
             oninput="this.style.color=parseFloat(this.value)>0?'var(--green,#1a9e6e)':'var(--text)'">
         </div>
       </div>
+      <!-- Lloji i hyrjes: Bankë / Dorë -->
+      <div class="field">
+        <label>Lloji i Hyrjes <span style="color:var(--muted);font-size:9px;text-transform:none;letter-spacing:0">(opsional)</span></label>
+        <div class="status-toggle">
+          <button class="status-btn active-dore" id="btn-h-dore" onclick="setHMenyra('dore')"><i class="ri-hand-coin-line"></i> Në Dorë</button>
+          <button class="status-btn" id="btn-h-banke" onclick="setHMenyra('banke')"><i class="ri-bank-line"></i> Me Bankë</button>
+        </div>
+      </div>
       <div class="field">
         <label>Shënime <span style="color:var(--muted);font-size:9px;text-transform:none;letter-spacing:0">(opsional)</span></label>
         <textarea id="fh-notes" placeholder="Detaje shtesë..." style="min-height:52px"></textarea>
@@ -214,6 +222,7 @@ let editId   = null;
 let editLloji= null;
 let deleteId = null;
 let dMenyra  = 'dore';
+let hMenyra  = 'dore';
 let typeFlt  = '';
 let sortCol  = 'data';
 let sortDir  = 'desc';
@@ -222,6 +231,12 @@ function setSort(col){
   if(sortCol===col) sortDir = sortDir==='asc'?'desc':'asc';
   else { sortCol=col; sortDir='asc'; }
   renderList();
+}
+
+function setHMenyra(m){
+  hMenyra=m;
+  document.getElementById('btn-h-dore').className  = 'status-btn' + (m==='dore'  ? ' active-dore'  : '');
+  document.getElementById('btn-h-banke').className = 'status-btn' + (m==='banke' ? ' active-banke' : '');
 }
 
 function setDMenyra(m){
@@ -273,6 +288,7 @@ function openModal(lloji, id){
       document.getElementById('fh-shuma').value=x.shuma||'';
       document.getElementById('fh-shuma').style.color=x.shuma?'var(--green,#1a9e6e)':'var(--text)';
       document.getElementById('fh-notes').value=x.notes||'';
+      setHMenyra(x.menyra||'dore');
     } else {
       document.getElementById('modal-dalje-title').innerHTML='<i class="ri-edit-line"></i> Edito Daljen';
       document.getElementById('fd-pershkrim').value=x.pershkrim||'';
@@ -292,6 +308,7 @@ function openModal(lloji, id){
       document.getElementById('fh-shuma').value='';
       document.getElementById('fh-shuma').style.color='var(--green,#1a9e6e)';
       document.getElementById('fh-notes').value='';
+      setHMenyra('dore');
     } else {
       document.getElementById('modal-dalje-title').innerHTML='<i class="ri-arrow-up-circle-line"></i> Dalje nga Arka';
       document.getElementById('fd-pershkrim').value='';
@@ -320,7 +337,7 @@ function saveArka(lloji){
   if(shuma<=0){ toast('Vendos shumën — e detyrueshme.'); document.getElementById(`${pfx}-shuma`).focus(); return; }
   const data  = document.getElementById(`${pfx}-data`).value||todayISO();
   const notes = document.getElementById(`${pfx}-notes`).value.trim();
-  const menyra = isH ? null : dMenyra;
+  const menyra = isH ? hMenyra : dMenyra;
 
   let list=DB.arka;
   if(editId){
@@ -360,6 +377,7 @@ function dupArka(id){
     document.getElementById('fh-shuma').value     = x.shuma||'';
     document.getElementById('fh-shuma').style.color = x.shuma?'var(--green,#1a9e6e)':'var(--text)';
     document.getElementById('fh-notes').value     = x.notes||'';
+    setHMenyra(x.menyra||'dore');
   } else {
     document.getElementById('modal-dalje-title').innerHTML='<i class="ri-file-copy-line"></i> Dubliko Daljen';
     document.getElementById('fd-pershkrim').value = x.pershkrim||'';
@@ -379,10 +397,7 @@ function renderList(){
   const menyra = document.getElementById('filter-menyra').value;
   let list=DB.arka.filter(x=>{
     if(typeFlt && x.lloji!==typeFlt) return false;
-    if(menyra){
-      if(x.lloji==='hyrje') return false; // hyrjet nuk kanë mënyra
-      if((x.menyra||'dore')!==menyra) return false;
-    }
+    if(menyra && (x.menyra||'dore')!==menyra) return false;
     if(!DP.matches(x.data)) return false;
     if(q&&!(x.pershkrim||'').toLowerCase().includes(q)) return false;
     return true;
@@ -414,11 +429,9 @@ function renderList(){
 
   const rows=list.map(x=>{
     const isH = x.lloji==='hyrje';
-    const menyraLabel = isH
-      ? '<span style="color:var(--muted);font-size:11px;">—</span>'
-      : (x.menyra||'dore')==='banke'
-        ? '<span class="badge badge-menyra"><i class="ri-bank-line"></i> Bankë</span>'
-        : '<span class="badge badge-menyra"><i class="ri-hand-coin-line"></i> Dorë</span>';
+    const menyraLabel = (x.menyra||'dore')==='banke'
+      ? '<span class="badge badge-menyra"><i class="ri-bank-line"></i> Bankë</span>'
+      : '<span class="badge badge-menyra"><i class="ri-hand-coin-line"></i> Dorë</span>';
     return `<tr onclick="openModal('${x.lloji}','${x.id}')" style="cursor:pointer;">
       <td>
         <div style="display:flex;align-items:center;gap:8px;">
