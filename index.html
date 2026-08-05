@@ -404,6 +404,8 @@
       color: var(--muted);
     }
   </style>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>emailjs.init('w5NLtDcnAYxXvl09w');</script>
 </head>
 <body>
 
@@ -1037,6 +1039,16 @@
         });
         await sbSet('contact_leads', JSON.stringify(leads));
       } catch(ex){ console.error('Contact save error:', ex); }
+
+      // Dërgo email njoftim tek admini
+      try {
+        await emailjs.send('service_1e8mzjr', 'template_j4beki8', {
+          emri:      name || '(pa emër)',
+          telefon:   tel,
+          produktet: prod || '—',
+          mesazhi:   msg  || '—'
+        });
+      } catch(ex){ console.warn('EmailJS error:', ex); }
 
       // Njoftim suksesi — perdoruesi qendron ne faqe
       showNotif('✓ Mesazhi u dërgua! Do t\'ju kontaktojmë së shpejti.', false);
