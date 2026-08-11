@@ -391,7 +391,7 @@ function buildCashList(){
   // Auto-pulled blerjet (dorë)
   const furnitoret = DB.furnitoret||[];
   const blerjetEntries = (DB.blerjet||[])
-    .filter(b => (b.menyra||'') === 'dore')
+    .filter(b => (b.menyra_pages||'dore') === 'dore')
     .map(b => {
       const furnitor = furnitoret.find(f=>f.id===b.furnitori_id);
       const emri = furnitor ? furnitor.emri : (b.furnitor_emri||'Blerje');
@@ -411,7 +411,7 @@ function buildCashList(){
 
   // Auto-pulled shpenzime (dorë)
   const shpenzimeEntries = (DB.shpenzime||[])
-    .filter(s => (s.menyra||'') === 'dore')
+    .filter(s => (s.menyra_pages||'dore') === 'dore')
     .map(s => ({
       _id:      s.id,
       _source:  'shpenzim',
@@ -444,7 +444,7 @@ function buildBankaList(){
 
   const furnitoret = DB.furnitoret||[];
   const blerjetEntries = (DB.blerjet||[])
-    .filter(b => (b.menyra||'') === 'banke')
+    .filter(b => (b.menyra_pages||'dore') === 'banke')
     .map(b => {
       const furnitor = furnitoret.find(f=>f.id===b.furnitori_id);
       const emri = furnitor ? furnitor.emri : (b.furnitor_emri||'Blerje');
@@ -453,7 +453,7 @@ function buildBankaList(){
     });
 
   const shpenzimeEntries = (DB.shpenzime||[])
-    .filter(s => (s.menyra||'') === 'banke')
+    .filter(s => (s.menyra_pages||'dore') === 'banke')
     .map(s => ({
       _id:s.id, _source:'shpenzim', lloji:'dalje', pershkrim:s.emertimi||'Shpenzim',
       data:s.data, shuma:s.shuma||0, statusi:s.statusi, notes:s.notes||'', created:s.created
