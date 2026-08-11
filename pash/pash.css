@@ -65,6 +65,10 @@ body{font-family:'Switzer',sans-serif;background:var(--surface);color:var(--text
 .nav-item:hover{color:rgba(255,255,255,.8);background:rgba(255,255,255,.06)}
 .nav-item.active{color:#fff;background:var(--accent)}
 .nav-item i{font-size:17px;flex-shrink:0;width:20px}
+.nav-group-lbl{display:flex;align-items:center;gap:8px;padding:10px 12px 2px;font-size:10px;
+  font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.25)}
+.nav-group-lbl i{font-size:14px;width:20px}
+.nav-child{padding-left:32px !important;}
 .nav-section{font-size:8.5px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.2);
   padding:14px 12px 4px;font-weight:600}
 
