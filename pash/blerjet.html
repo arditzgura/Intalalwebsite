@@ -836,7 +836,7 @@ function renderList(){
       const f=furnitoret.find(x=>x.id===b.furnitori_id);
       const fname=(f?f.emri:b.furnitor_emri||'').toLowerCase();
       const items=(b.items||[]).map(i=>i.zeri_emri||'').join(' ').toLowerCase();
-      if(!fname.includes(q)&&!items.includes(q)&&!String(b.nr).includes(q)) return false;
+      if(!fname.includes(q)&&!items.includes(q)&&!String(b.nr).includes(q)&&!String(b.totali||0).includes(q)&&!(b.notes||'').toLowerCase().includes(q)) return false;
     }
     return true;
   });

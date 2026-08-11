@@ -431,7 +431,7 @@ function buildCashList(){
       _id:      s.id,
       _source:  'shpenzim',
       lloji:    'dalje',
-      pershkrim: s.emertimi||'Shpenzim',
+      pershkrim: s.pershkrim||'Shpenzim',
       data:      s.data,
       shuma:     s.shuma||0,
       statusi:   s.statusi,
@@ -470,7 +470,7 @@ function buildBankaList(){
   const shpenzimeEntries = (DB.shpenzime||[])
     .filter(s => (s.menyra_pages||'dore') === 'banke')
     .map(s => ({
-      _id:s.id, _source:'shpenzim', lloji:'dalje', pershkrim:s.emertimi||'Shpenzim',
+      _id:s.id, _source:'shpenzim', lloji:'dalje', pershkrim:s.pershkrim||'Shpenzim',
       data:s.data, shuma:s.shuma||0, statusi:s.statusi, notes:s.notes||'', created:s.created
     }));
 
@@ -487,7 +487,11 @@ function renderList(){
   let list = fullList.filter(x=>{
     if(typeFlt && x.lloji !== typeFlt) return false;
     if(!DP.matches(x.data)) return false;
-    if(q && !x.pershkrim.toLowerCase().includes(q)) return false;
+    if(q){
+      const srcLabel = x._source==='blerje'?'blerje':x._source==='shpenzim'?'shpenzim':x.lloji;
+      const shumaStr = String(x.shuma||0);
+      if(!x.pershkrim.toLowerCase().includes(q) && !shumaStr.includes(q) && !srcLabel.includes(q) && !(x.notes||'').toLowerCase().includes(q)) return false;
+    }
     return true;
   });
 
@@ -676,7 +680,7 @@ function openDetail(entry){
       : '<i class="ri-hand-coin-line"></i> Në Dorë';
     bodyEl.innerHTML = `
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-        <div><div class="detail-lbl">Emërtimi</div><div class="detail-val">${esc(s.emertimi||'—')}</div></div>
+        <div><div class="detail-lbl">Emërtimi</div><div class="detail-val">${esc(s.pershkrim||'—')}</div></div>
         <div><div class="detail-lbl">Data</div><div class="detail-val">${s.data?fmtDate(s.data):'—'}</div></div>
         <div><div class="detail-lbl">Shuma</div><div class="detail-val" style="font-size:18px;font-weight:700;color:var(--accent)">${fmtL(s.shuma||0)}</div></div>
         <div><div class="detail-lbl">Statusi</div><div class="detail-val"><span class="badge ${s.statusi==='paguar'?'paguar':'pa-paguar'}">${s.statusi==='paguar'?'Paguar':'Pa paguar'}</span></div></div>

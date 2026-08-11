@@ -384,7 +384,7 @@ function renderList(){
     if(status&&(x.statusi||'paguar')!==status) return false;
     if(menyra&&(x.menyra_pages||'dore')!==menyra) return false;
     if(!DP.matches(x.data)) return false;
-    if(q&&!(x.pershkrim||'').toLowerCase().includes(q)&&!(x.kategoria||'').toLowerCase().includes(q)) return false;
+    if(q&&!(x.pershkrim||'').toLowerCase().includes(q)&&!(x.kategoria||'').toLowerCase().includes(q)&&!String(x.shuma||0).includes(q)&&!(x.notes||'').toLowerCase().includes(q)) return false;
     return true;
   });
   if(sortCol==='data')      list.sort((a,b)=>{const da=new Date(a.data||a.created||0),db=new Date(b.data||b.created||0);return sortDir==='asc'?da-db:db-da;});
