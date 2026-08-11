@@ -466,8 +466,12 @@ function renderList(){
     list.sort((a,b)=>sortDir==='asc'?a.shuma-b.shuma:b.shuma-a.shuma);
 
   // Stats — always from full (unfiltered) list for totals
-  const allHyrje = fullList.filter(x=>x.lloji==='hyrje').reduce((s,x)=>s+x.shuma,0);
-  const allDalje = fullList.filter(x=>x.lloji==='dalje').reduce((s,x)=>s+x.shuma,0);
+  const manualHyrje = fullList.filter(x=>x.lloji==='hyrje'&&x._source==='arka').reduce((s,x)=>s+x.shuma,0);
+  const manualDalje = fullList.filter(x=>x.lloji==='dalje'&&x._source==='arka').reduce((s,x)=>s+x.shuma,0);
+  const autoTotal   = fullList.filter(x=>x._source!=='arka').reduce((s,x)=>s+x.shuma,0);
+  // Cash dorë transactions count in BOTH hyrje and dalje (pass-through cash)
+  const allHyrje = activeTab==='cash' ? manualHyrje + autoTotal : manualHyrje;
+  const allDalje = manualDalje + autoTotal;
   const balanca  = allHyrje - allDalje;
 
   let statsHtml;
