@@ -126,6 +126,15 @@
             oninput="this.style.color=parseFloat(this.value)>0?'var(--green,#1a9e6e)':'var(--text)'">
         </div>
       </div>
+      <!-- Burimi — shown only for Hyrje Bankë -->
+      <div class="field" id="field-burimi" style="display:none">
+        <label>Burimi i hyrjes</label>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="status-btn active-burimi" id="btn-burimi-cash"   onclick="setBurimi('cash')"><i class="ri-hand-coin-line"></i> Nga Cash</button>
+          <button class="status-btn"               id="btn-burimi-tjeter" onclick="setBurimi('tjeter')"><i class="ri-bank-line"></i> Burim tjetër</button>
+        </div>
+        <div id="burimi-note" style="font-size:11px;color:var(--muted);margin-top:5px">Shuma do të zbritet nga Cash dhe do të kalohet në Bankë.</div>
+      </div>
       <div class="field">
         <label>Shënime <span style="color:var(--muted);font-size:9px;text-transform:none;letter-spacing:0">(opsional)</span></label>
         <textarea id="fh-notes" placeholder="Detaje shtesë..." style="min-height:52px"></textarea>
@@ -222,6 +231,14 @@ let activeTab = 'cash';
 let typeFlt   = '';
 let sortCol   = 'data';
 let sortDir   = 'desc';
+let burimiVal = 'cash';
+
+function setBurimi(v){
+  burimiVal = v;
+  document.getElementById('btn-burimi-cash').className   = 'status-btn' + (v==='cash'  ? ' active-burimi' : '');
+  document.getElementById('btn-burimi-tjeter').className = 'status-btn' + (v==='tjeter' ? ' active-burimi' : '');
+  document.getElementById('burimi-note').style.display = v==='cash' ? '' : 'none';
+}
 
 /* ── Tab ─────────────────────────────────────────────────────── */
 function setTab(t){
@@ -323,6 +340,13 @@ function openModal(lloji, id){
     document.getElementById(`${pfx}-shuma`).style.color = col;
     document.getElementById(`${pfx}-notes`).value     = '';
   }
+  // Show burimi selector only for Hyrje in Bankë tab
+  const showBurimi = isH && activeTab === 'banka';
+  document.getElementById('field-burimi').style.display = showBurimi ? '' : 'none';
+  if(showBurimi){
+    const saved = id ? (DB.arka.find(a=>a.id===id)?.burimi || 'cash') : 'cash';
+    setBurimi(saved);
+  }
   document.getElementById(`modal-${lloji}-bd`).classList.add('open');
   setTimeout(()=>document.getElementById(`${pfx}-pershkrim`).focus(), 80);
 }
@@ -345,13 +369,15 @@ function saveArka(lloji){
     ? (DB.arka.find(a=>a.id===editId)?.menyra || (activeTab==='cash'?'dore':'banke'))
     : (activeTab==='cash'?'dore':'banke');
 
+  const burimi = (isH && activeTab==='banka') ? burimiVal : null;
+
   let list = DB.arka;
   if(editId){
     const idx = list.findIndex(a=>a.id===editId);
-    if(idx>=0) list[idx] = {...list[idx], pershkrim, data, shuma, menyra, notes};
+    if(idx>=0) list[idx] = {...list[idx], pershkrim, data, shuma, menyra, notes, ...(burimi ? {burimi} : {})};
     toast(`${isH?'Hyrja':'Dalja'} u përditësua.`);
   } else {
-    list.push({id:genId(), lloji, pershkrim, data, shuma, menyra, notes, created:new Date().toISOString()});
+    list.push({id:genId(), lloji, pershkrim, data, shuma, menyra, notes, ...(burimi ? {burimi} : {}), created:new Date().toISOString()});
     toast(`${isH?'Hyrja':'Dalja'} u shtua.`);
   }
   DB.arka = list;
@@ -439,7 +465,21 @@ function buildCashList(){
       created:   s.created
     }));
 
-  return [...arkaEntries, ...blerjetEntries, ...shpenzimeEntries];
+  // Cash→Bankë transfers: Hyrje Bankë with burimi='cash' → appear as Dalje in Cash
+  const transferEntries = DB.arka
+    .filter(x => x.lloji==='hyrje' && (x.menyra||'dore')==='banke' && x.burimi==='cash')
+    .map(x => ({
+      _id:      x.id,
+      _source:  'transfer',
+      lloji:    'dalje',
+      pershkrim: `Depozitim Bankë — ${x.pershkrim||''}`.trim(),
+      data:      x.data,
+      shuma:     x.shuma||0,
+      notes:     x.notes||'',
+      created:   x.created
+    }));
+
+  return [...arkaEntries, ...blerjetEntries, ...shpenzimeEntries, ...transferEntries];
 }
 
 /* ── Build Banka list ────────────────────────────────────────── */
@@ -504,12 +544,14 @@ function renderList(){
     list.sort((a,b)=>sortDir==='asc'?a.shuma-b.shuma:b.shuma-a.shuma);
 
   // Stats — from filtered list so totals reflect search/filter
-  const manualHyrje = list.filter(x=>x.lloji==='hyrje'&&x._source==='arka').reduce((s,x)=>s+x.shuma,0);
-  const manualDalje = list.filter(x=>x.lloji==='dalje'&&x._source==='arka').reduce((s,x)=>s+x.shuma,0);
-  const autoTotal   = list.filter(x=>x._source!=='arka').reduce((s,x)=>s+x.shuma,0);
-  // Cash dorë transactions count in BOTH hyrje and dalje (pass-through cash)
-  const allHyrje = activeTab==='cash' ? manualHyrje + autoTotal : manualHyrje;
-  const allDalje = manualDalje + autoTotal;
+  const manualHyrje    = list.filter(x=>x.lloji==='hyrje'&&x._source==='arka').reduce((s,x)=>s+x.shuma,0);
+  const manualDalje    = list.filter(x=>x.lloji==='dalje'&&x._source==='arka').reduce((s,x)=>s+x.shuma,0);
+  // Pass-through: blerje+shpenzim dorë count in BOTH hyrje and dalje (net 0 on balance)
+  const passThrough    = list.filter(x=>x._source==='blerje'||x._source==='shpenzim').reduce((s,x)=>s+x.shuma,0);
+  // Transfers (Cash→Bankë): count only as Dalje in Cash (no hyrje counterpart)
+  const transferDalje  = list.filter(x=>x._source==='transfer').reduce((s,x)=>s+x.shuma,0);
+  const allHyrje = activeTab==='cash' ? manualHyrje + passThrough : manualHyrje;
+  const allDalje = manualDalje + passThrough + transferDalje;
   const balanca  = allHyrje - allDalje;
 
   let statsHtml;
@@ -547,7 +589,7 @@ function renderList(){
 
   const rows = list.map(x=>{
     const isH      = x.lloji === 'hyrje';
-    const isAuto   = x._source !== 'arka';
+    const isAuto   = x._source === 'blerje' || x._source === 'shpenzim';
     const iconCls  = isH ? 'ri-arrow-down-circle-line' : 'ri-arrow-up-circle-line';
     const iconCol  = isH ? '#1a9e6e' : 'var(--accent)';
     const iconBg   = isH ? '#1a9e6e18' : 'var(--accent-bg,#fee)';
@@ -560,6 +602,8 @@ function renderList(){
       badgeHtml = '<span class="badge badge-blerje"><i class="ri-shopping-bag-line"></i> Blerje</span>';
     } else if(x._source === 'shpenzim'){
       badgeHtml = '<span class="badge badge-shpenzim"><i class="ri-wallet-3-line"></i> Shpenzim</span>';
+    } else if(x._source === 'transfer'){
+      badgeHtml = '<span class="badge badge-transfer"><i class="ri-arrow-right-line"></i> Cash→Bankë</span>';
     } else {
       badgeHtml = `<span class="badge ${isH?'paguar':'pa-paguar'}">${isH?'Hyrje':'Dalje'}</span>`;
     }
@@ -576,13 +620,14 @@ function renderList(){
     } else {
       actionsHtml = `
         <button class="btn-icon" onclick="dupArka('${x._id}')" title="Dubliko"><i class="ri-file-copy-line"></i></button>
-        <button class="btn-icon" onclick="openModal('${x.lloji}','${x._id}')" title="Edito"><i class="ri-edit-line"></i></button>
+        <button class="btn-icon" onclick="openModal('${editLlojiFor}','${x._id}')" title="Edito"><i class="ri-edit-line"></i></button>
         <button class="btn-icon danger" onclick="askDel('${x._id}')" title="Fshi"><i class="ri-delete-bin-line"></i></button>`;
     }
 
+    const editLlojiFor = x._source==='transfer' ? 'hyrje' : x.lloji;
     const rowClick = isAuto
       ? `onclick="_openDetailById('${x._id}','${x._source}')" style="cursor:pointer;"`
-      : `onclick="openModal('${x.lloji}','${x._id}')" style="cursor:pointer;"`;
+      : `onclick="openModal('${editLlojiFor}','${x._id}')" style="cursor:pointer;"`;
 
     return `<tr ${rowClick}>
       <td>
@@ -744,9 +789,11 @@ document.addEventListener('click', e=>{
 .tf-btn.tf-active.tf-dalje  { background:var(--accent-bg,#fee2ec);color:var(--accent);border-color:var(--accent); }
 .badge-blerje   { background:#ede9fe;color:#7c3aed;border:0.5px solid #c4b5fd; }
 .badge-shpenzim { background:#fef3c7;color:#b45309;border:0.5px solid #fcd34d; }
+.badge-transfer { background:#e0f2fe;color:#0369a1;border:0.5px solid #7dd3fc; }
 .badge-menyra   { background:var(--surface2,#f3f4f6);color:var(--text);border:0.5px solid var(--border);display:inline-flex;align-items:center;gap:4px; }
 .detail-lbl     { font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:3px; }
 .detail-val     { font-size:13px;font-weight:500;color:var(--text); }
+.active-burimi  { background:var(--accent-bg,#fee2e2);color:var(--accent);border-color:var(--accent) !important; }
 </style>
 </body>
 </html>
