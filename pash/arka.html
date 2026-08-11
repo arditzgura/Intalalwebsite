@@ -18,7 +18,7 @@
     <a class="nav-item" href="shpenzime.html"><i class="ri-wallet-3-line"></i>Shpenzime</a>
     <a class="nav-item" href="blerjet.html"><i class="ri-shopping-bag-line"></i>Blerjet</a>
     <div class="nav-group-lbl"><i class="ri-safe-line"></i>Arka</div>
-    <a class="nav-item nav-child" id="nav-cash" href="arka.html"><i class="ri-hand-coin-line"></i>Cash</a>
+    <a class="nav-item nav-child" id="nav-cash"  href="arka.html"><i class="ri-hand-coin-line"></i>Cash</a>
     <a class="nav-item nav-child" id="nav-banka" href="arka.html#banka"><i class="ri-bank-line"></i>Bankë</a>
     <a class="nav-item" href="furnitoret.html"><i class="ri-user-2-line"></i>Furnitorët</a>
     <a class="nav-item" href="zerat.html"><i class="ri-price-tag-3-line"></i>Zërat</a>
@@ -44,10 +44,9 @@
     <div class="list-head">
       <div>
         <div class="page-title" id="page-title">Arka — Cash</div>
-        <div class="page-sub" id="page-sub">Mbyllje Muaji, Hyrje dhe Dalje në Cash</div>
+        <div class="page-sub" id="page-sub">Hyrje dhe dalje cash — pagesa në dorë</div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;">
-        <!-- Tab switcher -->
         <div class="arka-tab-bar">
           <button id="tab-cash"  class="arka-tab active-cash"  onclick="setTab('cash')"><i class="ri-hand-coin-line"></i> Cash</button>
           <button id="tab-banka" class="arka-tab"              onclick="setTab('banka')"><i class="ri-bank-line"></i> Bankë</button>
@@ -98,7 +97,7 @@
 <div class="modal-backdrop" id="modal-hyrje-bd" onclick="if(event.target===this)closeModal('hyrje')">
   <div class="modal">
     <div class="modal-head">
-      <h2 id="modal-hyrje-title" style="color:var(--green,#1a9e6e)"><i class="ri-arrow-down-circle-line"></i> Hyrje</h2>
+      <h2 id="modal-hyrje-title" style="color:var(--green,#1a9e6e)"><i class="ri-arrow-down-circle-line"></i> Hyrje Cash</h2>
       <button class="modal-close" onclick="closeModal('hyrje')">&#x2715;</button>
     </div>
     <div class="modal-body">
@@ -186,53 +185,6 @@
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════════════
-     MBYLLJE MUAJI MODAL
-═══════════════════════════════════════════════════════════════ -->
-<div class="modal-backdrop" id="modal-mbyllje-bd" onclick="if(event.target===this)closeModal('mbyllje')">
-  <div class="modal">
-    <div class="modal-head">
-      <h2 id="modal-mbyllje-title" style="color:#2563eb"><i class="ri-calendar-check-line"></i> Mbyllje Muaji</h2>
-      <button class="modal-close" onclick="closeModal('mbyllje')">&#x2715;</button>
-    </div>
-    <div class="modal-body">
-      <div class="field">
-        <label>Përshkrimi <span style="color:var(--accent);font-size:10px;">*</span></label>
-        <div class="ac-wrap">
-          <input type="text" id="fm-pershkrim" autocomplete="off"
-            style="background:var(--surface);border:0.5px solid var(--border);border-radius:7px;
-                   padding:9px 12px;font-family:'Switzer',sans-serif;font-size:13px;
-                   color:var(--text);outline:none;width:100%;transition:border-color .15s"
-            placeholder="p.sh. Mbyllje Janar 2025, Balanca mujore..."
-            oninput="acPershkrim('fm-pershkrim','ac-mbyllje-dd',this.value)"
-            onfocus="acPershkrim('fm-pershkrim','ac-mbyllje-dd',this.value)">
-          <div class="ac-dd" id="ac-mbyllje-dd"></div>
-        </div>
-      </div>
-      <div class="field-row">
-        <div class="field">
-          <label>Data</label>
-          <input type="date" id="fm-data">
-        </div>
-        <div class="field">
-          <label>Shuma (L) <span style="color:var(--accent);font-size:10px;">*</span></label>
-          <input type="number" id="fm-shuma" min="0" step="0.01" placeholder="0.00"
-            style="font-size:16px;font-weight:600;padding:9px 12px;color:#2563eb"
-            oninput="this.style.color=parseFloat(this.value)>0?'#2563eb':'var(--text)'">
-        </div>
-      </div>
-      <div class="field">
-        <label>Shënime <span style="color:var(--muted);font-size:9px;text-transform:none;letter-spacing:0">(opsional)</span></label>
-        <textarea id="fm-notes" placeholder="Detaje shtesë..." style="min-height:52px"></textarea>
-      </div>
-    </div>
-    <div class="modal-foot">
-      <button class="btn-secondary" onclick="closeModal('mbyllje')">Anulo</button>
-      <button class="btn-mbyllje" onclick="saveArka('mbyllje')"><i class="ri-save-line"></i> Ruaj</button>
-    </div>
-  </div>
-</div>
-
 <!-- Confirm delete -->
 <div class="modal-backdrop confirm-modal" id="conf-bd" onclick="if(event.target===this)closeConf()">
   <div class="modal" style="max-width:360px">
@@ -251,33 +203,25 @@
 let editId    = null;
 let editLloji = null;
 let deleteId  = null;
-let activeTab = 'cash';   // 'cash' | 'banka'
-let typeFlt   = '';       // '' | 'mbyllje' | 'hyrje' | 'dalje'
+let activeTab = 'cash';
+let typeFlt   = '';
 let sortCol   = 'data';
 let sortDir   = 'desc';
 
 /* ── Tab ─────────────────────────────────────────────────────── */
 function setTab(t){
-  activeTab = t;
-  typeFlt   = '';
-
-  document.getElementById('tab-cash').className  = 'arka-tab' + (t==='cash'  ? ' active-cash'  : '');
-  document.getElementById('tab-banka').className = 'arka-tab' + (t==='banka' ? ' active-banka' : '');
-
+  activeTab = t; typeFlt = '';
   const isCash = t === 'cash';
+  document.getElementById('tab-cash').className  = 'arka-tab' + (isCash  ? ' active-cash'  : '');
+  document.getElementById('tab-banka').className = 'arka-tab' + (!isCash ? ' active-banka' : '');
   document.getElementById('topbar-name').textContent = isCash ? 'Arka — Cash' : 'Arka — Bankë';
   document.getElementById('page-title').textContent  = isCash ? 'Arka — Cash' : 'Arka — Bankë';
   document.getElementById('page-sub').textContent    = isCash
-    ? 'Mbyllje Muaji, Hyrje dhe Dalje në Cash'
-    : 'Hyrje dhe Dalje bankare';
-
-  // Nav active state
+    ? 'Hyrje dhe dalje cash — pagesa në dorë'
+    : 'Hyrje dhe dalje bankare';
   document.getElementById('nav-cash').classList.toggle('active',  isCash);
   document.getElementById('nav-banka').classList.toggle('active', !isCash);
-
-  // Update hash without scrolling
-  history.replaceState(null,'', isCash ? 'arka.html' : 'arka.html#banka');
-
+  history.replaceState(null, '', isCash ? 'arka.html' : 'arka.html#banka');
   updateActions();
   updateTypeFilters();
   renderList();
@@ -287,9 +231,8 @@ function updateActions(){
   const el = document.getElementById('arka-actions');
   if(activeTab === 'cash'){
     el.innerHTML = `
-      <button class="btn-mbyllje" onclick="openModal('mbyllje')"><i class="ri-calendar-check-line"></i> Mbyllje Muaji</button>
-      <button class="btn-hyrje"   onclick="openModal('hyrje')"><i class="ri-arrow-down-circle-line"></i> Hyrje Cash</button>
-      <button class="btn-dalje"   onclick="openModal('dalje')"><i class="ri-arrow-up-circle-line"></i> Dalje Cash</button>`;
+      <button class="btn-hyrje" onclick="openModal('hyrje')"><i class="ri-arrow-down-circle-line"></i> Hyrje Cash</button>
+      <button class="btn-dalje" onclick="openModal('dalje')"><i class="ri-arrow-up-circle-line"></i> Dalje Cash</button>`;
   } else {
     el.innerHTML = `
       <button class="btn-hyrje" onclick="openModal('hyrje')"><i class="ri-arrow-down-circle-line"></i> Hyrje Bankë</button>
@@ -298,32 +241,19 @@ function updateActions(){
 }
 
 function updateTypeFilters(){
-  const el = document.getElementById('type-filters');
-  const pills = activeTab === 'cash'
-    ? [
-        {id:'tf-all',     t:'',         label:'Të gjitha', cls:''},
-        {id:'tf-mbyllje', t:'mbyllje',  label:'<i class="ri-calendar-check-line"></i> Mbyllje', cls:'tf-mbyllje'},
-        {id:'tf-hyrje',   t:'hyrje',    label:'<i class="ri-arrow-down-circle-line"></i> Hyrje', cls:'tf-hyrje'},
-        {id:'tf-dalje',   t:'dalje',    label:'<i class="ri-arrow-up-circle-line"></i> Dalje',  cls:'tf-dalje'},
-      ]
-    : [
-        {id:'tf-all',   t:'',       label:'Të gjitha', cls:''},
-        {id:'tf-hyrje', t:'hyrje',  label:'<i class="ri-arrow-down-circle-line"></i> Hyrje', cls:'tf-hyrje'},
-        {id:'tf-dalje', t:'dalje',  label:'<i class="ri-arrow-up-circle-line"></i> Dalje',  cls:'tf-dalje'},
-      ];
-  el.innerHTML = pills.map(p=>{
+  const pills = [
+    {id:'tf-all',   t:'',      label:'Të gjitha', cls:''},
+    {id:'tf-hyrje', t:'hyrje', label:'<i class="ri-arrow-down-circle-line"></i> Hyrje', cls:'tf-hyrje'},
+    {id:'tf-dalje', t:'dalje', label:'<i class="ri-arrow-up-circle-line"></i> Dalje',  cls:'tf-dalje'},
+  ];
+  document.getElementById('type-filters').innerHTML = pills.map(p=>{
     const isActive = typeFlt === p.t;
     const cls = 'tf-btn' + (isActive ? (' tf-active' + (p.cls?' '+p.cls:'')) : '');
     return `<button id="${p.id}" class="${cls}" onclick="setTypeFlt('${p.t}')">${p.label}</button>`;
   }).join('');
 }
 
-function setTypeFlt(t){
-  typeFlt = t;
-  updateTypeFilters();
-  renderList();
-}
-
+function setTypeFlt(t){ typeFlt=t; updateTypeFilters(); renderList(); }
 function setSort(col){
   if(sortCol===col) sortDir = sortDir==='asc'?'desc':'asc';
   else { sortCol=col; sortDir='asc'; }
@@ -354,19 +284,13 @@ function acPershkrim(inputId, ddId, q){
 
 /* ── Modal ───────────────────────────────────────────────────── */
 function openModal(lloji, id){
-  if(lloji === 'mbyllje'){
-    openMbyllje(id); return;
-  }
   const isH  = lloji === 'hyrje';
   const pfx  = isH ? 'fh' : 'fd';
   const col  = isH ? 'var(--green,#1a9e6e)' : 'var(--accent)';
-  const menyra = activeTab === 'cash' ? 'dore' : 'banke';
   const tabLabel = activeTab === 'cash' ? 'Cash' : 'Bankë';
-
   if(id){
     const x = DB.arka.find(a=>a.id===id); if(!x) return;
     editId = id; editLloji = lloji;
-    const icon = isH ? 'ri-edit-line' : 'ri-edit-line';
     document.getElementById(`modal-${lloji}-title`).innerHTML =
       `<i class="ri-edit-line"></i> Edito ${isH?'Hyrjen':'Daljen'}`;
     document.getElementById(`${pfx}-pershkrim`).value = x.pershkrim||'';
@@ -374,8 +298,6 @@ function openModal(lloji, id){
     document.getElementById(`${pfx}-shuma`).value     = x.shuma||'';
     document.getElementById(`${pfx}-shuma`).style.color = x.shuma ? col : 'var(--text)';
     document.getElementById(`${pfx}-notes`).value     = x.notes||'';
-    // Store the menyra from the entry (not overriding with tab)
-    editLloji = lloji;
   } else {
     editId = null; editLloji = lloji;
     document.getElementById(`modal-${lloji}-title`).innerHTML =
@@ -390,73 +312,39 @@ function openModal(lloji, id){
   setTimeout(()=>document.getElementById(`${pfx}-pershkrim`).focus(), 80);
 }
 
-function openMbyllje(id){
-  if(id){
-    const x = DB.arka.find(a=>a.id===id); if(!x) return;
-    editId = id; editLloji = 'mbyllje';
-    document.getElementById('modal-mbyllje-title').innerHTML = '<i class="ri-edit-line"></i> Edito Mbylljen';
-    document.getElementById('fm-pershkrim').value = x.pershkrim||'';
-    document.getElementById('fm-data').value      = x.data||'';
-    document.getElementById('fm-shuma').value     = x.shuma||'';
-    document.getElementById('fm-shuma').style.color = x.shuma ? '#2563eb' : 'var(--text)';
-    document.getElementById('fm-notes').value     = x.notes||'';
-  } else {
-    editId = null; editLloji = 'mbyllje';
-    document.getElementById('modal-mbyllje-title').innerHTML = '<i class="ri-calendar-check-line"></i> Mbyllje Muaji';
-    document.getElementById('fm-pershkrim').value = '';
-    document.getElementById('fm-data').value      = todayISO();
-    document.getElementById('fm-shuma').value     = '';
-    document.getElementById('fm-shuma').style.color = '#2563eb';
-    document.getElementById('fm-notes').value     = '';
-  }
-  document.getElementById('modal-mbyllje-bd').classList.add('open');
-  setTimeout(()=>document.getElementById('fm-pershkrim').focus(), 80);
-}
-
 function closeModal(lloji){
   document.getElementById(`modal-${lloji}-bd`).classList.remove('open');
   editId = null; editLloji = null;
 }
 
 function saveArka(lloji){
-  const isMb = lloji === 'mbyllje';
-  const isH  = lloji === 'hyrje';
-  const pfx  = isMb ? 'fm' : (isH ? 'fh' : 'fd');
-
+  const isH = lloji === 'hyrje';
+  const pfx = isH ? 'fh' : 'fd';
   const pershkrim = document.getElementById(`${pfx}-pershkrim`).value.trim();
   if(!pershkrim){ toast('Shkruaj përshkrimin — e detyrueshme.'); document.getElementById(`${pfx}-pershkrim`).focus(); return; }
   const shuma = parseFloat(document.getElementById(`${pfx}-shuma`).value)||0;
   if(shuma<=0){ toast('Vendos shumën — e detyrueshme.'); document.getElementById(`${pfx}-shuma`).focus(); return; }
   const data  = document.getElementById(`${pfx}-data`).value||todayISO();
   const notes = document.getElementById(`${pfx}-notes`).value.trim();
-
-  // menyra: mbyllje=null (always cash), others forced by tab unless editing existing
-  let menyra;
-  if(isMb){
-    menyra = null;
-  } else if(editId){
-    // Keep existing menyra when editing
-    const existing = DB.arka.find(a=>a.id===editId);
-    menyra = existing ? (existing.menyra || (activeTab==='cash'?'dore':'banke')) : (activeTab==='cash'?'dore':'banke');
-  } else {
-    menyra = activeTab === 'cash' ? 'dore' : 'banke';
-  }
+  const menyra = editId
+    ? (DB.arka.find(a=>a.id===editId)?.menyra || (activeTab==='cash'?'dore':'banke'))
+    : (activeTab==='cash'?'dore':'banke');
 
   let list = DB.arka;
   if(editId){
     const idx = list.findIndex(a=>a.id===editId);
     if(idx>=0) list[idx] = {...list[idx], pershkrim, data, shuma, menyra, notes};
-    toast(isMb ? 'Mbyllja u përditësua.' : `${isH?'Hyrja':'Dalja'} u përditësua.`);
+    toast(`${isH?'Hyrja':'Dalja'} u përditësua.`);
   } else {
     list.push({id:genId(), lloji, pershkrim, data, shuma, menyra, notes, created:new Date().toISOString()});
-    toast(isMb ? 'Mbyllja u shtua.' : `${isH?'Hyrja':'Dalja'} u shtua.`);
+    toast(`${isH?'Hyrja':'Dalja'} u shtua.`);
   }
   DB.arka = list;
   closeModal(lloji);
   renderList();
 }
 
-/* ── Delete ──────────────────────────────────────────────────── */
+/* ── Delete (only for arka manual entries) ───────────────────── */
 function askDel(id){ deleteId=id; document.getElementById('conf-bd').classList.add('open'); }
 function closeConf(){ document.getElementById('conf-bd').classList.remove('open'); deleteId=null; }
 function confirmDel(){
@@ -465,27 +353,14 @@ function confirmDel(){
   closeConf(); toast('Veprimi u fshi.'); renderList();
 }
 
-/* ── Duplicate ───────────────────────────────────────────────── */
+/* ── Duplicate (only for arka manual entries) ────────────────── */
 function dupArka(id){
   const x = DB.arka.find(a=>a.id===id); if(!x) return;
   const lloji = x.lloji;
+  const isH   = lloji === 'hyrje';
+  const pfx   = isH ? 'fh' : 'fd';
+  const col   = isH ? 'var(--green,#1a9e6e)' : 'var(--accent)';
   editId = null; editLloji = lloji;
-
-  if(lloji === 'mbyllje'){
-    document.getElementById('modal-mbyllje-title').innerHTML = '<i class="ri-file-copy-line"></i> Dubliko Mbylljen';
-    document.getElementById('fm-pershkrim').value = x.pershkrim||'';
-    document.getElementById('fm-data').value      = todayISO();
-    document.getElementById('fm-shuma').value     = x.shuma||'';
-    document.getElementById('fm-shuma').style.color = '#2563eb';
-    document.getElementById('fm-notes').value     = x.notes||'';
-    document.getElementById('modal-mbyllje-bd').classList.add('open');
-    setTimeout(()=>document.getElementById('fm-shuma').focus(), 80);
-    return;
-  }
-  const isH = lloji === 'hyrje';
-  const pfx = isH ? 'fh' : 'fd';
-  const col = isH ? 'var(--green,#1a9e6e)' : 'var(--accent)';
-  const tabLabel = activeTab === 'cash' ? 'Cash' : 'Bankë';
   document.getElementById(`modal-${lloji}-title`).innerHTML =
     `<i class="ri-file-copy-line"></i> Dubliko ${isH?'Hyrjen':'Daljen'}`;
   document.getElementById(`${pfx}-pershkrim`).value = x.pershkrim||'';
@@ -497,26 +372,88 @@ function dupArka(id){
   setTimeout(()=>document.getElementById(`${pfx}-shuma`).focus(), 80);
 }
 
+/* ── Build unified Cash list ─────────────────────────────────── */
+function buildCashList(){
+  // Manual arka entries (dorë) — also include old mbyllje as hyrje for compat
+  const arkaEntries = DB.arka
+    .filter(x => (x.menyra||'dore') === 'dore' || x.lloji === 'mbyllje')
+    .map(x => ({
+      _id:      x.id,
+      _source:  'arka',
+      lloji:    x.lloji === 'mbyllje' ? 'hyrje' : x.lloji,
+      pershkrim: x.pershkrim||'',
+      data:      x.data,
+      shuma:     x.shuma||0,
+      notes:     x.notes||'',
+      created:   x.created
+    }));
+
+  // Auto-pulled blerjet (dorë)
+  const furnitoret = DB.furnitoret||[];
+  const blerjetEntries = (DB.blerjet||[])
+    .filter(b => (b.menyra||'') === 'dore')
+    .map(b => {
+      const furnitor = furnitoret.find(f=>f.id===b.furnitori_id);
+      const emri = furnitor ? furnitor.emri : (b.furnitor_emri||'Blerje');
+      const totali = (b.items||[]).reduce((s,i)=>s+(i.sasia||1)*(i.cmimi||0), 0);
+      return {
+        _id:      b.id,
+        _source:  'blerje',
+        lloji:    'dalje',
+        pershkrim: emri,
+        data:      b.data,
+        shuma:     totali,
+        statusi:   b.statusi,
+        notes:     '',
+        created:   b.created
+      };
+    });
+
+  // Auto-pulled shpenzime (dorë)
+  const shpenzimeEntries = (DB.shpenzime||[])
+    .filter(s => (s.menyra||'') === 'dore')
+    .map(s => ({
+      _id:      s.id,
+      _source:  'shpenzim',
+      lloji:    'dalje',
+      pershkrim: s.emertimi||'Shpenzim',
+      data:      s.data,
+      shuma:     s.shuma||0,
+      statusi:   s.statusi,
+      notes:     s.notes||'',
+      created:   s.created
+    }));
+
+  return [...arkaEntries, ...blerjetEntries, ...shpenzimeEntries];
+}
+
+/* ── Build Banka list ────────────────────────────────────────── */
+function buildBankaList(){
+  return DB.arka
+    .filter(x => (x.menyra||'dore') === 'banke')
+    .map(x => ({
+      _id:      x.id,
+      _source:  'arka',
+      lloji:    x.lloji,
+      pershkrim: x.pershkrim||'',
+      data:      x.data,
+      shuma:     x.shuma||0,
+      notes:     x.notes||'',
+      created:   x.created
+    }));
+}
+
 /* ── Render ──────────────────────────────────────────────────── */
 function renderList(){
   const q = document.getElementById('search').value.toLowerCase();
 
-  // Filter by tab
-  let list = DB.arka.filter(x=>{
-    if(activeTab === 'cash'){
-      // Cash: mbyllje OR hyrje/dalje dorë (null also treated as dorë for backward compat)
-      if(x.lloji === 'mbyllje') return true;
-      if((x.menyra||'dore') !== 'dore') return false;
-    } else {
-      // Banka: only hyrje/dalje bankë
-      if(x.lloji === 'mbyllje') return false;
-      if((x.menyra||'dore') !== 'banke') return false;
-    }
-    return true;
-  }).filter(x=>{
+  let fullList = activeTab === 'cash' ? buildCashList() : buildBankaList();
+
+  // Apply filters
+  let list = fullList.filter(x=>{
     if(typeFlt && x.lloji !== typeFlt) return false;
     if(!DP.matches(x.data)) return false;
-    if(q && !(x.pershkrim||'').toLowerCase().includes(q)) return false;
+    if(q && !x.pershkrim.toLowerCase().includes(q)) return false;
     return true;
   });
 
@@ -524,42 +461,39 @@ function renderList(){
   if(sortCol==='data')
     list.sort((a,b)=>{const da=new Date(a.data||a.created||0),db=new Date(b.data||b.created||0);return sortDir==='asc'?da-db:db-da;});
   else if(sortCol==='emertimi')
-    list.sort((a,b)=>{const na=(a.pershkrim||'').toLowerCase(),nb=(b.pershkrim||'').toLowerCase();return sortDir==='asc'?na.localeCompare(nb):nb.localeCompare(na);});
+    list.sort((a,b)=>{const na=a.pershkrim.toLowerCase(),nb=b.pershkrim.toLowerCase();return sortDir==='asc'?na.localeCompare(nb):nb.localeCompare(na);});
   else if(sortCol==='shuma')
-    list.sort((a,b)=>sortDir==='asc'?(a.shuma||0)-(b.shuma||0):(b.shuma||0)-(a.shuma||0));
+    list.sort((a,b)=>sortDir==='asc'?a.shuma-b.shuma:b.shuma-a.shuma);
 
-  // Stats
-  const mbylljeTotal = list.filter(x=>x.lloji==='mbyllje').reduce((s,x)=>s+(x.shuma||0),0);
-  const hyrjeTotal   = list.filter(x=>x.lloji==='hyrje').reduce((s,x)=>s+(x.shuma||0),0);
-  const daljeTotal   = list.filter(x=>x.lloji==='dalje').reduce((s,x)=>s+(x.shuma||0),0);
+  // Stats — always from full (unfiltered) list for totals
+  const allHyrje = fullList.filter(x=>x.lloji==='hyrje').reduce((s,x)=>s+x.shuma,0);
+  const allDalje = fullList.filter(x=>x.lloji==='dalje').reduce((s,x)=>s+x.shuma,0);
+  const balanca  = allHyrje - allDalje;
 
   let statsHtml;
   if(activeTab === 'cash'){
-    const totalHyrje = mbylljeTotal + hyrjeTotal; // mbyllje + hyrje dorë
-    const balanca    = totalHyrje - daljeTotal;
+    const arkaDalje = fullList.filter(x=>x.lloji==='dalje'&&x._source==='arka').reduce((s,x)=>s+x.shuma,0);
+    const bDalje    = fullList.filter(x=>x._source==='blerje').reduce((s,x)=>s+x.shuma,0);
+    const shDalje   = fullList.filter(x=>x._source==='shpenzim').reduce((s,x)=>s+x.shuma,0);
     statsHtml = `
       <div class="period-card"><div class="pc-header"><div class="pc-icon ${balanca>=0?'green':'red'}"><i class="ri-hand-coin-line"></i></div><span class="pc-label">Balanca Cash</span></div><div class="pc-val ${balanca>=0?'':'red'}">${fmtL(balanca)}</div></div>
-      <div class="period-card"><div class="pc-header"><div class="pc-icon" style="background:#dbeafe"><i class="ri-calendar-check-line" style="color:#2563eb"></i></div><span class="pc-label">Mbyllje Muaji</span></div><div class="pc-val" style="color:#2563eb">${fmtL(mbylljeTotal)}</div></div>
-      <div class="period-card"><div class="pc-header"><div class="pc-icon green"><i class="ri-arrow-down-circle-line"></i></div><span class="pc-label">Hyrje Cash</span></div><div class="pc-val" style="color:#1a9e6e">${fmtL(hyrjeTotal)}</div></div>
-      <div class="period-card"><div class="pc-header"><div class="pc-icon red"><i class="ri-arrow-up-circle-line"></i></div><span class="pc-label">Dalje Cash</span></div><div class="pc-val red">${fmtL(daljeTotal)}</div></div>`;
+      <div class="period-card"><div class="pc-header"><div class="pc-icon green"><i class="ri-arrow-down-circle-line"></i></div><span class="pc-label">Hyrje Cash</span></div><div class="pc-val" style="color:#1a9e6e">${fmtL(allHyrje)}</div></div>
+      <div class="period-card"><div class="pc-header"><div class="pc-icon red"><i class="ri-arrow-up-circle-line"></i></div><span class="pc-label">Dalje Cash</span></div><div class="pc-val red">${fmtL(allDalje)}</div></div>
+      <div class="period-card"><div class="pc-header"><div class="pc-icon blue"><i class="ri-list-check"></i></div><span class="pc-label">Nr. Veprimeve</span></div><div class="pc-val">${fullList.length}</div></div>`;
   } else {
-    const balanca = hyrjeTotal - daljeTotal;
     statsHtml = `
       <div class="period-card"><div class="pc-header"><div class="pc-icon ${balanca>=0?'green':'red'}"><i class="ri-bank-line"></i></div><span class="pc-label">Balanca Bankë</span></div><div class="pc-val ${balanca>=0?'':'red'}">${fmtL(balanca)}</div></div>
-      <div class="period-card"><div class="pc-header"><div class="pc-icon green"><i class="ri-arrow-down-circle-line"></i></div><span class="pc-label">Hyrje Bankë</span></div><div class="pc-val" style="color:#1a9e6e">${fmtL(hyrjeTotal)}</div></div>
-      <div class="period-card"><div class="pc-header"><div class="pc-icon red"><i class="ri-arrow-up-circle-line"></i></div><span class="pc-label">Dalje Bankë</span></div><div class="pc-val red">${fmtL(daljeTotal)}</div></div>
-      <div class="period-card"><div class="pc-header"><div class="pc-icon blue"><i class="ri-list-check"></i></div><span class="pc-label">Nr. Veprimeve</span></div><div class="pc-val">${list.length}</div></div>`;
+      <div class="period-card"><div class="pc-header"><div class="pc-icon green"><i class="ri-arrow-down-circle-line"></i></div><span class="pc-label">Hyrje Bankë</span></div><div class="pc-val" style="color:#1a9e6e">${fmtL(allHyrje)}</div></div>
+      <div class="period-card"><div class="pc-header"><div class="pc-icon red"><i class="ri-arrow-up-circle-line"></i></div><span class="pc-label">Dalje Bankë</span></div><div class="pc-val red">${fmtL(allDalje)}</div></div>
+      <div class="period-card"><div class="pc-header"><div class="pc-icon blue"><i class="ri-list-check"></i></div><span class="pc-label">Nr. Veprimeve</span></div><div class="pc-val">${fullList.length}</div></div>`;
   }
   document.getElementById('stats-strip').innerHTML = statsHtml;
-
-  const totalHyrjeCash = mbylljeTotal + hyrjeTotal;
-  const balancaLabel   = activeTab==='cash' ? totalHyrjeCash - daljeTotal : hyrjeTotal - daljeTotal;
-  document.getElementById('list-total').textContent = `${list.length} rekorde · Balanca: ${fmtL(balancaLabel)}`;
+  document.getElementById('list-total').textContent = `${list.length} rekorde · Balanca: ${fmtL(balanca)}`;
 
   const wrap = document.getElementById('list-wrap');
   if(!list.length){
     const emptyMsg = activeTab==='cash'
-      ? 'Nuk ka veprime Cash.<br>Shtyp <strong>Mbyllje Muaji</strong>, <strong>Hyrje Cash</strong> ose <strong>Dalje Cash</strong>.'
+      ? 'Nuk ka veprime Cash.<br>Shtyp <strong>Hyrje Cash</strong> ose <strong>Dalje Cash</strong>, ose regjistro blerje/shpenzime me mënyrën <em>Në Dorë</em>.'
       : 'Nuk ka veprime bankare.<br>Shtyp <strong>Hyrje Bankë</strong> ose <strong>Dalje Bankë</strong>.';
     wrap.innerHTML = `<div class="empty"><i class="ri-safe-line"></i>${emptyMsg}</div>`;
     return;
@@ -570,39 +504,61 @@ function renderList(){
     : '<span class="sort-arrow muted">↕</span>';
 
   const rows = list.map(x=>{
-    const isMb = x.lloji === 'mbyllje';
-    const isH  = x.lloji === 'hyrje';
-    const isDa = x.lloji === 'dalje';
+    const isH      = x.lloji === 'hyrje';
+    const isAuto   = x._source !== 'arka';
+    const iconCls  = isH ? 'ri-arrow-down-circle-line' : 'ri-arrow-up-circle-line';
+    const iconCol  = isH ? '#1a9e6e' : 'var(--accent)';
+    const iconBg   = isH ? '#1a9e6e18' : 'var(--accent-bg,#fee)';
+    const amtColor = isH ? '#1a9e6e' : 'var(--accent)';
+    const amtSign  = isH ? '+' : '−';
 
-    const iconCls   = isMb ? 'ri-calendar-check-line' : (isH ? 'ri-arrow-down-circle-line' : 'ri-arrow-up-circle-line');
-    const iconColor = isMb ? '#2563eb' : (isH ? '#1a9e6e' : 'var(--accent)');
-    const iconBg    = isMb ? '#dbeafe' : (isH ? '#1a9e6e18' : 'var(--accent-bg,#fee)');
-    const amtColor  = isMb ? '#2563eb' : (isH ? '#1a9e6e' : 'var(--accent)');
-    const amtSign   = isDa ? '−' : '+';
-    const badgeCls  = isMb ? 'badge-mbyllje' : (isH ? 'paguar' : 'pa-paguar');
-    const badgeLbl  = isMb ? 'Mbyllje' : (isH ? 'Hyrje' : 'Dalje');
+    // Badge: for auto-pulled show source, for manual show Hyrje/Dalje
+    let badgeHtml;
+    if(x._source === 'blerje'){
+      badgeHtml = '<span class="badge badge-blerje"><i class="ri-shopping-bag-line"></i> Blerje</span>';
+    } else if(x._source === 'shpenzim'){
+      badgeHtml = '<span class="badge badge-shpenzim"><i class="ri-wallet-3-line"></i> Shpenzim</span>';
+    } else {
+      badgeHtml = `<span class="badge ${isH?'paguar':'pa-paguar'}">${isH?'Hyrje':'Dalje'}</span>`;
+    }
 
-    const editFn = isMb
-      ? `openMbyllje('${x.id}')`
-      : `openModal('${x.lloji}','${x.id}')`;
+    // Statusi for auto-pulled
+    const statusiHtml = isAuto && x.statusi
+      ? `<span class="badge ${x.statusi==='paguar'?'paguar':'pa-paguar'}" style="margin-left:4px">${x.statusi==='paguar'?'Paguar':'Pa paguar'}</span>`
+      : '';
 
-    return `<tr onclick="${editFn}" style="cursor:pointer;">
+    // Action buttons: auto-pulled = link to source page; manual = dup/edit/delete
+    let actionsHtml;
+    if(isAuto){
+      const href = x._source==='blerje' ? 'blerjet.html' : 'shpenzime.html';
+      actionsHtml = `<a class="btn-icon" href="${href}" title="Shiko në ${x._source==='blerje'?'Blerjet':'Shpenzime'}"><i class="ri-external-link-line"></i></a>`;
+    } else {
+      actionsHtml = `
+        <button class="btn-icon" onclick="dupArka('${x._id}')" title="Dubliko"><i class="ri-file-copy-line"></i></button>
+        <button class="btn-icon" onclick="openModal('${x.lloji}','${x._id}')" title="Edito"><i class="ri-edit-line"></i></button>
+        <button class="btn-icon danger" onclick="askDel('${x._id}')" title="Fshi"><i class="ri-delete-bin-line"></i></button>`;
+    }
+
+    const rowClick = isAuto ? '' : `onclick="openModal('${x.lloji}','${x._id}')" style="cursor:pointer;"`;
+
+    return `<tr ${rowClick}>
       <td>
         <div style="display:flex;align-items:center;gap:8px;">
           <div style="width:30px;height:30px;border-radius:7px;background:${iconBg};display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-            <i class="${iconCls}" style="font-size:15px;color:${iconColor}"></i>
+            <i class="${iconCls}" style="font-size:15px;color:${iconCol}"></i>
           </div>
-          <div class="td-name">${esc(x.pershkrim||'Pa përshkrim')}</div>
+          <div>
+            <div class="td-name">${esc(x.pershkrim||'Pa përshkrim')}</div>
+            ${x.notes ? `<div style="font-size:11px;color:var(--muted);margin-top:1px">${esc(x.notes)}</div>` : ''}
+          </div>
         </div>
       </td>
       <td>${x.data?fmtDate(x.data):'—'}</td>
       <td class="td-amt" style="color:${amtColor};">${amtSign}${fmtL(x.shuma)}</td>
-      <td><span class="badge ${badgeCls}">${badgeLbl}</span></td>
+      <td>${badgeHtml}${statusiHtml}</td>
       <td onclick="event.stopPropagation()">
         <div style="display:flex;gap:6px;justify-content:flex-end;">
-          <button class="btn-icon" onclick="dupArka('${x.id}')" title="Dubliko"><i class="ri-file-copy-line"></i></button>
-          <button class="btn-icon" onclick="${editFn};event.stopPropagation()" title="Edito"><i class="ri-edit-line"></i></button>
-          <button class="btn-icon danger" onclick="askDel('${x.id}');event.stopPropagation()" title="Fshi"><i class="ri-delete-bin-line"></i></button>
+          ${actionsHtml}
         </div>
       </td>
     </tr>`;
@@ -622,12 +578,11 @@ function renderList(){
 
 DP.onchange = renderList;
 
-// Init tab from hash
 const initTab = location.hash === '#banka' ? 'banka' : 'cash';
 setTab(initTab);
 
 document.addEventListener('click', e=>{
-  ['ac-hyrje-dd','ac-dalje-dd','ac-mbyllje-dd'].forEach(id=>{
+  ['ac-hyrje-dd','ac-dalje-dd'].forEach(id=>{
     const dd = document.getElementById(id);
     if(dd && !dd.closest('.ac-wrap').contains(e.target)) dd.classList.remove('open');
   });
@@ -635,7 +590,6 @@ document.addEventListener('click', e=>{
 </script>
 
 <style>
-/* ── Arka-specific buttons ─────────────────────────────────── */
 .btn-hyrje {
   display:inline-flex;align-items:center;gap:6px;
   padding:9px 18px;border-radius:8px;border:none;cursor:pointer;
@@ -650,14 +604,6 @@ document.addEventListener('click', e=>{
   background:var(--accent,#c8003e);color:#fff;transition:background .15s;
 }
 .btn-dalje:hover{ filter:brightness(0.88); }
-.btn-mbyllje {
-  display:inline-flex;align-items:center;gap:6px;
-  padding:9px 18px;border-radius:8px;border:none;cursor:pointer;
-  font-family:'Switzer',sans-serif;font-size:13px;font-weight:600;
-  background:#2563eb;color:#fff;transition:background .15s;
-}
-.btn-mbyllje:hover{ background:#1d4ed8; }
-/* Tab bar */
 .arka-tab-bar {
   display:flex;background:var(--surface);border-radius:9px;padding:3px;
   border:0.5px solid var(--border);gap:2px;
@@ -670,19 +616,17 @@ document.addEventListener('click', e=>{
 }
 .arka-tab.active-cash  { background:#fff;color:#2563eb;font-weight:700;box-shadow:0 1px 3px rgba(0,0,0,.08); }
 .arka-tab.active-banka { background:#fff;color:#1a9e6e;font-weight:700;box-shadow:0 1px 3px rgba(0,0,0,.08); }
-/* Type filter pills */
 .tf-btn {
   padding:7px 14px;border-radius:7px;border:0.5px solid var(--border);
   background:var(--white);color:var(--muted);font-family:'Switzer',sans-serif;
   font-size:12px;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;gap:5px;
   transition:all .15s;
 }
-.tf-btn.tf-active             { background:var(--surface);color:var(--text);border-color:var(--text);font-weight:600; }
-.tf-btn.tf-active.tf-mbyllje  { background:#dbeafe;color:#2563eb;border-color:#2563eb; }
-.tf-btn.tf-active.tf-hyrje    { background:#e8f9f3;color:#1a9e6e;border-color:#1a9e6e; }
-.tf-btn.tf-active.tf-dalje    { background:var(--accent-bg,#fee2ec);color:var(--accent);border-color:var(--accent); }
-/* Mbyllje badge */
-.badge-mbyllje { background:#dbeafe;color:#2563eb;border:0.5px solid #bfdbfe; }
+.tf-btn.tf-active           { background:var(--surface);color:var(--text);border-color:var(--text);font-weight:600; }
+.tf-btn.tf-active.tf-hyrje  { background:#e8f9f3;color:#1a9e6e;border-color:#1a9e6e; }
+.tf-btn.tf-active.tf-dalje  { background:var(--accent-bg,#fee2ec);color:var(--accent);border-color:var(--accent); }
+.badge-blerje   { background:#ede9fe;color:#7c3aed;border:0.5px solid #c4b5fd; }
+.badge-shpenzim { background:#fef3c7;color:#b45309;border:0.5px solid #fcd34d; }
 </style>
 </body>
 </html>
