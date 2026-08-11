@@ -429,7 +429,7 @@ function buildCashList(){
 
 /* ── Build Banka list ────────────────────────────────────────── */
 function buildBankaList(){
-  return DB.arka
+  const arkaEntries = DB.arka
     .filter(x => (x.menyra||'dore') === 'banke')
     .map(x => ({
       _id:      x.id,
@@ -441,6 +441,25 @@ function buildBankaList(){
       notes:     x.notes||'',
       created:   x.created
     }));
+
+  const furnitoret = DB.furnitoret||[];
+  const blerjetEntries = (DB.blerjet||[])
+    .filter(b => (b.menyra||'') === 'banke')
+    .map(b => {
+      const furnitor = furnitoret.find(f=>f.id===b.furnitori_id);
+      const emri = furnitor ? furnitor.emri : (b.furnitor_emri||'Blerje');
+      const totali = (b.items||[]).reduce((s,i)=>s+(i.sasia||1)*(i.cmimi||0), 0);
+      return { _id:b.id, _source:'blerje', lloji:'dalje', pershkrim:emri, data:b.data, shuma:totali, statusi:b.statusi, notes:'', created:b.created };
+    });
+
+  const shpenzimeEntries = (DB.shpenzime||[])
+    .filter(s => (s.menyra||'') === 'banke')
+    .map(s => ({
+      _id:s.id, _source:'shpenzim', lloji:'dalje', pershkrim:s.emertimi||'Shpenzim',
+      data:s.data, shuma:s.shuma||0, statusi:s.statusi, notes:s.notes||'', created:s.created
+    }));
+
+  return [...arkaEntries, ...blerjetEntries, ...shpenzimeEntries];
 }
 
 /* ── Render ──────────────────────────────────────────────────── */
