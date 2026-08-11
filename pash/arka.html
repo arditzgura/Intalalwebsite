@@ -197,6 +197,21 @@
   </div>
 </div>
 
+<!-- Detail popup for auto-pulled blerje/shpenzime -->
+<div class="modal-backdrop" id="modal-detail-bd" onclick="if(event.target===this)closeDetail()">
+  <div class="modal" style="max-width:480px">
+    <div class="modal-head">
+      <h2 id="detail-title"></h2>
+      <button class="modal-close" onclick="closeDetail()">&#x2715;</button>
+    </div>
+    <div class="modal-body" id="detail-body"></div>
+    <div class="modal-foot">
+      <button class="btn-secondary" onclick="closeDetail()">Mbyll</button>
+      <a id="detail-link" href="#" class="btn-primary" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:8px;font-size:13px;font-weight:600;color:#fff;background:var(--accent)"><i class="ri-external-link-line"></i> Hap faqen</a>
+    </div>
+  </div>
+</div>
+
 <div id="toast"></div>
 <script src="pash-data.js"></script>
 <script>
@@ -553,8 +568,7 @@ function renderList(){
     // Action buttons: auto-pulled = link to source page; manual = dup/edit/delete
     let actionsHtml;
     if(isAuto){
-      const href = x._source==='blerje' ? 'blerjet.html' : 'shpenzime.html';
-      actionsHtml = `<a class="btn-icon" href="${href}" title="Shiko në ${x._source==='blerje'?'Blerjet':'Shpenzime'}"><i class="ri-external-link-line"></i></a>`;
+      actionsHtml = `<button class="btn-icon" onclick="_openDetailById('${x._id}','${x._source}')" title="Shiko detajet"><i class="ri-information-line"></i></button>`;
     } else {
       actionsHtml = `
         <button class="btn-icon" onclick="dupArka('${x._id}')" title="Dubliko"><i class="ri-file-copy-line"></i></button>
@@ -562,7 +576,9 @@ function renderList(){
         <button class="btn-icon danger" onclick="askDel('${x._id}')" title="Fshi"><i class="ri-delete-bin-line"></i></button>`;
     }
 
-    const rowClick = isAuto ? '' : `onclick="openModal('${x.lloji}','${x._id}')" style="cursor:pointer;"`;
+    const rowClick = isAuto
+      ? `onclick="_openDetailById('${x._id}','${x._source}')" style="cursor:pointer;"`
+      : `onclick="openModal('${x.lloji}','${x._id}')" style="cursor:pointer;"`;
 
     return `<tr ${rowClick}>
       <td>
@@ -598,6 +614,80 @@ function renderList(){
     <tbody>${rows}</tbody>
   </table>`;
 }
+
+function _openDetailById(id, source){
+  const list = source==='blerje' ? buildCashList().concat(buildBankaList()) : buildCashList().concat(buildBankaList());
+  const entry = list.find(x=>x._id===id && x._source===source);
+  if(entry) openDetail(entry);
+}
+function openDetail(entry){
+  const isBlerje = entry._source === 'blerje';
+  const titleEl  = document.getElementById('detail-title');
+  const bodyEl   = document.getElementById('detail-body');
+  const linkEl   = document.getElementById('detail-link');
+
+  if(isBlerje){
+    titleEl.innerHTML = '<i class="ri-shopping-bag-line" style="color:#7c3aed"></i> Detaje Blerje';
+    const b = (DB.blerjet||[]).find(x=>x.id===entry._id) || {};
+    const furnitoret = DB.furnitoret||[];
+    const furnitor = furnitoret.find(f=>f.id===b.furnitori_id);
+    const emri = furnitor ? furnitor.emri : (b.furnitor_emri||'—');
+    const zerat = DB.zerat||[];
+    const itemRows = (b.items||[]).map(it=>{
+      const z = zerat.find(z=>z.id===it.zeri_id);
+      const emriZ = z ? z.emri : (it.emri||'Artikull');
+      return `<tr style="font-size:13px">
+        <td style="padding:5px 8px">${esc(emriZ)}</td>
+        <td style="padding:5px 8px;text-align:center">${it.sasia||1}</td>
+        <td style="padding:5px 8px;text-align:right">${fmtL(it.cmimi||0)}</td>
+        <td style="padding:5px 8px;text-align:right;font-weight:600">${fmtL((it.sasia||1)*(it.cmimi||0))}</td>
+      </tr>`;
+    }).join('');
+    const menyra = (b.menyra_pages||'dore')==='banke'
+      ? '<i class="ri-bank-line"></i> Me Bankë'
+      : '<i class="ri-hand-coin-line"></i> Në Dorë';
+    bodyEl.innerHTML = `
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+        <div><div class="detail-lbl">Furnitori</div><div class="detail-val">${esc(emri)}</div></div>
+        <div><div class="detail-lbl">Data</div><div class="detail-val">${b.data?fmtDate(b.data):'—'}</div></div>
+        <div><div class="detail-lbl">Statusi</div><div class="detail-val"><span class="badge ${b.statusi==='paguar'?'paguar':'pa-paguar'}">${b.statusi==='paguar'?'Paguar':'Pa paguar'}</span></div></div>
+        <div><div class="detail-lbl">Mënyra</div><div class="detail-val"><span class="badge badge-menyra">${menyra}</span></div></div>
+      </div>
+      ${itemRows ? `<table style="width:100%;border-collapse:collapse;margin-bottom:12px">
+        <thead><tr style="font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)">
+          <th style="padding:4px 8px;text-align:left">Artikull</th>
+          <th style="padding:4px 8px;text-align:center">Sasia</th>
+          <th style="padding:4px 8px;text-align:right">Çmimi</th>
+          <th style="padding:4px 8px;text-align:right">Totali</th>
+        </tr></thead>
+        <tbody>${itemRows}</tbody>
+        <tfoot><tr style="font-size:13px;font-weight:700;border-top:1px solid var(--border)">
+          <td colspan="3" style="padding:6px 8px;text-align:right">Totali</td>
+          <td style="padding:6px 8px;text-align:right;color:var(--accent)">${fmtL(entry.shuma)}</td>
+        </tr></tfoot>
+      </table>` : ''}
+      ${b.notes ? `<div><div class="detail-lbl">Shënime</div><div class="detail-val" style="color:var(--text)">${esc(b.notes)}</div></div>` : ''}`;
+    linkEl.href = 'blerjet.html';
+  } else {
+    titleEl.innerHTML = '<i class="ri-wallet-3-line" style="color:#b45309"></i> Detaje Shpenzimi';
+    const s = (DB.shpenzime||[]).find(x=>x.id===entry._id) || {};
+    const menyra = (s.menyra_pages||'dore')==='banke'
+      ? '<i class="ri-bank-line"></i> Me Bankë'
+      : '<i class="ri-hand-coin-line"></i> Në Dorë';
+    bodyEl.innerHTML = `
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div><div class="detail-lbl">Emërtimi</div><div class="detail-val">${esc(s.emertimi||'—')}</div></div>
+        <div><div class="detail-lbl">Data</div><div class="detail-val">${s.data?fmtDate(s.data):'—'}</div></div>
+        <div><div class="detail-lbl">Shuma</div><div class="detail-val" style="font-size:18px;font-weight:700;color:var(--accent)">${fmtL(s.shuma||0)}</div></div>
+        <div><div class="detail-lbl">Statusi</div><div class="detail-val"><span class="badge ${s.statusi==='paguar'?'paguar':'pa-paguar'}">${s.statusi==='paguar'?'Paguar':'Pa paguar'}</span></div></div>
+        <div><div class="detail-lbl">Mënyra</div><div class="detail-val"><span class="badge badge-menyra">${menyra}</span></div></div>
+        ${s.notes ? `<div style="grid-column:1/-1"><div class="detail-lbl">Shënime</div><div class="detail-val">${esc(s.notes)}</div></div>` : ''}
+      </div>`;
+    linkEl.href = 'shpenzime.html';
+  }
+  document.getElementById('modal-detail-bd').classList.add('open');
+}
+function closeDetail(){ document.getElementById('modal-detail-bd').classList.remove('open'); }
 
 DP.onchange = renderList;
 
@@ -650,6 +740,9 @@ document.addEventListener('click', e=>{
 .tf-btn.tf-active.tf-dalje  { background:var(--accent-bg,#fee2ec);color:var(--accent);border-color:var(--accent); }
 .badge-blerje   { background:#ede9fe;color:#7c3aed;border:0.5px solid #c4b5fd; }
 .badge-shpenzim { background:#fef3c7;color:#b45309;border:0.5px solid #fcd34d; }
+.badge-menyra   { background:var(--surface2,#f3f4f6);color:var(--text);border:0.5px solid var(--border);display:inline-flex;align-items:center;gap:4px; }
+.detail-lbl     { font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:3px; }
+.detail-val     { font-size:13px;font-weight:500;color:var(--text); }
 </style>
 </body>
 </html>
