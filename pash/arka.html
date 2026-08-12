@@ -106,7 +106,7 @@
       <h2 id="modal-hyrje-title" style="color:var(--green,#1a9e6e)"><i class="ri-arrow-down-circle-line"></i> Hyrje Cash</h2>
       <button class="modal-close" onclick="closeModal('hyrje')">&#x2715;</button>
     </div>
-    <div class="modal-body">
+    <div class="modal-body" onclick="closeAllAc(event)">
       <div class="field">
         <label>Përshkrimi <span style="color:var(--accent);font-size:10px;">*</span></label>
         <div class="ac-wrap">
@@ -170,7 +170,7 @@
       <h2 id="modal-dalje-title" style="color:var(--accent)"><i class="ri-arrow-up-circle-line"></i> Dalje</h2>
       <button class="modal-close" onclick="closeModal('dalje')">&#x2715;</button>
     </div>
-    <div class="modal-body">
+    <div class="modal-body" onclick="closeAllAc(event)">
       <div class="field">
         <label>Përshkrimi <span style="color:var(--accent);font-size:10px;">*</span></label>
         <div class="ac-wrap">
@@ -198,12 +198,13 @@
       </div>
       <div class="field">
         <label>Kategoria</label>
-        <select id="fd-kat" style="background:var(--surface);border:0.5px solid var(--border);border-radius:7px;padding:9px 12px;font-family:'Switzer',sans-serif;font-size:13px;color:var(--text);outline:none;width:100%">
+        <select id="fd-kat" style="background:var(--surface);border:0.5px solid var(--border);border-radius:7px;padding:9px 12px;font-family:'Switzer',sans-serif;font-size:13px;color:var(--text);outline:none;width:100%" onchange="onDaljeKatChange(this.value)">
           <option value="">Pa kategori</option>
           <option>Paga</option><option>Qira</option><option>Utilities</option>
           <option>Transport</option><option>Mirëmbajtje</option><option>Marketing</option>
-          <option>Kosto Operative</option><option>Të Tjera</option>
+          <option>Kosto Operative</option><option>Bankë</option><option>Të Tjera</option>
         </select>
+        <div id="fd-kat-note" style="display:none;font-size:11px;color:#0369a1;margin-top:5px"><i class="ri-information-line"></i> Shuma do të debitohet nga Cash dhe do të kreditohet në Bankë.</div>
       </div>
       <div class="field">
         <label>Shënime <span style="color:var(--muted);font-size:9px;text-transform:none;letter-spacing:0">(opsional)</span></label>
@@ -257,6 +258,15 @@ let sortCol   = 'data';
 let sortDir   = 'desc';
 let burimiVal = 'cash';
 
+function closeAllAc(e){
+  ['ac-hyrje-dd','ac-dalje-dd'].forEach(id=>{
+    const dd = document.getElementById(id);
+    if(dd && !dd.contains(e.target)) dd.classList.remove('open');
+  });
+}
+function onDaljeKatChange(v){
+  document.getElementById('fd-kat-note').style.display = v==='Bankë' ? '' : 'none';
+}
 function setBurimi(v){
   burimiVal = v;
   document.getElementById('btn-burimi-cash').className   = 'status-btn' + (v==='cash'  ? ' active-burimi' : '');
@@ -547,7 +557,22 @@ function buildBankaList(){
       kategoria:s.kategoria||'', data:s.data, shuma:s.shuma||0, statusi:s.statusi, notes:s.notes||'', created:s.created
     }));
 
-  return [...arkaEntries, ...blerjetEntries, ...shpenzimeEntries];
+  // Dalje Cash with kategoria='Bankë' → appear as Hyrje in Bankë
+  const fromCashEntries = DB.arka
+    .filter(x => x.lloji==='dalje' && (x.menyra||'dore')==='dore' && x.kategoria==='Bankë')
+    .map(x => ({
+      _id:       x.id,
+      _source:   'transfer-from-cash',
+      lloji:     'hyrje',
+      pershkrim: x.pershkrim||'',
+      kategoria: 'Cash → Bankë',
+      data:      x.data,
+      shuma:     x.shuma||0,
+      notes:     x.notes||'',
+      created:   x.created
+    }));
+
+  return [...arkaEntries, ...blerjetEntries, ...shpenzimeEntries, ...fromCashEntries];
 }
 
 /* ── Render ──────────────────────────────────────────────────── */
@@ -594,7 +619,8 @@ function renderList(){
   const passThrough    = list.filter(x=>x._source==='blerje'||x._source==='shpenzim').reduce((s,x)=>s+x.shuma,0);
   // Transfers (Cash→Bankë): count only as Dalje in Cash (no hyrje counterpart)
   const transferDalje  = list.filter(x=>x._source==='transfer').reduce((s,x)=>s+x.shuma,0);
-  const allHyrje = activeTab==='cash' ? manualHyrje + passThrough : manualHyrje;
+  const incomingCash = list.filter(x=>x._source==='transfer-from-cash').reduce((s,x)=>s+x.shuma,0);
+  const allHyrje = activeTab==='cash' ? manualHyrje + passThrough : manualHyrje + incomingCash;
   const allDalje = manualDalje + passThrough + transferDalje;
   const balanca  = allHyrje - allDalje;
 
@@ -633,7 +659,7 @@ function renderList(){
 
   const rows = list.map(x=>{
     const isH      = x.lloji === 'hyrje';
-    const isAuto   = x._source === 'blerje' || x._source === 'shpenzim';
+    const isAuto   = x._source === 'blerje' || x._source === 'shpenzim' || x._source === 'transfer-from-cash';
     const iconCls  = isH ? 'ri-arrow-down-circle-line' : 'ri-arrow-up-circle-line';
     const iconCol  = isH ? '#1a9e6e' : 'var(--accent)';
     const iconBg   = isH ? '#1a9e6e18' : 'var(--accent-bg,#fee)';
@@ -648,6 +674,8 @@ function renderList(){
       badgeHtml = '<span class="badge badge-shpenzim"><i class="ri-wallet-3-line"></i> Shpenzim</span>';
     } else if(x._source === 'transfer'){
       badgeHtml = '<span class="badge badge-transfer"><i class="ri-arrow-right-line"></i> Cash→Bankë</span>';
+    } else if(x._source === 'transfer-from-cash'){
+      badgeHtml = '<span class="badge badge-transfer"><i class="ri-arrow-left-line"></i> Cash→Bankë</span>';
     } else {
       badgeHtml = `<span class="badge ${isH?'paguar':'pa-paguar'}">${isH?'Hyrje':'Dalje'}</span>`;
     }
