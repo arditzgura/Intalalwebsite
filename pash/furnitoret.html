@@ -162,7 +162,7 @@ function setView(v){
 
 function renderList(){
   const q = document.getElementById('search').value.toLowerCase();
-  let list = DB.furnitoret.filter(f => !q || f.emri.toLowerCase().includes(q));
+  let list = DB.furnitoret.filter(f => !q || f.emri.toLowerCase().includes(q) || (f.adresa||'').toLowerCase().includes(q) || (f.telefon||'').includes(q));
   list = list.map(f => {
     const total    = furnitorTotal(f.id);
     const paguar   = furnitorPaguar(f.id);

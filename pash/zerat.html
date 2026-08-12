@@ -172,7 +172,7 @@ function renderList(){
   const kat = document.getElementById('filter-kat').value;
   let list  = DB.zerat.filter(z => {
     if(kat && z.kategoria !== kat) return false;
-    if(q && !z.emri.toLowerCase().includes(q)) return false;
+    if(q && !z.emri.toLowerCase().includes(q) && !(z.kategoria||'').toLowerCase().includes(q) && !String(z.cmimi||0).includes(q)) return false;
     return true;
   }).map(z => {
     const total    = zeriTotal(z.id);
