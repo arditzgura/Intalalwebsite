@@ -67,6 +67,12 @@
         <input class="search-input" id="search" placeholder="Kërko veprim..." oninput="renderList()">
       </div>
       <div id="type-filters" style="display:flex;gap:6px;"></div>
+      <select id="katFlt" onchange="renderList()"
+        style="background:var(--surface);border:0.5px solid var(--border);border-radius:7px;
+               padding:8px 12px;font-family:'Switzer',sans-serif;font-size:12px;
+               color:var(--text);outline:none;cursor:pointer;">
+        <option value="">Të gjitha kategoritë</option>
+      </select>
       <div class="dp-wrap" id="dp-wrap">
         <button class="dp-trigger" id="dp-trigger" onclick="DP.toggle()">
           <i class="ri-calendar-line"></i><span id="dp-label">Të gjithë datat</span>
@@ -126,6 +132,14 @@
             oninput="this.style.color=parseFloat(this.value)>0?'var(--green,#1a9e6e)':'var(--text)'">
         </div>
       </div>
+      <div class="field">
+        <label>Kategoria</label>
+        <select id="fh-kat" style="background:var(--surface);border:0.5px solid var(--border);border-radius:7px;padding:9px 12px;font-family:'Switzer',sans-serif;font-size:13px;color:var(--text);outline:none;width:100%">
+          <option value="">Pa kategori</option>
+          <option>Arkëtim Shitje</option><option>Klient</option><option>Kapital</option>
+          <option>Financim</option><option>Të Tjera</option>
+        </select>
+      </div>
       <!-- Burimi — shown only for Hyrje Bankë -->
       <div class="field" id="field-burimi" style="display:none">
         <label>Burimi i hyrjes</label>
@@ -183,6 +197,15 @@
         </div>
       </div>
       <div class="field">
+        <label>Kategoria</label>
+        <select id="fd-kat" style="background:var(--surface);border:0.5px solid var(--border);border-radius:7px;padding:9px 12px;font-family:'Switzer',sans-serif;font-size:13px;color:var(--text);outline:none;width:100%">
+          <option value="">Pa kategori</option>
+          <option>Paga</option><option>Qira</option><option>Utilities</option>
+          <option>Transport</option><option>Mirëmbajtje</option><option>Marketing</option>
+          <option>Kosto Operative</option><option>Të Tjera</option>
+        </select>
+      </div>
+      <div class="field">
         <label>Shënime <span style="color:var(--muted);font-size:9px;text-transform:none;letter-spacing:0">(opsional)</span></label>
         <textarea id="fd-notes" placeholder="Detaje shtesë..." style="min-height:52px"></textarea>
       </div>
@@ -229,6 +252,7 @@ let editLloji = null;
 let deleteId  = null;
 let activeTab = 'cash';
 let typeFlt   = '';
+let katFlt    = '';
 let sortCol   = 'data';
 let sortDir   = 'desc';
 let burimiVal = 'cash';
@@ -242,7 +266,7 @@ function setBurimi(v){
 
 /* ── Tab ─────────────────────────────────────────────────────── */
 function setTab(t){
-  activeTab = t; typeFlt = '';
+  activeTab = t; typeFlt = ''; katFlt = '';
   const isCash = t === 'cash';
   document.getElementById('tab-cash').className  = 'arka-tab' + (isCash  ? ' active-cash'  : '');
   document.getElementById('tab-banka').className = 'arka-tab' + (!isCash ? ' active-banka' : '');
@@ -330,6 +354,7 @@ function openModal(lloji, id){
     document.getElementById(`${pfx}-shuma`).value     = x.shuma||'';
     document.getElementById(`${pfx}-shuma`).style.color = x.shuma ? col : 'var(--text)';
     document.getElementById(`${pfx}-notes`).value     = x.notes||'';
+    document.getElementById(`${pfx}-kat`).value       = x.kategoria||'';
   } else {
     editId = null; editLloji = lloji;
     document.getElementById(`modal-${lloji}-title`).innerHTML =
@@ -339,6 +364,7 @@ function openModal(lloji, id){
     document.getElementById(`${pfx}-shuma`).value     = '';
     document.getElementById(`${pfx}-shuma`).style.color = col;
     document.getElementById(`${pfx}-notes`).value     = '';
+    document.getElementById(`${pfx}-kat`).value       = '';
   }
   // Show burimi selector only for Hyrje in Bankë tab
   const showBurimi = isH && activeTab === 'banka';
@@ -363,8 +389,9 @@ function saveArka(lloji){
   if(!pershkrim){ toast('Shkruaj përshkrimin — e detyrueshme.'); document.getElementById(`${pfx}-pershkrim`).focus(); return; }
   const shuma = parseFloat(document.getElementById(`${pfx}-shuma`).value)||0;
   if(shuma<=0){ toast('Vendos shumën — e detyrueshme.'); document.getElementById(`${pfx}-shuma`).focus(); return; }
-  const data  = document.getElementById(`${pfx}-data`).value||todayISO();
-  const notes = document.getElementById(`${pfx}-notes`).value.trim();
+  const data     = document.getElementById(`${pfx}-data`).value||todayISO();
+  const notes    = document.getElementById(`${pfx}-notes`).value.trim();
+  const kategoria = document.getElementById(`${pfx}-kat`).value.trim();
   const menyra = editId
     ? (DB.arka.find(a=>a.id===editId)?.menyra || (activeTab==='cash'?'dore':'banke'))
     : (activeTab==='cash'?'dore':'banke');
@@ -374,10 +401,10 @@ function saveArka(lloji){
   let list = DB.arka;
   if(editId){
     const idx = list.findIndex(a=>a.id===editId);
-    if(idx>=0) list[idx] = {...list[idx], pershkrim, data, shuma, menyra, notes, ...(burimi ? {burimi} : {})};
+    if(idx>=0) list[idx] = {...list[idx], pershkrim, data, shuma, menyra, notes, kategoria, ...(burimi ? {burimi} : {})};
     toast(`${isH?'Hyrja':'Dalja'} u përditësua.`);
   } else {
-    list.push({id:genId(), lloji, pershkrim, data, shuma, menyra, notes, ...(burimi ? {burimi} : {}), created:new Date().toISOString()});
+    list.push({id:genId(), lloji, pershkrim, data, shuma, menyra, notes, kategoria, ...(burimi ? {burimi} : {}), created:new Date().toISOString()});
     toast(`${isH?'Hyrja':'Dalja'} u shtua.`);
   }
   DB.arka = list;
@@ -409,6 +436,7 @@ function dupArka(id){
   document.getElementById(`${pfx}-shuma`).value     = x.shuma||'';
   document.getElementById(`${pfx}-shuma`).style.color = col;
   document.getElementById(`${pfx}-notes`).value     = x.notes||'';
+  document.getElementById(`${pfx}-kat`).value       = x.kategoria||'';
   document.getElementById(`modal-${lloji}-bd`).classList.add('open');
   setTimeout(()=>document.getElementById(`${pfx}-shuma`).focus(), 80);
 }
@@ -419,10 +447,11 @@ function buildCashList(){
   const arkaEntries = DB.arka
     .filter(x => (x.menyra||'dore') === 'dore' || x.lloji === 'mbyllje')
     .map(x => ({
-      _id:      x.id,
-      _source:  'arka',
-      lloji:    x.lloji === 'mbyllje' ? 'hyrje' : x.lloji,
+      _id:       x.id,
+      _source:   'arka',
+      lloji:     x.lloji === 'mbyllje' ? 'hyrje' : x.lloji,
       pershkrim: x.pershkrim||'',
+      kategoria: x.kategoria||'',
       data:      x.data,
       shuma:     x.shuma||0,
       notes:     x.notes||'',
@@ -438,10 +467,11 @@ function buildCashList(){
       const emri = furnitor ? furnitor.emri : (b.furnitor_emri||'Blerje');
       const totali = (b.items||[]).reduce((s,i)=>s+(i.sasia||1)*(i.cmimi||0), 0);
       return {
-        _id:      b.id,
-        _source:  'blerje',
-        lloji:    'dalje',
+        _id:       b.id,
+        _source:   'blerje',
+        lloji:     'dalje',
         pershkrim: emri,
+        kategoria: 'Blerje',
         data:      b.data,
         shuma:     totali,
         statusi:   b.statusi,
@@ -454,10 +484,11 @@ function buildCashList(){
   const shpenzimeEntries = (DB.shpenzime||[])
     .filter(s => (s.menyra_pages||'dore') === 'dore')
     .map(s => ({
-      _id:      s.id,
-      _source:  'shpenzim',
-      lloji:    'dalje',
+      _id:       s.id,
+      _source:   'shpenzim',
+      lloji:     'dalje',
       pershkrim: s.pershkrim||'Shpenzim',
+      kategoria: s.kategoria||'',
       data:      s.data,
       shuma:     s.shuma||0,
       statusi:   s.statusi,
@@ -469,10 +500,11 @@ function buildCashList(){
   const transferEntries = DB.arka
     .filter(x => x.lloji==='hyrje' && (x.menyra||'dore')==='banke' && x.burimi==='cash')
     .map(x => ({
-      _id:      x.id,
-      _source:  'transfer',
-      lloji:    'dalje',
+      _id:       x.id,
+      _source:   'transfer',
+      lloji:     'dalje',
       pershkrim: `Depozitim Bankë — ${x.pershkrim||''}`.trim(),
+      kategoria: 'Cash → Bankë',
       data:      x.data,
       shuma:     x.shuma||0,
       notes:     x.notes||'',
@@ -487,10 +519,11 @@ function buildBankaList(){
   const arkaEntries = DB.arka
     .filter(x => (x.menyra||'dore') === 'banke')
     .map(x => ({
-      _id:      x.id,
-      _source:  'arka',
-      lloji:    x.lloji,
+      _id:       x.id,
+      _source:   'arka',
+      lloji:     x.lloji,
       pershkrim: x.pershkrim||'',
+      kategoria: x.kategoria||'',
       data:      x.data,
       shuma:     x.shuma||0,
       notes:     x.notes||'',
@@ -504,14 +537,14 @@ function buildBankaList(){
       const furnitor = furnitoret.find(f=>f.id===b.furnitori_id);
       const emri = furnitor ? furnitor.emri : (b.furnitor_emri||'Blerje');
       const totali = (b.items||[]).reduce((s,i)=>s+(i.sasia||1)*(i.cmimi||0), 0);
-      return { _id:b.id, _source:'blerje', lloji:'dalje', pershkrim:emri, data:b.data, shuma:totali, statusi:b.statusi, notes:'', created:b.created };
+      return { _id:b.id, _source:'blerje', lloji:'dalje', pershkrim:emri, kategoria:'Blerje', data:b.data, shuma:totali, statusi:b.statusi, notes:'', created:b.created };
     });
 
   const shpenzimeEntries = (DB.shpenzime||[])
     .filter(s => (s.menyra_pages||'dore') === 'banke')
     .map(s => ({
       _id:s.id, _source:'shpenzim', lloji:'dalje', pershkrim:s.pershkrim||'Shpenzim',
-      data:s.data, shuma:s.shuma||0, statusi:s.statusi, notes:s.notes||'', created:s.created
+      kategoria:s.kategoria||'', data:s.data, shuma:s.shuma||0, statusi:s.statusi, notes:s.notes||'', created:s.created
     }));
 
   return [...arkaEntries, ...blerjetEntries, ...shpenzimeEntries];
@@ -520,17 +553,28 @@ function buildBankaList(){
 /* ── Render ──────────────────────────────────────────────────── */
 function renderList(){
   const q = document.getElementById('search').value.toLowerCase();
+  katFlt = document.getElementById('katFlt').value;
 
   let fullList = activeTab === 'cash' ? buildCashList() : buildBankaList();
+
+  // Rebuild category dropdown from current full list
+  const katSel = document.getElementById('katFlt');
+  const allKats = [...new Set(fullList.map(x=>x.kategoria).filter(Boolean))].sort();
+  const prevKat = katSel.value;
+  katSel.innerHTML = '<option value="">Të gjitha kategoritë</option>' +
+    allKats.map(k=>`<option${k===prevKat?' selected':''}>${k}</option>`).join('');
+  katFlt = katSel.value;
 
   // Apply filters
   let list = fullList.filter(x=>{
     if(typeFlt && x.lloji !== typeFlt) return false;
+    if(katFlt && (x.kategoria||'') !== katFlt) return false;
     if(!DP.matches(x.data)) return false;
     if(q){
       const srcLabel = x._source==='blerje'?'blerje':x._source==='shpenzim'?'shpenzim':x.lloji;
       const shumaStr = String(x.shuma||0);
-      if(!x.pershkrim.toLowerCase().includes(q) && !shumaStr.includes(q) && !srcLabel.includes(q) && !(x.notes||'').toLowerCase().includes(q)) return false;
+      const katStr   = (x.kategoria||'').toLowerCase();
+      if(!x.pershkrim.toLowerCase().includes(q) && !shumaStr.includes(q) && !srcLabel.includes(q) && !(x.notes||'').toLowerCase().includes(q) && !katStr.includes(q)) return false;
     }
     return true;
   });
@@ -637,6 +681,7 @@ function renderList(){
           </div>
           <div>
             <div class="td-name">${esc(x.pershkrim||'Pa përshkrim')}</div>
+            ${x.kategoria ? `<div style="font-size:11px;color:var(--muted);margin-top:1px">${esc(x.kategoria)}</div>` : ''}
             ${x.notes ? `<div style="font-size:11px;color:var(--muted);margin-top:1px">${esc(x.notes)}</div>` : ''}
           </div>
         </div>
