@@ -200,8 +200,7 @@ var _PG_SIZE = 16;
 var _pgShown = 0;
 var _pgList = [];
 
-function sbImgUrl(u){ return u||''; }
-function getPhotoSrc(u){ return sbImgUrl(u); }
+function getPhotoSrc(p){ if(!p) return ''; if(typeof p==='string') return p; return p.src||p.url||''; }
 
 // ── Load data ──────────────────────────────────────────
 async function init(){
