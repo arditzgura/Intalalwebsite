@@ -113,7 +113,13 @@
 <div class="kat-topbar">
   <span class="kat-logo">intal</span>
   <span class="kat-label">Katalog Çmimesh</span>
-  <div style="flex:1;display:flex;align-items:center;justify-content:flex-end;gap:8px;">
+  <div style="flex:1;display:flex;align-items:center;justify-content:flex-end;gap:10px;">
+    <!-- Language toggle -->
+    <div style="display:flex;align-items:center;background:#1e1e1e;border-radius:20px;overflow:hidden;flex-shrink:0;">
+      <button id="lang-al" onclick="setLang('al')" style="padding:4px 12px;border:none;background:#C8003E;color:#fff;font-size:11px;font-weight:700;cursor:pointer;letter-spacing:.5px;">AL</button>
+      <button id="lang-en" onclick="setLang('en')" style="padding:4px 12px;border:none;background:none;color:#555;font-size:11px;font-weight:700;cursor:pointer;letter-spacing:.5px;">EN</button>
+    </div>
+    <!-- Search -->
     <div id="search-wrap" style="display:flex;align-items:center;gap:6px;background:#1e1e1e;border-radius:20px;padding:4px 12px;transition:all .2s;">
       <i class="ri-search-line" style="color:#555;font-size:14px;flex-shrink:0;"></i>
       <input id="search-input" type="text" placeholder="Kërko..." autocomplete="off"
@@ -200,11 +206,44 @@
 
 <script>
 var _arts = [];
-var _prices = {};      // { id: { tregu:'', oferte:'' } }
+var _prices = {};
 var _currency = 'ALL';
 var _katSettings = [];
 var _activeSub = 'te-gjitha';
 var _activeKat = 'te-gjitha';
+var _lang = 'al';
+
+var _TR = {
+  al: {
+    'te-gjitha':'Të Gjitha','meshkuj':'Meshkuj','femra':'Femra','fëmijë':'Fëmijë','femijë':'Fëmijë','femije':'Fëmijë',
+    'mbathje':'Mbathje','kanatjere':'Kanatjere','kanatjere':'Kanatjere','bluze':'Bluze','çorape':'Çorape',
+    'artikujt':'Artikujt','kerko':'Kërko...'
+  },
+  en: {
+    'te-gjitha':'All','meshkuj':'Men','femra':'Women','fëmijë':'Kids','femijë':'Kids','femije':'Kids',
+    'mbathje':'Underwear','kanatjere':'Tank Top','bluze':'T-Shirt','çorape':'Socks',
+    'artikujt':'Products','kerko':'Search...'
+  }
+};
+
+function tr(val){
+  if(!val) return val;
+  var key = val.toLowerCase();
+  return (_TR[_lang] && _TR[_lang][key]) || val;
+}
+
+function setLang(lang){
+  _lang = lang;
+  try{ localStorage.setItem('intal_kat_lang', lang); }catch(e){}
+  document.getElementById('lang-al').style.background = lang==='al' ? '#C8003E' : 'none';
+  document.getElementById('lang-al').style.color = lang==='al' ? '#fff' : '#555';
+  document.getElementById('lang-en').style.background = lang==='en' ? '#C8003E' : 'none';
+  document.getElementById('lang-en').style.color = lang==='en' ? '#fff' : '#555';
+  var inp = document.getElementById('search-input');
+  if(inp) inp.placeholder = tr('kerko');
+  document.querySelector('.pg-breadcrumb').textContent = tr('artikujt');
+  buildFilterBar();
+}
 var _openList = [];
 var _openIdx = 0;
 var _PG_SIZE = 16;
@@ -238,6 +277,9 @@ async function init(){
     }catch(e){}
   }
 
+  // Restore saved language
+  try{ var sl=localStorage.getItem('intal_kat_lang'); if(sl) _lang=sl; }catch(e){}
+  setLang(_lang);
   buildFilterBar();
   renderGridAll(_arts, _activeSub, _activeKat);
 }
@@ -294,11 +336,11 @@ function buildFilterBar(){
   _arts.forEach(function(a){
     getArtSubs(a).forEach(function(v){ v=(v||'').trim(); if(v && subs.indexOf(v)===-1) subs.push(v); });
   });
-  // Row 1: "Të Gjitha" + gjinia buttons
+  // Row 1: "Të Gjitha/All" + gjinia buttons
   var row1 = '<div class="dfc-row">';
-  row1 += '<button class="dfc'+((!_activeSub||_activeSub==='te-gjitha')?' active':'')+'" onclick="setSub(\'te-gjitha\')">Të Gjitha</button>';
+  row1 += '<button class="dfc'+((!_activeSub||_activeSub==='te-gjitha')?' active':'')+'" onclick="setSub(\'te-gjitha\')">'+tr('te-gjitha')+'</button>';
   subs.forEach(function(s){
-    row1 += '<button class="dfc'+(s===_activeSub?' active':'')+'" data-sub="'+escHtml(s)+'" onclick="setSub(\''+s.replace(/'/g,"\\'")+'\')">'+s+'</button>';
+    row1 += '<button class="dfc'+(s===_activeSub?' active':'')+'" data-sub="'+escHtml(s)+'" onclick="setSub(\''+s.replace(/'/g,"\\'")+'\')">'+tr(s)+'</button>';
   });
   row1 += '</div>';
   // Row 2: kat buttons — only visible when a gjinia is selected
@@ -310,7 +352,7 @@ function buildFilterBar(){
     if(kats.length){
       row2 = '<div class="dfc-row dfc-row-sub">';
       kats.forEach(function(k){
-        row2 += '<button class="dfc-sub'+(k===_activeKat?' active':'')+'" data-kat="'+escHtml(k)+'" onclick="setKat(\''+k.replace(/'/g,"\\'")+'\')">'+k+'</button>';
+        row2 += '<button class="dfc-sub'+(k===_activeKat?' active':'')+'" data-kat="'+escHtml(k)+'" onclick="setKat(\''+k.replace(/'/g,"\\'")+'\')">'+tr(k)+'</button>';
       });
       row2 += '</div>';
     }
