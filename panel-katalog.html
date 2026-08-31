@@ -13,6 +13,8 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{--accent:#C8003E;--black:#111;--bg:#f4f4f4;--border:#e2e2e2;--muted:#888;}
 body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);min-height:100vh;display:flex;flex-direction:column;}
+
+/* TOP BAR */
 .top-bar{background:var(--black);height:48px;padding:0 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-shrink:0;}
 .logo{background:var(--accent);padding:3px 10px;border-radius:4px;font-weight:900;font-size:13px;color:#fff;letter-spacing:-.5px;}
 .top-title{font-size:11px;color:#888;letter-spacing:.8px;text-transform:uppercase;}
@@ -21,16 +23,32 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);min-height:10
 .btn-save:hover{opacity:.85;}
 .btn-back{font-size:11px;color:#aaa;text-decoration:none;border:1px solid #444;padding:5px 12px;border-radius:4px;}
 .btn-back:hover{color:#fff;border-color:#fff;}
-.link-box{background:#0d0d0d;padding:12px 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+
+/* CLIENT BAR */
+.client-bar{background:#0d0d0d;padding:10px 20px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.client-bar-label{font-size:10px;color:#555;letter-spacing:1px;text-transform:uppercase;white-space:nowrap;}
+.client-tabs{display:flex;gap:6px;flex-wrap:wrap;flex:1;}
+.client-tab{padding:5px 14px;border-radius:20px;border:1px solid #333;background:none;color:#777;font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;white-space:nowrap;}
+.client-tab:hover{border-color:#555;color:#ccc;}
+.client-tab.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+.btn-new-client{padding:5px 14px;border-radius:20px;border:1px dashed #444;background:none;color:#555;font-size:11px;cursor:pointer;white-space:nowrap;transition:all .15s;}
+.btn-new-client:hover{border-color:#888;color:#aaa;}
+.btn-del-client{padding:3px 8px;border-radius:4px;border:1px solid #333;background:none;color:#555;font-size:10px;cursor:pointer;margin-left:2px;}
+.btn-del-client:hover{border-color:#e00;color:#e00;}
+
+/* LINK BOX */
+.link-box{background:#0a0a0a;padding:10px 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;border-top:.5px solid #1a1a1a;}
 .link-label{font-size:10px;color:#555;letter-spacing:1px;text-transform:uppercase;white-space:nowrap;}
 .link-url{font-size:12px;color:#4ade80;font-family:monospace;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .btn-copy{font-size:10px;background:#222;color:#aaa;border:1px solid #333;padding:4px 12px;border-radius:4px;cursor:pointer;white-space:nowrap;}
 .btn-copy:hover{color:#fff;}
-/* CURRENCY TOGGLE */
+
+/* CURRENCY */
 .currency-bar{background:#fff;border-bottom:1px solid var(--border);padding:10px 20px;display:flex;align-items:center;gap:10px;}
 .currency-label{font-size:9px;font-weight:700;letter-spacing:2px;color:var(--muted);text-transform:uppercase;}
 .cur-btn{padding:5px 16px;border-radius:20px;border:1px solid var(--border);background:#fafafa;font-size:12px;font-weight:700;cursor:pointer;color:var(--black);transition:all .15s;letter-spacing:.5px;}
 .cur-btn.on{background:var(--black);color:#fff;border-color:var(--black);}
+
 /* FILTERS */
 .filters{background:#fff;border-bottom:1px solid var(--border);padding:10px 20px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
 .flabel{font-size:9px;font-weight:700;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-right:2px;}
@@ -38,6 +56,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);min-height:10
 .fb.on{background:var(--black);color:#fff;border-color:var(--black);}
 .vsep{width:1px;height:18px;background:var(--border);margin:0 2px;}
 .info-bar{padding:8px 20px;font-size:11px;color:var(--muted);}
+
 /* TABLE */
 .tbl-wrap{padding:0 20px 40px;overflow-x:auto;}
 table{width:100%;border-collapse:collapse;background:#fff;border-radius:8px;overflow:hidden;border:1px solid var(--border);}
@@ -54,6 +73,21 @@ tr:last-child td{border-bottom:none;}
 .price-inp.tregu{color:#555;}
 .price-inp.oferte{color:var(--accent);}
 .empty-row td{text-align:center;padding:40px;color:var(--muted);}
+
+/* NEW CLIENT MODAL */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:500;display:none;align-items:center;justify-content:center;}
+.modal-bg.open{display:flex;}
+.modal{background:#fff;border-radius:10px;padding:28px 28px 24px;width:min(380px,92vw);box-shadow:0 20px 60px rgba(0,0,0,.3);}
+.modal h3{font-size:15px;font-weight:700;margin-bottom:16px;}
+.modal label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px;}
+.modal input{width:100%;border:1px solid var(--border);border-radius:6px;padding:9px 12px;font-size:13px;outline:none;margin-bottom:12px;}
+.modal input:focus{border-color:var(--accent);}
+.modal-slug{font-size:11px;color:var(--muted);margin-bottom:16px;font-family:monospace;}
+.modal-slug span{color:#111;}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;}
+.btn-cancel{background:none;border:1px solid var(--border);border-radius:6px;padding:7px 16px;font-size:12px;cursor:pointer;}
+.btn-confirm{background:var(--accent);color:#fff;border:none;border-radius:6px;padding:7px 16px;font-size:12px;font-weight:700;cursor:pointer;}
+
 .toast{position:fixed;bottom:24px;right:24px;background:var(--black);color:#fff;padding:10px 18px;border-radius:6px;font-size:12px;display:none;z-index:999;}
 </style>
 </head>
@@ -70,12 +104,21 @@ tr:last-child td{border-bottom:none;}
   </div>
 </div>
 
+<!-- CLIENT TABS -->
+<div class="client-bar">
+  <span class="client-bar-label">Klientët</span>
+  <div class="client-tabs" id="client-tabs"></div>
+  <button class="btn-new-client" onclick="openNewClient()">+ Klient i Ri</button>
+</div>
+
+<!-- LINK BOX -->
 <div class="link-box">
   <span class="link-label">Linku i klientit</span>
   <span class="link-url" id="client-link"></span>
   <button class="btn-copy" onclick="copyLink()"><i class="ri-file-copy-line"></i> Kopjo</button>
 </div>
 
+<!-- CURRENCY -->
 <div class="currency-bar">
   <span class="currency-label">Monedha</span>
   <button class="cur-btn on" id="cur-ALL" onclick="setCurrency('ALL')">ALL</button>
@@ -83,6 +126,7 @@ tr:last-child td{border-bottom:none;}
   <span style="font-size:11px;color:var(--muted);margin-left:6px;">Monedha ruhet dhe shfaqet automatikisht te klienti</span>
 </div>
 
+<!-- FILTERS -->
 <div class="filters">
   <span class="flabel">Gjinia</span>
   <button class="fb on" onclick="setF('g','te-gjitha',this)">Të Gjitha</button>
@@ -113,16 +157,34 @@ tr:last-child td{border-bottom:none;}
   </table>
 </div>
 
+<!-- NEW CLIENT MODAL -->
+<div class="modal-bg" id="modal-bg" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <h3>Klient i Ri</h3>
+    <label>Emri i Klientit</label>
+    <input type="text" id="new-client-name" placeholder="p.sh. Alba, Marketi ABC..."
+      oninput="updateSlugPreview()" onkeydown="if(event.key==='Enter')confirmNewClient()">
+    <div class="modal-slug">Link: <span id="slug-preview"></span></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Anulo</button>
+      <button class="btn-confirm" onclick="confirmNewClient()">Krijo Linkun</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
 var _arts = [];
-var _prices = {};   // { id: { tregu:'', oferte:'' } }
+var _prices = {};
 var _currency = 'ALL';
 var _fg = 'te-gjitha', _fk = 'te-gjitha';
 
-document.getElementById('client-link').textContent = location.origin + '/katalog-klient';
+// Client management
+var _clients = [];   // [{name, slug, created}]
+var _activeSlug = 'default';  // 'default' = original katalog_cmime
 
+// ── Init ──────────────────────────────────────────────
 async function init(){
   await sbSyncCache();
   var cache = {};
@@ -132,27 +194,127 @@ async function init(){
     var raw = await sbGet('artikujt');
     if(raw) try{ _arts = JSON.parse(raw); }catch(e){}
   }
-  var pr = await sbGet('katalog_cmime');
+
+  // Load client list
+  var cl = await sbGet('katalog_klientet');
+  if(cl){ try{ _clients = JSON.parse(cl); }catch(e){} }
+
+  // Start with default client (original link)
+  await switchClient('default');
+  buildClientTabs();
+  buildKats();
+}
+
+// ── Client tabs ───────────────────────────────────────
+function buildClientTabs(){
+  var wrap = document.getElementById('client-tabs');
+  var html = '<button class="client-tab'+(_activeSlug==='default'?' active':'')+'" onclick="switchClient(\'default\')">Parazgjedhja</button>';
+  _clients.forEach(function(c){
+    html += '<span style="display:inline-flex;align-items:center;gap:2px;">'
+      +'<button class="client-tab'+(_activeSlug===c.slug?' active':'')+'" onclick="switchClient(\''+c.slug+'\')">'+escHtml(c.name)+'</button>'
+      +'<button class="btn-del-client" onclick="deleteClient(\''+c.slug+'\')" title="Fshi">✕</button>'
+      +'</span>';
+  });
+  wrap.innerHTML = html;
+}
+
+async function switchClient(slug){
+  // Save current inputs before switching
+  if(_activeSlug) collectInputs();
+
+  _activeSlug = slug;
+  _prices = {};
+  _currency = 'ALL';
+
+  var key = slug==='default' ? 'katalog_cmime' : 'katalog_cmime_'+slug;
+  var pr = await sbGet(key);
   if(pr){
     try{
       var obj = JSON.parse(pr);
-      _currency = obj._currency || 'ALL';
-      _prices = obj.prices || obj;  // backward compat
-      if(obj._currency) delete _prices._currency;
+      if(obj._currency){ _currency = obj._currency; _prices = obj.prices || {}; }
+      else { _prices = obj; }
     }catch(e){}
   }
+
   document.getElementById('cur-ALL').classList.toggle('on', _currency==='ALL');
   document.getElementById('cur-EUR').classList.toggle('on', _currency==='EUR');
-  buildKats();
+
+  var baseUrl = location.origin + '/katalog-klient.html';
+  var url = slug==='default' ? baseUrl : baseUrl+'?c='+encodeURIComponent(slug);
+  document.getElementById('client-link').textContent = url;
+
+  buildClientTabs();
   render();
 }
 
+function collectInputs(){
+  document.querySelectorAll('#tbody tr[data-id]').forEach(function(row){
+    var id=row.dataset.id;
+    var t=row.querySelector('[data-field="tregu"]');
+    var o=row.querySelector('[data-field="oferte"]');
+    if(t&&t.value){ if(!_prices[id])_prices[id]={}; _prices[id].tregu=t.value; }
+    else if(t&&!t.value && _prices[id]) delete _prices[id].tregu;
+    if(o&&o.value){ if(!_prices[id])_prices[id]={}; _prices[id].oferte=o.value; }
+    else if(o&&!o.value && _prices[id]) delete _prices[id].oferte;
+    if(_prices[id]&&!_prices[id].tregu&&!_prices[id].oferte) delete _prices[id];
+  });
+}
+
+// ── New client modal ──────────────────────────────────
+function openNewClient(){
+  document.getElementById('new-client-name').value='';
+  document.getElementById('slug-preview').textContent='';
+  document.getElementById('modal-bg').classList.add('open');
+  setTimeout(function(){ document.getElementById('new-client-name').focus(); }, 60);
+}
+function closeModal(){ document.getElementById('modal-bg').classList.remove('open'); }
+
+function toSlug(s){
+  return s.toLowerCase()
+    .replace(/ë/g,'e').replace(/ç/g,'c').replace(/ä/g,'a').replace(/ö/g,'o').replace(/ü/g,'u')
+    .replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
+}
+
+function updateSlugPreview(){
+  var name = document.getElementById('new-client-name').value.trim();
+  var slug = toSlug(name);
+  document.getElementById('slug-preview').textContent = slug
+    ? location.origin+'/katalog-klient.html?c='+slug
+    : '—';
+}
+
+async function confirmNewClient(){
+  var name = document.getElementById('new-client-name').value.trim();
+  if(!name){ document.getElementById('new-client-name').focus(); return; }
+  var slug = toSlug(name);
+  if(!slug){ showToast('Emri i pavlefshëm.'); return; }
+  if(_clients.some(function(c){ return c.slug===slug; })){
+    showToast('Ekziston tashmë një klient me këtë emër.'); return;
+  }
+  _clients.push({ name:name, slug:slug, created: new Date().toISOString() });
+  await sbSet('katalog_klientet', JSON.stringify(_clients));
+  closeModal();
+  await switchClient(slug);
+}
+
+async function deleteClient(slug){
+  if(!confirm('Fshi klientin "'+slug+'"? Çmimet e tyre do të fshihen gjithashtu.')) return;
+  _clients = _clients.filter(function(c){ return c.slug!==slug; });
+  await sbSet('katalog_klientet', JSON.stringify(_clients));
+  // Note: we leave the price key in Firebase (harmless orphan)
+  if(_activeSlug===slug) await switchClient('default');
+  else buildClientTabs();
+  showToast('✓ Klienti u fshi.');
+}
+
+// ── Currency ──────────────────────────────────────────
 function setCurrency(cur){
   _currency = cur;
   document.getElementById('cur-ALL').classList.toggle('on', cur==='ALL');
   document.getElementById('cur-EUR').classList.toggle('on', cur==='EUR');
 }
 
+// ── Filters ───────────────────────────────────────────
 function getArtSubs(a){
   var s=(a.sub&&(Array.isArray(a.sub)?a.sub.length:a.sub))?a.sub:a.gjinia;
   if(!s) return []; if(Array.isArray(s)) return s.filter(Boolean); return [s];
@@ -162,7 +324,6 @@ function getArtKats(a){
   if(!k) return []; if(Array.isArray(k)) return k.filter(Boolean); return [k];
 }
 function artMatchesSub(a, sub){ return getArtSubs(a).some(function(x){ return (x||'').toLowerCase()===sub.toLowerCase(); }); }
-function artKatArr(a){ return getArtKats(a); }
 function artMatchesKat(a, kat){ return getArtKats(a).some(function(x){ return (x||'').toLowerCase()===kat.toLowerCase(); }); }
 
 function buildKats(){
@@ -189,6 +350,7 @@ function filtered(){
   });
 }
 
+// ── Render table ──────────────────────────────────────
 function render(){
   var list = filtered();
   document.getElementById('info-bar').textContent = list.length + ' artikuj';
@@ -198,9 +360,9 @@ function render(){
     return;
   }
   tbody.innerHTML = list.map(function(a){
-    var _ph0 = (a.photos&&a.photos[0])||''; var ph = typeof _ph0==='string'?_ph0:(_ph0.src||_ph0.url||'');
+    var _ph0=(a.photos&&a.photos[0])||''; var ph=typeof _ph0==='string'?_ph0:(_ph0.src||_ph0.url||'');
     var pr = _prices[a.id] || {};
-    var katGj = [artKatArr(a).join(', '), Array.isArray(a.sub)?a.sub.join(', '):(a.sub||'')].filter(Boolean).join(' · ');
+    var katGj = [getArtKats(a).join(', '), getArtSubs(a).join(', ')].filter(Boolean).join(' · ');
     return '<tr data-id="'+a.id+'">'
       +'<td>'+(ph?'<img class="art-photo" src="'+ph+'" alt="">':'<div class="art-photo-ph">&#128085;</div>')+'</td>'
       +'<td><div class="art-name">'+escHtml(a.name)+'</div><div class="art-meta">'+(a.sizes||[]).join(', ')+'</div></td>'
@@ -219,28 +381,27 @@ function savePrice(id, field, val){
 }
 
 async function saveAll(){
-  document.querySelectorAll('#tbody tr[data-id]').forEach(function(row){
-    var id=row.dataset.id;
-    var t=row.querySelector('[data-field="tregu"]');
-    var o=row.querySelector('[data-field="oferte"]');
-    if(t&&t.value){ if(!_prices[id])_prices[id]={}; _prices[id].tregu=t.value; }
-    if(o&&o.value){ if(!_prices[id])_prices[id]={}; _prices[id].oferte=o.value; }
-  });
+  collectInputs();
+  var key = _activeSlug==='default' ? 'katalog_cmime' : 'katalog_cmime_'+_activeSlug;
   var payload = { _currency: _currency, prices: _prices };
-  await sbSet('katalog_cmime', JSON.stringify(payload));
-  showToast('✓ Çmimet u ruajtën!');
+  await sbSet(key, JSON.stringify(payload));
+  showToast('✓ Çmimet u ruajtën për "'+(
+    _activeSlug==='default' ? 'Parazgjedhja' :
+    (_clients.find(function(c){return c.slug===_activeSlug;})||{name:_activeSlug}).name
+  )+'"!');
 }
 
 function copyLink(){
-  var url = location.origin + '/katalog-klient';
-  navigator.clipboard.writeText(url).then(function(){ showToast('✓ Linku u kopjua!'); })
+  var url = document.getElementById('client-link').textContent;
+  navigator.clipboard.writeText(url)
+    .then(function(){ showToast('✓ Linku u kopjua!'); })
     .catch(function(){ prompt('Kopjo linkun:', url); });
 }
 
 function showToast(msg){
   var t=document.getElementById('toast');
   t.textContent=msg; t.style.display='block';
-  setTimeout(function(){ t.style.display='none'; }, 2500);
+  setTimeout(function(){ t.style.display='none'; }, 2800);
 }
 
 function escHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }

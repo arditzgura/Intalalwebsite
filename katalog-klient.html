@@ -267,8 +267,12 @@ async function init(){
     if(raw) try{ _arts = JSON.parse(raw); }catch(e){}
   }
 
-  // Load prices + currency
-  var pr = await sbGet('katalog_cmime');
+  // Detect client slug from URL ?c=SLUG
+  var _clientSlug = (new URLSearchParams(location.search)).get('c') || '';
+  var _priceKey = _clientSlug ? 'katalog_cmime_'+_clientSlug : 'katalog_cmime';
+
+  // Load prices + currency for this client
+  var pr = await sbGet(_priceKey);
   if(pr){
     try{
       var obj = JSON.parse(pr);
