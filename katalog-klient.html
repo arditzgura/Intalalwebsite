@@ -294,8 +294,9 @@ function buildFilterBar(){
   _arts.forEach(function(a){
     getArtSubs(a).forEach(function(v){ v=(v||'').trim(); if(v && subs.indexOf(v)===-1) subs.push(v); });
   });
-  // Row 1: gjinia buttons (no "Të Gjitha"), same as artikujt.html
+  // Row 1: "Të Gjitha" + gjinia buttons
   var row1 = '<div class="dfc-row">';
+  row1 += '<button class="dfc'+((!_activeSub||_activeSub==='te-gjitha')?' active':'')+'" onclick="setSub(\'te-gjitha\')">Të Gjitha</button>';
   subs.forEach(function(s){
     row1 += '<button class="dfc'+(s===_activeSub?' active':'')+'" data-sub="'+escHtml(s)+'" onclick="setSub(\''+s.replace(/'/g,"\\'")+'\')">'+s+'</button>';
   });
@@ -319,7 +320,7 @@ function buildFilterBar(){
 }
 
 function setSub(val){
-  _activeSub = (_activeSub===val) ? 'te-gjitha' : val;
+  _activeSub = (val==='te-gjitha') ? 'te-gjitha' : ((_activeSub===val) ? 'te-gjitha' : val);
   _activeKat = 'te-gjitha';
   buildFilterBar();
   renderGridAll(_arts, _activeSub, _activeKat);
