@@ -113,6 +113,17 @@
 <div class="kat-topbar">
   <span class="kat-logo">intal</span>
   <span class="kat-label">Katalog Çmimesh</span>
+  <div style="flex:1;display:flex;align-items:center;justify-content:flex-end;gap:8px;">
+    <div id="search-wrap" style="display:flex;align-items:center;gap:6px;background:#1e1e1e;border-radius:20px;padding:4px 12px;transition:all .2s;">
+      <i class="ri-search-line" style="color:#555;font-size:14px;flex-shrink:0;"></i>
+      <input id="search-input" type="text" placeholder="Kërko..." autocomplete="off"
+        style="background:none;border:none;outline:none;color:#fff;font-size:12px;width:130px;font-family:inherit;"
+        oninput="doSearch(this.value)"
+        onkeydown="if(event.key==='Escape'){this.value='';doSearch('');this.blur();}">
+      <button id="search-clear" onclick="document.getElementById('search-input').value='';doSearch('');document.getElementById('search-input').focus();"
+        style="display:none;background:none;border:none;color:#555;cursor:pointer;font-size:12px;padding:0;line-height:1;">✕</button>
+    </div>
+  </div>
 </div>
 
 <!-- PAGE HEADER -->
@@ -204,6 +215,8 @@ function getPhotoSrc(p){ if(!p) return ''; if(typeof p==='string') return p; ret
 
 // ── Load data ──────────────────────────────────────────
 async function init(){
+  // Always force-refresh so client always sees the latest articles
+  try{ localStorage.removeItem('intal_cache_ts'); }catch(e){}
   await sbSyncCache();
   var cache = {};
   try{ cache = JSON.parse(localStorage.getItem('intal_cache_v1')||'{}'); }catch(e){}
@@ -229,59 +242,105 @@ async function init(){
   renderGridAll(_arts, _activeSub, _activeKat);
 }
 
-// ── Filter bar ────────────────────────────────────────
+// ── Filter helpers — supports both sub/kat and gjinia/kategoria fields ──
+function getArtSubs(a){
+  var s = (a.sub&&(Array.isArray(a.sub)?a.sub.length:a.sub)) ? a.sub : a.gjinia;
+  if(!s) return [];
+  if(Array.isArray(s)) return s.filter(Boolean);
+  return [s];
+}
+function getArtKats(a){
+  var k = (a.kat&&(Array.isArray(a.kat)?a.kat.length:a.kat)) ? a.kat : a.kategoria;
+  if(!k) return [];
+  if(Array.isArray(k)) return k.filter(Boolean);
+  return [k];
+}
+function artMatchesCat(a, cat){
+  return getArtSubs(a).some(function(x){ return (x||'').toLowerCase()===cat.toLowerCase(); });
+}
+function artKatArr(a){ return getArtKats(a); }
+function artMatchesKat(a, kat){ return getArtKats(a).some(function(x){ return (x||'').toLowerCase()===kat.toLowerCase(); }); }
+function artMatchesQuery(a, q){
+  var lq = q.toLowerCase();
+  if((a.name||'').toLowerCase().indexOf(lq)>-1) return true;
+  if((a.code||'').toLowerCase().indexOf(lq)>-1) return true;
+  if(getArtKats(a).some(function(k){ return k.toLowerCase().indexOf(lq)>-1; })) return true;
+  if(getArtSubs(a).some(function(s){ return s.toLowerCase().indexOf(lq)>-1; })) return true;
+  return false;
+}
+
+// ── Search ─────────────────────────────────────────────
+function doSearch(q){
+  var clr = document.getElementById('search-clear');
+  if(clr) clr.style.display = q ? 'inline' : 'none';
+  var bar = document.getElementById('dyn-filter-bar');
+  if(q){
+    if(bar) bar.style.display = 'none';
+    var found = _arts.filter(function(a){ return artMatchesQuery(a, q); });
+    document.getElementById('pg-count').textContent = found.length+' ARTIKUJ';
+    _pgList = found; _pgShown = 0;
+    _pgRender(false);
+  } else {
+    if(bar) bar.style.display = 'flex';
+    renderGridAll(_arts, _activeSub, _activeKat);
+  }
+}
+
+// ── Filter bar (identical structure to artikujt.html) ─
 function buildFilterBar(){
   var bar = document.getElementById('dyn-filter-bar');
-  // Gather sub-categories (gjinia)
-  var subs = ['te-gjitha'];
-  var subSeen = {};
+  // Collect unique sub (gjinia) values
+  var subs = [];
   _arts.forEach(function(a){
-    var g = (a.gjinia||'').trim();
-    if(g && !subSeen[g]){ subs.push(g); subSeen[g]=true; }
+    getArtSubs(a).forEach(function(v){ v=(v||'').trim(); if(v && subs.indexOf(v)===-1) subs.push(v); });
   });
-  // Gather categories
-  var kats = ['te-gjitha'];
-  var katSeen = {};
-  _arts.forEach(function(a){
-    var k = (a.kategoria||'').trim();
-    if(k && !katSeen[k]){ kats.push(k); katSeen[k]=true; }
+  // Row 1: gjinia buttons (no "Të Gjitha"), same as artikujt.html
+  var row1 = '<div class="dfc-row">';
+  subs.forEach(function(s){
+    row1 += '<button class="dfc'+(s===_activeSub?' active':'')+'" data-sub="'+escHtml(s)+'" onclick="setSub(\''+s.replace(/'/g,"\\'")+'\')">'+s+'</button>';
   });
-
-  var subHtml = subs.map(function(s){
-    var label = s==='te-gjitha'?'Të Gjitha': s.charAt(0).toUpperCase()+s.slice(1);
-    return '<button class="dfc-sub'+(s===_activeSub?' active':'')+'" data-sub="'+s+'" onclick="setSub(\''+s+'\',this)">'+label+'</button>';
-  }).join('');
-
-  var katHtml = kats.map(function(k){
-    var label = k==='te-gjitha'?'Të Gjitha':k;
-    return '<button class="dfc'+(k===_activeKat?' active':'')+'" data-kat="'+k+'" onclick="setKat(\''+k+'\',this)">'+label+'</button>';
-  }).join('');
-
-  bar.innerHTML = '<div class="dfc-row dfc-row-sub">'+subHtml+'</div>'
-    +'<div class="dfc-row">'+katHtml+'</div>';
+  row1 += '</div>';
+  // Row 2: kat buttons — only visible when a gjinia is selected
+  var row2 = '';
+  if(_activeSub && _activeSub!=='te-gjitha'){
+    var subArts = _arts.filter(function(a){ return artMatchesCat(a, _activeSub); });
+    var kats = [];
+    subArts.forEach(function(a){ getArtKats(a).forEach(function(k){ k=(k||'').trim(); if(k && kats.indexOf(k)===-1) kats.push(k); }); });
+    if(kats.length){
+      row2 = '<div class="dfc-row dfc-row-sub">';
+      kats.forEach(function(k){
+        row2 += '<button class="dfc-sub'+(k===_activeKat?' active':'')+'" data-kat="'+escHtml(k)+'" onclick="setKat(\''+k.replace(/'/g,"\\'")+'\')">'+k+'</button>';
+      });
+      row2 += '</div>';
+    }
+  }
+  bar.innerHTML = row1 + row2;
   bar.style.display = 'flex';
 }
 
-function setSub(val, btn){
-  _activeSub = val;
-  document.querySelectorAll('[data-sub]').forEach(function(b){ b.classList.toggle('active', b.dataset.sub===val); });
+function setSub(val){
+  _activeSub = (_activeSub===val) ? 'te-gjitha' : val;
+  _activeKat = 'te-gjitha';
+  buildFilterBar();
   renderGridAll(_arts, _activeSub, _activeKat);
 }
-function setKat(val, btn){
-  _activeKat = val;
-  document.querySelectorAll('[data-kat]').forEach(function(b){ b.classList.toggle('active', b.dataset.kat===val); });
+function setKat(val){
+  _activeKat = (_activeKat===val) ? 'te-gjitha' : val;
+  buildFilterBar();
   renderGridAll(_arts, _activeSub, _activeKat);
 }
 
 // ── Grid rendering ────────────────────────────────────
 function renderGridAll(list, sub, kat){
   var show = list;
-  if(sub && sub!=='te-gjitha') show = show.filter(function(a){ return (a.gjinia||'').toLowerCase()===sub.toLowerCase(); });
-  if(kat && kat!=='te-gjitha') show = show.filter(function(a){ return (a.kategoria||'').toLowerCase()===kat.toLowerCase(); });
+  if(sub && sub!=='te-gjitha') show = show.filter(function(a){ return artMatchesCat(a, sub); });
+  if(kat && kat!=='te-gjitha') show = show.filter(function(a){ return artMatchesKat(a, kat); });
   document.getElementById('pg-count').textContent = show.length+' ARTIKUJ';
   _pgList = show; _pgShown = 0;
   _pgRender(false);
 }
+
+function escHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 
 function _pgRender(append){
   var grid = document.getElementById('dyn-grid');
@@ -375,7 +434,7 @@ window.openDet = function(id){
 function renderPopup(a){
   var photos = (a.photos||[]).map(getPhotoSrc).filter(Boolean);
   var idx = 0;
-  document.getElementById('art-detail-kat').textContent = [a.kategoria, a.gjinia].filter(Boolean).join(' · ').toUpperCase();
+  document.getElementById('art-detail-kat').textContent = [getArtKats(a).join(', '), getArtSubs(a).join(', ')].filter(Boolean).join(' · ').toUpperCase();
   document.getElementById('art-detail-code').textContent = a.code ? 'KOD: '+a.code : '';
   document.getElementById('art-detail-name').textContent = a.name||'';
   document.getElementById('art-detail-desc').textContent = a.pershkrim||'';

@@ -153,9 +153,21 @@ function setCurrency(cur){
   document.getElementById('cur-EUR').classList.toggle('on', cur==='EUR');
 }
 
+function getArtSubs(a){
+  var s=(a.sub&&(Array.isArray(a.sub)?a.sub.length:a.sub))?a.sub:a.gjinia;
+  if(!s) return []; if(Array.isArray(s)) return s.filter(Boolean); return [s];
+}
+function getArtKats(a){
+  var k=(a.kat&&(Array.isArray(a.kat)?a.kat.length:a.kat))?a.kat:a.kategoria;
+  if(!k) return []; if(Array.isArray(k)) return k.filter(Boolean); return [k];
+}
+function artMatchesSub(a, sub){ return getArtSubs(a).some(function(x){ return (x||'').toLowerCase()===sub.toLowerCase(); }); }
+function artKatArr(a){ return getArtKats(a); }
+function artMatchesKat(a, kat){ return getArtKats(a).some(function(x){ return (x||'').toLowerCase()===kat.toLowerCase(); }); }
+
 function buildKats(){
   var seen = {};
-  _arts.forEach(function(a){ var k=(a.kategoria||'').trim(); if(k) seen[k]=true; });
+  _arts.forEach(function(a){ getArtKats(a).forEach(function(k){ k=(k||'').trim(); if(k) seen[k]=true; }); });
   document.getElementById('kat-wrap').innerHTML = Object.keys(seen).sort().map(function(k){
     return '<button class="fb" onclick="setF(\'k\',\''+escHtml(k)+'\',this)" data-kg>'+escHtml(k)+'</button>';
   }).join('');
@@ -171,8 +183,8 @@ function setF(type, val, btn){
 
 function filtered(){
   return _arts.filter(function(a){
-    var gOk = _fg==='te-gjitha' || (a.gjinia||'').toLowerCase()===_fg.toLowerCase();
-    var kOk = _fk==='te-gjitha' || (a.kategoria||'').toLowerCase()===_fk.toLowerCase();
+    var gOk = _fg==='te-gjitha' || artMatchesSub(a, _fg);
+    var kOk = _fk==='te-gjitha' || artMatchesKat(a, _fk);
     return gOk && kOk;
   });
 }
@@ -186,9 +198,9 @@ function render(){
     return;
   }
   tbody.innerHTML = list.map(function(a){
-    var ph = (a.photos&&a.photos[0]) ? a.photos[0] : '';
+    var _ph0 = (a.photos&&a.photos[0])||''; var ph = typeof _ph0==='string'?_ph0:(_ph0.src||_ph0.url||'');
     var pr = _prices[a.id] || {};
-    var katGj = [a.kategoria, a.gjinia].filter(Boolean).join(' · ');
+    var katGj = [artKatArr(a).join(', '), Array.isArray(a.sub)?a.sub.join(', '):(a.sub||'')].filter(Boolean).join(' · ');
     return '<tr data-id="'+a.id+'">'
       +'<td>'+(ph?'<img class="art-photo" src="'+ph+'" alt="">':'<div class="art-photo-ph">&#128085;</div>')+'</td>'
       +'<td><div class="art-name">'+escHtml(a.name)+'</div><div class="art-meta">'+(a.sizes||[]).join(', ')+'</div></td>'
