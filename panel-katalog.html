@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Katalog Çmimesh — Intal Panel</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="js/firebase.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--accent:#C8003E;--black:#111;--bg:#f4f4f4;--border:#e2e2e2;--muted:#888;}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);min-height:100vh;display:flex;flex-direction:column;}
+
+.top-bar{background:var(--black);height:48px;padding:0 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-shrink:0;}
+.logo{background:var(--accent);padding:3px 10px;border-radius:4px;font-weight:900;font-size:13px;color:#fff;letter-spacing:-.5px;}
+.top-title{font-size:11px;color:#888;letter-spacing:.8px;text-transform:uppercase;}
+.top-actions{display:flex;gap:8px;align-items:center;}
+.btn-save{background:var(--accent);color:#fff;border:none;padding:6px 16px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:.5px;cursor:pointer;text-transform:uppercase;}
+.btn-save:hover{opacity:.85;}
+.btn-back{font-size:11px;color:#aaa;text-decoration:none;border:1px solid #444;padding:5px 12px;border-radius:4px;}
+.btn-back:hover{color:#fff;border-color:#fff;}
+
+/* LINK BOX */
+.link-box{background:#0d0d0d;padding:12px 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.link-label{font-size:10px;color:#555;letter-spacing:1px;text-transform:uppercase;white-space:nowrap;}
+.link-url{font-size:12px;color:#4ade80;font-family:monospace;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.btn-copy{font-size:10px;background:#222;color:#aaa;border:1px solid #333;padding:4px 12px;border-radius:4px;cursor:pointer;white-space:nowrap;}
+.btn-copy:hover{color:#fff;}
+
+/* FILTERS */
+.filters{background:#fff;border-bottom:1px solid var(--border);padding:12px 20px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
+.flabel{font-size:9px;font-weight:700;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-right:2px;}
+.fb{padding:5px 13px;border-radius:20px;border:1px solid var(--border);background:#fafafa;font-size:11px;font-weight:600;cursor:pointer;color:var(--black);transition:all .15s;}
+.fb.on{background:var(--black);color:#fff;border-color:var(--black);}
+.vsep{width:1px;height:18px;background:var(--border);margin:0 2px;}
+
+/* COUNT */
+.info-bar{padding:8px 20px;font-size:11px;color:var(--muted);}
+
+/* TABLE */
+.tbl-wrap{padding:0 20px 40px;overflow-x:auto;}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:8px;overflow:hidden;border:1px solid var(--border);}
+thead tr{background:#fafafa;border-bottom:1px solid var(--border);}
+th{padding:10px 14px;font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;text-align:left;white-space:nowrap;}
+td{padding:10px 14px;border-bottom:.5px solid var(--border);vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+
+.art-photo{width:48px;height:48px;object-fit:cover;border-radius:4px;background:#f0f0f0;display:block;}
+.art-photo-ph{width:48px;height:48px;border-radius:4px;background:#f0f0f0;display:flex;align-items:center;justify-content:center;font-size:18px;color:#ccc;}
+.art-name{font-size:12px;font-weight:700;color:var(--black);}
+.art-meta{font-size:10px;color:var(--muted);margin-top:2px;}
+
+.price-inp{width:100px;border:1px solid var(--border);border-radius:4px;padding:6px 8px;font-size:12px;font-weight:600;outline:none;text-align:right;background:#fafafa;}
+.price-inp:focus{border-color:var(--accent);background:#fff;}
+.price-inp.tregu{color:#555;}
+.price-inp.oferte{color:var(--accent);}
+
+.empty-row td{text-align:center;padding:40px;color:var(--muted);}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--black);color:#fff;padding:10px 18px;border-radius:6px;font-size:12px;display:none;z-index:999;}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div style="display:flex;align-items:center;gap:10px;">
+    <span class="logo">intal</span>
+    <span class="top-title">Katalog Çmimesh</span>
+  </div>
+  <div class="top-actions">
+    <a class="btn-back" href="panel-dashboard.html">← Dashboard</a>
+    <button class="btn-save" onclick="saveAll()">Ruaj Çmimet</button>
+  </div>
+</div>
+
+<div class="link-box">
+  <span class="link-label">Linku i klientit</span>
+  <span class="link-url" id="client-link"></span>
+  <button class="btn-copy" onclick="copyLink()"><i class="ri-file-copy-line"></i> Kopjo</button>
+</div>
+
+<div class="filters">
+  <span class="flabel">Gjinia</span>
+  <button class="fb on" onclick="setF('g','te-gjitha',this)">Të Gjitha</button>
+  <button class="fb" onclick="setF('g','meshkuj',this)">Meshkuj</button>
+  <button class="fb" onclick="setF('g','femra',this)">Femra</button>
+  <button class="fb" onclick="setF('g','femijë',this)">Fëmijë</button>
+  <div class="vsep"></div>
+  <span class="flabel">Kategoria</span>
+  <button class="fb on" onclick="setF('k','te-gjitha',this)" data-kg>Të Gjitha</button>
+  <span id="kat-wrap" style="display:flex;flex-wrap:wrap;gap:8px;"></span>
+</div>
+
+<div class="info-bar" id="info-bar">Duke ngarkuar...</div>
+
+<div class="tbl-wrap">
+  <table id="tbl">
+    <thead>
+      <tr>
+        <th style="width:56px;"></th>
+        <th>Artikulli</th>
+        <th>Kategoria</th>
+        <th>Gjinia</th>
+        <th>Kodi</th>
+        <th style="text-align:right;">Çmimi Tregut (ALL)</th>
+        <th style="text-align:right;">Çmimi Ofertë (ALL)</th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var _arts = [];
+var _prices = {};  // { id: { tregu:'', oferte:'' } }
+var _fg = 'te-gjitha', _fk = 'te-gjitha';
+
+var _origin = location.origin;
+document.getElementById('client-link').textContent = _origin + '/katalog-klient';
+
+async function init(){
+  await sbSyncCache();
+  var cache = {};
+  try{ cache = JSON.parse(localStorage.getItem('intal_cache_v1')||'{}'); }catch(e){}
+  _arts = cache.artikujt || [];
+  if(!_arts.length){
+    var raw = await sbGet('artikujt');
+    if(raw) try{ _arts = JSON.parse(raw); }catch(e){}
+  }
+  // Load saved prices
+  var pr = await sbGet('katalog_cmime');
+  if(pr) try{ _prices = JSON.parse(pr); }catch(e){}
+
+  buildKats();
+  render();
+}
+
+function buildKats(){
+  var seen = {};
+  _arts.forEach(function(a){ var k=(a.kategoria||'').trim(); if(k) seen[k]=true; });
+  document.getElementById('kat-wrap').innerHTML = Object.keys(seen).sort().map(function(k){
+    return '<button class="fb" onclick="setF(\'k\',\''+escHtml(k)+'\',this)" data-kg>'+escHtml(k)+'</button>';
+  }).join('');
+}
+
+function setF(type, val, btn){
+  if(type==='g') _fg=val; else _fk=val;
+  if(type==='g') document.querySelectorAll('.filters .fb:not([data-kg])').forEach(function(b){ b.classList.remove('on'); });
+  else document.querySelectorAll('.filters .fb[data-kg]').forEach(function(b){ b.classList.remove('on'); });
+  btn.classList.add('on');
+  render();
+}
+
+function filtered(){
+  return _arts.filter(function(a){
+    var gOk = _fg==='te-gjitha' || (a.gjinia||'').toLowerCase()===_fg.toLowerCase();
+    var kOk = _fk==='te-gjitha' || (a.kategoria||'').toLowerCase()===_fk.toLowerCase();
+    return gOk && kOk;
+  });
+}
+
+function render(){
+  var list = filtered();
+  document.getElementById('info-bar').textContent = list.length + ' artikuj';
+  var tbody = document.getElementById('tbody');
+  if(!list.length){
+    tbody.innerHTML='<tr class="empty-row"><td colspan="7">Nuk ka artikuj për këtë filtër.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = list.map(function(a){
+    var ph = (a.photos&&a.photos[0]) ? a.photos[0] : '';
+    var pr = _prices[a.id] || {};
+    return '<tr data-id="'+a.id+'">'
+      +'<td>'+(ph?'<img class="art-photo" src="'+ph+'" alt="">':'<div class="art-photo-ph">&#128085;</div>')+'</td>'
+      +'<td><div class="art-name">'+escHtml(a.name)+'</div><div class="art-meta">'+(a.sizes||[]).join(', ')+'</div></td>'
+      +'<td><span style="font-size:11px;">'+escHtml(a.kategoria||'—')+'</span></td>'
+      +'<td><span style="font-size:11px;">'+escHtml(a.gjinia||'—')+'</span></td>'
+      +'<td><span style="font-size:11px;color:var(--muted);">'+escHtml(a.code||'—')+'</span></td>'
+      +'<td style="text-align:right;"><input class="price-inp tregu" type="number" min="0" step="1" placeholder="—" value="'+(pr.tregu||'')+'" data-field="tregu" onchange="savePrice(\''+a.id+'\',\'tregu\',this.value)"></td>'
+      +'<td style="text-align:right;"><input class="price-inp oferte" type="number" min="0" step="1" placeholder="—" value="'+(pr.oferte||'')+'" data-field="oferte" onchange="savePrice(\''+a.id+'\',\'oferte\',this.value)"></td>'
+      +'</tr>';
+  }).join('');
+}
+
+function savePrice(id, field, val){
+  if(!_prices[id]) _prices[id]={};
+  if(val) _prices[id][field]=val;
+  else delete _prices[id][field];
+  if(!_prices[id].tregu && !_prices[id].oferte) delete _prices[id];
+}
+
+async function saveAll(){
+  // sync from inputs
+  document.querySelectorAll('#tbody tr[data-id]').forEach(function(row){
+    var id=row.dataset.id;
+    var t=row.querySelector('[data-field="tregu"]');
+    var o=row.querySelector('[data-field="oferte"]');
+    if(t&&t.value) { if(!_prices[id]) _prices[id]={}; _prices[id].tregu=t.value; }
+    if(o&&o.value) { if(!_prices[id]) _prices[id]={}; _prices[id].oferte=o.value; }
+  });
+  await sbSet('katalog_cmime', JSON.stringify(_prices));
+  showToast('✓ Çmimet u ruajtën!');
+}
+
+function copyLink(){
+  var url = _origin + '/katalog-klient';
+  navigator.clipboard.writeText(url).then(function(){
+    showToast('✓ Linku u kopjua!');
+  }).catch(function(){
+    prompt('Kopjo linkun:', url);
+  });
+}
+
+function showToast(msg){
+  var t=document.getElementById('toast');
+  t.textContent=msg; t.style.display='block';
+  setTimeout(function(){ t.style.display='none'; }, 2500);
+}
+
+function escHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+init();
+</script>
+</body>
+</html>

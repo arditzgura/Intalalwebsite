@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Katalog Çmimesh — Intal Underwear</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="css/main.css">
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="js/firebase.js"></script>
+<style>
+:root { --art-side:180px; }
+@media(max-width:900px){ :root { --art-side:60px; } }
+@media(max-width:600px){ :root { --art-side:20px; } }
+
+/* Simple top bar (jo navbar) */
+.kat-topbar { background:#111; height:52px; display:flex; align-items:center; padding:0 24px; gap:14px; position:sticky; top:0; z-index:200; }
+.kat-logo { background:#C8003E; padding:3px 10px; border-radius:4px; font-weight:900; font-size:13px; color:#fff; letter-spacing:-.5px; }
+.kat-label { font-size:10px; color:#555; letter-spacing:2px; text-transform:uppercase; }
+
+/* Page header */
+.pg-header { padding:10px var(--side) 8px; border-bottom:.5px solid var(--border); display:flex; align-items:baseline; justify-content:space-between; gap:12px; }
+.pg-breadcrumb { font-size:12px; font-weight:500; letter-spacing:.5px; color:var(--black); text-transform:uppercase; }
+#pg-count { font-size:11px; color:var(--muted); letter-spacing:1px; white-space:nowrap; }
+
+/* Filter bar */
+#dyn-filter-bar { background:#fff; border-bottom:.5px solid var(--border); padding:0 var(--art-side); display:flex; flex-direction:column; }
+@media(max-width:600px){ #dyn-filter-bar { padding:0 14px; } }
+.dfc-row { display:flex; flex-wrap:nowrap; gap:6px; padding:8px 0; align-items:center; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+.dfc-row::-webkit-scrollbar { display:none; }
+.dfc-row-sub { gap:2px; }
+.dfc-sub { background:none; border:none; padding:3px 8px; font-size:9px; font-weight:500; letter-spacing:.8px; text-transform:uppercase; cursor:pointer; color:var(--muted); transition:color .15s; white-space:nowrap; flex-shrink:0; }
+.dfc-sub:hover { color:var(--black); }
+.dfc-sub.active { color:var(--black); text-decoration:underline; text-underline-offset:3px; }
+.dfc { padding:4px 12px; border:.5px solid var(--border); background:#fff; font-size:10px; font-weight:500; letter-spacing:.8px; text-transform:uppercase; cursor:pointer; transition:all .15s; white-space:nowrap; flex-shrink:0; }
+.dfc:hover { border-color:var(--black); }
+.dfc.active { background:var(--black); color:#fff; border-color:var(--black); }
+
+/* Grid */
+#dyn-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:44px 36px; padding:24px var(--art-side) 80px; }
+@media(max-width:900px){ #dyn-grid { grid-template-columns:repeat(3,1fr); gap:36px 28px; } }
+@media(max-width:600px){ #dyn-grid { grid-template-columns:repeat(2,1fr); gap:20px 12px; padding:var(--side) var(--side) 50px; } .art-card-name{font-size:10px!important;letter-spacing:0!important;} .art-card-code{font-size:8.5px!important;letter-spacing:1px!important;} }
+
+/* Card */
+.art-card { cursor:pointer; position:relative; }
+.art-card-img-wrap { aspect-ratio:3/4; overflow:hidden; background:#f0f0f0; position:relative; }
+.art-card-img-wrap img { width:100%; height:100%; object-fit:cover; display:block; }
+.art-card-arr { position:absolute;top:50%;transform:translateY(-50%);background:none;border:none;padding:0;cursor:pointer;font-size:20px;line-height:1;opacity:0;transition:opacity .15s;pointer-events:none;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.6); }
+.art-card:hover .art-card-arr { opacity:1; pointer-events:auto; }
+.art-card-arr.l { left:8px; } .art-card-arr.r { right:8px; }
+
+/* Prices on card */
+.card-prices { padding:4px 10px 12px; }
+.card-price-tregu { font-size:11px; color:#aaa; text-decoration:line-through; letter-spacing:.3px; }
+.card-price-oferte { font-size:13px; font-weight:700; color:#C8003E; letter-spacing:-.2px; }
+.card-price-empty { font-size:11px; color:#ccc; letter-spacing:.5px; font-style:italic; }
+
+/* Article popup */
+#art-detail-overlay { display:none; position:fixed; inset:0; z-index:9000; background:rgba(255,255,255,.95); backdrop-filter:blur(8px); align-items:center; justify-content:center; padding:1.2rem; }
+#art-detail-box { background:#fff; border-radius:6px; width:min(1260px,96vw); height:min(820px,92vh); display:grid; grid-template-columns:58% 42%; overflow:hidden; box-shadow:0 24px 60px rgba(0,0,0,.45); position:relative; }
+#art-detail-photos { background:#f5f5f5; overflow:hidden; position:relative; display:flex; align-items:flex-start; justify-content:center; }
+#det-main-wrap { position:absolute; top:0; left:0; width:100%; height:100%; display:flex; align-items:center; justify-content:center; }
+#det-main-wrap img { object-fit:contain!important; width:100%!important; height:100%!important; display:block; object-position:center top!important; }
+@media(min-width:701px) and (max-width:1199px){ #art-detail-box { grid-template-columns:55% 45%; width:98vw; height:90vh; } }
+.art-det-side { display:flex; flex-direction:column; height:100%; }
+.art-det-info { flex:1; overflow-y:auto; padding:24px 28px 12px; }
+.art-det-info::-webkit-scrollbar { width:4px; } .art-det-info::-webkit-scrollbar-thumb { background:#ddd; }
+.art-det-footer { padding:14px 28px 20px; flex-shrink:0; border-top:.5px solid var(--border); display:flex; gap:8px; }
+.art-nav-btn { position:fixed; top:50%; background:none; border:none; color:#aaa; width:32px; height:32px; font-size:26px; display:flex; align-items:center; justify-content:center; cursor:pointer; z-index:9100; padding:0; }
+.art-nav-btn:disabled { opacity:.25; cursor:default; }
+.art-nav-btn.prev { left:calc(50% - min(630px,48vw) + 14px); }
+.art-nav-btn.next { right:calc(50% - min(630px,48vw) + 14px); }
+@media(max-width:700px){ .art-nav-btn { top:16px!important; } .art-nav-btn.prev { left:14px; } .art-nav-btn.next { right:14px; } }
+#art-det-thumbs { position:absolute; bottom:0; left:0; right:0; display:flex; gap:6px; padding:10px 14px; background:linear-gradient(transparent,rgba(0,0,0,.6)); overflow-x:auto; scrollbar-width:none; }
+#art-det-thumbs::-webkit-scrollbar { display:none; }
+.det-th { width:52px; height:52px; border-radius:3px; object-fit:cover; border:2px solid transparent; cursor:pointer; flex-shrink:0; opacity:.7; }
+.det-th:hover { opacity:1; }
+.det-th.active { border-color:#fff; opacity:1; }
+
+/* Price block inside popup */
+.popup-prices { margin:14px 0 6px; padding:14px 16px; background:#fafafa; border-radius:6px; border:.5px solid var(--border); display:flex; align-items:center; gap:20px; }
+.pp-tregu { display:flex; flex-direction:column; gap:2px; }
+.pp-tregu-label { font-size:9px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:#bbb; }
+.pp-tregu-val { font-size:16px; font-weight:500; color:#bbb; text-decoration:line-through; }
+.pp-oferte { display:flex; flex-direction:column; gap:2px; }
+.pp-oferte-label { font-size:9px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:#C8003E; }
+.pp-oferte-val { font-size:22px; font-weight:800; color:#C8003E; letter-spacing:-.5px; }
+.pp-divider { width:1px; height:36px; background:var(--border); }
+
+/* Mobile popup */
+@media(max-width:700px){
+  #art-detail-overlay { padding:2px 0 0!important; align-items:flex-end!important; overflow:hidden; }
+  #art-detail-box { grid-template-columns:1fr!important; grid-template-rows:auto 1fr!important; width:100vw!important; height:calc(100vh - 2px)!important; border-radius:10px 10px 0 0!important; box-shadow:none!important; overflow:hidden!important; max-width:100vw!important; }
+  #art-detail-photos { width:100vw!important; height:auto!important; max-height:60vh!important; position:relative!important; overflow:hidden!important; }
+  #det-main-wrap { position:relative!important; width:100%!important; height:auto!important; }
+  #det-main-wrap img { width:100%!important; height:auto!important; max-height:60vh!important; display:block!important; object-fit:cover!important; object-position:center top!important; }
+  #art-det-thumbs { position:absolute!important; bottom:0!important; left:0!important; right:0!important; z-index:2!important; }
+  .det-th { width:40px!important; height:40px!important; }
+}
+
+/* Footer */
+.simple-footer { background:#111; color:#fff; padding:32px var(--side) 24px; }
+.contact-locations { display:flex; gap:32px; flex-wrap:wrap; margin-bottom:20px; }
+.contact-loc-name { font-size:9px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#555; margin-bottom:4px; }
+.contact-loc-addr { font-size:12px; color:#888; line-height:1.5; }
+.contact-footer { border-top:.5px solid #222; padding-top:16px; display:flex; justify-content:space-between; align-items:center; font-size:11px; color:#444; }
+.contact-brand { font-weight:700; letter-spacing:.5px; color:#555; }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="kat-topbar">
+  <span class="kat-logo">intal</span>
+  <span class="kat-label">Katalog Çmimesh</span>
+</div>
+
+<!-- PAGE HEADER -->
+<div class="pg-header">
+  <span class="pg-breadcrumb">Artikujt</span>
+  <span id="pg-count"></span>
+</div>
+
+<!-- FILTER BAR -->
+<div id="dyn-filter-bar"></div>
+
+<!-- GRID -->
+<div id="dyn-grid"></div>
+<div id="load-more-wrap" style="display:none;text-align:center;padding:0 0 60px;">
+  <button onclick="loadMoreArts()" style="background:none;border:1.5px solid #1a1a1a;border-radius:4px;padding:11px 36px;font-size:11px;font-weight:700;letter-spacing:1.5px;cursor:pointer;text-transform:uppercase;">Ngarko më shumë</button>
+</div>
+
+<!-- POPUP -->
+<button class="art-nav-btn prev" id="art-prev-btn" onclick="navArt(-1)">&#8592;</button>
+<button class="art-nav-btn next" id="art-next-btn" onclick="navArt(1)">&#8594;</button>
+
+<div id="art-detail-overlay" onclick="if(event.target===this)closeArtDetail()">
+  <div id="art-detail-box">
+    <div id="art-detail-photos"></div>
+    <div class="art-det-side">
+      <div class="art-det-info">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+          <p id="art-detail-kat" style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin:0;"></p>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <p id="art-detail-code" style="font-size:9px;color:var(--muted);letter-spacing:1px;margin:0;"></p>
+            <button onclick="closeArtDetail()" style="background:#f0f0f0;border:none;border-radius:50%;width:26px;height:26px;cursor:pointer;font-size:13px;line-height:26px;text-align:center;">&#10005;</button>
+          </div>
+        </div>
+        <h2 id="art-detail-name" style="font-size:clamp(16px,1.8vw,22px);font-weight:600;letter-spacing:-.4px;margin:0 0 8px;line-height:1.2;color:#111;"></h2>
+        <p id="art-detail-desc" style="font-size:12px;line-height:1.65;color:#555;margin:0;"></p>
+
+        <!-- PRICES IN POPUP -->
+        <div id="popup-prices" class="popup-prices" style="display:none;">
+          <div class="pp-tregu">
+            <span class="pp-tregu-label">Çmimi Tregut</span>
+            <span class="pp-tregu-val" id="pp-tregu-val">—</span>
+          </div>
+          <div class="pp-divider"></div>
+          <div class="pp-oferte">
+            <span class="pp-oferte-label">Çmimi Ofertë</span>
+            <span class="pp-oferte-val" id="pp-oferte-val">—</span>
+          </div>
+        </div>
+
+        <div style="height:.5px;background:var(--border);margin:14px 0;"></div>
+        <div id="art-detail-masat" style="margin-bottom:16px;"></div>
+        <div id="art-detail-ngjyrat" style="margin-bottom:16px;"></div>
+        <div id="art-detail-perberja"></div>
+      </div>
+      <div class="art-det-footer">
+        <a href="https://wa.me/355692776636" target="_blank" style="flex:1;background:#111;color:#fff;border:none;padding:11px 10px;font-size:10px;font-weight:500;letter-spacing:1.2px;text-transform:uppercase;cursor:pointer;text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center;">Na Kontaktoni</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="simple-footer">
+  <div class="contact-locations">
+    <a href="https://maps.google.com/?q=Rrobaqep%C3%ABsi+INTAL,+Rruga+Arbanes,+Vaqarr,+Tiran%C3%AB+1035" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;">
+      <p class="contact-loc-name">Selia Kryesore</p>
+      <p class="contact-loc-addr">Rrobaqepësi INTAL, Rruga Arbanes, Vaqarr, Tiranë 1035</p>
+    </a>
+    <a href="https://maps.google.com/?q=Intal,+Rruga+5+Maji+67%2F1,+Tiran%C3%AB+1032" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;">
+      <p class="contact-loc-name">Dyqani</p>
+      <p class="contact-loc-addr">Intal, Rruga 5 Maji 67/1, Tiranë 1032</p>
+    </a>
+  </div>
+  <div class="contact-footer">
+    <span class="contact-brand">Intal UNDERWEAR</span>
+    <span>© 2025 Intal Albania</span>
+  </div>
+</div>
+
+<script>
+var _arts = [];
+var _prices = {};      // { id: { tregu:'', oferte:'' } }
+var _katSettings = [];
+var _activeSub = 'te-gjitha';
+var _activeKat = 'te-gjitha';
+var _openList = [];
+var _openIdx = 0;
+var _PG_SIZE = 16;
+var _pgShown = 0;
+var _pgList = [];
+
+function sbImgUrl(u){ return u||''; }
+function getPhotoSrc(u){ return sbImgUrl(u); }
+
+// ── Load data ──────────────────────────────────────────
+async function init(){
+  await sbSyncCache();
+  var cache = {};
+  try{ cache = JSON.parse(localStorage.getItem('intal_cache_v1')||'{}'); }catch(e){}
+  _arts = cache.artikujt || [];
+  _katSettings = cache.kategoriSettings || [];
+
+  if(!_arts.length){
+    var raw = await sbGet('artikujt');
+    if(raw) try{ _arts = JSON.parse(raw); }catch(e){}
+  }
+
+  // Load prices
+  var pr = await sbGet('katalog_cmime');
+  if(pr) try{ _prices = JSON.parse(pr); }catch(e){}
+
+  buildFilterBar();
+  renderGridAll(_arts, _activeSub, _activeKat);
+}
+
+// ── Filter bar ────────────────────────────────────────
+function buildFilterBar(){
+  var bar = document.getElementById('dyn-filter-bar');
+  // Gather sub-categories (gjinia)
+  var subs = ['te-gjitha'];
+  var subSeen = {};
+  _arts.forEach(function(a){
+    var g = (a.gjinia||'').trim();
+    if(g && !subSeen[g]){ subs.push(g); subSeen[g]=true; }
+  });
+  // Gather categories
+  var kats = ['te-gjitha'];
+  var katSeen = {};
+  _arts.forEach(function(a){
+    var k = (a.kategoria||'').trim();
+    if(k && !katSeen[k]){ kats.push(k); katSeen[k]=true; }
+  });
+
+  var subHtml = subs.map(function(s){
+    var label = s==='te-gjitha'?'Të Gjitha': s.charAt(0).toUpperCase()+s.slice(1);
+    return '<button class="dfc-sub'+(s===_activeSub?' active':'')+'" data-sub="'+s+'" onclick="setSub(\''+s+'\',this)">'+label+'</button>';
+  }).join('');
+
+  var katHtml = kats.map(function(k){
+    var label = k==='te-gjitha'?'Të Gjitha':k;
+    return '<button class="dfc'+(k===_activeKat?' active':'')+'" data-kat="'+k+'" onclick="setKat(\''+k+'\',this)">'+label+'</button>';
+  }).join('');
+
+  bar.innerHTML = '<div class="dfc-row dfc-row-sub">'+subHtml+'</div>'
+    +'<div class="dfc-row">'+katHtml+'</div>';
+  bar.style.display = 'flex';
+}
+
+function setSub(val, btn){
+  _activeSub = val;
+  document.querySelectorAll('[data-sub]').forEach(function(b){ b.classList.toggle('active', b.dataset.sub===val); });
+  renderGridAll(_arts, _activeSub, _activeKat);
+}
+function setKat(val, btn){
+  _activeKat = val;
+  document.querySelectorAll('[data-kat]').forEach(function(b){ b.classList.toggle('active', b.dataset.kat===val); });
+  renderGridAll(_arts, _activeSub, _activeKat);
+}
+
+// ── Grid rendering ────────────────────────────────────
+function renderGridAll(list, sub, kat){
+  var show = list;
+  if(sub && sub!=='te-gjitha') show = show.filter(function(a){ return (a.gjinia||'').toLowerCase()===sub.toLowerCase(); });
+  if(kat && kat!=='te-gjitha') show = show.filter(function(a){ return (a.kategoria||'').toLowerCase()===kat.toLowerCase(); });
+  document.getElementById('pg-count').textContent = show.length+' ARTIKUJ';
+  _pgList = show; _pgShown = 0;
+  _pgRender(false);
+}
+
+function _pgRender(append){
+  var grid = document.getElementById('dyn-grid');
+  var wrap = document.getElementById('load-more-wrap');
+  var slice = _pgList.slice(append ? _pgShown : 0, _pgShown + _PG_SIZE);
+  if(!append){
+    if(!_pgList.length){ grid.innerHTML='<div style="grid-column:1/-1;padding:80px 0;text-align:center;color:var(--muted);font-size:13px;">Nuk ka artikuj.</div>'; wrap.style.display='none'; _pgShown=0; return; }
+    grid.innerHTML = slice.map(buildCard).join('');
+    _pgShown = slice.length;
+  } else {
+    grid.innerHTML += slice.map(buildCard).join('');
+    _pgShown += slice.length;
+  }
+  wrap.style.display = _pgShown < _pgList.length ? 'block' : 'none';
+}
+window.loadMoreArts = function(){ _pgRender(true); };
+
+function buildCard(a){
+  var photos = (a.photos||[]).map(getPhotoSrc).filter(Boolean);
+  var img0 = photos[0]||'';
+  var hasM = photos.length>1;
+  var pa = hasM?' data-photos=\''+JSON.stringify(photos).replace(/'/g,'&#39;')+'\'':'';
+  var imgEl = img0
+    ? '<img src="'+img0+'" data-idx="0" style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy">'
+    : '<div style="width:100%;height:100%;background:#e0e0e0;display:flex;align-items:center;justify-content:center;font-size:40px;">&#128085;</div>';
+  var arr = hasM?'<button class="art-card-arr l" onclick="cardStep(event,this,-1)">&#8592;</button><button class="art-card-arr r" onclick="cardStep(event,this,1)">&#8594;</button>':'';
+
+  var pr = _prices[a.id]||{};
+  var priceHtml = '';
+  if(pr.tregu || pr.oferte){
+    priceHtml = '<div class="card-prices">'
+      +(pr.tregu?'<div class="card-price-tregu">'+pr.tregu+' ALL</div>':'')
+      +(pr.oferte?'<div class="card-price-oferte">'+pr.oferte+' ALL</div>':'')
+      +'</div>';
+  }
+
+  return '<div class="art-card" onclick="openDet(\''+a.id+'\')">'
+    +'<div class="art-card-img-wrap"'+pa+'>'+imgEl+arr+'</div>'
+    +'<div style="padding:6px 10px 4px;display:flex;justify-content:space-between;align-items:flex-start;gap:6px;">'
+    +'<p class="art-card-name" style="font-size:13px;font-weight:500;letter-spacing:-.2px;color:var(--black);margin:0;word-break:break-word;">'+a.name+'</p>'
+    +(a.code?'<p class="art-card-code" style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin:0;white-space:nowrap;flex-shrink:0;padding-top:1px;">Art: '+a.code+'</p>':'')
+    +'</div>'
+    +priceHtml
+    +'</div>';
+}
+
+// ── Card hover/swipe ─────────────────────────────────
+window.cardStep = function(e, btn, dir){
+  e.stopPropagation();
+  var wrap = btn.parentElement;
+  var idx = parseInt(wrap.querySelector('img').dataset.idx||0);
+  var photos = JSON.parse(wrap.dataset.photos||'[]');
+  var ni = (idx+dir+photos.length)%photos.length;
+  wrap.querySelector('img').src = photos[ni];
+  wrap.querySelector('img').dataset.idx = ni;
+};
+
+// ── Popup ─────────────────────────────────────────────
+window.openDet = function(id){
+  var a = _arts.find(function(x){ return x.id===id; });
+  if(!a) return;
+  _openList = _pgList;
+  _openIdx = _pgList.findIndex(function(x){ return x.id===id; });
+  renderPopup(a);
+  var ov = document.getElementById('art-detail-overlay');
+  ov.style.display='flex';
+  document.body.style.overflow='hidden';
+  updateNavBtns();
+};
+
+function renderPopup(a){
+  var photos = (a.photos||[]).map(getPhotoSrc).filter(Boolean);
+  var idx = 0;
+  document.getElementById('art-detail-kat').textContent = [a.kategoria, a.gjinia].filter(Boolean).join(' · ').toUpperCase();
+  document.getElementById('art-detail-code').textContent = a.code ? 'KOD: '+a.code : '';
+  document.getElementById('art-detail-name').textContent = a.name||'';
+  document.getElementById('art-detail-desc').textContent = a.pershkrim||'';
+
+  // Prices
+  var pr = _prices[a.id]||{};
+  var ppEl = document.getElementById('popup-prices');
+  if(pr.tregu || pr.oferte){
+    document.getElementById('pp-tregu-val').textContent = pr.tregu ? pr.tregu+' ALL' : '—';
+    document.getElementById('pp-oferte-val').textContent = pr.oferte ? pr.oferte+' ALL' : '—';
+    ppEl.style.display = 'flex';
+  } else {
+    ppEl.style.display = 'none';
+  }
+
+  // Sizes
+  var masatEl = document.getElementById('art-detail-masat');
+  if(a.sizes && a.sizes.length){
+    masatEl.innerHTML = '<p style="font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin:0 0 8px;">MASAT</p>'
+      +'<div style="display:flex;flex-wrap:wrap;gap:6px;">'+a.sizes.map(function(s){
+        return '<span style="padding:6px 14px;border:.5px solid var(--border);border-radius:2px;font-size:11px;font-weight:500;letter-spacing:.5px;">'+s+'</span>';
+      }).join('')+'</div>';
+  } else { masatEl.innerHTML=''; }
+
+  // Colors
+  var ngj = document.getElementById('art-detail-ngjyrat');
+  if(a.ngjyrat && a.ngjyrat.length){
+    ngj.innerHTML='<p style="font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin:0 0 8px;">NGJYRAT</p>'
+      +'<div style="display:flex;flex-wrap:wrap;gap:6px;">'+a.ngjyrat.map(function(c){
+        return '<span style="padding:4px 10px;border:.5px solid var(--border);font-size:11px;">'+c+'</span>';
+      }).join('')+'</div>';
+  } else { ngj.innerHTML=''; }
+
+  // Photos
+  var mi = photos.length
+    ? '<img src="'+photos[idx]+'" style="width:100%;height:100%;object-fit:contain;display:block;">'
+    : '<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:60px;">&#128085;</div>';
+  var th = '';
+  if(photos.length>1){
+    th='<div id="art-det-thumbs">'+photos.map(function(ph,i){
+      return '<img src="'+ph+'" class="det-th'+(i===0?' active':'')+'" onclick="setPI('+i+')" alt="">';
+    }).join('')+'</div>';
+  }
+  document.getElementById('art-detail-photos').innerHTML='<div id="det-main-wrap">'+mi+'</div>'+th;
+}
+
+window.setPI = function(i){
+  var photos = Array.from(document.querySelectorAll('.det-th')).map(function(t){ return t.src; });
+  if(!photos.length) return;
+  var wrap = document.getElementById('det-main-wrap');
+  if(wrap) { var img=wrap.querySelector('img'); if(img) img.src=photos[i]; }
+  document.querySelectorAll('.det-th').forEach(function(t,j){ t.classList.toggle('active',j===i); });
+};
+
+window.closeArtDetail = function(){
+  document.getElementById('art-detail-overlay').style.display='none';
+  document.body.style.overflow='';
+};
+
+window.navArt = function(dir){
+  _openIdx = Math.max(0, Math.min(_openList.length-1, _openIdx+dir));
+  renderPopup(_openList[_openIdx]);
+  updateNavBtns();
+};
+
+function updateNavBtns(){
+  document.getElementById('art-prev-btn').disabled = _openIdx<=0;
+  document.getElementById('art-next-btn').disabled = _openIdx>=_openList.length-1;
+}
+
+document.addEventListener('keydown', function(e){
+  var ov = document.getElementById('art-detail-overlay');
+  if(ov.style.display!=='flex') return;
+  if(e.key==='Escape') closeArtDetail();
+  if(e.key==='ArrowLeft') navArt(-1);
+  if(e.key==='ArrowRight') navArt(1);
+});
+
+init();
+</script>
+</body>
+</html>
