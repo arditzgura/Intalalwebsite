@@ -53,11 +53,10 @@
 .art-card:hover .art-card-arr { opacity:1; pointer-events:auto; }
 .art-card-arr.l { left:8px; } .art-card-arr.r { right:8px; }
 
-/* Prices on card */
-.card-prices { padding:4px 10px 12px; }
-.card-price-tregu { font-size:11px; color:#aaa; text-decoration:line-through; letter-spacing:.3px; }
+/* Prices on card — same line, same size */
+.card-prices { padding:4px 10px 12px; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.card-price-tregu { font-size:13px; font-weight:600; color:#bbb; text-decoration:line-through; letter-spacing:-.2px; }
 .card-price-oferte { font-size:13px; font-weight:700; color:#C8003E; letter-spacing:-.2px; }
-.card-price-empty { font-size:11px; color:#ccc; letter-spacing:.5px; font-style:italic; }
 
 /* Article popup */
 #art-detail-overlay { display:none; position:fixed; inset:0; z-index:9000; background:rgba(255,255,255,.95); backdrop-filter:blur(8px); align-items:center; justify-content:center; padding:1.2rem; }
@@ -81,15 +80,12 @@
 .det-th:hover { opacity:1; }
 .det-th.active { border-color:#fff; opacity:1; }
 
-/* Price block inside popup */
-.popup-prices { margin:14px 0 6px; padding:14px 16px; background:#fafafa; border-radius:6px; border:.5px solid var(--border); display:flex; align-items:center; gap:20px; }
-.pp-tregu { display:flex; flex-direction:column; gap:2px; }
-.pp-tregu-label { font-size:9px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:#bbb; }
-.pp-tregu-val { font-size:16px; font-weight:500; color:#bbb; text-decoration:line-through; }
-.pp-oferte { display:flex; flex-direction:column; gap:2px; }
-.pp-oferte-label { font-size:9px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:#C8003E; }
-.pp-oferte-val { font-size:22px; font-weight:800; color:#C8003E; letter-spacing:-.5px; }
-.pp-divider { width:1px; height:36px; background:var(--border); }
+/* Price block inside popup — same line, same size */
+.popup-prices { margin:14px 0 6px; padding:12px 16px; background:#fafafa; border-radius:6px; border:.5px solid var(--border); display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.pp-label { font-size:9px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:#bbb; margin-right:2px; }
+.pp-tregu-val { font-size:18px; font-weight:600; color:#bbb; text-decoration:line-through; letter-spacing:-.3px; }
+.pp-arrow { font-size:14px; color:#ccc; }
+.pp-oferte-val { font-size:18px; font-weight:800; color:#C8003E; letter-spacing:-.3px; }
 
 /* Mobile popup */
 @media(max-width:700px){
@@ -155,15 +151,10 @@
 
         <!-- PRICES IN POPUP -->
         <div id="popup-prices" class="popup-prices" style="display:none;">
-          <div class="pp-tregu">
-            <span class="pp-tregu-label">Çmimi Tregut</span>
-            <span class="pp-tregu-val" id="pp-tregu-val">—</span>
-          </div>
-          <div class="pp-divider"></div>
-          <div class="pp-oferte">
-            <span class="pp-oferte-label">Çmimi Ofertë</span>
-            <span class="pp-oferte-val" id="pp-oferte-val">—</span>
-          </div>
+          <span class="pp-label">Çmimi</span>
+          <span class="pp-tregu-val" id="pp-tregu-val"></span>
+          <span class="pp-arrow">→</span>
+          <span class="pp-oferte-val" id="pp-oferte-val"></span>
         </div>
 
         <div style="height:.5px;background:var(--border);margin:14px 0;"></div>
@@ -199,6 +190,7 @@
 <script>
 var _arts = [];
 var _prices = {};      // { id: { tregu:'', oferte:'' } }
+var _currency = 'ALL';
 var _katSettings = [];
 var _activeSub = 'te-gjitha';
 var _activeKat = 'te-gjitha';
@@ -224,9 +216,15 @@ async function init(){
     if(raw) try{ _arts = JSON.parse(raw); }catch(e){}
   }
 
-  // Load prices
+  // Load prices + currency
   var pr = await sbGet('katalog_cmime');
-  if(pr) try{ _prices = JSON.parse(pr); }catch(e){}
+  if(pr){
+    try{
+      var obj = JSON.parse(pr);
+      if(obj._currency){ _currency = obj._currency; _prices = obj.prices || {}; }
+      else { _prices = obj; }
+    }catch(e){}
+  }
 
   buildFilterBar();
   renderGridAll(_arts, _activeSub, _activeKat);
@@ -310,19 +308,22 @@ function buildCard(a){
   var imgEl = img0
     ? '<img src="'+img0+'" data-idx="0" style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy">'
     : '<div style="width:100%;height:100%;background:#e0e0e0;display:flex;align-items:center;justify-content:center;font-size:40px;">&#128085;</div>';
+  var hoverAttr = hasM?' onmouseenter="hoverEnter(this)" onmouseleave="hoverLeave(this)"':'';
   var arr = hasM?'<button class="art-card-arr l" onclick="cardStep(event,this,-1)">&#8592;</button><button class="art-card-arr r" onclick="cardStep(event,this,1)">&#8594;</button>':'';
 
   var pr = _prices[a.id]||{};
+  var cur = _currency || 'ALL';
   var priceHtml = '';
   if(pr.tregu || pr.oferte){
     priceHtml = '<div class="card-prices">'
-      +(pr.tregu?'<div class="card-price-tregu">'+pr.tregu+' ALL</div>':'')
-      +(pr.oferte?'<div class="card-price-oferte">'+pr.oferte+' ALL</div>':'')
+      +(pr.tregu?'<span class="card-price-tregu">'+pr.tregu+' '+cur+'</span>':'')
+      +(pr.tregu && pr.oferte?'<span style="color:#ccc;font-size:12px;">→</span>':'')
+      +(pr.oferte?'<span class="card-price-oferte">'+pr.oferte+' '+cur+'</span>':'')
       +'</div>';
   }
 
   return '<div class="art-card" onclick="openDet(\''+a.id+'\')">'
-    +'<div class="art-card-img-wrap"'+pa+'>'+imgEl+arr+'</div>'
+    +'<div class="art-card-img-wrap"'+pa+hoverAttr+'>'+imgEl+arr+'</div>'
     +'<div style="padding:6px 10px 4px;display:flex;justify-content:space-between;align-items:flex-start;gap:6px;">'
     +'<p class="art-card-name" style="font-size:13px;font-weight:500;letter-spacing:-.2px;color:var(--black);margin:0;word-break:break-word;">'+a.name+'</p>'
     +(a.code?'<p class="art-card-code" style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin:0;white-space:nowrap;flex-shrink:0;padding-top:1px;">Art: '+a.code+'</p>':'')
@@ -332,6 +333,23 @@ function buildCard(a){
 }
 
 // ── Card hover/swipe ─────────────────────────────────
+var _hoverTimers = {};
+window.hoverEnter = function(wrap){
+  var photos = JSON.parse(wrap.dataset.photos||'[]');
+  if(photos.length<2) return;
+  var idx = 0;
+  _hoverTimers[wrap] = setInterval(function(){
+    idx = (idx+1)%photos.length;
+    var img = wrap.querySelector('img');
+    if(img){ img.src=photos[idx]; img.dataset.idx=idx; }
+  }, 900);
+};
+window.hoverLeave = function(wrap){
+  clearInterval(_hoverTimers[wrap]);
+  var photos = JSON.parse(wrap.dataset.photos||'[]');
+  if(photos[0]){ var img=wrap.querySelector('img'); if(img){ img.src=photos[0]; img.dataset.idx=0; } }
+};
+
 window.cardStep = function(e, btn, dir){
   e.stopPropagation();
   var wrap = btn.parentElement;
@@ -365,10 +383,12 @@ function renderPopup(a){
 
   // Prices
   var pr = _prices[a.id]||{};
+  var cur = _currency || 'ALL';
   var ppEl = document.getElementById('popup-prices');
   if(pr.tregu || pr.oferte){
-    document.getElementById('pp-tregu-val').textContent = pr.tregu ? pr.tregu+' ALL' : '—';
-    document.getElementById('pp-oferte-val').textContent = pr.oferte ? pr.oferte+' ALL' : '—';
+    document.getElementById('pp-tregu-val').textContent = pr.tregu ? pr.tregu+' '+cur : '';
+    document.getElementById('pp-oferte-val').textContent = pr.oferte ? pr.oferte+' '+cur : '';
+    document.querySelector('.pp-arrow').style.display = (pr.tregu && pr.oferte) ? '' : 'none';
     ppEl.style.display = 'flex';
   } else {
     ppEl.style.display = 'none';

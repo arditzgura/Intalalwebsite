@@ -13,7 +13,6 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{--accent:#C8003E;--black:#111;--bg:#f4f4f4;--border:#e2e2e2;--muted:#888;}
 body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);min-height:100vh;display:flex;flex-direction:column;}
-
 .top-bar{background:var(--black);height:48px;padding:0 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-shrink:0;}
 .logo{background:var(--accent);padding:3px 10px;border-radius:4px;font-weight:900;font-size:13px;color:#fff;letter-spacing:-.5px;}
 .top-title{font-size:11px;color:#888;letter-spacing:.8px;text-transform:uppercase;}
@@ -22,24 +21,23 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);min-height:10
 .btn-save:hover{opacity:.85;}
 .btn-back{font-size:11px;color:#aaa;text-decoration:none;border:1px solid #444;padding:5px 12px;border-radius:4px;}
 .btn-back:hover{color:#fff;border-color:#fff;}
-
-/* LINK BOX */
 .link-box{background:#0d0d0d;padding:12px 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
 .link-label{font-size:10px;color:#555;letter-spacing:1px;text-transform:uppercase;white-space:nowrap;}
 .link-url{font-size:12px;color:#4ade80;font-family:monospace;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .btn-copy{font-size:10px;background:#222;color:#aaa;border:1px solid #333;padding:4px 12px;border-radius:4px;cursor:pointer;white-space:nowrap;}
 .btn-copy:hover{color:#fff;}
-
+/* CURRENCY TOGGLE */
+.currency-bar{background:#fff;border-bottom:1px solid var(--border);padding:10px 20px;display:flex;align-items:center;gap:10px;}
+.currency-label{font-size:9px;font-weight:700;letter-spacing:2px;color:var(--muted);text-transform:uppercase;}
+.cur-btn{padding:5px 16px;border-radius:20px;border:1px solid var(--border);background:#fafafa;font-size:12px;font-weight:700;cursor:pointer;color:var(--black);transition:all .15s;letter-spacing:.5px;}
+.cur-btn.on{background:var(--black);color:#fff;border-color:var(--black);}
 /* FILTERS */
-.filters{background:#fff;border-bottom:1px solid var(--border);padding:12px 20px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
+.filters{background:#fff;border-bottom:1px solid var(--border);padding:10px 20px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
 .flabel{font-size:9px;font-weight:700;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-right:2px;}
 .fb{padding:5px 13px;border-radius:20px;border:1px solid var(--border);background:#fafafa;font-size:11px;font-weight:600;cursor:pointer;color:var(--black);transition:all .15s;}
 .fb.on{background:var(--black);color:#fff;border-color:var(--black);}
 .vsep{width:1px;height:18px;background:var(--border);margin:0 2px;}
-
-/* COUNT */
 .info-bar{padding:8px 20px;font-size:11px;color:var(--muted);}
-
 /* TABLE */
 .tbl-wrap{padding:0 20px 40px;overflow-x:auto;}
 table{width:100%;border-collapse:collapse;background:#fff;border-radius:8px;overflow:hidden;border:1px solid var(--border);}
@@ -47,20 +45,15 @@ thead tr{background:#fafafa;border-bottom:1px solid var(--border);}
 th{padding:10px 14px;font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;text-align:left;white-space:nowrap;}
 td{padding:10px 14px;border-bottom:.5px solid var(--border);vertical-align:middle;}
 tr:last-child td{border-bottom:none;}
-
-.art-photo{width:48px;height:48px;object-fit:cover;border-radius:4px;background:#f0f0f0;display:block;}
-.art-photo-ph{width:48px;height:48px;border-radius:4px;background:#f0f0f0;display:flex;align-items:center;justify-content:center;font-size:18px;color:#ccc;}
+.art-photo{width:56px;height:72px;object-fit:cover;border-radius:4px;background:#f0f0f0;display:block;}
+.art-photo-ph{width:56px;height:72px;border-radius:4px;background:#f0f0f0;display:flex;align-items:center;justify-content:center;font-size:18px;color:#ccc;}
 .art-name{font-size:12px;font-weight:700;color:var(--black);}
 .art-meta{font-size:10px;color:var(--muted);margin-top:2px;}
-
-.price-inp{width:100px;border:1px solid var(--border);border-radius:4px;padding:6px 8px;font-size:12px;font-weight:600;outline:none;text-align:right;background:#fafafa;}
+.price-inp{width:90px;border:1px solid var(--border);border-radius:4px;padding:6px 8px;font-size:12px;font-weight:600;outline:none;text-align:right;background:#fafafa;}
 .price-inp:focus{border-color:var(--accent);background:#fff;}
 .price-inp.tregu{color:#555;}
 .price-inp.oferte{color:var(--accent);}
-
 .empty-row td{text-align:center;padding:40px;color:var(--muted);}
-
-/* TOAST */
 .toast{position:fixed;bottom:24px;right:24px;background:var(--black);color:#fff;padding:10px 18px;border-radius:6px;font-size:12px;display:none;z-index:999;}
 </style>
 </head>
@@ -83,6 +76,13 @@ tr:last-child td{border-bottom:none;}
   <button class="btn-copy" onclick="copyLink()"><i class="ri-file-copy-line"></i> Kopjo</button>
 </div>
 
+<div class="currency-bar">
+  <span class="currency-label">Monedha</span>
+  <button class="cur-btn on" id="cur-ALL" onclick="setCurrency('ALL')">ALL</button>
+  <button class="cur-btn" id="cur-EUR" onclick="setCurrency('EUR')">EUR</button>
+  <span style="font-size:11px;color:var(--muted);margin-left:6px;">Monedha ruhet dhe shfaqet automatikisht te klienti</span>
+</div>
+
 <div class="filters">
   <span class="flabel">Gjinia</span>
   <button class="fb on" onclick="setF('g','te-gjitha',this)">Të Gjitha</button>
@@ -98,16 +98,15 @@ tr:last-child td{border-bottom:none;}
 <div class="info-bar" id="info-bar">Duke ngarkuar...</div>
 
 <div class="tbl-wrap">
-  <table id="tbl">
+  <table>
     <thead>
       <tr>
-        <th style="width:56px;"></th>
+        <th style="width:68px;"></th>
         <th>Artikulli</th>
-        <th>Kategoria</th>
-        <th>Gjinia</th>
+        <th>Kategoria / Gjinia</th>
         <th>Kodi</th>
-        <th style="text-align:right;">Çmimi Tregut (ALL)</th>
-        <th style="text-align:right;">Çmimi Ofertë (ALL)</th>
+        <th style="text-align:right;">Çmimi Tregut</th>
+        <th style="text-align:right;">Çmimi Ofertë</th>
       </tr>
     </thead>
     <tbody id="tbody"></tbody>
@@ -118,11 +117,11 @@ tr:last-child td{border-bottom:none;}
 
 <script>
 var _arts = [];
-var _prices = {};  // { id: { tregu:'', oferte:'' } }
+var _prices = {};   // { id: { tregu:'', oferte:'' } }
+var _currency = 'ALL';
 var _fg = 'te-gjitha', _fk = 'te-gjitha';
 
-var _origin = location.origin;
-document.getElementById('client-link').textContent = _origin + '/katalog-klient';
+document.getElementById('client-link').textContent = location.origin + '/katalog-klient';
 
 async function init(){
   await sbSyncCache();
@@ -133,12 +132,25 @@ async function init(){
     var raw = await sbGet('artikujt');
     if(raw) try{ _arts = JSON.parse(raw); }catch(e){}
   }
-  // Load saved prices
   var pr = await sbGet('katalog_cmime');
-  if(pr) try{ _prices = JSON.parse(pr); }catch(e){}
-
+  if(pr){
+    try{
+      var obj = JSON.parse(pr);
+      _currency = obj._currency || 'ALL';
+      _prices = obj.prices || obj;  // backward compat
+      if(obj._currency) delete _prices._currency;
+    }catch(e){}
+  }
+  document.getElementById('cur-ALL').classList.toggle('on', _currency==='ALL');
+  document.getElementById('cur-EUR').classList.toggle('on', _currency==='EUR');
   buildKats();
   render();
+}
+
+function setCurrency(cur){
+  _currency = cur;
+  document.getElementById('cur-ALL').classList.toggle('on', cur==='ALL');
+  document.getElementById('cur-EUR').classList.toggle('on', cur==='EUR');
 }
 
 function buildKats(){
@@ -170,51 +182,47 @@ function render(){
   document.getElementById('info-bar').textContent = list.length + ' artikuj';
   var tbody = document.getElementById('tbody');
   if(!list.length){
-    tbody.innerHTML='<tr class="empty-row"><td colspan="7">Nuk ka artikuj për këtë filtër.</td></tr>';
+    tbody.innerHTML='<tr class="empty-row"><td colspan="6">Nuk ka artikuj për këtë filtër.</td></tr>';
     return;
   }
   tbody.innerHTML = list.map(function(a){
     var ph = (a.photos&&a.photos[0]) ? a.photos[0] : '';
     var pr = _prices[a.id] || {};
+    var katGj = [a.kategoria, a.gjinia].filter(Boolean).join(' · ');
     return '<tr data-id="'+a.id+'">'
       +'<td>'+(ph?'<img class="art-photo" src="'+ph+'" alt="">':'<div class="art-photo-ph">&#128085;</div>')+'</td>'
       +'<td><div class="art-name">'+escHtml(a.name)+'</div><div class="art-meta">'+(a.sizes||[]).join(', ')+'</div></td>'
-      +'<td><span style="font-size:11px;">'+escHtml(a.kategoria||'—')+'</span></td>'
-      +'<td><span style="font-size:11px;">'+escHtml(a.gjinia||'—')+'</span></td>'
+      +'<td><span style="font-size:11px;">'+escHtml(katGj||'—')+'</span></td>'
       +'<td><span style="font-size:11px;color:var(--muted);">'+escHtml(a.code||'—')+'</span></td>'
-      +'<td style="text-align:right;"><input class="price-inp tregu" type="number" min="0" step="1" placeholder="—" value="'+(pr.tregu||'')+'" data-field="tregu" onchange="savePrice(\''+a.id+'\',\'tregu\',this.value)"></td>'
-      +'<td style="text-align:right;"><input class="price-inp oferte" type="number" min="0" step="1" placeholder="—" value="'+(pr.oferte||'')+'" data-field="oferte" onchange="savePrice(\''+a.id+'\',\'oferte\',this.value)"></td>'
+      +'<td style="text-align:right;"><input class="price-inp tregu" type="number" min="0" step="0.01" placeholder="—" value="'+(pr.tregu||'')+'" data-field="tregu" onchange="savePrice(\''+a.id+'\',\'tregu\',this.value)"></td>'
+      +'<td style="text-align:right;"><input class="price-inp oferte" type="number" min="0" step="0.01" placeholder="—" value="'+(pr.oferte||'')+'" data-field="oferte" onchange="savePrice(\''+a.id+'\',\'oferte\',this.value)"></td>'
       +'</tr>';
   }).join('');
 }
 
 function savePrice(id, field, val){
   if(!_prices[id]) _prices[id]={};
-  if(val) _prices[id][field]=val;
-  else delete _prices[id][field];
+  if(val) _prices[id][field]=val; else delete _prices[id][field];
   if(!_prices[id].tregu && !_prices[id].oferte) delete _prices[id];
 }
 
 async function saveAll(){
-  // sync from inputs
   document.querySelectorAll('#tbody tr[data-id]').forEach(function(row){
     var id=row.dataset.id;
     var t=row.querySelector('[data-field="tregu"]');
     var o=row.querySelector('[data-field="oferte"]');
-    if(t&&t.value) { if(!_prices[id]) _prices[id]={}; _prices[id].tregu=t.value; }
-    if(o&&o.value) { if(!_prices[id]) _prices[id]={}; _prices[id].oferte=o.value; }
+    if(t&&t.value){ if(!_prices[id])_prices[id]={}; _prices[id].tregu=t.value; }
+    if(o&&o.value){ if(!_prices[id])_prices[id]={}; _prices[id].oferte=o.value; }
   });
-  await sbSet('katalog_cmime', JSON.stringify(_prices));
+  var payload = { _currency: _currency, prices: _prices };
+  await sbSet('katalog_cmime', JSON.stringify(payload));
   showToast('✓ Çmimet u ruajtën!');
 }
 
 function copyLink(){
-  var url = _origin + '/katalog-klient';
-  navigator.clipboard.writeText(url).then(function(){
-    showToast('✓ Linku u kopjua!');
-  }).catch(function(){
-    prompt('Kopjo linkun:', url);
-  });
+  var url = location.origin + '/katalog-klient';
+  navigator.clipboard.writeText(url).then(function(){ showToast('✓ Linku u kopjua!'); })
+    .catch(function(){ prompt('Kopjo linkun:', url); });
 }
 
 function showToast(msg){
