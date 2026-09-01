@@ -114,11 +114,6 @@
   <span class="kat-logo">intal</span>
   <span class="kat-label">Katalog Çmimesh</span>
   <div style="flex:1;display:flex;align-items:center;justify-content:flex-end;gap:10px;">
-    <!-- Language toggle -->
-    <div style="display:flex;align-items:center;background:#1e1e1e;border-radius:20px;overflow:hidden;flex-shrink:0;">
-      <button id="lang-al" onclick="setLang('al')" style="padding:4px 12px;border:none;background:#C8003E;color:#fff;font-size:11px;font-weight:700;cursor:pointer;letter-spacing:.5px;">AL</button>
-      <button id="lang-en" onclick="setLang('en')" style="padding:4px 12px;border:none;background:none;color:#555;font-size:11px;font-weight:700;cursor:pointer;letter-spacing:.5px;">EN</button>
-    </div>
     <!-- Search -->
     <div id="search-wrap" style="display:flex;align-items:center;gap:6px;background:#1e1e1e;border-radius:20px;padding:4px 12px;transition:all .2s;">
       <i class="ri-search-line" style="color:#555;font-size:14px;flex-shrink:0;"></i>
@@ -234,14 +229,10 @@ function tr(val){
 
 function setLang(lang){
   _lang = lang;
-  try{ localStorage.setItem('intal_kat_lang', lang); }catch(e){}
-  document.getElementById('lang-al').style.background = lang==='al' ? '#C8003E' : 'none';
-  document.getElementById('lang-al').style.color = lang==='al' ? '#fff' : '#555';
-  document.getElementById('lang-en').style.background = lang==='en' ? '#C8003E' : 'none';
-  document.getElementById('lang-en').style.color = lang==='en' ? '#fff' : '#555';
   var inp = document.getElementById('search-input');
   if(inp) inp.placeholder = tr('kerko');
-  document.querySelector('.pg-breadcrumb').textContent = tr('artikujt');
+  var bc = document.querySelector('.pg-breadcrumb');
+  if(bc) bc.textContent = tr('artikujt');
   buildFilterBar();
 }
 var _openList = [];
@@ -271,18 +262,28 @@ async function init(){
   var _clientSlug = (new URLSearchParams(location.search)).get('c') || '';
   var _priceKey = _clientSlug ? 'katalog_cmime_'+_clientSlug : 'katalog_cmime';
 
-  // Load prices + currency for this client
+  // Load prices, currency, language, and selected articles for this client
   var pr = await sbGet(_priceKey);
   if(pr){
     try{
       var obj = JSON.parse(pr);
-      if(obj._currency){ _currency = obj._currency; _prices = obj.prices || {}; }
-      else { _prices = obj; }
+      if(obj._currency){
+        _currency = obj._currency;
+        _prices = obj.prices || {};
+        // Language set by admin
+        if(obj._lang) _lang = obj._lang;
+        // Filter to only selected articles (if list is set)
+        if(obj._selectedIds && obj._selectedIds.length){
+          var selSet = {};
+          obj._selectedIds.forEach(function(id){ selSet[id]=true; });
+          _arts = _arts.filter(function(a){ return selSet[a.id]; });
+        }
+      } else {
+        _prices = obj;
+      }
     }catch(e){}
   }
 
-  // Restore saved language
-  try{ var sl=localStorage.getItem('intal_kat_lang'); if(sl) _lang=sl; }catch(e){}
   setLang(_lang);
   buildFilterBar();
   renderGridAll(_arts, _activeSub, _activeKat);

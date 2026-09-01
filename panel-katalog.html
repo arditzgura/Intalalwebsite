@@ -14,7 +14,6 @@
 :root{--accent:#C8003E;--black:#111;--bg:#f4f4f4;--border:#e2e2e2;--muted:#888;}
 body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);min-height:100vh;display:flex;flex-direction:column;}
 
-/* TOP BAR */
 .top-bar{background:var(--black);height:48px;padding:0 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-shrink:0;}
 .logo{background:var(--accent);padding:3px 10px;border-radius:4px;font-weight:900;font-size:13px;color:#fff;letter-spacing:-.5px;}
 .top-title{font-size:11px;color:#888;letter-spacing:.8px;text-transform:uppercase;}
@@ -26,15 +25,13 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);min-height:10
 
 /* CLIENT BAR */
 .client-bar{background:#0d0d0d;padding:10px 20px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
-.client-bar-label{font-size:10px;color:#555;letter-spacing:1px;text-transform:uppercase;white-space:nowrap;}
+.client-bar-label{font-size:10px;color:#555;letter-spacing:1px;text-transform:uppercase;white-space:nowrap;flex-shrink:0;}
 .client-tabs{display:flex;gap:6px;flex-wrap:wrap;flex:1;}
 .client-tab{padding:5px 14px;border-radius:20px;border:1px solid #333;background:none;color:#777;font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;white-space:nowrap;}
 .client-tab:hover{border-color:#555;color:#ccc;}
 .client-tab.active{background:var(--accent);border-color:var(--accent);color:#fff;}
-.btn-new-client{padding:5px 14px;border-radius:20px;border:1px dashed #444;background:none;color:#555;font-size:11px;cursor:pointer;white-space:nowrap;transition:all .15s;}
+.btn-new-client{padding:5px 14px;border-radius:20px;border:1px dashed #444;background:none;color:#555;font-size:11px;cursor:pointer;white-space:nowrap;transition:all .15s;flex-shrink:0;}
 .btn-new-client:hover{border-color:#888;color:#aaa;}
-.btn-del-client{padding:3px 8px;border-radius:4px;border:1px solid #333;background:none;color:#555;font-size:10px;cursor:pointer;margin-left:2px;}
-.btn-del-client:hover{border-color:#e00;color:#e00;}
 
 /* LINK BOX */
 .link-box{background:#0a0a0a;padding:10px 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;border-top:.5px solid #1a1a1a;}
@@ -42,12 +39,16 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);min-height:10
 .link-url{font-size:12px;color:#4ade80;font-family:monospace;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .btn-copy{font-size:10px;background:#222;color:#aaa;border:1px solid #333;padding:4px 12px;border-radius:4px;cursor:pointer;white-space:nowrap;}
 .btn-copy:hover{color:#fff;}
+.btn-del-link{font-size:10px;background:none;color:#622;border:1px solid #422;padding:4px 12px;border-radius:4px;cursor:pointer;white-space:nowrap;}
+.btn-del-link:hover{color:#f66;border-color:#f66;}
 
-/* CURRENCY */
-.currency-bar{background:#fff;border-bottom:1px solid var(--border);padding:10px 20px;display:flex;align-items:center;gap:10px;}
-.currency-label{font-size:9px;font-weight:700;letter-spacing:2px;color:var(--muted);text-transform:uppercase;}
-.cur-btn{padding:5px 16px;border-radius:20px;border:1px solid var(--border);background:#fafafa;font-size:12px;font-weight:700;cursor:pointer;color:var(--black);transition:all .15s;letter-spacing:.5px;}
-.cur-btn.on{background:var(--black);color:#fff;border-color:var(--black);}
+/* SETTINGS BAR (currency + language) */
+.settings-bar{background:#fff;border-bottom:1px solid var(--border);padding:10px 20px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
+.set-group{display:flex;align-items:center;gap:8px;}
+.set-label{font-size:9px;font-weight:700;letter-spacing:2px;color:var(--muted);text-transform:uppercase;}
+.tog-btn{padding:5px 16px;border-radius:20px;border:1px solid var(--border);background:#fafafa;font-size:12px;font-weight:700;cursor:pointer;color:var(--black);transition:all .15s;letter-spacing:.5px;}
+.tog-btn.on{background:var(--black);color:#fff;border-color:var(--black);}
+.set-hint{font-size:11px;color:var(--muted);margin-left:4px;}
 
 /* FILTERS */
 .filters{background:#fff;border-bottom:1px solid var(--border);padding:10px 20px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
@@ -55,7 +56,8 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);min-height:10
 .fb{padding:5px 13px;border-radius:20px;border:1px solid var(--border);background:#fafafa;font-size:11px;font-weight:600;cursor:pointer;color:var(--black);transition:all .15s;}
 .fb.on{background:var(--black);color:#fff;border-color:var(--black);}
 .vsep{width:1px;height:18px;background:var(--border);margin:0 2px;}
-.info-bar{padding:8px 20px;font-size:11px;color:var(--muted);}
+.info-bar{padding:8px 20px;font-size:11px;color:var(--muted);display:flex;align-items:center;gap:12px;}
+.info-sel{color:var(--accent);font-weight:600;}
 
 /* TABLE */
 .tbl-wrap{padding:0 20px 40px;overflow-x:auto;}
@@ -64,6 +66,7 @@ thead tr{background:#fafafa;border-bottom:1px solid var(--border);}
 th{padding:10px 14px;font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;text-align:left;white-space:nowrap;}
 td{padding:10px 14px;border-bottom:.5px solid var(--border);vertical-align:middle;}
 tr:last-child td{border-bottom:none;}
+tr.deselected{opacity:.45;}
 .art-photo{width:56px;height:72px;object-fit:cover;border-radius:4px;background:#f0f0f0;display:block;}
 .art-photo-ph{width:56px;height:72px;border-radius:4px;background:#f0f0f0;display:flex;align-items:center;justify-content:center;font-size:18px;color:#ccc;}
 .art-name{font-size:12px;font-weight:700;color:var(--black);}
@@ -74,19 +77,29 @@ tr:last-child td{border-bottom:none;}
 .price-inp.oferte{color:var(--accent);}
 .empty-row td{text-align:center;padding:40px;color:var(--muted);}
 
-/* NEW CLIENT MODAL */
+/* Checkbox */
+.cb-wrap{display:flex;align-items:center;justify-content:center;}
+input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--accent);}
+
+/* MODALS */
 .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:500;display:none;align-items:center;justify-content:center;}
 .modal-bg.open{display:flex;}
-.modal{background:#fff;border-radius:10px;padding:28px 28px 24px;width:min(380px,92vw);box-shadow:0 20px 60px rgba(0,0,0,.3);}
+.modal{background:#fff;border-radius:10px;padding:28px 28px 24px;width:min(400px,92vw);box-shadow:0 20px 60px rgba(0,0,0,.3);}
 .modal h3{font-size:15px;font-weight:700;margin-bottom:16px;}
 .modal label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px;}
-.modal input{width:100%;border:1px solid var(--border);border-radius:6px;padding:9px 12px;font-size:13px;outline:none;margin-bottom:12px;}
+.modal input{width:100%;border:1px solid var(--border);border-radius:6px;padding:9px 12px;font-size:13px;outline:none;margin-bottom:8px;}
 .modal input:focus{border-color:var(--accent);}
-.modal-slug{font-size:11px;color:var(--muted);margin-bottom:16px;font-family:monospace;}
+.modal-slug{font-size:11px;color:var(--muted);margin-bottom:16px;font-family:monospace;word-break:break-all;}
 .modal-slug span{color:#111;}
 .modal-actions{display:flex;gap:8px;justify-content:flex-end;}
 .btn-cancel{background:none;border:1px solid var(--border);border-radius:6px;padding:7px 16px;font-size:12px;cursor:pointer;}
 .btn-confirm{background:var(--accent);color:#fff;border:none;border-radius:6px;padding:7px 16px;font-size:12px;font-weight:700;cursor:pointer;}
+
+/* DELETE MODAL */
+.modal-del{background:#fff;border-radius:10px;padding:28px;width:min(360px,92vw);box-shadow:0 20px 60px rgba(0,0,0,.3);}
+.modal-del h3{font-size:15px;font-weight:700;margin-bottom:8px;}
+.modal-del p{font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.5;}
+.btn-del-confirm{background:#C8003E;color:#fff;border:none;border-radius:6px;padding:7px 16px;font-size:12px;font-weight:700;cursor:pointer;}
 
 .toast{position:fixed;bottom:24px;right:24px;background:var(--black);color:#fff;padding:10px 18px;border-radius:6px;font-size:12px;display:none;z-index:999;}
 </style>
@@ -108,7 +121,7 @@ tr:last-child td{border-bottom:none;}
 <div class="client-bar">
   <span class="client-bar-label">Klientët</span>
   <div class="client-tabs" id="client-tabs"></div>
-  <button class="btn-new-client" onclick="openNewClient()">+ Klient i Ri</button>
+  <button class="btn-new-client" onclick="openNewClient()"><i class="ri-add-line"></i> Klient i Ri</button>
 </div>
 
 <!-- LINK BOX -->
@@ -116,14 +129,22 @@ tr:last-child td{border-bottom:none;}
   <span class="link-label">Linku i klientit</span>
   <span class="link-url" id="client-link"></span>
   <button class="btn-copy" onclick="copyLink()"><i class="ri-file-copy-line"></i> Kopjo</button>
+  <button class="btn-del-link" id="btn-del-client" onclick="openDeleteClient()" style="display:none;"><i class="ri-delete-bin-line"></i> Fshi Klientin</button>
 </div>
 
-<!-- CURRENCY -->
-<div class="currency-bar">
-  <span class="currency-label">Monedha</span>
-  <button class="cur-btn on" id="cur-ALL" onclick="setCurrency('ALL')">ALL</button>
-  <button class="cur-btn" id="cur-EUR" onclick="setCurrency('EUR')">EUR</button>
-  <span style="font-size:11px;color:var(--muted);margin-left:6px;">Monedha ruhet dhe shfaqet automatikisht te klienti</span>
+<!-- SETTINGS: Currency + Language -->
+<div class="settings-bar">
+  <div class="set-group">
+    <span class="set-label">Monedha</span>
+    <button class="tog-btn on" id="cur-ALL" onclick="setCurrency('ALL')">ALL</button>
+    <button class="tog-btn" id="cur-EUR" onclick="setCurrency('EUR')">EUR</button>
+  </div>
+  <div class="set-group">
+    <span class="set-label">Gjuha</span>
+    <button class="tog-btn on" id="lang-al" onclick="setLangPref('al')">AL</button>
+    <button class="tog-btn" id="lang-en" onclick="setLangPref('en')">EN</button>
+    <span class="set-hint">Shfaqet automatikisht te klienti</span>
+  </div>
 </div>
 
 <!-- FILTERS -->
@@ -139,12 +160,20 @@ tr:last-child td{border-bottom:none;}
   <span id="kat-wrap" style="display:flex;flex-wrap:wrap;gap:8px;"></span>
 </div>
 
-<div class="info-bar" id="info-bar">Duke ngarkuar...</div>
+<div class="info-bar" id="info-bar">
+  <span id="info-total">Duke ngarkuar...</span>
+  <span class="info-sel" id="info-sel"></span>
+</div>
 
 <div class="tbl-wrap">
   <table>
     <thead>
       <tr>
+        <th style="width:44px;text-align:center;">
+          <div class="cb-wrap">
+            <input type="checkbox" id="chk-all" title="Zgjidh / Hiq të gjitha" onchange="toggleAll(this.checked)">
+          </div>
+        </th>
         <th style="width:68px;"></th>
         <th>Artikulli</th>
         <th>Kategoria / Gjinia</th>
@@ -158,16 +187,28 @@ tr:last-child td{border-bottom:none;}
 </div>
 
 <!-- NEW CLIENT MODAL -->
-<div class="modal-bg" id="modal-bg" onclick="if(event.target===this)closeModal()">
+<div class="modal-bg" id="modal-new" onclick="if(event.target===this)closeModal('modal-new')">
   <div class="modal">
     <h3>Klient i Ri</h3>
     <label>Emri i Klientit</label>
     <input type="text" id="new-client-name" placeholder="p.sh. Alba, Marketi ABC..."
       oninput="updateSlugPreview()" onkeydown="if(event.key==='Enter')confirmNewClient()">
-    <div class="modal-slug">Link: <span id="slug-preview"></span></div>
+    <div class="modal-slug">Link: <span id="slug-preview">—</span></div>
     <div class="modal-actions">
-      <button class="btn-cancel" onclick="closeModal()">Anulo</button>
+      <button class="btn-cancel" onclick="closeModal('modal-new')">Anulo</button>
       <button class="btn-confirm" onclick="confirmNewClient()">Krijo Linkun</button>
+    </div>
+  </div>
+</div>
+
+<!-- DELETE CLIENT MODAL -->
+<div class="modal-bg" id="modal-del" onclick="if(event.target===this)closeModal('modal-del')">
+  <div class="modal-del">
+    <h3>Fshi Klientin</h3>
+    <p id="modal-del-text">A jeni i sigurt që dëshironi të fshini këtë klient? Linku i tij nuk do të funksionojë më.</p>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('modal-del')">Anulo</button>
+      <button class="btn-del-confirm" onclick="confirmDeleteClient()">Fshi</button>
     </div>
   </div>
 </div>
@@ -177,12 +218,14 @@ tr:last-child td{border-bottom:none;}
 <script>
 var _arts = [];
 var _prices = {};
+var _selectedIds = {};  // { id: true } — artikujt e zgjedhur
 var _currency = 'ALL';
+var _langPref = 'al';
 var _fg = 'te-gjitha', _fk = 'te-gjitha';
 
-// Client management
-var _clients = [];   // [{name, slug, created}]
-var _activeSlug = 'default';  // 'default' = original katalog_cmime
+var _clients = [];
+var _activeSlug = 'default';
+var _pendingDeleteSlug = null;
 
 // ── Init ──────────────────────────────────────────────
 async function init(){
@@ -194,95 +237,111 @@ async function init(){
     var raw = await sbGet('artikujt');
     if(raw) try{ _arts = JSON.parse(raw); }catch(e){}
   }
-
-  // Load client list
   var cl = await sbGet('katalog_klientet');
   if(cl){ try{ _clients = JSON.parse(cl); }catch(e){} }
 
-  // Start with default client (original link)
   await switchClient('default');
-  buildClientTabs();
   buildKats();
 }
 
-// ── Client tabs ───────────────────────────────────────
+// ── Client management ─────────────────────────────────
 function buildClientTabs(){
   var wrap = document.getElementById('client-tabs');
   var html = '<button class="client-tab'+(_activeSlug==='default'?' active':'')+'" onclick="switchClient(\'default\')">Parazgjedhja</button>';
   _clients.forEach(function(c){
-    html += '<span style="display:inline-flex;align-items:center;gap:2px;">'
-      +'<button class="client-tab'+(_activeSlug===c.slug?' active':'')+'" onclick="switchClient(\''+c.slug+'\')">'+escHtml(c.name)+'</button>'
-      +'<button class="btn-del-client" onclick="deleteClient(\''+c.slug+'\')" title="Fshi">✕</button>'
-      +'</span>';
+    html += '<button class="client-tab'+(_activeSlug===c.slug?' active':'')+'" onclick="switchClient(\''+c.slug+'\')">'+escHtml(c.name)+'</button>';
   });
   wrap.innerHTML = html;
+  // Show/hide delete button
+  document.getElementById('btn-del-client').style.display = _activeSlug==='default' ? 'none' : '';
 }
 
 async function switchClient(slug){
-  // Save current inputs before switching
   if(_activeSlug) collectInputs();
-
   _activeSlug = slug;
   _prices = {};
+  _selectedIds = {};
   _currency = 'ALL';
+  _langPref = 'al';
 
   var key = slug==='default' ? 'katalog_cmime' : 'katalog_cmime_'+slug;
   var pr = await sbGet(key);
   if(pr){
     try{
       var obj = JSON.parse(pr);
-      if(obj._currency){ _currency = obj._currency; _prices = obj.prices || {}; }
-      else { _prices = obj; }
-    }catch(e){}
+      if(obj._currency){
+        _currency = obj._currency;
+        _langPref = obj._lang || 'al';
+        _prices = obj.prices || {};
+        // Load selected IDs
+        if(obj._selectedIds && obj._selectedIds.length){
+          obj._selectedIds.forEach(function(id){ _selectedIds[id]=true; });
+        } else {
+          // None saved → select all by default
+          _arts.forEach(function(a){ _selectedIds[a.id]=true; });
+        }
+      } else {
+        _prices = obj;
+        _arts.forEach(function(a){ _selectedIds[a.id]=true; });
+      }
+    }catch(e){ _arts.forEach(function(a){ _selectedIds[a.id]=true; }); }
+  } else {
+    // New client → all selected by default
+    _arts.forEach(function(a){ _selectedIds[a.id]=true; });
   }
 
-  document.getElementById('cur-ALL').classList.toggle('on', _currency==='ALL');
-  document.getElementById('cur-EUR').classList.toggle('on', _currency==='EUR');
-
+  applySettings();
   var baseUrl = location.origin + '/katalog-klient.html';
   var url = slug==='default' ? baseUrl : baseUrl+'?c='+encodeURIComponent(slug);
   document.getElementById('client-link').textContent = url;
-
   buildClientTabs();
   render();
 }
 
+function applySettings(){
+  document.getElementById('cur-ALL').classList.toggle('on', _currency==='ALL');
+  document.getElementById('cur-EUR').classList.toggle('on', _currency==='EUR');
+  document.getElementById('lang-al').classList.toggle('on', _langPref==='al');
+  document.getElementById('lang-en').classList.toggle('on', _langPref==='en');
+}
+
 function collectInputs(){
   document.querySelectorAll('#tbody tr[data-id]').forEach(function(row){
-    var id=row.dataset.id;
-    var t=row.querySelector('[data-field="tregu"]');
-    var o=row.querySelector('[data-field="oferte"]');
+    var id = row.dataset.id;
+    var t = row.querySelector('[data-field="tregu"]');
+    var o = row.querySelector('[data-field="oferte"]');
     if(t&&t.value){ if(!_prices[id])_prices[id]={}; _prices[id].tregu=t.value; }
-    else if(t&&!t.value && _prices[id]) delete _prices[id].tregu;
+    else if(_prices[id]) delete _prices[id].tregu;
     if(o&&o.value){ if(!_prices[id])_prices[id]={}; _prices[id].oferte=o.value; }
-    else if(o&&!o.value && _prices[id]) delete _prices[id].oferte;
+    else if(_prices[id]) delete _prices[id].oferte;
     if(_prices[id]&&!_prices[id].tregu&&!_prices[id].oferte) delete _prices[id];
+    // Read checkbox
+    var chk = row.querySelector('input[type=checkbox]');
+    if(chk){
+      if(chk.checked) _selectedIds[id]=true;
+      else delete _selectedIds[id];
+    }
   });
 }
 
-// ── New client modal ──────────────────────────────────
+// ── New client ────────────────────────────────────────
 function openNewClient(){
   document.getElementById('new-client-name').value='';
-  document.getElementById('slug-preview').textContent='';
-  document.getElementById('modal-bg').classList.add('open');
+  document.getElementById('slug-preview').textContent='—';
+  document.getElementById('modal-new').classList.add('open');
   setTimeout(function(){ document.getElementById('new-client-name').focus(); }, 60);
 }
-function closeModal(){ document.getElementById('modal-bg').classList.remove('open'); }
 
 function toSlug(s){
   return s.toLowerCase()
     .replace(/ë/g,'e').replace(/ç/g,'c').replace(/ä/g,'a').replace(/ö/g,'o').replace(/ü/g,'u')
     .replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
 }
-
 function updateSlugPreview(){
-  var name = document.getElementById('new-client-name').value.trim();
-  var slug = toSlug(name);
+  var slug = toSlug(document.getElementById('new-client-name').value.trim());
   document.getElementById('slug-preview').textContent = slug
-    ? location.origin+'/katalog-klient.html?c='+slug
-    : '—';
+    ? location.origin+'/katalog-klient.html?c='+slug : '—';
 }
-
 async function confirmNewClient(){
   var name = document.getElementById('new-client-name').value.trim();
   if(!name){ document.getElementById('new-client-name').focus(); return; }
@@ -293,28 +352,47 @@ async function confirmNewClient(){
   }
   _clients.push({ name:name, slug:slug, created: new Date().toISOString() });
   await sbSet('katalog_klientet', JSON.stringify(_clients));
-  closeModal();
+  closeModal('modal-new');
   await switchClient(slug);
 }
 
-async function deleteClient(slug){
-  if(!confirm('Fshi klientin "'+slug+'"? Çmimet e tyre do të fshihen gjithashtu.')) return;
+// ── Delete client ─────────────────────────────────────
+function openDeleteClient(){
+  if(_activeSlug==='default') return;
+  var client = _clients.find(function(c){ return c.slug===_activeSlug; });
+  var name = client ? client.name : _activeSlug;
+  _pendingDeleteSlug = _activeSlug;
+  document.getElementById('modal-del-text').textContent =
+    'A jeni i sigurt që dëshironi të fshini klientin "'+name+'"? Linku i tij nuk do të funksionojë më.';
+  document.getElementById('modal-del').classList.add('open');
+}
+async function confirmDeleteClient(){
+  var slug = _pendingDeleteSlug;
+  if(!slug){ closeModal('modal-del'); return; }
   _clients = _clients.filter(function(c){ return c.slug!==slug; });
   await sbSet('katalog_klientet', JSON.stringify(_clients));
-  // Note: we leave the price key in Firebase (harmless orphan)
-  if(_activeSlug===slug) await switchClient('default');
-  else buildClientTabs();
+  // Invalidate the price key by saving empty (client link stops working)
+  await sbSet('katalog_cmime_'+slug, JSON.stringify({_deleted:true}));
+  closeModal('modal-del');
   showToast('✓ Klienti u fshi.');
+  await switchClient('default');
 }
 
-// ── Currency ──────────────────────────────────────────
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+
+// ── Settings ──────────────────────────────────────────
 function setCurrency(cur){
   _currency = cur;
   document.getElementById('cur-ALL').classList.toggle('on', cur==='ALL');
   document.getElementById('cur-EUR').classList.toggle('on', cur==='EUR');
 }
+function setLangPref(lang){
+  _langPref = lang;
+  document.getElementById('lang-al').classList.toggle('on', lang==='al');
+  document.getElementById('lang-en').classList.toggle('on', lang==='en');
+}
 
-// ── Filters ───────────────────────────────────────────
+// ── Filters / Helpers ─────────────────────────────────
 function getArtSubs(a){
   var s=(a.sub&&(Array.isArray(a.sub)?a.sub.length:a.sub))?a.sub:a.gjinia;
   if(!s) return []; if(Array.isArray(s)) return s.filter(Boolean); return [s];
@@ -323,8 +401,8 @@ function getArtKats(a){
   var k=(a.kat&&(Array.isArray(a.kat)?a.kat.length:a.kat))?a.kat:a.kategoria;
   if(!k) return []; if(Array.isArray(k)) return k.filter(Boolean); return [k];
 }
-function artMatchesSub(a, sub){ return getArtSubs(a).some(function(x){ return (x||'').toLowerCase()===sub.toLowerCase(); }); }
-function artMatchesKat(a, kat){ return getArtKats(a).some(function(x){ return (x||'').toLowerCase()===kat.toLowerCase(); }); }
+function artMatchesSub(a,sub){ return getArtSubs(a).some(function(x){ return (x||'').toLowerCase()===sub.toLowerCase(); }); }
+function artMatchesKat(a,kat){ return getArtKats(a).some(function(x){ return (x||'').toLowerCase()===kat.toLowerCase(); }); }
 
 function buildKats(){
   var seen = {};
@@ -333,37 +411,74 @@ function buildKats(){
     return '<button class="fb" onclick="setF(\'k\',\''+escHtml(k)+'\',this)" data-kg>'+escHtml(k)+'</button>';
   }).join('');
 }
-
-function setF(type, val, btn){
+function setF(type,val,btn){
   if(type==='g') _fg=val; else _fk=val;
   if(type==='g') document.querySelectorAll('.filters .fb:not([data-kg])').forEach(function(b){ b.classList.remove('on'); });
   else document.querySelectorAll('.filters .fb[data-kg]').forEach(function(b){ b.classList.remove('on'); });
   btn.classList.add('on');
   render();
 }
-
 function filtered(){
   return _arts.filter(function(a){
-    var gOk = _fg==='te-gjitha' || artMatchesSub(a, _fg);
-    var kOk = _fk==='te-gjitha' || artMatchesKat(a, _fk);
-    return gOk && kOk;
+    return (_fg==='te-gjitha'||artMatchesSub(a,_fg)) && (_fk==='te-gjitha'||artMatchesKat(a,_fk));
   });
 }
 
-// ── Render table ──────────────────────────────────────
+// ── Checkbox ──────────────────────────────────────────
+function toggleAll(checked){
+  var list = filtered();
+  list.forEach(function(a){
+    if(checked) _selectedIds[a.id]=true; else delete _selectedIds[a.id];
+  });
+  // Update visible checkboxes
+  document.querySelectorAll('#tbody input[type=checkbox]').forEach(function(chk){
+    chk.checked = checked;
+  });
+  updateRowStyles();
+  updateInfoBar(list);
+}
+function toggleRow(id, checked){
+  if(checked) _selectedIds[id]=true; else delete _selectedIds[id];
+  var row = document.querySelector('#tbody tr[data-id="'+id+'"]');
+  if(row) row.classList.toggle('deselected', !checked);
+  syncAllCheckbox();
+  updateInfoBar(filtered());
+}
+function syncAllCheckbox(){
+  var list = filtered();
+  var selCount = list.filter(function(a){ return _selectedIds[a.id]; }).length;
+  var chkAll = document.getElementById('chk-all');
+  chkAll.checked = selCount>0 && selCount===list.length;
+  chkAll.indeterminate = selCount>0 && selCount<list.length;
+}
+function updateRowStyles(){
+  document.querySelectorAll('#tbody tr[data-id]').forEach(function(row){
+    row.classList.toggle('deselected', !_selectedIds[row.dataset.id]);
+  });
+}
+function updateInfoBar(list){
+  var selCount = list.filter(function(a){ return _selectedIds[a.id]; }).length;
+  document.getElementById('info-total').textContent = list.length + ' artikuj';
+  document.getElementById('info-sel').textContent = selCount < list.length
+    ? selCount + ' zgjedhur' : '';
+}
+
+// ── Render ────────────────────────────────────────────
 function render(){
   var list = filtered();
-  document.getElementById('info-bar').textContent = list.length + ' artikuj';
+  updateInfoBar(list);
   var tbody = document.getElementById('tbody');
   if(!list.length){
-    tbody.innerHTML='<tr class="empty-row"><td colspan="6">Nuk ka artikuj për këtë filtër.</td></tr>';
+    tbody.innerHTML='<tr class="empty-row"><td colspan="7">Nuk ka artikuj për këtë filtër.</td></tr>';
     return;
   }
   tbody.innerHTML = list.map(function(a){
     var _ph0=(a.photos&&a.photos[0])||''; var ph=typeof _ph0==='string'?_ph0:(_ph0.src||_ph0.url||'');
     var pr = _prices[a.id] || {};
     var katGj = [getArtKats(a).join(', '), getArtSubs(a).join(', ')].filter(Boolean).join(' · ');
-    return '<tr data-id="'+a.id+'">'
+    var sel = !!_selectedIds[a.id];
+    return '<tr data-id="'+a.id+'"'+(sel?'':' class="deselected"')+'>'
+      +'<td><div class="cb-wrap"><input type="checkbox"'+(sel?' checked':'')+' onchange="toggleRow(\''+a.id+'\',this.checked)"></div></td>'
       +'<td>'+(ph?'<img class="art-photo" src="'+ph+'" alt="">':'<div class="art-photo-ph">&#128085;</div>')+'</td>'
       +'<td><div class="art-name">'+escHtml(a.name)+'</div><div class="art-meta">'+(a.sizes||[]).join(', ')+'</div></td>'
       +'<td><span style="font-size:11px;">'+escHtml(katGj||'—')+'</span></td>'
@@ -372,23 +487,31 @@ function render(){
       +'<td style="text-align:right;"><input class="price-inp oferte" type="number" min="0" step="0.01" placeholder="—" value="'+(pr.oferte||'')+'" data-field="oferte" onchange="savePrice(\''+a.id+'\',\'oferte\',this.value)"></td>'
       +'</tr>';
   }).join('');
+  syncAllCheckbox();
 }
 
-function savePrice(id, field, val){
+function savePrice(id,field,val){
   if(!_prices[id]) _prices[id]={};
   if(val) _prices[id][field]=val; else delete _prices[id][field];
-  if(!_prices[id].tregu && !_prices[id].oferte) delete _prices[id];
+  if(!_prices[id].tregu&&!_prices[id].oferte) delete _prices[id];
 }
 
+// ── Save ──────────────────────────────────────────────
 async function saveAll(){
   collectInputs();
   var key = _activeSlug==='default' ? 'katalog_cmime' : 'katalog_cmime_'+_activeSlug;
-  var payload = { _currency: _currency, prices: _prices };
+  var payload = {
+    _currency: _currency,
+    _lang: _langPref,
+    _selectedIds: Object.keys(_selectedIds),
+    prices: _prices
+  };
   await sbSet(key, JSON.stringify(payload));
-  showToast('✓ Çmimet u ruajtën për "'+(
-    _activeSlug==='default' ? 'Parazgjedhja' :
-    (_clients.find(function(c){return c.slug===_activeSlug;})||{name:_activeSlug}).name
-  )+'"!');
+  var clientName = _activeSlug==='default'
+    ? 'Parazgjedhja'
+    : (_clients.find(function(c){return c.slug===_activeSlug;})||{name:_activeSlug}).name;
+  var selCount = Object.keys(_selectedIds).length;
+  showToast('✓ U ruajt për "'+clientName+'" — '+selCount+' artikuj të zgjedhur');
 }
 
 function copyLink(){
@@ -398,12 +521,11 @@ function copyLink(){
     .catch(function(){ prompt('Kopjo linkun:', url); });
 }
 
-function showToast(msg){
+function showToast(msg,dur){
   var t=document.getElementById('toast');
   t.textContent=msg; t.style.display='block';
-  setTimeout(function(){ t.style.display='none'; }, 2800);
+  setTimeout(function(){ t.style.display='none'; }, dur||2800);
 }
-
 function escHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
 init();
