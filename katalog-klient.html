@@ -272,11 +272,11 @@ async function init(){
         _prices = obj.prices || {};
         // Language set by admin
         if(obj._lang) _lang = obj._lang;
-        // Filter to only selected articles (if list is set)
-        if(obj._selectedIds && obj._selectedIds.length){
+        // Filter to only selected articles (if key is present, even if empty)
+        if(Object.prototype.hasOwnProperty.call(obj, '_selectedIds')){
           var selSet = {};
-          obj._selectedIds.forEach(function(id){ selSet[id]=true; });
-          _arts = _arts.filter(function(a){ return selSet[a.id]; });
+          (obj._selectedIds||[]).forEach(function(id){ selSet[id]=true; });
+          _arts = _arts.filter(function(a){ return !!selSet[a.id]; });
         }
       } else {
         _prices = obj;
