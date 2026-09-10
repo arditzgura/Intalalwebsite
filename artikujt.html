@@ -652,18 +652,18 @@
             });
             row2+='</div>';
           }
-          // row3: product types within selected season
-          if(activeKat&&activeKat!=='te-gjitha'){
-            var sezArts=subArts.filter(function(a){ return artMatchesKat(a,activeKat); });
-            var subkats=[];
-            sezArts.forEach(function(a){ artKatArr(a).forEach(function(k){ if(!isSeasonKat(k)&&!subkats.includes(k)) subkats.push(k); }); });
-            if(subkats.length){
-              row3='<div class="dfc-row dfc-row-sub">';
-              subkats.forEach(function(k){
-                row3+='<button class="dfc-sub'+(activeSubKat===k?' active':'')+'" onclick="applySubKatFilter(\''+k.replace(/'/g,"\\'")+'\')">'+k+'</button>';
-              });
-              row3+='</div>';
-            }
+          // row3: product types — from selected season or all Stinore if no season selected
+          var typeSource=activeKat&&activeKat!=='te-gjitha'
+            ?subArts.filter(function(a){ return artMatchesKat(a,activeKat); })
+            :subArts;
+          var subkats=[];
+          typeSource.forEach(function(a){ artKatArr(a).forEach(function(k){ if(!isSeasonKat(k)&&!subkats.includes(k)) subkats.push(k); }); });
+          if(subkats.length){
+            row3='<div class="dfc-row dfc-row-sub">';
+            subkats.forEach(function(k){
+              row3+='<button class="dfc-sub'+(activeSubKat===k?' active':'')+'" onclick="applySubKatFilter(\''+k.replace(/'/g,"\\'")+'\')">'+k+'</button>';
+            });
+            row3+='</div>';
           }
         } else {
           // Normal subs: row2 = all kats (dfc-sub underline)
