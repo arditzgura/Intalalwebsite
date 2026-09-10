@@ -409,21 +409,29 @@
     function artKatArr(a){ var k=a.kat; if(!k) return []; if(Array.isArray(k)) return k; return [k]; }
     function artMatchesKat(a,kat){ return artKatArr(a).some(function(x){ return (x||'').toLowerCase()===kat.toLowerCase(); }); }
 
+    var _SEASON_VALS=['verë','vere','dimër','dimer'];
+    function isSeasonKat(v){ return _SEASON_VALS.indexOf((v||'').toLowerCase())>=0; }
+    function subHasSeasons(list,sub){
+      if(!sub||sub==='te-gjitha') return false;
+      return list.some(function(a){ return artMatchesCat(a,sub)&&artKatArr(a).some(isSeasonKat); });
+    }
+
     // mode: '' = show all, 'sub' = filter by sub category, 'kat' = filter by kat
     var _state = { cat:'', filter:'te-gjitha', filterMode:'', articles:[], allArticles:[] };
     var _det = { artIdx:0, photoIdx:0, articles:[] };
 
     function getHash(){
       var h=decodeURIComponent(window.location.hash.replace('#',''));
-      if(!h) return {cat:'',filter:'te-gjitha',artId:''};
+      if(!h) return {cat:'',filter:'te-gjitha',subfilter:'',artId:''};
       var p=h.split('/');
       var artId='';
       if(p.length>0 && p[p.length-1].charAt(0)==='~'){ artId=p.pop().slice(1); }
-      return {cat:p[0]||'',filter:p[1]||'te-gjitha',artId:artId};
+      return {cat:p[0]||'',filter:p[1]||'te-gjitha',subfilter:p[2]||'',artId:artId};
     }
-    function setHash(cat,filter,push){
+    function setHash(cat,filter,push,subfilter){
       var h=cat?'#'+encodeURIComponent(cat.toLowerCase()):'';
       if(h&&filter&&filter!=='te-gjitha') h+='/'+encodeURIComponent(filter.toLowerCase());
+      if(h&&filter&&filter!=='te-gjitha'&&subfilter&&subfilter!=='te-gjitha') h+='/'+encodeURIComponent(subfilter.toLowerCase());
       if(push) history.pushState(null,'',h||window.location.pathname.split('#')[0]);
       else history.replaceState(null,'',h||window.location.pathname.split('#')[0]);
     }
@@ -501,7 +509,7 @@
       });
     }
 
-    function showAllWithFilters(data,activeSub,activeKat){
+    function showAllWithFilters(data,activeSub,activeKat,activeSubKat){
       var artikujt=data&&data.artikujt?data.artikujt:[];
       var artKats=artikujt.filter(function(a){
         var s=a.sub; if(!s) return true;
@@ -509,17 +517,19 @@
         return !arr.some(function(x){ return (x||'').toLowerCase()==='pelhura'; });
       });
       _state.cat=''; _state.activeSub=activeSub; _state.activeKat=activeKat||'te-gjitha';
+      _state.activeSubKat=activeSubKat||'te-gjitha';
       _state.articles=artKats; _state.allArticles=artKats;
       document.getElementById('dyn-grid').style.display='grid';
       renderBreadcrumb();
-      renderFilterBarAll(artKats,activeSub,activeKat||'te-gjitha');
-      renderGridAll(artKats,activeSub,activeKat||'te-gjitha');
+      renderFilterBarAll(artKats,activeSub,activeKat||'te-gjitha',activeSubKat||'te-gjitha');
+      renderGridAll(artKats,activeSub,activeKat||'te-gjitha',activeSubKat||'te-gjitha');
     }
 
     function renderBreadcrumb(){
       var el=document.getElementById('pg-breadcrumb');
       var sub=_state.activeSub&&_state.activeSub!=='te-gjitha'?_state.activeSub:'';
       var kat=_state.activeKat&&_state.activeKat!=='te-gjitha'?_state.activeKat:'';
+      var subkat=_state.activeSubKat&&_state.activeSubKat!=='te-gjitha'?_state.activeSubKat:'';
       var cat=_state.cat||'';
       var filter=_state.filter&&_state.filter!=='te-gjitha'?_state.filter:'';
       var parts=[];
@@ -529,11 +539,21 @@
         ?'<span class="cur">ARTIKUJT</span>'
         :'<a href="#" onclick="bcGoAll();return false;">ARTIKUJT</a>');
       if(sub){
-        parts.push(kat
-          ?'<a href="#" onclick="bcGoSub(\''+sub.replace(/'/g,"\\'")+ '\');return false;">'+sub.toUpperCase()+'</a>'
-          :'<span class="cur">'+sub.toUpperCase()+'</span>');
+        var _hasSez=subHasSeasons(_state.allArticles||[],sub);
+        if(_hasSez&&kat&&subkat){
+          parts.push('<a href="#" onclick="bcGoSub(\''+sub.replace(/'/g,"\\'")+'\');return false;">'+sub.toUpperCase()+'</a>');
+          parts.push('<a href="#" onclick="bcGoSez(\''+sub.replace(/'/g,"\\'")+'\',\''+kat.replace(/'/g,"\\'")+'\');return false;">'+kat.toUpperCase()+'</a>');
+          parts.push('<span class="cur">'+subkat.toUpperCase()+'</span>');
+        } else if(_hasSez&&kat){
+          parts.push('<a href="#" onclick="bcGoSub(\''+sub.replace(/'/g,"\\'")+'\');return false;">'+sub.toUpperCase()+'</a>');
+          parts.push('<span class="cur">'+kat.toUpperCase()+'</span>');
+        } else {
+          parts.push(kat
+            ?'<a href="#" onclick="bcGoSub(\''+sub.replace(/'/g,"\\'")+'\');return false;">'+sub.toUpperCase()+'</a>'
+            :'<span class="cur">'+sub.toUpperCase()+'</span>');
+          if(kat) parts.push('<span class="cur">'+kat.toUpperCase()+'</span>');
+        }
       }
-      if(kat) parts.push('<span class="cur">'+kat.toUpperCase()+'</span>');
       if(cat&&!sub){
         parts.push(filter
           ?'<a href="#" onclick="applyFilter(\'te-gjitha\');return false;">'+cat.toUpperCase()+'</a>'
@@ -544,19 +564,27 @@
     }
 
     window.bcGoAll=function(){
-      _state.activeSub='te-gjitha'; _state.activeKat='te-gjitha'; _state.cat=''; _state.filter='';
+      _state.activeSub='te-gjitha'; _state.activeKat='te-gjitha'; _state.activeSubKat='te-gjitha'; _state.cat=''; _state.filter='';
       history.pushState(null,'','artikujt.html');
       renderBreadcrumb();
-      renderFilterBarAll(_state.allArticles,'te-gjitha','te-gjitha');
-      renderGridAll(_state.allArticles,'te-gjitha','te-gjitha');
+      renderFilterBarAll(_state.allArticles,'te-gjitha','te-gjitha','te-gjitha');
+      renderGridAll(_state.allArticles,'te-gjitha','te-gjitha','te-gjitha');
       scrollToGrid();
     };
     window.bcGoSub=function(sub){
-      _state.activeKat='te-gjitha';
+      _state.activeKat='te-gjitha'; _state.activeSubKat='te-gjitha';
       setHash(sub,'te-gjitha',true);
       renderBreadcrumb();
-      renderFilterBarAll(_state.allArticles,sub,'te-gjitha');
-      renderGridAll(_state.allArticles,sub,'te-gjitha');
+      renderFilterBarAll(_state.allArticles,sub,'te-gjitha','te-gjitha');
+      renderGridAll(_state.allArticles,sub,'te-gjitha','te-gjitha');
+      scrollToGrid();
+    };
+    window.bcGoSez=function(sub,sez){
+      _state.activeSubKat='te-gjitha';
+      setHash(sub,sez,true,'');
+      renderBreadcrumb();
+      renderFilterBarAll(_state.allArticles,sub,sez,'te-gjitha');
+      renderGridAll(_state.allArticles,sub,sez,'te-gjitha');
       scrollToGrid();
     };
 
@@ -589,10 +617,11 @@
       syncWrapH();
     }
 
-    // Two-row filter bar for "show all" view
+    // Filter bar for "show all" view — 2 rows normally, 3 rows for Stinore-type subs
     // Row 1: sub-categories (Meshkuj, Femra...) — always visible
-    // Row 2: kat values for active sub — visible only when a sub is selected
-    function renderFilterBarAll(allList, activeSub, activeKat){
+    // Row 2: for Stinore → seasons (dfc filled); for others → kat underline
+    // Row 3: for Stinore when season selected → product types (dfc-sub underline)
+    function renderFilterBarAll(allList, activeSub, activeKat, activeSubKat){
       var bar=document.getElementById('dyn-filter-bar');
       // collect unique subs
       var subs=[];
@@ -601,43 +630,72 @@
         var arr=Array.isArray(s)?s:[s];
         arr.forEach(function(v){ if(v&&!subs.includes(v)) subs.push(v); });
       });
-      // row 1: sub categories (no "Të Gjitha")
+      // row 1: sub categories
       var row1='<div class="dfc-row">';
       subs.forEach(function(s){
         row1+='<button class="dfc'+(activeSub===s?' active':'')+'" onclick="applySubFilter(\''+s.replace(/'/g,"\\'")+'\')">'+s+'</button>';
       });
       row1+='</div>';
-      // row 2: kat values — shfaqet kur klikohet çdo kategori me të paktën 1 nënfiltër
-      var row2='';
+
+      var row2='', row3='';
       if(activeSub&&activeSub!=='te-gjitha'){
         var subArts=allList.filter(function(a){ return artMatchesCat(a,activeSub); });
-        var kats=[];
-        subArts.forEach(function(a){ artKatArr(a).forEach(function(k){ if(k&&!kats.includes(k)) kats.push(k); }); });
-        if(kats.length){
-          row2='<div class="dfc-row dfc-row-sub">';
-          kats.forEach(function(k){
-            row2+='<button class="dfc-sub'+(activeKat===k?' active':'')+'" onclick="applyKatFilter(\''+k.replace(/'/g,"\\'")+'\')">'+k+'</button>';
-          });
-          row2+='</div>';
+        var _hasSez=subHasSeasons(allList,activeSub);
+        if(_hasSez){
+          // Stinore: row2 = seasons (dfc filled), row3 = product types (dfc-sub)
+          var seasons=[];
+          subArts.forEach(function(a){ artKatArr(a).forEach(function(k){ if(isSeasonKat(k)&&!seasons.includes(k)) seasons.push(k); }); });
+          if(seasons.length){
+            row2='<div class="dfc-row">';
+            seasons.forEach(function(k){
+              row2+='<button class="dfc'+(activeKat===k?' active':'')+'" onclick="applySeasonFilter(\''+k.replace(/'/g,"\\'")+'\')">'+k+'</button>';
+            });
+            row2+='</div>';
+          }
+          // row3: product types within selected season
+          if(activeKat&&activeKat!=='te-gjitha'){
+            var sezArts=subArts.filter(function(a){ return artMatchesKat(a,activeKat); });
+            var subkats=[];
+            sezArts.forEach(function(a){ artKatArr(a).forEach(function(k){ if(!isSeasonKat(k)&&!subkats.includes(k)) subkats.push(k); }); });
+            if(subkats.length){
+              row3='<div class="dfc-row dfc-row-sub">';
+              subkats.forEach(function(k){
+                row3+='<button class="dfc-sub'+(activeSubKat===k?' active':'')+'" onclick="applySubKatFilter(\''+k.replace(/'/g,"\\'")+'\')">'+k+'</button>';
+              });
+              row3+='</div>';
+            }
+          }
+        } else {
+          // Normal subs: row2 = all kats (dfc-sub underline)
+          var kats=[];
+          subArts.forEach(function(a){ artKatArr(a).forEach(function(k){ if(k&&!kats.includes(k)) kats.push(k); }); });
+          if(kats.length){
+            row2='<div class="dfc-row dfc-row-sub">';
+            kats.forEach(function(k){
+              row2+='<button class="dfc-sub'+(activeKat===k?' active':'')+'" onclick="applyKatFilter(\''+k.replace(/'/g,"\\'")+'\')">'+k+'</button>';
+            });
+            row2+='</div>';
+          }
         }
       }
+
       /* ruaj pozicionin ekzakt të scroll-it */
-      var oldRow1=bar.querySelector('.dfc-row');
-      var savedScroll1=oldRow1?oldRow1.scrollLeft:0;
-      var oldRow2=bar.querySelector('.dfc-row-sub');
-      var savedScroll2=oldRow2?oldRow2.scrollLeft:0;
-      bar.innerHTML=row1+row2;
+      var oldRows=bar.querySelectorAll('.dfc-row');
+      var savedScroll1=oldRows[0]?oldRows[0].scrollLeft:0;
+      var savedScroll2=oldRows[1]?oldRows[1].scrollLeft:0;
+      var savedScroll3=oldRows[2]?oldRows[2].scrollLeft:0;
+      bar.innerHTML=row1+row2+row3;
       bar.style.display='block';
-      var newRow1=bar.querySelector('.dfc-row');
-      if(newRow1) newRow1.scrollLeft=savedScroll1;
-      var newRow2=bar.querySelector('.dfc-row-sub');
-      if(newRow2){
-        var activeBtn=newRow2.querySelector('.dfc-sub.active');
+      var newRows=bar.querySelectorAll('.dfc-row');
+      if(newRows[0]) newRows[0].scrollLeft=savedScroll1;
+      if(newRows[1]) newRows[1].scrollLeft=savedScroll2;
+      var lastRow=bar.querySelector('.dfc-row-sub');
+      if(lastRow){
+        var activeBtn=lastRow.querySelector('.dfc-sub.active');
         if(activeBtn){
-          /* scroll so active button is centered in the row */
-          newRow2.scrollLeft=activeBtn.offsetLeft-(newRow2.clientWidth/2)+(activeBtn.offsetWidth/2);
-        } else {
-          newRow2.scrollLeft=savedScroll2;
+          lastRow.scrollLeft=activeBtn.offsetLeft-(lastRow.clientWidth/2)+(activeBtn.offsetWidth/2);
+        } else if(newRows[2]) {
+          newRows[2].scrollLeft=savedScroll3;
         }
       }
       syncWrapH();
@@ -689,10 +747,11 @@
       _pgRender(false);
     }
 
-    function renderGridAll(allList, activeSub, activeKat){
+    function renderGridAll(allList, activeSub, activeKat, activeSubKat){
       var show=allList;
       if(activeSub&&activeSub!=='te-gjitha') show=show.filter(function(a){ return artMatchesCat(a,activeSub); });
       if(activeKat&&activeKat!=='te-gjitha') show=show.filter(function(a){ return artMatchesKat(a,activeKat); });
+      if(activeSubKat&&activeSubKat!=='te-gjitha') show=show.filter(function(a){ return artMatchesKat(a,activeSubKat); });
       document.getElementById('pg-count').textContent=show.length+' ARTIKUJ';
       _pgList=show; _pgShown=0; _pgOpener='openDetAll';
       _pgRender(false);
@@ -715,11 +774,11 @@
         var arr=Array.isArray(s)?s:[s];
         return !arr.some(function(x){ return (x||'').toLowerCase()==='pelhura'; });
       });
-      _state.cat=''; _state.activeSub='te-gjitha'; _state.activeKat='te-gjitha'; _state.articles=artKats; _state.allArticles=artKats;
+      _state.cat=''; _state.activeSub='te-gjitha'; _state.activeKat='te-gjitha'; _state.activeSubKat='te-gjitha'; _state.articles=artKats; _state.allArticles=artKats;
       document.getElementById('dyn-grid').style.display='grid';
       renderBreadcrumb();
-      renderFilterBarAll(artKats,'te-gjitha','te-gjitha');
-      renderGridAll(artKats,'te-gjitha','te-gjitha');
+      renderFilterBarAll(artKats,'te-gjitha','te-gjitha','te-gjitha');
+      renderGridAll(artKats,'te-gjitha','te-gjitha','te-gjitha');
     }
 
     function isKat(cat,data){
@@ -737,7 +796,7 @@
       if(!h.cat){ showAll(data); }
       else if(h.cat==='pelhura'){ location.href='pelhura.html'; }
       else if(isSub(h.cat,data)){
-        showAllWithFilters(data,h.cat,h.filter&&h.filter!=='te-gjitha'?h.filter:'te-gjitha');
+        showAllWithFilters(data,h.cat,h.filter&&h.filter!=='te-gjitha'?h.filter:'te-gjitha',h.subfilter||'');
       }
       else if(isKat(h.cat,data)){
         /* Kategori që ruhet si kat, jo sub — shfaq të gjithë artikujt me atë kat */
@@ -808,11 +867,11 @@
     // Level-1 filter: sub category (Meshkuj, Femra...) — klik sërish e çaktivizon
     window.applySubFilter=function(sub){
       var newSub = (_state.activeSub===sub) ? 'te-gjitha' : sub;
-      _state.activeSub=newSub; _state.activeKat='te-gjitha';
+      _state.activeSub=newSub; _state.activeKat='te-gjitha'; _state.activeSubKat='te-gjitha';
       setHash(newSub==='te-gjitha'?'':newSub,'te-gjitha',true);
       renderBreadcrumb();
-      renderFilterBarAll(_state.allArticles,newSub,'te-gjitha');
-      renderGridAll(_state.allArticles,newSub,'te-gjitha');
+      renderFilterBarAll(_state.allArticles,newSub,'te-gjitha','te-gjitha');
+      renderGridAll(_state.allArticles,newSub,'te-gjitha','te-gjitha');
       scrollToGrid();
       /* OG for sub-category */
       var filtered=newSub==='te-gjitha'?_state.allArticles:_state.allArticles.filter(function(a){ return artMatchesCat(a,newSub); });
@@ -822,23 +881,45 @@
       updatePageOg(title,desc,firstPhotoFromList(filtered),window.location.href);
     };
 
-    // Level-2 filter: kat (Mbathje, Kanatjere...)
+    // Level-2 filter for normal subs: kat (Mbathje, Kanatjere...) — klik sërish çaktivizoj
     window.applyKatFilter=function(kat){
-      _state.activeKat=kat;
+      _state.activeKat=kat; _state.activeSubKat='te-gjitha';
       var _sub=_state.activeSub&&_state.activeSub!=='te-gjitha'?_state.activeSub:'';
       if(_sub){ setHash(_sub,kat,true); } else { setHash(kat,'te-gjitha',true); }
       renderBreadcrumb();
-      renderFilterBarAll(_state.allArticles,_state.activeSub,kat);
-      renderGridAll(_state.allArticles,_state.activeSub,kat);
+      renderFilterBarAll(_state.allArticles,_state.activeSub,kat,'te-gjitha');
+      renderGridAll(_state.allArticles,_state.activeSub,kat,'te-gjitha');
       scrollToGrid();
-      /* OG for kat sub-filter */
+      /* OG */
       var sub=_state.activeSub; var filtered;
       if(kat==='te-gjitha'){ filtered=sub&&sub!=='te-gjitha'?_state.allArticles.filter(function(a){ return artMatchesCat(a,sub); }):_state.allArticles; }
       else { filtered=_state.allArticles.filter(function(a){ return (sub&&sub!=='te-gjitha'?artMatchesCat(a,sub):true)&&artKatArr(a).includes(kat); }); }
       var label=kat==='te-gjitha'?(sub&&sub!=='te-gjitha'?sub:'Artikujt'):kat;
-      var title=label+' — Intal Underwear';
-      var desc='Koleksioni i plotë i të brendëshmes — '+label+'. Cilësi shqiptare direkt nga fabrika.';
-      updatePageOg(title,desc,firstPhotoFromList(filtered),window.location.href);
+      updatePageOg(label+' — Intal Underwear','Koleksioni i plotë i të brendëshmes — '+label+'. Cilësi shqiptare direkt nga fabrika.',firstPhotoFromList(filtered),window.location.href);
+    };
+
+    // Level-2 filter for Stinore: season (Dimër, Verë) — toggle
+    window.applySeasonFilter=function(sez){
+      var newSez=(_state.activeKat===sez)?'te-gjitha':sez;
+      _state.activeKat=newSez; _state.activeSubKat='te-gjitha';
+      var _sub=_state.activeSub&&_state.activeSub!=='te-gjitha'?_state.activeSub:'';
+      setHash(_sub,newSez,true,'');
+      renderBreadcrumb();
+      renderFilterBarAll(_state.allArticles,_state.activeSub,newSez,'te-gjitha');
+      renderGridAll(_state.allArticles,_state.activeSub,newSez,'te-gjitha');
+      scrollToGrid();
+    };
+
+    // Level-3 filter for Stinore: product type (Pizhame, Kemisha...) — toggle
+    window.applySubKatFilter=function(kat){
+      var newKat=(_state.activeSubKat===kat)?'te-gjitha':kat;
+      _state.activeSubKat=newKat;
+      var _sub=_state.activeSub&&_state.activeSub!=='te-gjitha'?_state.activeSub:'';
+      setHash(_sub,_state.activeKat,true,newKat!=='te-gjitha'?newKat:'');
+      renderBreadcrumb();
+      renderFilterBarAll(_state.allArticles,_state.activeSub,_state.activeKat,newKat);
+      renderGridAll(_state.allArticles,_state.activeSub,_state.activeKat,newKat);
+      scrollToGrid();
     };
 
     window.hoverEnter=function(wrap){
