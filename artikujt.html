@@ -221,23 +221,24 @@
           <i class="ri-menu-line"></i>
         </button>
         <div class="nav-links">
-          <a href="index.html" class="nav-link">Home</a>
-          <a href="artikujt.html" class="nav-link active">Artikujt</a>
-          <a href="pelhura.html" class="nav-link">Pelhura</a>
-          <a href="rreth-nesh.html" class="nav-link">Rreth Nesh</a>
+          <a href="index.html" class="nav-link" data-t="nav-home">Home</a>
+          <a href="artikujt.html" class="nav-link active" data-t="nav-art">Artikujt</a>
+          <a href="pelhura.html" class="nav-link" data-t="nav-pel">Pelhura</a>
+          <a href="rreth-nesh.html" class="nav-link" data-t="nav-rr">Rreth Nesh</a>
         </div>
       </div>
 
       <a href="index.html" class="navbar-brand">Intal Underwear</a>
 
       <div class="navbar-right">
-        <button class="nav-share-btn" onclick="shareCurrentPage()" aria-label="Share">
-          <i class="ri-share-line"></i><span class="nav-share-text"> Share</span>
-        </button>
+        <div class="lang-toggle" id="lang-toggle">
+          <span class="lang-opt" id="lt-al" onclick="setLang('al')">AL</span>
+          <span class="lang-sep">|</span>
+          <span class="lang-opt" id="lt-en" onclick="setLang('en')">EN</span>
+        </div>
         <button class="search-btn" aria-label="Kërko">
           <i class="ri-search-line"></i>
         </button>
-        
       </div>
     </div>
   </nav>
@@ -266,7 +267,7 @@
   <!-- Article grid -->
   <div id="dyn-grid"></div>
   <div id="load-more-wrap" style="display:none;text-align:center;padding:0 0 60px;">
-    <button id="load-more-btn" onclick="loadMoreArts()" style="background:none;border:1.5px solid #1a1a1a;border-radius:4px;padding:11px 36px;font-family:var(--fh);font-size:11px;font-weight:700;letter-spacing:1.5px;cursor:pointer;text-transform:uppercase;">Ngarko më shumë</button>
+    <button id="load-more-btn" onclick="loadMoreArts()" style="background:none;border:1.5px solid #1a1a1a;border-radius:4px;padding:11px 36px;font-family:var(--fh);font-size:11px;font-weight:700;letter-spacing:1.5px;cursor:pointer;text-transform:uppercase;" data-t="load-more">Ngarko më shumë</button>
   </div>
 
   <!-- Detail popup -->
@@ -306,8 +307,8 @@
 
         <!-- Footer buttons -->
         <div class="art-det-footer">
-          <button onclick="goKontaktArt()" style="flex:1;background:#111;color:#fff;border:none;padding:11px 10px;font-size:10px;font-weight:500;letter-spacing:1.2px;text-transform:uppercase;cursor:pointer;text-align:center;transition:background .15s;" onmouseover="this.style.background='#333'" onmouseout="this.style.background='#111'">Na Kontaktoni</button>
-          <button onclick="shareArtUrl()" style="display:flex;align-items:center;justify-content:center;gap:5px;background:#fff;border:.5px solid var(--border);padding:11px 18px;font-size:10px;font-weight:500;letter-spacing:1px;text-transform:uppercase;cursor:pointer;color:var(--muted);transition:all .15s;" onmouseover="this.style.borderColor='#111';this.style.color='#111'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'"><i class="ri-share-line" style="font-size:14px;"></i> Share</button>
+          <button onclick="goKontaktArt()" style="flex:1;background:#111;color:#fff;border:none;padding:11px 10px;font-size:10px;font-weight:500;letter-spacing:1.2px;text-transform:uppercase;cursor:pointer;text-align:center;transition:background .15s;" onmouseover="this.style.background='#333'" onmouseout="this.style.background='#111'" data-t="popup-kontakt">Na Kontaktoni</button>
+          <button onclick="shareArtUrl()" style="display:flex;align-items:center;justify-content:center;gap:5px;background:#fff;border:.5px solid var(--border);padding:11px 18px;font-size:10px;font-weight:500;letter-spacing:1px;text-transform:uppercase;cursor:pointer;color:var(--muted);transition:all .15s;" onmouseover="this.style.borderColor='#111';this.style.color='#111'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'"><i class="ri-share-line" style="font-size:14px;"></i> <span data-t="popup-share">Share</span></button>
         </div>
       </div>
     </div>
@@ -317,11 +318,11 @@
   <div class="simple-footer">
     <div class="contact-locations">
       <a class="contact-loc" href="https://maps.google.com/?q=Rrobaqep%C3%ABsi+INTAL,+Rruga+Arbanes,+Vaqarr,+Tiran%C3%AB+1035" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;display:block;cursor:pointer;">
-        <p class="contact-loc-name">Selia Kryesore</p>
+        <p class="contact-loc-name" data-t="loc1-name">Selia Kryesore</p>
         <p class="contact-loc-addr">Rrobaqepësi INTAL, Rruga Arbanes, Vaqarr, Tiranë 1035</p>
       </a>
       <a class="contact-loc" href="https://maps.google.com/?q=Intal,+Rruga+5+Maji+67%2F1,+Tiran%C3%AB+1032" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;display:block;cursor:pointer;">
-        <p class="contact-loc-name">Dyqani</p>
+        <p class="contact-loc-name" data-t="loc2-name">Dyqani</p>
         <p class="contact-loc-addr">Intal, Rruga 5 Maji 67/1, Tiranë 1032</p>
       </a>
     </div>
@@ -342,36 +343,36 @@
     </div>
     <div class="menu-drawer-body">
       <nav class="menu-drawer-nav">
-        <a href="index.html" class="menu-drawer-link" onclick="closeMenuDrawer()">Home</a>
-        <a href="artikujt.html" class="menu-drawer-link" onclick="closeMenuDrawer()">Artikujt</a>
-        <a href="pelhura.html" class="menu-drawer-link" onclick="closeMenuDrawer()">Pelhura</a>
-        <a href="rreth-nesh.html" class="menu-drawer-link" onclick="closeMenuDrawer()">Rreth Nesh</a>
-        <a href="index.html#kontakt" class="menu-drawer-link" onclick="goKontakt();return false;">Kontakt</a>
+        <a href="index.html" class="menu-drawer-link" onclick="closeMenuDrawer()" data-t="nav-home">Home</a>
+        <a href="artikujt.html" class="menu-drawer-link" onclick="closeMenuDrawer()" data-t="nav-art">Artikujt</a>
+        <a href="pelhura.html" class="menu-drawer-link" onclick="closeMenuDrawer()" data-t="nav-pel">Pelhura</a>
+        <a href="rreth-nesh.html" class="menu-drawer-link" onclick="closeMenuDrawer()" data-t="nav-rr">Rreth Nesh</a>
+        <a href="index.html#kontakt" class="menu-drawer-link" onclick="goKontakt();return false;" data-t="nav-kontakt">Kontakt</a>
       </nav>
 
       <div class="menu-drawer-divider"></div>
 
-      <p class="menu-drawer-eyebrow">NA KONTAKTONI</p>
+      <p class="menu-drawer-eyebrow" data-t="md-ct-eyebrow">NA KONTAKTONI</p>
 
       <div class="menu-drawer-contacts">
         <a class="menu-drawer-contact-item" href="tel:+355692776636">
           <div class="menu-drawer-icon"><i class="ri-phone-line"></i></div>
           <div>
-            <span class="menu-drawer-label">Telefon / WhatsApp</span>
+            <span class="menu-drawer-label" data-t="ct-phone-label">Telefon / WhatsApp</span>
             <span class="menu-drawer-value">+355 692 776 636</span>
           </div>
         </a>
         <a class="menu-drawer-contact-item" href="mailto:info@intal.com">
           <div class="menu-drawer-icon"><i class="ri-mail-line"></i></div>
           <div>
-            <span class="menu-drawer-label">Email</span>
+            <span class="menu-drawer-label" data-t="ct-email-label">Email</span>
             <span class="menu-drawer-value">info@intal.com</span>
           </div>
         </a>
         <div class="menu-drawer-contact-item">
           <div class="menu-drawer-icon"><i class="ri-map-pin-line"></i></div>
           <div>
-            <span class="menu-drawer-label">Adresa</span>
+            <span class="menu-drawer-label" data-t="ct-addr-label">Adresa</span>
             <span class="menu-drawer-value">Tiranë, Shqipëri</span>
           </div>
         </div>
@@ -381,11 +382,11 @@
 
       <div class="menu-drawer-locations">
         <a class="menu-drawer-loc" href="https://maps.google.com/?q=Rrobaqep%C3%ABsi+INTAL,+Rruga+Arbanes,+Vaqarr,+Tiran%C3%AB+1035" target="_blank" rel="noopener">
-          <p class="menu-drawer-loc-name">Selia Kryesore</p>
+          <p class="menu-drawer-loc-name" data-t="loc1-name">Selia Kryesore</p>
           <p class="menu-drawer-loc-addr">Rrobaqepësi INTAL, Rruga Arbanes, Vaqarr, Tiranë 1035</p>
         </a>
         <a class="menu-drawer-loc" href="https://maps.google.com/?q=Intal,+Rruga+5+Maji+67%2F1,+Tiran%C3%AB+1032" target="_blank" rel="noopener">
-          <p class="menu-drawer-loc-name">Dyqani</p>
+          <p class="menu-drawer-loc-name" data-t="loc2-name">Dyqani</p>
           <p class="menu-drawer-loc-addr">Intal, Rruga 5 Maji 67/1, Tiranë 1032</p>
         </a>
       </div>
@@ -418,6 +419,7 @@
 
     // mode: '' = show all, 'sub' = filter by sub category, 'kat' = filter by kat
     var _state = { cat:'', filter:'te-gjitha', filterMode:'', articles:[], allArticles:[] };
+    if(!window._t) window._t=function(k){return k;};
     var _det = { artIdx:0, photoIdx:0, articles:[] };
 
     function getHash(){
@@ -536,8 +538,8 @@
       parts.push('<a href="index.html">HOME</a>');
       var isRoot=!sub&&!kat&&!cat;
       parts.push(isRoot
-        ?'<span class="cur">ARTIKUJT</span>'
-        :'<a href="#" onclick="bcGoAll();return false;">ARTIKUJT</a>');
+        ?'<span class="cur">'+_t('ARTIKUJT')+'</span>'
+        :'<a href="#" onclick="bcGoAll();return false;">'+_t('ARTIKUJT')+'</a>');
       if(sub){
         var _hasSez=subHasSeasons(_state.allArticles||[],sub);
         if(_hasSez&&kat&&subkat){
@@ -742,7 +744,7 @@
 
     function renderGrid(list,filter){
       var show=filter==='te-gjitha'?list:list.filter(function(a){ return artMatchesKat(a,filter); });
-      document.getElementById('pg-count').textContent=show.length+' ARTIKUJ';
+      document.getElementById('pg-count').textContent=show.length+' '+_t('ARTIKUJ');
       _pgList=show; _pgShown=0; _pgOpener='openDet';
       _pgRender(false);
     }
@@ -752,7 +754,7 @@
       if(activeSub&&activeSub!=='te-gjitha') show=show.filter(function(a){ return artMatchesCat(a,activeSub); });
       if(activeKat&&activeKat!=='te-gjitha') show=show.filter(function(a){ return artMatchesKat(a,activeKat); });
       if(activeSubKat&&activeSubKat!=='te-gjitha') show=show.filter(function(a){ return artMatchesKat(a,activeSubKat); });
-      document.getElementById('pg-count').textContent=show.length+' ARTIKUJ';
+      document.getElementById('pg-count').textContent=show.length+' '+_t('ARTIKUJ');
       _pgList=show; _pgShown=0; _pgOpener='openDetAll';
       _pgRender(false);
     }
@@ -1073,7 +1075,7 @@
       var masat=a.masat||a.sizes||[];
       var mEl=document.getElementById('art-detail-masat');
       mEl.innerHTML=masat.length
-        ?'<p style="font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin:0 0 8px;font-weight:600;">MASAT</p>'
+        ?'<p style="font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin:0 0 8px;font-weight:600;">'+_t('MASAT')+'</p>'
          +'<div style="display:flex;flex-wrap:wrap;gap:6px;">'
          +masat.map(function(m){ return '<span style="border:.5px solid #ccc;padding:5px 12px;font-size:11px;font-weight:500;letter-spacing:.5px;color:#222;min-width:36px;text-align:center;">'+m+'</span>'; }).join('')
          +'</div>':'';
@@ -1082,7 +1084,7 @@
       var nEl=document.getElementById('art-detail-ngjyrat');
       var ngjyrat=a.ngjyrat||[];
       nEl.innerHTML=ngjyrat.length
-        ?'<p style="font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin:0 0 8px;font-weight:600;">NGJYRAT</p>'
+        ?'<p style="font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin:0 0 8px;font-weight:600;">'+_t('NGJYRAT')+'</p>'
          +'<div style="display:flex;flex-wrap:wrap;gap:10px;align-items:flex-start;">'
          +ngjyrat.map(function(n){
            return '<div style="display:flex;flex-direction:column;align-items:center;gap:4px;">'
@@ -1095,7 +1097,7 @@
       var perberja=a.perberja||[];
       var pEl=document.getElementById('art-detail-perberja');
       pEl.innerHTML=perberja.length
-        ?'<p style="font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin:0 0 8px;font-weight:600;">PËRBËRJA</p>'
+        ?'<p style="font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin:0 0 8px;font-weight:600;">'+_t('PERBERJA')+'</p>'
          +'<div style="border:.5px solid var(--border);overflow:hidden;">'
          +perberja.map(function(p,i){
            var emri=p.material||p.name||'';
@@ -1243,7 +1245,7 @@
       /* Fshih filter bar-in gjatë kërkimit */
       document.getElementById('dyn-filter-bar').style.display = 'none';
       var found = all.filter(function(a){ return artMatchesQuery(a, q); });
-      document.getElementById('pg-count').textContent = found.length + ' ARTIKUJ';
+      document.getElementById('pg-count').textContent = found.length + ' ' + _t('ARTIKUJ');
       if (!found.length) {
         grid.innerHTML = '<div style="grid-column:1/-1;padding:80px 0;text-align:center;color:var(--muted);font-size:13px;">Nuk u gjet asnjë artikull për "<strong>'+q+'</strong>".</div>';
       } else {
@@ -1332,6 +1334,64 @@
     </svg>
   </a>
 </div>
+
+<!-- Language system -->
+<style>
+  .lang-toggle{display:flex;align-items:center;gap:3px;font-size:11px;font-weight:700;letter-spacing:1.5px;user-select:none;}
+  .lang-opt{cursor:pointer;color:var(--muted);transition:color .15s;padding:2px 1px;}
+  .lang-opt.active{color:var(--black);}
+  .lang-sep{color:#d1d5dc;font-weight:300;font-size:10px;}
+</style>
+<script>
+(function(){
+  var T={
+    al:{
+      'load-more':'Ngarko më shumë',
+      'popup-kontakt':'Na Kontaktoni','popup-share':'Share',
+      'loc1-name':'Selia Kryesore','loc2-name':'Dyqani',
+      'md-ct-eyebrow':'NA KONTAKTONI',
+      'ct-phone-label':'Telefon / WhatsApp','ct-email-label':'Email','ct-addr-label':'Adresa',
+      'nav-home':'Home','nav-art':'Artikujt','nav-pel':'Pelhura','nav-rr':'Rreth Nesh','nav-kontakt':'Kontakt',
+      'MASAT':'MASAT','NGJYRAT':'NGJYRAT','PERBERJA':'PËRBËRJA',
+      'ARTIKUJ':'ARTIKUJ','ARTIKUJT':'ARTIKUJT'
+    },
+    en:{
+      'load-more':'Load More',
+      'popup-kontakt':'Contact Us','popup-share':'Share',
+      'loc1-name':'Headquarters','loc2-name':'Store',
+      'md-ct-eyebrow':'CONTACT US',
+      'ct-phone-label':'Phone / WhatsApp','ct-email-label':'Email','ct-addr-label':'Address',
+      'nav-home':'Home','nav-art':'Products','nav-pel':'Fabric','nav-rr':'About Us','nav-kontakt':'Contact',
+      'MASAT':'SIZES','NGJYRAT':'COLORS','PERBERJA':'COMPOSITION',
+      'ARTIKUJ':'PRODUCTS','ARTIKUJT':'PRODUCTS'
+    }
+  };
+  var _lang=localStorage.getItem('intal_lang')||'al';
+  window._t=function(k){ return (T[_lang]&&T[_lang][k])||k; };
+  function applyLang(lang){
+    _lang=lang;
+    localStorage.setItem('intal_lang',lang);
+    window._t=function(k){ return (T[lang]&&T[lang][k])||k; };
+    var dict=T[lang];
+    document.querySelectorAll('[data-t]').forEach(function(el){
+      var k=el.getAttribute('data-t');
+      if(dict[k]!==undefined) el.textContent=dict[k];
+    });
+    var alEl=document.getElementById('lt-al');
+    var enEl=document.getElementById('lt-en');
+    if(alEl) alEl.classList.toggle('active',lang==='al');
+    if(enEl) enEl.classList.toggle('active',lang==='en');
+    document.documentElement.lang=lang==='en'?'en':'sq';
+    // re-render breadcrumb and count if visible
+    try{ renderBreadcrumb(); }catch(e){}
+    var cnt=document.getElementById('pg-count');
+    if(cnt&&cnt.textContent){ var m=cnt.textContent.match(/^(\d+)\s/); if(m) cnt.textContent=m[1]+' '+_t('ARTIKUJ'); }
+  }
+  window.setLang=function(lang){ applyLang(lang); };
+  document.addEventListener('DOMContentLoaded',function(){ applyLang(_lang); });
+  if(document.readyState!=='loading') applyLang(_lang);
+})();
+</script>
 
 <!-- PROMO POPUP -->
 <div id="promo-popup-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:5000;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(4px);" onclick="if(event.target===this)closePromoPopup()">
