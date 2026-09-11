@@ -60,6 +60,10 @@
     .navbar-brand{font-size:clamp(10px,1vw,13px);font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#0a0a0a;text-decoration:none;}
     .nav-hamburger{display:flex;background:none;border:none;cursor:pointer;padding:0;align-items:center;color:#0a0a0a;}
     .navbar-right{display:flex;align-items:center;gap:clamp(8px,1vw,16px);}
+    .lang-toggle{display:flex;align-items:center;gap:3px;font-size:11px;font-weight:700;letter-spacing:1.5px;user-select:none;}
+    .lang-opt{cursor:pointer;color:var(--muted);transition:color .15s;padding:2px 1px;}
+    .lang-opt.active{color:var(--black);}
+    .lang-sep{color:#d1d5dc;font-weight:300;font-size:10px;}
     .nav-links{display:flex;gap:clamp(14px,1.8vw,28px);}
     @media(max-width:768px){.nav-links{display:none;}}
     .menu-drawer{position:fixed;top:0;left:0;bottom:0;width:min(360px,85vw);background:#0a0a0a;z-index:200;transform:translateX(-100%);transition:transform 0.35s ease;}
@@ -427,9 +431,11 @@
       <a href="index.html" class="navbar-brand">Intal Albania Underwear</a>
 
       <div class="navbar-right">
-        <button class="nav-share-btn" onclick="heroShare()" aria-label="Share">
-          <i class="ri-share-line"></i><span class="nav-share-text"> Share</span>
-        </button>
+        <div class="lang-toggle" id="lang-toggle">
+          <span class="lang-opt" id="lt-al" onclick="setLang('al')">AL</span>
+          <span class="lang-sep">|</span>
+          <span class="lang-opt" id="lt-en" onclick="setLang('en')">EN</span>
+        </div>
         <button class="search-btn" aria-label="Kërko">
           <i class="ri-search-line"></i>
         </button>
@@ -445,11 +451,11 @@
     fetchpriority="high" decoding="async" aria-hidden="true"
     alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;">
     <div class="hero-content">
-      <p class="hero-eyebrow">Prodhim Shqiptar</p>
-      <h1 class="hero-heading">Fabrike Prodhimi të Brëndshem</h1>
+      <p class="hero-eyebrow" data-t="hero-eyebrow">Prodhim Shqiptar</p>
+      <h1 class="hero-heading" data-t="hero-heading">Fabrike Prodhimi të Brëndshem</h1>
       <div class="hero-buttons">
-        <a href="artikujt.html" class="btn-primary">Shiko Artikujt</a>
-        <a href="index.html?goto=kontakt" class="btn-outline">Na Kontakto</a>
+        <a href="artikujt.html" class="btn-primary" data-t="hero-btn1">Shiko Artikujt</a>
+        <a href="index.html?goto=kontakt" class="btn-outline" data-t="hero-btn2">Na Kontakto</a>
       </div>
     </div>
   </section>
@@ -457,8 +463,8 @@
   <!-- ── Products Showcase ────────────────────────────────────── -->
   <section class="showcase-section">
     <div class="showcase-header">
-      <p class="showcase-eyebrow">Produktet</p>
-      <h2 class="showcase-heading">Zbulo Koleksionin</h2>
+      <p class="showcase-eyebrow" data-t="sc-eyebrow">Produktet</p>
+      <h2 class="showcase-heading" data-t="sc-heading">Zbulo Koleksionin</h2>
     </div>
     <div class="showcase-grid" id="showcase-grid">
       <!-- rendered dynamically -->
@@ -554,32 +560,32 @@
   <section class="about-section">
     <div class="about-inner">
       <div class="about-left">
-        <p class="about-eyebrow">Rreth Nesh</p>
-        <h2 class="about-heading">Intal — Prodhim Shqiptar i Brendëshmes</h2>
-        <p class="about-body">Në Intal, jemi të dedicuar për të ofruar të brendëshme premium që kombinon rehati, cilësi dhe stil. Çdo produkt prodhohet me kujdes nga materialet më të mira, për të siguruar kënaqësinë tuaj të përditshme.</p>
-        <a href="index.html?goto=kontakt" class="about-btn">Na Kontaktoni</a>
+        <p class="about-eyebrow" data-t="about-eyebrow">Rreth Nesh</p>
+        <h2 class="about-heading" data-t="about-heading">Intal — Prodhim Shqiptar i Brendëshmes</h2>
+        <p class="about-body" data-t="about-body">Në Intal, jemi të dedicuar për të ofruar të brendëshme premium që kombinon rehati, cilësi dhe stil. Çdo produkt prodhohet me kujdes nga materialet më të mira, për të siguruar kënaqësinë tuaj të përditshme.</p>
+        <a href="index.html?goto=kontakt" class="about-btn" data-t="about-btn">Na Kontaktoni</a>
       </div>
       <div class="about-right">
         <div class="about-stat">
           <span class="about-stat-num">15+</span>
-          <span class="about-stat-label">Vite Eksperiencë</span>
+          <span class="about-stat-label" data-t="stat1">Vite Eksperiencë</span>
         </div>
         <div class="about-stat">
           <span class="about-stat-num">100%</span>
-          <span class="about-stat-label">Prodhim Vendor</span>
+          <span class="about-stat-label" data-t="stat2">Prodhim Vendor</span>
         </div>
         <div class="about-stat">
           <span class="about-stat-num">500+</span>
-          <span class="about-stat-label">Partnerë Biznesi</span>
+          <span class="about-stat-label" data-t="stat3">Partnerë Biznesi</span>
         </div>
         <div class="about-columns">
           <div class="about-col">
-            <p class="about-col-title">Vizioni Ynë</p>
-            <p class="about-col-text">Të bëhemi referencë kryesore e brendëshmes premium në rajon, me fokus në cilësi dhe inovacion.</p>
+            <p class="about-col-title" data-t="vision-title">Vizioni Ynë</p>
+            <p class="about-col-text" data-t="vision-text">Të bëhemi referencë kryesore e brendëshmes premium në rajon, me fokus në cilësi dhe inovacion.</p>
           </div>
           <div class="about-col">
-            <p class="about-col-title">Misioni Ynë</p>
-            <p class="about-col-text">Ofrojmë produkte me cilësi të lartë, çmime konkurruese dhe shërbim të shkëlqyer ndaj çdo klienti.</p>
+            <p class="about-col-title" data-t="mission-title">Misioni Ynë</p>
+            <p class="about-col-text" data-t="mission-text">Ofrojmë produkte me cilësi të lartë, çmime konkurruese dhe shërbim të shkëlqyer ndaj çdo klienti.</p>
           </div>
         </div>
       </div>
@@ -590,29 +596,29 @@
   <section class="services-section">
     <div class="services-header">
       <p class="services-eyebrow">2025</p>
-      <h2 class="services-heading">Shërbimet Tona</h2>
+      <h2 class="services-heading" data-t="srv-heading">Shërbimet Tona</h2>
     </div>
     <div class="services-grid">
       <div class="service-card">
         <div class="service-img-wrap">
           <img src="" alt="Prodhim" loading="lazy">
         </div>
-        <p class="service-title">Prodhim Brendëshëm</p>
-        <p class="service-desc">Prodhojmë brendëshme premium me materialet më të mira — pambuk natyral, vikson dhe ribana — sipas standardeve të larta të cilësisë.</p>
+        <p class="service-title" data-t="srv1-title">Prodhim Brendëshëm</p>
+        <p class="service-desc" data-t="srv1-desc">Prodhojmë brendëshme premium me materialet më të mira — pambuk natyral, vikson dhe ribana — sipas standardeve të larta të cilësisë.</p>
       </div>
       <div class="service-card">
         <div class="service-img-wrap">
           <img src="" alt="Shumicë" loading="lazy">
         </div>
-        <p class="service-title">Shitje me Shumicë</p>
-        <p class="service-desc">Ofrojmë çmime konkurruese për porosi me shumicë. Partnerë idealë për dyqane, biznese dhe distributorë në të gjithë rajonin.</p>
+        <p class="service-title" data-t="srv2-title">Shitje me Shumicë</p>
+        <p class="service-desc" data-t="srv2-desc">Ofrojmë çmime konkurruese për porosi me shumicë. Partnerë idealë për dyqane, biznese dhe distributorë në të gjithë rajonin.</p>
       </div>
       <div class="service-card">
         <div class="service-img-wrap">
           <img src="" alt="Personalizim" loading="lazy">
         </div>
-        <p class="service-title">Personalizim</p>
-        <p class="service-desc">Prodhim me etiketë private dhe personalizim sipas kërkesës së klientit — ngjyra, madhësi dhe dizajne ekskluzive.</p>
+        <p class="service-title" data-t="srv3-title">Personalizim</p>
+        <p class="service-desc" data-t="srv3-desc">Prodhim me etiketë private dhe personalizim sipas kërkesës së klientit — ngjyra, madhësi dhe dizajne ekskluzive.</p>
       </div>
     </div>
   </section>
@@ -623,15 +629,15 @@
 
       <!-- Left: info -->
       <div class="contact-left">
-        <p class="contact-eyebrow">NA KONTAKTONI</p>
-        <h2 class="contact-heading">Porositni<br>Tani</h2>
-        <p class="contact-sub">Na kontaktoni për porosi me shumicë.</p>
+        <p class="contact-eyebrow" data-t="ct-eyebrow">NA KONTAKTONI</p>
+        <h2 class="contact-heading" data-t="ct-heading">Porositni<br>Tani</h2>
+        <p class="contact-sub" data-t="ct-sub">Na kontaktoni për porosi me shumicë.</p>
 
         <div class="contact-items">
           <a class="contact-item" href="tel:+355692776636">
             <div class="contact-icon"><i class="ri-phone-line"></i></div>
             <div>
-              <span class="contact-item-label">Telefon / WhatsApp</span>
+              <span class="contact-item-label" data-t="ct-phone-label">Telefon / WhatsApp</span>
               <span class="contact-item-value">+355 692 776 636</span>
             </div>
           </a>
@@ -645,7 +651,7 @@
           <div class="contact-item">
             <div class="contact-icon"><i class="ri-map-pin-line"></i></div>
             <div>
-              <span class="contact-item-label">Adresa</span>
+              <span class="contact-item-label" data-t="ct-addr-label">Adresa</span>
               <span class="contact-item-value">Tiranë, Shqipëri</span>
             </div>
           </div>
@@ -655,20 +661,20 @@
 
       <!-- Right: form -->
       <div class="contact-right">
-        <p class="contact-form-title">Dërgoni një Mesazh</p>
+        <p class="contact-form-title" data-t="cf-title">Dërgoni një Mesazh</p>
         <form class="contact-form" id="cf-form">
           <div class="cf-row">
             <div class="cf-field">
-              <label class="cf-label">EMRI <span class="cf-opt">(opsional)</span></label>
-             <input class="cf-input" id="cf-name" type="text" name="Emri" placeholder="Emri juaj" autocomplete="name">
+              <label class="cf-label"><span data-t="cf-name-label">EMRI</span> <span class="cf-opt" data-t="cf-opt">( opsional)</span></label>
+             <input class="cf-input" id="cf-name" type="text" name="Emri" placeholder="Emri juaj" autocomplete="name" data-t-ph="cf-name-ph">
             </div>
             <div class="cf-field">
-              <label class="cf-label">TELEFON <span style="color:#e53e3e;">*</span></label>
-              <input class="cf-input" id="cf-tel" type="tel" name="Telefoni" required placeholder="Nr. i telefonit" autocomplete="tel">
+              <label class="cf-label"><span data-t="cf-tel-label">TELEFON</span> <span style="color:#e53e3e;">*</span></label>
+              <input class="cf-input" id="cf-tel" type="tel" name="Telefoni" required placeholder="Nr. i telefonit" autocomplete="tel" data-t-ph="cf-tel-ph">
             </div>
           </div>
           <div class="cf-field">
-            <label class="cf-label">PRODUKTET <span class="cf-opt">(shkruaj ose zgjedh)</span></label>
+            <label class="cf-label"><span data-t="cf-prod-label">PRODUKTET</span> <span class="cf-opt" data-t="cf-prod-opt">( shkruaj ose zgjedh)</span></label>
             <div class="cf-multiselect" id="cfMultiselect">
               <input type="hidden" name="Produktet" id="inputiFshehteProduktet">
               <div class="cf-tags" id="cfTags">
@@ -680,11 +686,11 @@
             </div>
           </div>
           <div class="cf-field">
-            <label class="cf-label">MESAZHI</label>
-            <textarea class="cf-input cf-textarea" id="cf-msg" placeholder="Sasia, specifikimet..."></textarea>
+            <label class="cf-label" data-t="cf-msg-label">MESAZHI</label>
+            <textarea class="cf-input cf-textarea" id="cf-msg" placeholder="Sasia, specifikimet..." data-t-ph="cf-msg-ph"></textarea>
           </div>
           <div id="cf-notif" style="display:none;padding:10px 14px;border-radius:4px;font-size:12px;letter-spacing:.3px;margin-bottom:8px;"></div>
-          <button class="cf-submit" type="submit">DËRGO KËRKESËN</button>
+          <button class="cf-submit" type="submit" data-t="cf-submit">DËRGO KËRKESËN</button>
         </form>
       </div>
 
@@ -693,7 +699,7 @@
     <!-- Locations full-width -->
     <div class="contact-locations">
       <a class="contact-loc" href="https://maps.google.com/?q=Rrobaqep%C3%ABsi+INTAL,+Rruga+Arbanes,+Vaqarr,+Tiran%C3%AB+1035" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;display:block;cursor:pointer;">
-        <p class="contact-loc-name">Selia Kryesore</p>
+        <p class="contact-loc-name" data-t="loc1-name">Selia Kryesore</p>
         <p class="contact-loc-addr">Rrobaqepësi INTAL, Rruga Arbanes, Vaqarr, Tiranë 1035</p>
       </a>
       <a class="contact-loc" href="https://maps.google.com/?q=Intal,+Rruga+5+Maji+67%2F1,+Tiran%C3%AB+1032" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;display:block;cursor:pointer;">
@@ -762,13 +768,13 @@
 
       <div class="menu-drawer-divider"></div>
 
-      <p class="menu-drawer-eyebrow">NA KONTAKTONI</p>
+      <p class="menu-drawer-eyebrow" data-t="md-ct-eyebrow">NA KONTAKTONI</p>
 
       <div class="menu-drawer-contacts">
         <a class="menu-drawer-contact-item" href="tel:+355692776636">
           <div class="menu-drawer-icon"><i class="ri-phone-line"></i></div>
           <div>
-            <span class="menu-drawer-label">Telefon / WhatsApp</span>
+            <span class="menu-drawer-label" data-t="ct-phone-label">Telefon / WhatsApp</span>
             <span class="menu-drawer-value">+355 692 776 636</span>
           </div>
         </a>
@@ -782,7 +788,7 @@
         <div class="menu-drawer-contact-item">
           <div class="menu-drawer-icon"><i class="ri-map-pin-line"></i></div>
           <div>
-            <span class="menu-drawer-label">Adresa</span>
+            <span class="menu-drawer-label" data-t="ct-addr-label">Adresa</span>
             <span class="menu-drawer-value">Tiranë, Shqipëri</span>
           </div>
         </div>
@@ -792,7 +798,7 @@
 
       <div class="menu-drawer-locations">
         <a class="menu-drawer-loc" href="https://maps.google.com/?q=Rrobaqep%C3%ABsi+INTAL,+Rruga+Arbanes,+Vaqarr,+Tiran%C3%AB+1035" target="_blank" rel="noopener">
-          <p class="menu-drawer-loc-name">Selia Kryesore</p>
+          <p class="menu-drawer-loc-name" data-t="loc1-name">Selia Kryesore</p>
           <p class="menu-drawer-loc-addr">Rrobaqepësi INTAL, Rruga Arbanes, Vaqarr, Tiranë 1035</p>
         </a>
         <a class="menu-drawer-loc" href="https://maps.google.com/?q=Intal,+Rruga+5+Maji+67%2F1,+Tiran%C3%AB+1032" target="_blank" rel="noopener">
@@ -1646,6 +1652,134 @@
       clearTimeout(t._to); t._to=setTimeout(function(){ t.style.opacity='0'; }, 2200);
     }
   };
+</script>
+
+<!-- Language system -->
+<script>
+(function(){
+  var T = {
+    al: {
+      'hero-eyebrow':'Prodhim Shqiptar',
+      'hero-heading':'Fabrike Prodhimi të Brëndshem',
+      'hero-btn1':'Shiko Artikujt',
+      'hero-btn2':'Na Kontakto',
+      'sc-eyebrow':'Produktet',
+      'sc-heading':'Zbulo Koleksionin',
+      'about-eyebrow':'Rreth Nesh',
+      'about-heading':'Intal — Prodhim Shqiptar i Brendëshmes',
+      'about-body':'Në Intal, jemi të dedicuar për të ofruar të brendëshme premium që kombinon rehati, cilësi dhe stil. Çdo produkt prodhohet me kujdes nga materialet më të mira, për të siguruar kënaqësinë tuaj të përditshme.',
+      'about-btn':'Na Kontaktoni',
+      'stat1':'Vite Eksperiencë',
+      'stat2':'Prodhim Vendor',
+      'stat3':'Partnerë Biznesi',
+      'vision-title':'Vizioni Ynë',
+      'vision-text':'Të bëhemi referencë kryesore e brendëshmes premium në rajon, me fokus në cilësi dhe inovacion.',
+      'mission-title':'Misioni Ynë',
+      'mission-text':'Ofrojmë produkte me cilësi të lartë, çmime konkurruese dhe shërbim të shkëlqyer ndaj çdo klienti.',
+      'srv-heading':'Shërbimet Tona',
+      'srv1-title':'Prodhim Brendëshëm',
+      'srv1-desc':'Prodhojmë brendëshme premium me materialet më të mira — pambuk natyral, vikson dhe ribana — sipas standardeve të larta të cilësisë.',
+      'srv2-title':'Shitje me Shumicë',
+      'srv2-desc':'Ofrojmë çmime konkurruese për porosi me shumicë. Partnerë idealë për dyqane, biznese dhe distributorë në të gjithë rajonin.',
+      'srv3-title':'Personalizim',
+      'srv3-desc':'Prodhim me etiketë private dhe personalizim sipas kërkesës së klientit — ngjyra, madhësi dhe dizajne ekskluzive.',
+      'ct-eyebrow':'NA KONTAKTONI',
+      'ct-heading':'Porositni<br>Tani',
+      'ct-sub':'Na kontaktoni për porosi me shumicë.',
+      'ct-phone-label':'Telefon / WhatsApp',
+      'ct-addr-label':'Adresa',
+      'cf-title':'Dërgoni një Mesazh',
+      'cf-name-label':'EMRI',
+      'cf-opt':'(opsional)',
+      'cf-tel-label':'TELEFON',
+      'cf-prod-label':'PRODUKTET',
+      'cf-prod-opt':'(shkruaj ose zgjedh)',
+      'cf-msg-label':'MESAZHI',
+      'cf-submit':'DËRGO KËRKESËN',
+      'loc1-name':'Selia Kryesore',
+      'md-ct-eyebrow':'NA KONTAKTONI',
+      'cf-name-ph':'Emri juaj',
+      'cf-tel-ph':'Nr. i telefonit',
+      'cf-msg-ph':'Sasia, specifikimet...'
+    },
+    en: {
+      'hero-eyebrow':'Albanian Production',
+      'hero-heading':'Underwear Manufacturing Factory',
+      'hero-btn1':'View Products',
+      'hero-btn2':'Contact Us',
+      'sc-eyebrow':'Products',
+      'sc-heading':'Discover the Collection',
+      'about-eyebrow':'About Us',
+      'about-heading':'Intal — Albanian Underwear Production',
+      'about-body':'At Intal, we are dedicated to offering premium underwear that combines comfort, quality and style. Every product is carefully made from the finest materials to ensure your everyday satisfaction.',
+      'about-btn':'Contact Us',
+      'stat1':'Years of Experience',
+      'stat2':'Local Production',
+      'stat3':'Business Partners',
+      'vision-title':'Our Vision',
+      'vision-text':'To become the leading reference for premium underwear in the region, with a focus on quality and innovation.',
+      'mission-title':'Our Mission',
+      'mission-text':'We offer high-quality products, competitive prices and excellent service to every client.',
+      'srv-heading':'Our Services',
+      'srv1-title':'Underwear Production',
+      'srv1-desc':'We manufacture premium underwear using the finest materials — natural cotton, viscose and rib fabric — according to the highest quality standards.',
+      'srv2-title':'Wholesale Sales',
+      'srv2-desc':'We offer competitive prices for wholesale orders. Ideal partners for shops, businesses and distributors throughout the region.',
+      'srv3-title':'Customization',
+      'srv3-desc':'Private label production and customization according to client specifications — colors, sizes and exclusive designs.',
+      'ct-eyebrow':'CONTACT US',
+      'ct-heading':'Order<br>Now',
+      'ct-sub':'Contact us for wholesale orders.',
+      'ct-phone-label':'Phone / WhatsApp',
+      'ct-addr-label':'Address',
+      'cf-title':'Send a Message',
+      'cf-name-label':'NAME',
+      'cf-opt':'(optional)',
+      'cf-tel-label':'PHONE',
+      'cf-prod-label':'PRODUCTS',
+      'cf-prod-opt':'(type or select)',
+      'cf-msg-label':'MESSAGE',
+      'cf-submit':'SEND REQUEST',
+      'loc1-name':'Headquarters',
+      'md-ct-eyebrow':'CONTACT US',
+      'cf-name-ph':'Your name',
+      'cf-tel-ph':'Phone number',
+      'cf-msg-ph':'Quantity, specifications...'
+    }
+  };
+
+  var _lang = localStorage.getItem('intal_lang') || 'al';
+
+  function applyLang(lang){
+    _lang = lang;
+    localStorage.setItem('intal_lang', lang);
+    var dict = T[lang];
+    // text content
+    document.querySelectorAll('[data-t]').forEach(function(el){
+      var k = el.getAttribute('data-t');
+      if(dict[k] !== undefined) el.innerHTML = dict[k];
+    });
+    // placeholders
+    document.querySelectorAll('[data-t-ph]').forEach(function(el){
+      var k = el.getAttribute('data-t-ph');
+      if(dict[k] !== undefined) el.placeholder = dict[k];
+    });
+    // toggle active state
+    var alEl = document.getElementById('lt-al');
+    var enEl = document.getElementById('lt-en');
+    if(alEl) alEl.classList.toggle('active', lang === 'al');
+    if(enEl) enEl.classList.toggle('active', lang === 'en');
+    // html lang attribute
+    document.documentElement.lang = lang === 'en' ? 'en' : 'sq';
+  }
+
+  window.setLang = function(lang){ applyLang(lang); };
+
+  // Apply on load
+  document.addEventListener('DOMContentLoaded', function(){ applyLang(_lang); });
+  // Also apply immediately for above-fold (in case DOMContentLoaded already fired)
+  if(document.readyState !== 'loading') applyLang(_lang);
+})();
 </script>
 
 <!-- Floating contact buttons -->
