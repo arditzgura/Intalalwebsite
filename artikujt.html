@@ -420,6 +420,7 @@
     // mode: '' = show all, 'sub' = filter by sub category, 'kat' = filter by kat
     var _state = { cat:'', filter:'te-gjitha', filterMode:'', articles:[], allArticles:[] };
     if(!window._t) window._t=function(k){return k;};
+    if(!window._tCat) window._tCat=function(k){return k;};
     var _det = { artIdx:0, photoIdx:0, articles:[] };
 
     function getHash(){
@@ -612,7 +613,7 @@
       if(!kats.length){ bar.style.display='none'; syncWrapH(); return; }
       bar.style.display='flex';
       var btns=['te-gjitha'].concat(kats).map(function(k){
-        var lbl=k==='te-gjitha'?'Të Gjitha':k;
+        var lbl=_tCat(k==='te-gjitha'?'Të Gjitha':k);
         return '<button class="dfc'+(active===k?' active':'')+'" onclick="applyFilter(\''+k.replace(/'/g,"\\'")+'\')">'+lbl+'</button>';
       }).join('');
       bar.innerHTML='<div class="dfc-row">'+btns+'</div>';
@@ -635,7 +636,7 @@
       // row 1: sub categories
       var row1='<div class="dfc-row">';
       subs.forEach(function(s){
-        row1+='<button class="dfc'+(activeSub===s?' active':'')+'" onclick="applySubFilter(\''+s.replace(/'/g,"\\'")+'\')">'+s+'</button>';
+        row1+='<button class="dfc'+(activeSub===s?' active':'')+'" onclick="applySubFilter(\''+s.replace(/'/g,"\\'")+'\')">'+_tCat(s)+'</button>';
       });
       row1+='</div>';
 
@@ -650,7 +651,7 @@
           if(seasons.length){
             row2='<div class="dfc-row">';
             seasons.forEach(function(k){
-              row2+='<button class="dfc'+(activeKat===k?' active':'')+'" onclick="applySeasonFilter(\''+k.replace(/'/g,"\\'")+'\')">'+k+'</button>';
+              row2+='<button class="dfc'+(activeKat===k?' active':'')+'" onclick="applySeasonFilter(\''+k.replace(/'/g,"\\'")+'\')">'+_tCat(k)+'</button>';
             });
             row2+='</div>';
           }
@@ -663,7 +664,7 @@
           if(subkats.length){
             row3='<div class="dfc-row dfc-row-sub">';
             subkats.forEach(function(k){
-              row3+='<button class="dfc-sub'+(activeSubKat===k?' active':'')+'" onclick="applySubKatFilter(\''+k.replace(/'/g,"\\'")+'\')">'+k+'</button>';
+              row3+='<button class="dfc-sub'+(activeSubKat===k?' active':'')+'" onclick="applySubKatFilter(\''+k.replace(/'/g,"\\'")+'\')">'+_tCat(k)+'</button>';
             });
             row3+='</div>';
           }
@@ -674,7 +675,7 @@
           if(kats.length){
             row2='<div class="dfc-row dfc-row-sub">';
             kats.forEach(function(k){
-              row2+='<button class="dfc-sub'+(activeKat===k?' active':'')+'" onclick="applyKatFilter(\''+k.replace(/'/g,"\\'")+'\')">'+k+'</button>';
+              row2+='<button class="dfc-sub'+(activeKat===k?' active':'')+'" onclick="applyKatFilter(\''+k.replace(/'/g,"\\'")+'\')">'+_tCat(k)+'</button>';
             });
             row2+='</div>';
           }
@@ -1366,12 +1367,24 @@
       'ARTIKUJ':'PRODUCTS','ARTIKUJT':'PRODUCTS'
     }
   };
+  var CAT={
+    'Meshkuj':'Men','Femra':'Women','Femijë':'Kids','Femije':'Kids',
+    'Stinore':'Seasonal','Dimër':'Winter','Dimer':'Winter','Verë':'Summer','Vere':'Summer',
+    'Pizhame':'Pajamas','Kemisha':'Shirts','Kostume':'Suits',
+    'Mbathje':'Underwear','Kanatjere':'Tank Tops','Çorape':'Socks',
+    'Kolloçe':'Boxers','Kolloge':'Boxers','Bodice':'Bodysuits','Bodis':'Bodysuits',
+    'Sutjena':'Bras','Fustane':'Dresses','Bluza':'Blouses','Bluze':'Blouses','Pantallona':'Pants',
+    'Fanella':'T-Shirts','Fanela':'T-Shirts',
+    'Të Gjitha':'All','te-gjitha':'All'
+  };
   var _lang=localStorage.getItem('intal_lang')||'al';
   window._t=function(k){ return (T[_lang]&&T[_lang][k])||k; };
+  window._tCat=function(k){ return (_lang==='en'&&CAT[k])||k; };
   function applyLang(lang){
     _lang=lang;
     localStorage.setItem('intal_lang',lang);
     window._t=function(k){ return (T[lang]&&T[lang][k])||k; };
+    window._tCat=function(k){ return (lang==='en'&&CAT[k])||k; };
     var dict=T[lang];
     document.querySelectorAll('[data-t]').forEach(function(el){
       var k=el.getAttribute('data-t');
@@ -1382,7 +1395,10 @@
     if(alEl) alEl.classList.toggle('active',lang==='al');
     if(enEl) enEl.classList.toggle('active',lang==='en');
     document.documentElement.lang=lang==='en'?'en':'sq';
-    // re-render breadcrumb and count if visible
+    // re-render filter bar, breadcrumb and count if visible
+    try{
+      renderFilterBarAll(_state.allArticles||[],_state.activeSub||'te-gjitha',_state.activeKat||'te-gjitha',_state.activeSubKat||'te-gjitha');
+    }catch(e){}
     try{ renderBreadcrumb(); }catch(e){}
     var cnt=document.getElementById('pg-count');
     if(cnt&&cnt.textContent){ var m=cnt.textContent.match(/^(\d+)\s/); if(m) cnt.textContent=m[1]+' '+_t('ARTIKUJ'); }
