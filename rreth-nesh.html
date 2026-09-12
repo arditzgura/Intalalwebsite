@@ -346,6 +346,12 @@
       transition: opacity 0.2s;
     }
     .rn-cta-btn:hover { opacity: 0.9; }
+
+    /* ── Lang Toggle ────────────────────────────────────────────── */
+    .lang-toggle{display:flex;align-items:center;gap:3px;font-size:11px;font-weight:700;letter-spacing:1.5px;user-select:none;}
+    .lang-opt{cursor:pointer;color:var(--muted);transition:color .15s;padding:2px 1px;}
+    .lang-opt.active{color:var(--black);}
+    .lang-sep{color:#d1d5dc;font-weight:300;font-size:10px;}
   </style>
 </head>
 <body>
@@ -358,19 +364,21 @@
           <i class="ri-menu-line"></i>
         </button>
         <div class="nav-links">
-          <a href="index.html" class="nav-link">Home</a>
-          <a href="artikujt.html" class="nav-link">Artikujt</a>
-          <a href="pelhura.html" class="nav-link">Pelhura</a>
-          <a href="rreth-nesh.html" class="nav-link active">Rreth Nesh</a>
+          <a href="index.html" class="nav-link" data-t="nav-home">Home</a>
+          <a href="artikujt.html" class="nav-link" data-t="nav-art">Artikujt</a>
+          <a href="pelhura.html" class="nav-link" data-t="nav-pel">Pelhura</a>
+          <a href="rreth-nesh.html" class="nav-link active" data-t="nav-rr">Rreth Nesh</a>
         </div>
       </div>
 
       <a href="index.html" class="navbar-brand">Intal Underwear</a>
 
       <div class="navbar-right">
-        <button class="nav-share-btn" onclick="rrShare()" aria-label="Share">
-          <i class="ri-share-line"></i><span class="nav-share-text"> Share</span>
-        </button>
+        <div class="lang-toggle" id="lang-toggle">
+          <span class="lang-opt" id="lt-al" onclick="setLang('al')">AL</span>
+          <span class="lang-sep">|</span>
+          <span class="lang-opt" id="lt-en" onclick="setLang('en')">EN</span>
+        </div>
         <button class="search-btn" aria-label="Kërko">
           <i class="ri-search-line"></i>
         </button>
@@ -415,7 +423,7 @@
 
   <!-- ── Mission & Vision ─────────────────────────────────────── -->
   <section class="rn-mv rn-section">
-    <p class="rn-mv-eyebrow">Drejtimi Ynë</p>
+    <p class="rn-mv-eyebrow" id="rn-mv-eyebrow">Drejtimi Ynë</p>
     <div class="rn-mv-grid">
       <div class="rn-mv-card">
         <div class="rn-mv-icon"><i class="ri-eye-line"></i></div>
@@ -433,8 +441,8 @@
   <!-- ── Values ───────────────────────────────────────────────── -->
   <section class="rn-values rn-section">
     <div class="rn-values-header">
-      <p class="rn-values-eyebrow">Parimet</p>
-      <h2 class="rn-values-heading">Vlerat Tona</h2>
+      <p class="rn-values-eyebrow" id="rn-values-eyebrow">Parimet</p>
+      <h2 class="rn-values-heading" id="rn-values-heading">Vlerat Tona</h2>
     </div>
     <div class="rn-values-grid">
       <div class="rn-value-card">
@@ -474,18 +482,18 @@
   <section class="rn-cta rn-section">
     <p class="rn-cta-eyebrow" id="rn-cta-eyebrow">Kontakt</p>
     <h2 class="rn-cta-heading" id="rn-cta-heading">Bashkohuni me ne</h2>
-    <a href="index.html?goto=kontakt" class="rn-cta-btn">Na Kontaktoni</a>
+    <a href="index.html?goto=kontakt" class="rn-cta-btn" id="rn-cta-btn">Na Kontaktoni</a>
   </section>
 
   <!-- ── Footer ──────────────────────────────────────────────── -->
   <div class="simple-footer">
     <div class="contact-locations">
       <a class="contact-loc" href="https://maps.google.com/?q=Rrobaqep%C3%ABsi+INTAL,+Rruga+Arbanes,+Vaqarr,+Tiran%C3%AB+1035" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;display:block;cursor:pointer;">
-        <p class="contact-loc-name">Selia Kryesore</p>
+        <p class="contact-loc-name" data-t="loc1-name">Selia Kryesore</p>
         <p class="contact-loc-addr">Rrobaqepësi INTAL, Rruga Arbanes, Vaqarr, Tiranë 1035</p>
       </a>
       <a class="contact-loc" href="https://maps.google.com/?q=Intal,+Rruga+5+Maji+67%2F1,+Tiran%C3%AB+1032" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;display:block;cursor:pointer;">
-        <p class="contact-loc-name">Dyqani</p>
+        <p class="contact-loc-name" data-t="loc2-name">Dyqani</p>
         <p class="contact-loc-addr">Intal, Rruga 5 Maji 67/1, Tiranë 1032</p>
       </a>
     </div>
@@ -506,36 +514,36 @@
     </div>
     <div class="menu-drawer-body">
       <nav class="menu-drawer-nav">
-        <a href="index.html" class="menu-drawer-link" onclick="closeMenuDrawer()">Home</a>
-        <a href="artikujt.html" class="menu-drawer-link" onclick="closeMenuDrawer()">Artikujt</a>
-        <a href="pelhura.html" class="menu-drawer-link" onclick="closeMenuDrawer()">Pelhura</a>
-        <a href="rreth-nesh.html" class="menu-drawer-link" onclick="closeMenuDrawer()">Rreth Nesh</a>
-        <a href="index.html?goto=kontakt" class="menu-drawer-link" onclick="goKontakt();return false;">Kontakt</a>
+        <a href="index.html" class="menu-drawer-link" onclick="closeMenuDrawer()" data-t="nav-home">Home</a>
+        <a href="artikujt.html" class="menu-drawer-link" onclick="closeMenuDrawer()" data-t="nav-art">Artikujt</a>
+        <a href="pelhura.html" class="menu-drawer-link" onclick="closeMenuDrawer()" data-t="nav-pel">Pelhura</a>
+        <a href="rreth-nesh.html" class="menu-drawer-link" onclick="closeMenuDrawer()" data-t="nav-rr">Rreth Nesh</a>
+        <a href="index.html?goto=kontakt" class="menu-drawer-link" onclick="goKontakt();return false;" data-t="nav-kontakt">Kontakt</a>
       </nav>
 
       <div class="menu-drawer-divider"></div>
 
-      <p class="menu-drawer-eyebrow">NA KONTAKTONI</p>
+      <p class="menu-drawer-eyebrow" data-t="md-ct-eyebrow">NA KONTAKTONI</p>
 
       <div class="menu-drawer-contacts">
         <a class="menu-drawer-contact-item" href="tel:+355692776636">
           <div class="menu-drawer-icon"><i class="ri-phone-line"></i></div>
           <div>
-            <span class="menu-drawer-label">Telefon / WhatsApp</span>
+            <span class="menu-drawer-label" data-t="ct-phone-label">Telefon / WhatsApp</span>
             <span class="menu-drawer-value">+355 692 776 636</span>
           </div>
         </a>
         <a class="menu-drawer-contact-item" href="mailto:info@intal.com">
           <div class="menu-drawer-icon"><i class="ri-mail-line"></i></div>
           <div>
-            <span class="menu-drawer-label">Email</span>
+            <span class="menu-drawer-label" data-t="ct-email-label">Email</span>
             <span class="menu-drawer-value">info@intal.com</span>
           </div>
         </a>
         <div class="menu-drawer-contact-item">
           <div class="menu-drawer-icon"><i class="ri-map-pin-line"></i></div>
           <div>
-            <span class="menu-drawer-label">Adresa</span>
+            <span class="menu-drawer-label" data-t="ct-addr-label">Adresa</span>
             <span class="menu-drawer-value">Tiranë, Shqipëri</span>
           </div>
         </div>
@@ -545,11 +553,11 @@
 
       <div class="menu-drawer-locations">
         <a class="menu-drawer-loc" href="https://maps.google.com/?q=Rrobaqep%C3%ABsi+INTAL,+Rruga+Arbanes,+Vaqarr,+Tiran%C3%AB+1035" target="_blank" rel="noopener">
-          <p class="menu-drawer-loc-name">Selia Kryesore</p>
+          <p class="menu-drawer-loc-name" data-t="loc1-name">Selia Kryesore</p>
           <p class="menu-drawer-loc-addr">Rrobaqepësi INTAL, Rruga Arbanes, Vaqarr, Tiranë 1035</p>
         </a>
         <a class="menu-drawer-loc" href="https://maps.google.com/?q=Intal,+Rruga+5+Maji+67%2F1,+Tiran%C3%AB+1032" target="_blank" rel="noopener">
-          <p class="menu-drawer-loc-name">Dyqani</p>
+          <p class="menu-drawer-loc-name" data-t="loc2-name">Dyqani</p>
           <p class="menu-drawer-loc-addr">Intal, Rruga 5 Maji 67/1, Tiranë 1032</p>
         </a>
       </div>
@@ -667,7 +675,85 @@
         if(section) section.style.display='none';
       }
     } catch(e){ console.warn('Rreth Nesh render error:', e); }
+    try{ if(window._rnApplyLang) window._rnApplyLang(); }catch(e){}
     } // end applyData
+  })();
+  </script>
+
+  <!-- Language toggle -->
+  <script>
+  (function(){
+    var T={
+      al:{
+        'nav-home':'Home','nav-art':'Artikujt','nav-pel':'Pelhura','nav-rr':'Rreth Nesh','nav-kontakt':'Kontakt',
+        'md-ct-eyebrow':'NA KONTAKTONI',
+        'ct-phone-label':'Telefon / WhatsApp','ct-email-label':'Email','ct-addr-label':'Adresa',
+        'loc1-name':'Selia Kryesore','loc2-name':'Dyqani',
+        'rn-hero-eyebrow':'Na Njihni','rn-hero-heading':'Rreth Intal',
+        'rn-ov-eyebrow':'Kompania','rn-ov-heading':'Prodhues Shqiptar i Brendëshmes Premium',
+        'rn-ov-body':'Intal është një nga prodhuesit kryesorë të brendëshmes në Shqipëri, me mbi 15 vite eksperiencë në industrinë e tekstilit. Kompania jonë është e dedikuar për prodhimin e brendëshmes premium duke përdorur materialet më të mira vendase dhe ndërkombëtare. Nga materiali deri te produkti final, çdo hap i prodhimit kryhet me standarde të larta cilësie, duke garantuar rehati dhe qëndrueshmëri afatgjatë. Ne bashkëpunojmë me mbi 500 partnerë biznesi në të gjithë rajonin, duke ofruar zgjidhje të personalizuara për çdo nevojë.',
+        'rn-stat-0-lbl':'Vite Eksperiencë','rn-stat-1-lbl':'Prodhim Vendor','rn-stat-2-lbl':'Partnerë',
+        'rn-mv-eyebrow':'Drejtimi Ynë',
+        'rn-mv-0-title':'Vizioni Ynë','rn-mv-0-text':'Të bëhemi referencë kryesore e brendëshmes premium në rajon, duke udhëhequr me cilësi, inovacion dhe vlera shqiptare.',
+        'rn-mv-1-title':'Misioni Ynë','rn-mv-1-text':'Ofrojmë produkte me cilësi të lartë, çmime konkurruese dhe shërbim të shkëlqyer ndaj çdo klienti, duke forcuar industrinë vendase.',
+        'rn-values-eyebrow':'Parimet','rn-values-heading':'Vlerat Tona',
+        'rn-val-0-title':'Cilësi','rn-val-0-text':'Çdo produkt i Intal kalon kontrolle rigoroze të cilësisë. Përdorim vetëm materialet më të mira për të garantuar produkte që zgjasin dhe kënaqin.',
+        'rn-val-1-title':'Rehati','rn-val-1-text':'Dizajnimi ynë ka rehatin si prioritet kryesor. Çdo prerje dhe material zgjidhet me kujdes për të ofruar ndjenjën e komfortit gjatë gjithë ditës.',
+        'rn-val-2-title':'Besueshmëri','rn-val-2-text':'Mbi 500 partnerë biznesi zgjedhin Intal çdo ditë. Besimi i tyre ndaj nesh është pasqyrë e qëndrueshmërisë dhe profesionalizmit tonë.',
+        'rn-pt-eyebrow':'Bashkëpunimi','rn-pt-heading':'Partnerë të besuar në gjithë rajonin',
+        'rn-cta-eyebrow':'Kontakt','rn-cta-heading':'Bashkohuni me ne','rn-cta-btn':'Na Kontaktoni'
+      },
+      en:{
+        'nav-home':'Home','nav-art':'Products','nav-pel':'Fabric','nav-rr':'About Us','nav-kontakt':'Contact',
+        'md-ct-eyebrow':'CONTACT US',
+        'ct-phone-label':'Phone / WhatsApp','ct-email-label':'Email','ct-addr-label':'Address',
+        'loc1-name':'Headquarters','loc2-name':'Store',
+        'rn-hero-eyebrow':'Get to Know Us','rn-hero-heading':'About Intal',
+        'rn-ov-eyebrow':'Company','rn-ov-heading':'Albanian Premium Underwear Manufacturer',
+        'rn-ov-body':'Intal is one of Albania\'s leading underwear manufacturers, with over 15 years of experience in the textile industry. Our company is dedicated to producing premium underwear using the finest domestic and international materials. From raw material to finished product, every step of production meets the highest quality standards, ensuring long-lasting comfort and durability. We collaborate with over 500 business partners across the region, offering tailored solutions for every need.',
+        'rn-stat-0-lbl':'Years of Experience','rn-stat-1-lbl':'Local Production','rn-stat-2-lbl':'Partners',
+        'rn-mv-eyebrow':'Our Direction',
+        'rn-mv-0-title':'Our Vision','rn-mv-0-text':'To become the leading premium underwear reference in the region, driven by quality, innovation, and Albanian values.',
+        'rn-mv-1-title':'Our Mission','rn-mv-1-text':'We deliver high-quality products, competitive prices, and excellent service to every client, while strengthening the local industry.',
+        'rn-values-eyebrow':'Principles','rn-values-heading':'Our Values',
+        'rn-val-0-title':'Quality','rn-val-0-text':'Every Intal product passes rigorous quality controls. We use only the finest materials to ensure products that last and satisfy.',
+        'rn-val-1-title':'Comfort','rn-val-1-text':'Comfort is the top priority in our design. Every cut and material is carefully chosen to provide a feeling of all-day comfort.',
+        'rn-val-2-title':'Reliability','rn-val-2-text':'Over 500 business partners choose Intal every day. Their trust in us reflects our consistency and professionalism.',
+        'rn-pt-eyebrow':'Partnerships','rn-pt-heading':'Trusted Partners Across the Region',
+        'rn-cta-eyebrow':'Contact','rn-cta-heading':'Work With Us','rn-cta-btn':'Contact Us'
+      }
+    };
+    var _lang=localStorage.getItem('intal_lang')||'al';
+
+    function applyLang(lang){
+      _lang=lang;
+      localStorage.setItem('intal_lang',lang);
+      var dict=T[lang]||T['al'];
+      // data-t elements
+      document.querySelectorAll('[data-t]').forEach(function(el){
+        var k=el.getAttribute('data-t');
+        if(dict[k]) el.textContent=dict[k];
+      });
+      // ID-based elements
+      var ids=['rn-hero-eyebrow','rn-hero-heading','rn-ov-eyebrow','rn-ov-heading','rn-ov-body',
+        'rn-stat-0-lbl','rn-stat-1-lbl','rn-stat-2-lbl','rn-mv-eyebrow',
+        'rn-mv-0-title','rn-mv-0-text','rn-mv-1-title','rn-mv-1-text',
+        'rn-values-eyebrow','rn-values-heading',
+        'rn-val-0-title','rn-val-0-text','rn-val-1-title','rn-val-1-text','rn-val-2-title','rn-val-2-text',
+        'rn-pt-eyebrow','rn-pt-heading','rn-cta-eyebrow','rn-cta-heading','rn-cta-btn'];
+      ids.forEach(function(id){
+        var el=document.getElementById(id);
+        if(el&&dict[id]) el.textContent=dict[id];
+      });
+      // lang toggle active state
+      var al=document.getElementById('lt-al'); if(al) al.classList.toggle('active',lang==='al');
+      var en=document.getElementById('lt-en'); if(en) en.classList.toggle('active',lang==='en');
+    }
+
+    window.setLang=function(lang){ applyLang(lang); };
+    window._rnApplyLang=function(){ applyLang(_lang); };
+
+    document.addEventListener('DOMContentLoaded',function(){ applyLang(_lang); });
   })();
   </script>
 
