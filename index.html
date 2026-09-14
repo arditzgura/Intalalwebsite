@@ -60,10 +60,16 @@
     .navbar-brand{font-size:clamp(10px,1vw,13px);font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#0a0a0a;text-decoration:none;}
     .nav-hamburger{display:flex;background:none;border:none;cursor:pointer;padding:0;align-items:center;color:#0a0a0a;}
     .navbar-right{display:flex;align-items:center;gap:clamp(8px,1vw,16px);}
-    .lang-toggle{display:flex;align-items:center;gap:3px;font-size:11px;font-weight:700;letter-spacing:1.5px;user-select:none;}
+    .lang-toggle{display:flex;align-items:center;gap:3px;font-size:11px;font-weight:700;letter-spacing:1.5px;user-select:none;position:relative;}
     .lang-opt{cursor:pointer;color:var(--muted);transition:color .15s;padding:2px 1px;}
     .lang-opt.active{color:var(--black);}
     .lang-sep{color:#d1d5dc;font-weight:300;font-size:10px;}
+    @media(max-width:600px){
+      .lang-sep{display:none;}
+      .lang-opt:not(.active){display:none;position:absolute;top:calc(100% + 8px);right:0;background:#fff;color:#0a0a0a;border:0.5px solid #e5e7eb;padding:7px 12px;border-radius:4px;box-shadow:0 4px 14px rgba(0,0,0,.12);z-index:1000;}
+      .lang-toggle.open .lang-opt:not(.active){display:block;}
+      .lang-opt.active::after{content:' ▾';font-size:8px;opacity:.6;}
+    }
     .nav-links{display:flex;gap:clamp(14px,1.8vw,28px);}
     @media(max-width:768px){.nav-links{display:none;}}
     .menu-drawer{position:fixed;top:0;left:0;bottom:0;width:min(360px,85vw);background:#0a0a0a;z-index:200;transform:translateX(-100%);transition:transform 0.35s ease;}
@@ -1789,12 +1795,26 @@
     document.documentElement.lang = lang === 'en' ? 'en' : 'sq';
   }
 
-  window.setLang = function(lang){ applyLang(lang); };
+  window.setLang = function(lang){
+    applyLang(lang);
+    var lt=document.getElementById('lang-toggle'); if(lt) lt.classList.remove('open');
+  };
+
+  function initMobileDrop(){
+    var lt=document.getElementById('lang-toggle');
+    if(!lt) return;
+    lt.addEventListener('click',function(e){
+      if(window.innerWidth>600) return;
+      if(e.target.classList.contains('active')){ e.stopPropagation(); lt.classList.toggle('open'); }
+      else lt.classList.remove('open');
+    },true);
+    document.addEventListener('click',function(){ var l=document.getElementById('lang-toggle'); if(l) l.classList.remove('open'); });
+  }
 
   // Apply on load
-  document.addEventListener('DOMContentLoaded', function(){ applyLang(_lang); });
+  document.addEventListener('DOMContentLoaded', function(){ applyLang(_lang); initMobileDrop(); });
   // Also apply immediately for above-fold (in case DOMContentLoaded already fired)
-  if(document.readyState !== 'loading') applyLang(_lang);
+  if(document.readyState !== 'loading'){ applyLang(_lang); initMobileDrop(); }
 })();
 </script>
 
