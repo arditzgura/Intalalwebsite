@@ -631,6 +631,9 @@
     if(!d._saved) return;
 
     try {
+      // Apply lang defaults first, then panel content overrides them
+      try{ if(window._rnApplyLang) window._rnApplyLang(); }catch(e){}
+
       // Hero
       set('rn-hero-eyebrow', d.hero.eyebrow);
       set('rn-hero-heading',  d.hero.heading);
@@ -686,7 +689,6 @@
         }
       }
     } catch(e){ console.warn('Rreth Nesh render error:', e); }
-    try{ if(window._rnApplyLang) window._rnApplyLang(); }catch(e){}
     } // end applyData
   })();
   </script>
