@@ -1207,32 +1207,42 @@
         if(data.artikujt) artikujt = data.artikujt;
       }
 
+      var lang = window._lang || 'al';
+      var tCat = window._tCat || function(k){ return k; };
+      var tDict = (window._T && window._T[lang]) || {};
+      var cardEyebrow = tDict['sc-card-eyebrow'] || 'Koleksioni';
+      var cardCta = tDict['sc-card-cta'] || 'Zbulo Koleksionin';
+
       kats = kats.filter(function(k){ return k.toLowerCase() !== 'pelhura'; });
       var html = '';
       kats.forEach(function(kat, i){
         var img = sbImgUrl(kryesoreFoto[kat] || firstPhotoOfCat(artikujt, kat) || FALLBACK_IMGS[i % FALLBACK_IMGS.length]);
         var href = kat.toLowerCase()==='pelhura' ? 'pelhura.html' : 'artikujt.html#'+encodeURIComponent(kat.toLowerCase());
-        var desc = data && data.kategoriSettings && data.kategoriSettings.kryesoreDesc && data.kategoriSettings.kryesoreDesc[kat]
-          ? data.kategoriSettings.kryesoreDesc[kat]
-          : 'Zbulo koleksionin e plotë të ' + kat.toLowerCase() + ' me cilësi të lartë prodhimi shqiptar.';
+        var customDesc = data && data.kategoriSettings && data.kategoriSettings.kryesoreDesc && data.kategoriSettings.kryesoreDesc[kat];
+        var defaultDesc = tDict['sc-desc-'+kat] || (lang==='en'
+          ? 'Explore the complete '+tCat(kat).toLowerCase()+' collection with high-quality Albanian production.'
+          : 'Zbulo koleksionin e plotë të '+kat.toLowerCase()+' me cilësi të lartë prodhimi shqiptar.');
+        var desc = customDesc || defaultDesc;
+        var displayName = tCat(kat);
         html += '<div onclick="location.href=\''+href+'\'">'
           +'<div class="showcase-card">'
           +'<div class="showcase-img-wrap">'
           +(img ? '<img src="'+img+'" alt="'+kat+'" loading="lazy">' : '')
           +'</div>'
           +'<div class="showcase-body">'
-          +'<p class="showcase-body-eyebrow">Koleksioni</p>'
-          +'<p class="showcase-body-name">'+kat+'</p>'
-          +'<span class="showcase-body-cta">Zbulo Koleksionin &rarr;</span>'
+          +'<p class="showcase-body-eyebrow">'+cardEyebrow+'</p>'
+          +'<p class="showcase-body-name">'+displayName+'</p>'
+          +'<span class="showcase-body-cta">'+cardCta+' &rarr;</span>'
           +'</div>'
           +'</div>'
-          +'<div class="showcase-sublabel"><strong>'+kat+'</strong> <span>&middot; '+desc+'</span></div>'
+          +'<div class="showcase-sublabel"><strong>'+displayName+'</strong> <span>&middot; '+desc+'</span></div>'
           +'</div>';
       });
       grid.innerHTML = html || '<p style="color:var(--muted);font-size:13px;">Nuk ka kategori. Shto nga paneli admin.</p>';
       /* Vendos numrin e kolonave dinamikisht (të gjitha në një rresht) */
       if(kats.length > 0) grid.style.gridTemplateColumns = 'repeat('+kats.length+', 1fr)';
     }
+    window.renderShowcase = renderShowcase;
 
     var _overlayState = { kat:'', activeFilter:'te-gjitha', artikujt:[] };
 
@@ -1714,7 +1724,13 @@
       'nav-art':'Artikujt',
       'nav-pel':'Pelhura',
       'nav-rr':'Rreth Nesh',
-      'nav-kontakt':'Kontakt'
+      'nav-kontakt':'Kontakt',
+      'sc-card-eyebrow':'Koleksioni',
+      'sc-card-cta':'Zbulo Koleksionin',
+      'sc-desc-Meshkuj':'Zbulo koleksionin e plotë të meshkujve me cilësi të lartë prodhimi shqiptar.',
+      'sc-desc-Femra':'Zbulo koleksionin e plotë të femrave me cilësi të lartë prodhimi shqiptar.',
+      'sc-desc-Femije':'Zbulo koleksionin e plotë të fëmijëve me cilësi të lartë prodhimi shqiptar.',
+      'sc-desc-Stinore':'Zbulo koleksionin stinor me cilësi të lartë prodhimi shqiptar.'
     },
     en: {
       'hero-eyebrow':'Albanian Production',
@@ -1766,14 +1782,29 @@
       'nav-art':'Products',
       'nav-pel':'Fabric',
       'nav-rr':'About Us',
-      'nav-kontakt':'Contact'
+      'nav-kontakt':'Contact',
+      'sc-card-eyebrow':'Collection',
+      'sc-card-cta':'Explore Collection',
+      'sc-desc-Meshkuj':'Explore the complete men\'s collection with high-quality Albanian production.',
+      'sc-desc-Femra':'Explore the complete women\'s collection with high-quality Albanian production.',
+      'sc-desc-Femije':'Explore the complete children\'s collection with high-quality Albanian production.',
+      'sc-desc-Stinore':'Explore the seasonal collection with high-quality Albanian production.'
     }
   };
 
+  var CAT = {
+    'Meshkuj':'Men','Femra':'Women','Femijë':'Kids','Femije':'Kids',
+    'Stinore':'Seasonal','Dimër':'Winter','Dimer':'Winter','Verë':'Summer','Vere':'Summer'
+  };
+  window._tCat = function(k){ return (_lang==='en' && CAT[k]) || k; };
+
   var _lang = localStorage.getItem('intal_lang') || 'al';
+  window._lang = _lang;
+  window._T = T;
 
   function applyLang(lang){
     _lang = lang;
+    window._lang = lang;
     localStorage.setItem('intal_lang', lang);
     var dict = T[lang];
     // text content
@@ -1793,6 +1824,10 @@
     if(enEl) enEl.classList.toggle('active', lang === 'en');
     // html lang attribute
     document.documentElement.lang = lang === 'en' ? 'en' : 'sq';
+    // update _tCat binding
+    window._tCat = function(k){ return (_lang==='en' && CAT[k]) || k; };
+    // re-render showcase with new language
+    try{ if(window.renderShowcase) window.renderShowcase(); }catch(e){}
   }
 
   window.setLang = function(lang){
