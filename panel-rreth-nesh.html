@@ -178,8 +178,10 @@
 
     <!-- PARTNERS -->
     <div class="panel-section" id="tab-partners">
-      <div class="pfield"><label>Etiketa e Seksionit</label><input type="text" id="pt-eyebrow"></div>
-      <div class="pfield"><label>Titulli</label><input type="text" id="pt-heading"></div>
+      <div class="pfield"><label>Etiketa e Seksionit (AL)</label><input type="text" id="pt-eyebrow"></div>
+      <div class="pfield"><label>Titulli (AL)</label><input type="text" id="pt-heading"></div>
+      <div class="pfield"><label>Section Label (EN)</label><input type="text" id="pt-eyebrow-en" placeholder="e.g. Our Products"></div>
+      <div class="pfield"><label>Title (EN)</label><input type="text" id="pt-heading-en" placeholder="e.g. Our Brands"></div>
       <div class="pfield">
         <label>Logot e Brandeve (2 rreshta × 4)</label>
         <div class="partners-grid-edit" id="partners-grid-edit"></div>
@@ -296,6 +298,8 @@
     // partners
     d.partners.eyebrow = document.getElementById('pt-eyebrow').value;
     d.partners.heading = document.getElementById('pt-heading').value;
+    d.partners.eyebrow_en = document.getElementById('pt-eyebrow-en').value;
+    d.partners.heading_en = document.getElementById('pt-heading-en').value;
     d.partners.items = [];
     for(var pi=0;pi<8;pi++){
       var ps=document.getElementById('pslot-'+pi);
@@ -341,6 +345,8 @@
     var pt = d.partners||{};
     document.getElementById('pt-eyebrow').value = pt.eyebrow||'';
     document.getElementById('pt-heading').value = pt.heading||'';
+    document.getElementById('pt-eyebrow-en').value = pt.eyebrow_en||'';
+    document.getElementById('pt-heading-en').value = pt.heading_en||'';
     var items = pt.items||[];
     for(var si=0;si<8;si++){
       var slot=document.getElementById('pslot-'+si);

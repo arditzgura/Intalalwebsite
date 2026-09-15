@@ -85,10 +85,14 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);height:100vh;
         <label style="display:flex;justify-content:space-between;"><span>Pozicioni Vertikal</span><span id="hero-pos-y-val" style="color:#111;font-weight:700;">50%</span></label>
         <input type="range" id="hero-pos-y" min="0" max="100" value="50" style="width:100%;margin:6px 0 0;" oninput="document.getElementById('hero-pos-y-val').textContent=this.value+'%';liveUpdate()">
       </div>
-      <p class="section-title">Teksti</p>
-      <div class="field"><label>Eyebrow (tekst i vogël sipër)</label><input type="text" id="hero-eyebrow" placeholder="p.sh. Materialet Tona" oninput="liveUpdate()"></div>
-      <div class="field"><label>Titulli Kryesor</label><input type="text" id="hero-heading" placeholder="p.sh. Pelhura" oninput="liveUpdate()"></div>
-      <div class="field"><label>Nëntitulli</label><textarea id="hero-sub" placeholder="p.sh. Materialet premium për prodhimin e brendëshmes..." oninput="liveUpdate()"></textarea></div>
+      <p class="section-title">Teksti — Shqip (AL)</p>
+      <div class="field"><label>Eyebrow AL</label><input type="text" id="hero-eyebrow" placeholder="p.sh. Materialet Tona" oninput="liveUpdate()"></div>
+      <div class="field"><label>Titulli AL</label><input type="text" id="hero-heading" placeholder="p.sh. Pelhura" oninput="liveUpdate()"></div>
+      <div class="field"><label>Nëntitulli AL</label><textarea id="hero-sub" placeholder="p.sh. Materialet premium për prodhimin e brendëshmes..." oninput="liveUpdate()"></textarea></div>
+      <p class="section-title">Teksti — Anglisht (EN)</p>
+      <div class="field"><label>Eyebrow EN</label><input type="text" id="hero-eyebrow-en" placeholder="e.g. Our Materials" oninput="liveUpdate()"></div>
+      <div class="field"><label>Title EN</label><input type="text" id="hero-heading-en" placeholder="e.g. Fabric" oninput="liveUpdate()"></div>
+      <div class="field"><label>Subtitle EN</label><textarea id="hero-sub-en" placeholder="e.g. Premium materials for underwear production..." oninput="liveUpdate()"></textarea></div>
     </div>
 
     <!-- TAB: FOOTER -->
@@ -136,6 +140,9 @@ function fillForm(){
   document.getElementById('hero-eyebrow').value=h.eyebrow||'';
   document.getElementById('hero-heading').value=h.heading||'';
   document.getElementById('hero-sub').value=h.sub||'';
+  document.getElementById('hero-eyebrow-en').value=h.eyebrow_en||'';
+  document.getElementById('hero-heading-en').value=h.heading_en||'';
+  document.getElementById('hero-sub-en').value=h.sub_en||'';
   if(h.bgImage){
     var w=document.getElementById('hero-bg-wrap');
     w.innerHTML='<img src="'+h.bgImage+'"><input type="file" accept="image/*" onchange="uploadHeroBg(this)" style="position:absolute;inset:0;opacity:0;cursor:pointer;z-index:2;">';
@@ -156,7 +163,10 @@ function collectData(){
   d._saved=true;
   d.hero={
     eyebrow:val('hero-eyebrow'), heading:val('hero-heading'),
-    sub:val('hero-sub'), bgImage:(d.hero&&d.hero.bgImage)||'',
+    sub:val('hero-sub'),
+    eyebrow_en:val('hero-eyebrow-en'), heading_en:val('hero-heading-en'),
+    sub_en:val('hero-sub-en'),
+    bgImage:(d.hero&&d.hero.bgImage)||'',
     bgX:parseInt(document.getElementById('hero-pos-x').value)||50,
     bgY:parseInt(document.getElementById('hero-pos-y').value)||50
   };

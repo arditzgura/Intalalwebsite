@@ -1293,6 +1293,9 @@
     try{
       var d=JSON.parse(localStorage.getItem('intal_art_page_v1')||'{}');
       if(!d._saved) return;
+      window._artPageData=d;
+      var _il=localStorage.getItem('intal_lang')||'al';
+      function _phero(al,en){ return (_il==='en'&&en)||al||''; }
       var hero=document.getElementById('art-page-hero');
       if(d.hero){
         var hasHero=(d.hero.heading||d.hero.eyebrow||d.hero.sub||d.hero.bgImage);
@@ -1302,9 +1305,12 @@
           if(d.hero.bgX!==undefined||d.hero.bgY!==undefined){
             document.getElementById('art-page-hero-bg').style.backgroundPosition=(d.hero.bgX||50)+'% '+(d.hero.bgY||50)+'%';
           }
-          if(d.hero.eyebrow) document.getElementById('art-page-hero-eyebrow').textContent=d.hero.eyebrow;
-          if(d.hero.heading) document.getElementById('art-page-hero-heading').textContent=d.hero.heading;
-          if(d.hero.sub) document.getElementById('art-page-hero-sub').textContent=d.hero.sub;
+          var ew=_phero(d.hero.eyebrow,d.hero.eyebrow_en);
+          var hw=_phero(d.hero.heading,d.hero.heading_en);
+          var sw=_phero(d.hero.sub,d.hero.sub_en);
+          if(ew) document.getElementById('art-page-hero-eyebrow').textContent=ew;
+          if(hw) document.getElementById('art-page-hero-heading').textContent=hw;
+          if(sw) document.getElementById('art-page-hero-sub').textContent=sw;
         }
       }
       if(d.footer){
@@ -1424,6 +1430,21 @@
     try{ var ov=document.getElementById('art-detail-overlay'); if(ov&&ov.style.display==='flex') renderDetInfo(); }catch(e){}
     var cnt=document.getElementById('pg-count');
     if(cnt&&cnt.textContent){ var m=cnt.textContent.match(/^(\d+)\s/); if(m) cnt.textContent=m[1]+' '+_t('ARTIKUJ'); }
+    // re-apply hero texts with correct language
+    try{
+      var _d=window._artPageData;
+      if(_d&&_d.hero){
+        var ew=(lang==='en'&&_d.hero.eyebrow_en)||_d.hero.eyebrow||'';
+        var hw=(lang==='en'&&_d.hero.heading_en)||_d.hero.heading||'';
+        var sw=(lang==='en'&&_d.hero.sub_en)||_d.hero.sub||'';
+        var eEl=document.getElementById('art-page-hero-eyebrow');
+        var hEl=document.getElementById('art-page-hero-heading');
+        var sEl=document.getElementById('art-page-hero-sub');
+        if(eEl) eEl.textContent=ew;
+        if(hEl) hEl.textContent=hw;
+        if(sEl) sEl.textContent=sw;
+      }
+    }catch(e){}
   }
   window.setLang=function(lang){
     applyLang(lang);
