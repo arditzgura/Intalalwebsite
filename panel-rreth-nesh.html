@@ -61,20 +61,19 @@
   #save-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--black);color:#fff;padding:8px 20px;border-radius:4px;font-size:12px;font-weight:500;letter-spacing:.5px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999;}
   #save-toast.show{opacity:1;}
 
-  /* ── Partners ── */
-  .partner-item{background:var(--white);border:.5px solid var(--border);border-radius:6px;padding:12px;margin-bottom:10px;display:flex;gap:10px;align-items:flex-start;}
-  .partner-thumb-wrap{position:relative;width:80px;height:56px;flex-shrink:0;background:var(--bg);border:.5px dashed var(--border);border-radius:4px;overflow:hidden;cursor:pointer;transition:border-color .15s;}
-  .partner-thumb-wrap:hover{border-color:var(--black);}
-  .partner-thumb-wrap img{width:100%;height:100%;object-fit:contain;display:block;}
-  .partner-thumb-wrap .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--border);}
-  .partner-thumb-wrap input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;}
-  .partner-info{flex:1;display:flex;flex-direction:column;gap:6px;}
-  .partner-info input{width:100%;background:var(--bg);border:.5px solid var(--border);border-radius:4px;padding:6px 8px;font-size:12px;color:var(--black);font-family:inherit;}
-  .partner-info input:focus{outline:none;border-color:var(--black);}
-  .partner-del{background:none;border:none;cursor:pointer;color:var(--border);font-size:16px;padding:2px;flex-shrink:0;transition:color .15s;}
-  .partner-del:hover{color:var(--accent);}
-  .btn-add-partner{width:100%;border:.5px dashed var(--border);background:none;padding:10px;font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted);cursor:pointer;border-radius:4px;margin-top:4px;transition:all .15s;}
-  .btn-add-partner:hover{border-color:var(--black);color:var(--black);}
+  /* ── Partners grid ── */
+  .partners-grid-edit{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:4px;}
+  .pslot{position:relative;aspect-ratio:3/2;background:var(--bg);border:.5px dashed var(--border);border-radius:4px;overflow:hidden;cursor:pointer;transition:border-color .15s;}
+  .pslot:hover{border-color:var(--black);}
+  .pslot img{width:100%;height:100%;object-fit:contain;display:none;}
+  .pslot .ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--border);font-size:10px;letter-spacing:.5px;pointer-events:none;}
+  .pslot .ph i{font-size:18px;}
+  .pslot input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+  .pslot .pslot-clear{position:absolute;top:3px;right:3px;background:rgba(0,0,0,.5);color:#fff;border:none;border-radius:50%;width:18px;height:18px;font-size:11px;cursor:pointer;display:none;align-items:center;justify-content:center;z-index:2;line-height:1;}
+  .pslot.has-img .pslot-clear{display:flex;}
+  .pslot.has-img img{display:block;}
+  .pslot.has-img .ph{display:none;}
+  .pslot-num{position:absolute;bottom:3px;left:5px;font-size:9px;font-weight:600;color:var(--border);pointer-events:none;}
 
   /* ── Preview iframe ── */
   #preview-wrap{flex:1;display:flex;flex-direction:column;overflow:hidden;}
@@ -181,8 +180,10 @@
     <div class="panel-section" id="tab-partners">
       <div class="pfield"><label>Etiketa e Seksionit</label><input type="text" id="pt-eyebrow"></div>
       <div class="pfield"><label>Titulli</label><input type="text" id="pt-heading"></div>
-      <div id="partners-list"></div>
-      <button class="btn-add-partner" id="btn-add-partner"><i class="ri-add-line"></i> Shto Partner</button>
+      <div class="pfield">
+        <label>Logot e Brandeve (2 rreshta × 4)</label>
+        <div class="partners-grid-edit" id="partners-grid-edit"></div>
+      </div>
     </div>
 
     <!-- CTA -->
@@ -296,12 +297,10 @@
     d.partners.eyebrow = document.getElementById('pt-eyebrow').value;
     d.partners.heading = document.getElementById('pt-heading').value;
     d.partners.items = [];
-    document.querySelectorAll('.partner-item').forEach(function(el){
-      d.partners.items.push({
-        img:  el.dataset.img||'',
-        name: el.querySelector('.p-name').value
-      });
-    });
+    for(var pi=0;pi<8;pi++){
+      var ps=document.getElementById('pslot-'+pi);
+      d.partners.items.push({ img: ps?ps.dataset.img||'':'' });
+    }
     return d;
   }
 
@@ -342,52 +341,58 @@
     var pt = d.partners||{};
     document.getElementById('pt-eyebrow').value = pt.eyebrow||'';
     document.getElementById('pt-heading').value = pt.heading||'';
-    document.getElementById('partners-list').innerHTML='';
-    (pt.items||[]).forEach(function(item){ addPartnerRow(item.img, item.name); });
+    var items = pt.items||[];
+    for(var si=0;si<8;si++){
+      var slot=document.getElementById('pslot-'+si);
+      if(!slot) continue;
+      var img=items[si]&&items[si].img?items[si].img:'';
+      setSlotImg(slot, img);
+    }
   }
 
-  // Partner row builder
-  function addPartnerRow(imgSrc, name){
-    var li = document.createElement('div');
-    li.className = 'partner-item';
-    li.dataset.img = imgSrc||'';
-    li.innerHTML =
-      '<div class="partner-thumb-wrap">'
-      +'<img src="'+(imgSrc||'')+'" style="display:'+(imgSrc?'block':'none')+';">'
-      +'<div class="ph"><i class="ri-image-line"></i></div>'
-      +'<input type="file" accept="image/*">'
-      +'</div>'
-      +'<div class="partner-info">'
-      +'<input class="p-name" type="text" placeholder="Emri i partnerit" value="'+(name||'')+'">'
-      +'</div>'
-      +'<button class="partner-del" title="Fshi"><i class="ri-delete-bin-line"></i></button>';
-
-    // image upload
-    li.querySelector('input[type=file]').addEventListener('change', function(e){
-      var file = e.target.files[0]; if(!file) return;
-      var reader = new FileReader();
-      reader.onload = function(ev){
-        li.dataset.img = ev.target.result;
-        var img = li.querySelector('img');
-        img.src = ev.target.result; img.style.display='block';
-        var pd = getFormData(); pd._saved = true; saveData(pd); refreshPreview();
-      };
-      reader.readAsDataURL(file);
-    });
-
-    // delete
-    li.querySelector('.partner-del').addEventListener('click', function(){
-      li.remove();
-      saveData(getFormData()); refreshPreview();
-    });
-
-    document.getElementById('partners-list').appendChild(li);
+  // Partner slot helpers
+  function setSlotImg(slot, src){
+    slot.dataset.img = src||'';
+    var img = slot.querySelector('img');
+    if(src){ img.src=src; slot.classList.add('has-img'); }
+    else { img.src=''; slot.classList.remove('has-img'); }
   }
 
-  document.getElementById('btn-add-partner').addEventListener('click', function(){
-    addPartnerRow('','');
-    saveData(getFormData());
-  });
+  function buildPartnerSlots(){
+    var grid = document.getElementById('partners-grid-edit');
+    grid.innerHTML='';
+    for(var i=0;i<8;i++){
+      var slot=document.createElement('div');
+      slot.className='pslot';
+      slot.id='pslot-'+i;
+      slot.dataset.img='';
+      slot.innerHTML=
+        '<img src="" alt="">'
+        +'<div class="ph"><i class="ri-image-add-line"></i></div>'
+        +'<input type="file" accept="image/*">'
+        +'<button class="pslot-clear" title="Hiq">✕</button>'
+        +'<span class="pslot-num">'+(i+1)+'</span>';
+      (function(s){
+        s.querySelector('input[type=file]').addEventListener('change',function(e){
+          var file=e.target.files[0]; if(!file) return;
+          var reader=new FileReader();
+          reader.onload=function(ev){
+            setSlotImg(s,ev.target.result);
+            var pd=getFormData(); pd._saved=true; saveData(pd); refreshPreview();
+          };
+          reader.readAsDataURL(file);
+        });
+        s.querySelector('.pslot-clear').addEventListener('click',function(e){
+          e.stopPropagation();
+          setSlotImg(s,'');
+          var pd=getFormData(); pd._saved=true; saveData(pd); refreshPreview();
+        });
+      })(slot);
+      grid.appendChild(slot);
+    }
+  }
+
+  buildPartnerSlots();
 
   // Tabs
   document.querySelectorAll('.ptab').forEach(function(tab){

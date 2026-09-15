@@ -266,13 +266,10 @@
     }
     .rn-partners-grid {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: clamp(12px, 2vw, 24px);
     }
-    @media (max-width: 900px) {
-      .rn-partners-grid { grid-template-columns: repeat(3, 1fr); }
-    }
-    @media (max-width: 500px) {
+    @media (max-width: 700px) {
       .rn-partners-grid { grid-template-columns: repeat(2, 1fr); }
     }
     .rn-partner-logo {
@@ -476,11 +473,14 @@
       <h2 class="rn-partners-heading" id="rn-pt-heading">Partnerë të besuar në gjithë rajonin</h2>
     </div>
     <div class="rn-partners-grid" id="rn-partners-grid">
-      <div class="rn-partner-logo"><span>Partner</span></div>
-      <div class="rn-partner-logo"><span>Partner</span></div>
-      <div class="rn-partner-logo"><span>Partner</span></div>
-      <div class="rn-partner-logo"><span>Partner</span></div>
-      <div class="rn-partner-logo"><span>Partner</span></div>
+      <div class="rn-partner-logo"><span></span></div>
+      <div class="rn-partner-logo"><span></span></div>
+      <div class="rn-partner-logo"><span></span></div>
+      <div class="rn-partner-logo"><span></span></div>
+      <div class="rn-partner-logo"><span></span></div>
+      <div class="rn-partner-logo"><span></span></div>
+      <div class="rn-partner-logo"><span></span></div>
+      <div class="rn-partner-logo"><span></span></div>
     </div>
   </section>
 
@@ -668,17 +668,22 @@
       set('rn-pt-heading',  pt.heading);
       var grid = document.getElementById('rn-partners-grid');
       var section = document.getElementById('rn-partners-section');
-      if(grid && pt.items && pt.items.length){
-        grid.innerHTML = pt.items.map(function(p){
-          if(p.img){
-            return '<div class="rn-partner-logo">'
-              +'<img src="'+p.img+'" alt="'+(p.name||'')+'">'
-              +'</div>';
+      if(grid){
+        var slots=pt.items||[];
+        var hasAny=slots.some(function(p){ return p&&p.img; });
+        if(section) section.style.display=hasAny?'':'none';
+        if(hasAny){
+          var html='';
+          for(var pi=0;pi<8;pi++){
+            var p=slots[pi]||{};
+            if(p.img){
+              html+='<div class="rn-partner-logo"><img src="'+p.img+'" alt="'+(p.name||'')+'"></div>';
+            } else {
+              html+='<div class="rn-partner-logo" style="visibility:hidden;"></div>';
+            }
           }
-          return '<div class="rn-partner-logo"><span>'+(p.name||'Partner')+'</span></div>';
-        }).join('');
-      } else if(grid && (!pt.items || !pt.items.length)){
-        if(section) section.style.display='none';
+          grid.innerHTML=html;
+        }
       }
     } catch(e){ console.warn('Rreth Nesh render error:', e); }
     try{ if(window._rnApplyLang) window._rnApplyLang(); }catch(e){}
