@@ -731,7 +731,7 @@
       var wrap = document.getElementById('load-more-wrap');
       var slice = _pgList.slice(append ? _pgShown : 0, _pgShown + _PG_SIZE);
       if (!append) {
-        if (!_pgList.length){ grid.innerHTML='<div style="grid-column:1/-1;padding:80px 0;text-align:center;color:var(--muted);font-size:13px;">Nuk ka artikuj për këtë filtër.</div>'; wrap.style.display='none'; _pgShown=0; return; }
+        if (!_pgList.length){ grid.innerHTML='<div style="grid-column:1/-1;padding:80px 0;text-align:center;color:var(--muted);font-size:13px;">'+_t('no-filter')+'</div>'; wrap.style.display='none'; _pgShown=0; return; }
         grid.innerHTML = slice.map(function(a){ return buildCardHtml(a,_pgOpener+'(\''+a.id+'\')'); }).join('');
         _pgShown = slice.length;
       } else {
@@ -1062,7 +1062,7 @@
       var kat=katArr.join(', ');
       document.getElementById('art-detail-kat').textContent=kat+(sub?' · '+sub:'');
       document.getElementById('art-detail-name').textContent=a.name||'';
-      document.getElementById('art-detail-code').textContent=a.code?'KOD: '+a.code:'';
+      document.getElementById('art-detail-code').textContent=a.code?_t('KOD')+': '+a.code:'';
       document.getElementById('art-detail-desc').textContent=a.desc||'';
 
       /* Update OG meta tags for sharing this article */
@@ -1248,7 +1248,7 @@
       var found = all.filter(function(a){ return artMatchesQuery(a, q); });
       document.getElementById('pg-count').textContent = found.length + ' ' + _t('ARTIKUJ');
       if (!found.length) {
-        grid.innerHTML = '<div style="grid-column:1/-1;padding:80px 0;text-align:center;color:var(--muted);font-size:13px;">Nuk u gjet asnjë artikull për "<strong>'+q+'</strong>".</div>';
+        grid.innerHTML = '<div style="grid-column:1/-1;padding:80px 0;text-align:center;color:var(--muted);font-size:13px;">'+_t('no-search-1')+'<strong>'+q+'</strong>'+_t('no-search-2')+'</div>';
       } else {
         grid.innerHTML = found.map(function(a){ return buildCardHtml(a,'openDetAll(\''+a.id+'\')'); }).join('');
       }
@@ -1360,7 +1360,10 @@
       'ct-phone-label':'Telefon / WhatsApp','ct-email-label':'Email','ct-addr-label':'Adresa',
       'nav-home':'Home','nav-art':'Artikujt','nav-pel':'Pelhura','nav-rr':'Rreth Nesh','nav-kontakt':'Kontakt',
       'MASAT':'MASAT','NGJYRAT':'NGJYRAT','PERBERJA':'PËRBËRJA',
-      'ARTIKUJ':'ARTIKUJ','ARTIKUJT':'ARTIKUJT'
+      'ARTIKUJ':'ARTIKUJ','ARTIKUJT':'ARTIKUJT',
+      'KOD':'KOD',
+      'no-filter':'Nuk ka artikuj për këtë filtër.',
+      'no-search-1':'Nuk u gjet asnjë artikull për "','no-search-2':'".'
     },
     en:{
       'load-more':'Load More',
@@ -1370,7 +1373,10 @@
       'ct-phone-label':'Phone / WhatsApp','ct-email-label':'Email','ct-addr-label':'Address',
       'nav-home':'Home','nav-art':'Products','nav-pel':'Fabric','nav-rr':'About Us','nav-kontakt':'Contact',
       'MASAT':'SIZES','NGJYRAT':'COLORS','PERBERJA':'COMPOSITION',
-      'ARTIKUJ':'PRODUCTS','ARTIKUJT':'PRODUCTS'
+      'ARTIKUJ':'PRODUCTS','ARTIKUJT':'PRODUCTS',
+      'KOD':'CODE',
+      'no-filter':'No articles found for this filter.',
+      'no-search-1':'No articles found for "','no-search-2':'".'
     }
   };
   var CAT={
@@ -1406,6 +1412,7 @@
       renderFilterBarAll(_state.allArticles||[],_state.activeSub||'te-gjitha',_state.activeKat||'te-gjitha',_state.activeSubKat||'te-gjitha');
     }catch(e){}
     try{ renderBreadcrumb(); }catch(e){}
+    try{ var ov=document.getElementById('art-detail-overlay'); if(ov&&ov.style.display==='flex') renderDetInfo(); }catch(e){}
     var cnt=document.getElementById('pg-count');
     if(cnt&&cnt.textContent){ var m=cnt.textContent.match(/^(\d+)\s/); if(m) cnt.textContent=m[1]+' '+_t('ARTIKUJ'); }
   }
