@@ -313,3 +313,38 @@ function goKontakt() {
     window.location.href = 'index.html?goto=kontakt';
   }
 }
+
+/* ── Apply contact info from panel-home data ────────────────── */
+function applyDrawerContact() {
+  try {
+    var d = JSON.parse(localStorage.getItem('intal_home_v1') || '{}');
+    var c = d.contact; if (!c) return;
+
+    // Menu drawer — phone
+    var phoneLink = document.querySelector('.menu-drawer-contacts a[href^="tel:"]');
+    if (phoneLink && c.phone) {
+      phoneLink.href = 'tel:' + c.phone.replace(/\s+/g, '');
+      var pVal = phoneLink.querySelector('.menu-drawer-value');
+      if (pVal) pVal.textContent = c.phone;
+    }
+    // Menu drawer — email
+    var emailLink = document.querySelector('.menu-drawer-contacts a[href^="mailto:"]');
+    if (emailLink && c.email) {
+      emailLink.href = 'mailto:' + c.email;
+      var eVal = emailLink.querySelector('.menu-drawer-value');
+      if (eVal) eVal.textContent = c.email;
+    }
+    // Floating WhatsApp button
+    var waBtn = document.querySelector('#float-btns a[href^="https://wa.me/"]');
+    if (waBtn && c.phone) {
+      var digits = c.phone.replace(/[^0-9]/g, '');
+      if (digits) waBtn.href = 'https://wa.me/' + digits;
+    }
+    // Floating phone button
+    var telBtn = document.querySelector('#float-btns a[href^="tel:"]');
+    if (telBtn && c.phone) {
+      telBtn.href = 'tel:' + c.phone.replace(/\s+/g, '');
+    }
+  } catch (e) {}
+}
+document.addEventListener('DOMContentLoaded', applyDrawerContact);

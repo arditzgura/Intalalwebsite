@@ -1610,9 +1610,19 @@
         var ch=document.querySelector('.contact-heading');
         if(ch&&d.contact.heading)ch.innerHTML=d.contact.heading.replace(/\n/g,'<br>');
         setText('.contact-sub',d.contact.sub);
-        var phones=document.querySelectorAll('.contact-item-value');
-        if(phones[0]&&d.contact.phone)phones[0].textContent=d.contact.phone;
-        if(phones[1]&&d.contact.email)phones[1].textContent=d.contact.email;
+        // Contact section values + hrefs
+        var phoneItem=document.querySelector('.contact-item[href^="tel:"]');
+        if(phoneItem&&d.contact.phone){
+          phoneItem.href='tel:'+d.contact.phone.replace(/\s+/g,'');
+          var pv=phoneItem.querySelector('.contact-item-value');if(pv)pv.textContent=d.contact.phone;
+        }
+        var emailItem=document.querySelector('.contact-item[href^="mailto:"]');
+        if(emailItem&&d.contact.email){
+          emailItem.href='mailto:'+d.contact.email;
+          var ev=emailItem.querySelector('.contact-item-value');if(ev)ev.textContent=d.contact.email;
+        }
+        // Menu drawer values + hrefs
+        applyDrawerContact();
       }
     }catch(e){}
   }
