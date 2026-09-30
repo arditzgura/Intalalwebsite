@@ -320,19 +320,19 @@ function applyDrawerContact() {
     var d = JSON.parse(localStorage.getItem('intal_home_v1') || '{}');
     var c = d.contact; if (!c) return;
 
-    // Menu drawer — phone
-    var phoneLink = document.querySelector('.menu-drawer-contacts a[href^="tel:"]');
-    if (phoneLink && c.phone) {
-      phoneLink.href = 'tel:' + c.phone.replace(/\s+/g, '');
-      var pVal = phoneLink.querySelector('.menu-drawer-value');
-      if (pVal) pVal.textContent = c.phone;
+    // Menu drawer — phone (ID-based, reliable across all pages)
+    var pl = document.getElementById('drawer-phone-link');
+    var pv = document.getElementById('drawer-phone-val');
+    if (c.phone) {
+      if (pl) pl.href = 'tel:' + c.phone.replace(/\s+/g, '');
+      if (pv) pv.textContent = c.phone;
     }
     // Menu drawer — email
-    var emailLink = document.querySelector('.menu-drawer-contacts a[href^="mailto:"]');
-    if (emailLink && c.email) {
-      emailLink.href = 'mailto:' + c.email;
-      var eVal = emailLink.querySelector('.menu-drawer-value');
-      if (eVal) eVal.textContent = c.email;
+    var el = document.getElementById('drawer-email-link');
+    var ev = document.getElementById('drawer-email-val');
+    if (c.email) {
+      if (el) el.href = 'mailto:' + c.email;
+      if (ev) ev.textContent = c.email;
     }
     // Floating WhatsApp button
     var waBtn = document.querySelector('#float-btns a[href^="https://wa.me/"]');
