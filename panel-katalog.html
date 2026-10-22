@@ -9,6 +9,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script src="js/firebase.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{--accent:#C8003E;--black:#111;--bg:#f4f4f4;--border:#e2e2e2;--muted:#888;}
@@ -113,6 +114,11 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--ac
   </div>
   <div class="top-actions">
     <a class="btn-back" href="panel-dashboard.html">← Dashboard</a>
+    <button id="pdf-btn" onclick="generatePDF()"
+      style="background:#333;border:none;border-radius:4px;padding:0 14px;height:32px;color:#fff;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;gap:6px;">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+      <span id="pdf-btn-label">Krijo PDF</span>
+    </button>
     <button class="btn-save" onclick="saveAll()">Ruaj Çmimet</button>
   </div>
 </div>
@@ -527,6 +533,110 @@ function showToast(msg,dur){
   setTimeout(function(){ t.style.display='none'; }, dur||2800);
 }
 function escHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// ── PDF Generation ────────────────────────────────────────────
+function _pdfImgUrl(p){ if(!p) return ''; if(typeof p==='string') return p; return p.src||p.url||''; }
+function _pdfLoadImg(src){
+  return new Promise(function(resolve){
+    var img=new Image(); img.crossOrigin='anonymous';
+    img.onload=function(){
+      try{
+        var c=document.createElement('canvas');
+        c.width=img.naturalWidth; c.height=img.naturalHeight;
+        c.getContext('2d').drawImage(img,0,0);
+        resolve(c.toDataURL('image/jpeg',0.82));
+      }catch(e){ resolve(null); }
+    };
+    img.onerror=function(){ resolve(null); };
+    img.src=src+(src.includes('?')?'&':'?')+'_t='+Date.now();
+  });
+}
+async function generatePDF(){
+  if(!window.jspdf){ alert('jsPDF nuk u ngarkua. Rifreskoni faqen.'); return; }
+  collectInputs();
+  var arts=_arts.filter(function(a){ return !!_selectedIds[a.id]; });
+  if(!arts.length){ showToast('Nuk ka artikuj të zgjedhur.'); return; }
+
+  var btn=document.getElementById('pdf-btn');
+  var lbl=document.getElementById('pdf-btn-label');
+  btn.disabled=true; lbl.textContent='Duke gjeneruar...';
+
+  try{
+    var jsPDF=window.jspdf.jsPDF;
+    var doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+    var M=14, PW=210, PH=297, COLS=3, GAP_C=6, GAP_R=8;
+    var UW=PW-2*M;
+    var CW=(UW-(COLS-1)*GAP_C)/COLS;
+    var PH_IMG=CW*4/3;
+    var INFO_H=18;
+    var CARD_H=PH_IMG+INFO_H;
+    var HDR=22;
+    var curY=M+HDR, col=0, pageNum=1;
+
+    function drawHeader(first){
+      doc.setFillColor(17,17,17); doc.rect(0,0,PW,12,'F');
+      doc.setFontSize(11); doc.setFont('helvetica','bold'); doc.setTextColor(200,0,62);
+      doc.text('intal',M,8.5);
+      doc.setFontSize(7); doc.setFont('helvetica','normal'); doc.setTextColor(120,120,120);
+      doc.text('KATALOG ÇMIMESH',M+14,8.5);
+      var clientName=_activeSlug==='default'?'Parazgjedhja':(_clients.find(function(c){return c.slug===_activeSlug;})||{name:_activeSlug}).name;
+      doc.setFontSize(7); doc.setTextColor(150,150,150);
+      doc.text(clientName+' — faqe '+pageNum, PW-M, 8.5,{align:'right'});
+      if(first){
+        doc.setDrawColor(220,220,220); doc.setLineWidth(0.3);
+        doc.line(M,M+HDR-4,PW-M,M+HDR-4);
+      }
+    }
+    drawHeader(true);
+
+    for(var i=0;i<arts.length;i++){
+      var a=arts[i];
+      var x=M+col*(CW+GAP_C);
+      var y=curY;
+      var photos=(a.photos||[]).map(_pdfImgUrl).filter(Boolean);
+      var imgData=photos[0]?await _pdfLoadImg(photos[0]):null;
+      if(imgData){
+        doc.addImage(imgData,'JPEG',x,y,CW,PH_IMG,'','FAST');
+      } else {
+        doc.setFillColor(235,235,235); doc.rect(x,y,CW,PH_IMG,'F');
+      }
+      doc.setFontSize(8); doc.setFont('helvetica','bold'); doc.setTextColor(30,30,30);
+      var nameLines=doc.splitTextToSize(a.name||'',CW);
+      doc.text(nameLines[0],x,y+PH_IMG+5);
+      if(a.code){
+        doc.setFontSize(6.5); doc.setFont('helvetica','normal'); doc.setTextColor(160,160,160);
+        doc.text('Art: '+a.code,x,y+PH_IMG+10);
+      }
+      var pr=_prices[a.id]||{};
+      var cur=_currency||'ALL';
+      if(pr.oferte||pr.tregu){
+        doc.setFontSize(8); doc.setFont('helvetica','bold');
+        if(pr.oferte){
+          doc.setTextColor(200,0,62); doc.text(pr.oferte+' '+cur,x,y+PH_IMG+16);
+          if(pr.tregu){
+            doc.setFontSize(6.5); doc.setFont('helvetica','normal'); doc.setTextColor(160,160,160);
+            doc.text(pr.tregu+' '+cur,x+doc.getTextWidth(pr.oferte+' '+cur)+2,y+PH_IMG+16);
+          }
+        } else {
+          doc.setTextColor(30,30,30); doc.text(pr.tregu+' '+cur,x,y+PH_IMG+16);
+        }
+      }
+      col++;
+      if(col>=COLS){
+        col=0; curY+=CARD_H+GAP_R;
+        if(curY+CARD_H>PH-M){
+          doc.addPage(); pageNum++;
+          drawHeader(false); curY=M+16;
+        }
+      }
+    }
+    doc.save('Intal-Katalog.pdf');
+  }catch(err){
+    console.error(err); alert('Gabim gjatë gjenerimit të PDF.');
+  }finally{
+    btn.disabled=false; lbl.textContent='Krijo PDF';
+  }
+}
 
 init();
 </script>
