@@ -355,18 +355,18 @@
       <p class="menu-drawer-eyebrow" data-t="md-ct-eyebrow">NA KONTAKTONI</p>
 
       <div class="menu-drawer-contacts">
-        <a class="menu-drawer-contact-item" href="tel:+355692776636">
+        <a class="menu-drawer-contact-item" id="drawer-phone-link" href="tel:+355692776636">
           <div class="menu-drawer-icon"><i class="ri-phone-line"></i></div>
           <div>
             <span class="menu-drawer-label" data-t="ct-phone-label">Telefon / WhatsApp</span>
-            <span class="menu-drawer-value">+355 692 776 636</span>
+            <span class="menu-drawer-value" id="drawer-phone-val">+355 692 776 636</span>
           </div>
         </a>
-        <a class="menu-drawer-contact-item" href="mailto:info@intal.com">
+        <a class="menu-drawer-contact-item" id="drawer-email-link" href="mailto:info@intal.com">
           <div class="menu-drawer-icon"><i class="ri-mail-line"></i></div>
           <div>
             <span class="menu-drawer-label" data-t="ct-email-label">Email</span>
-            <span class="menu-drawer-value">info@intal.com</span>
+            <span class="menu-drawer-value" id="drawer-email-val">info@intal.com</span>
           </div>
         </a>
         <div class="menu-drawer-contact-item">
@@ -419,6 +419,7 @@
 
     // mode: '' = show all, 'sub' = filter by sub category, 'kat' = filter by kat
     var _state = { cat:'', filter:'te-gjitha', filterMode:'', articles:[], allArticles:[] };
+    window._artTrans = window._artTrans || {};
     if(!window._t) window._t=function(k){return k;};
     if(!window._tCat)(function(){
       var _il=localStorage.getItem('intal_lang')||'al';
@@ -722,10 +723,12 @@
         :'<div style="width:100%;height:100%;background:#e0e0e0;display:flex;align-items:center;justify-content:center;font-size:40px;">&#128085;</div>';
       var hoverAttr=hasM?' onmouseenter="hoverEnter(this)" onmouseleave="hoverLeave(this)"':'';
       var arr=hasM?'<button class="art-card-arr l" onclick="cardStep(event,this,-1)">&#8592;</button><button class="art-card-arr r" onclick="cardStep(event,this,1)">&#8594;</button>':'';
+      var _clang=localStorage.getItem('intal_lang')||'al';
+      var _dname=(_clang==='en'&&window._artTrans[a.id]&&window._artTrans[a.id].name)||a.name;
       return '<div class="art-card" onclick="'+opener+'">'
         +'<div class="art-card-img-wrap"'+pa+hoverAttr+'>'+imgEl+arr+'</div>'
         +'<div style="padding:2px 10px 14px;display:flex;justify-content:space-between;align-items:flex-start;gap:6px;">'
-        +'<p class="art-card-name" style="font-size:13px;font-weight:500;letter-spacing:-0.2px;color:var(--black);margin:0;word-break:break-word;">'+a.name+'</p>'
+        +'<p class="art-card-name" data-aid="'+a.id+'" style="font-size:13px;font-weight:500;letter-spacing:-0.2px;color:var(--black);margin:0;word-break:break-word;">'+_dname+'</p>'
         +(a.code?'<p class="art-card-code" style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin:0;white-space:nowrap;flex-shrink:0;padding-top:1px;">Art: '+a.code+'</p>':'')
         +'</div></div>';
     }
@@ -1070,9 +1073,12 @@
       var katArr=artKatArr(a).filter(function(k){ return isStinore||!stinoreKats.includes((k||'').toLowerCase()); });
       var kat=katArr.join(', ');
       document.getElementById('art-detail-kat').textContent=kat+(sub?' · '+sub:'');
-      document.getElementById('art-detail-name').textContent=a.name||'';
+      var _dlang=localStorage.getItem('intal_lang')||'al';
+      var _dtn=(_dlang==='en'&&window._artTrans[a.id]&&window._artTrans[a.id].name)||a.name||'';
+      var _dtd=(_dlang==='en'&&window._artTrans[a.id]&&window._artTrans[a.id].desc)||a.desc||'';
+      document.getElementById('art-detail-name').textContent=_dtn;
       document.getElementById('art-detail-code').textContent=a.code?_t('KOD')+': '+a.code:'';
-      document.getElementById('art-detail-desc').textContent=a.desc||'';
+      document.getElementById('art-detail-desc').textContent=_dtd;
 
       /* Update OG meta tags for sharing this article */
       (function(){
@@ -1266,6 +1272,39 @@
 
     window.addEventListener('hashchange',route);
     window.addEventListener('popstate',route);
+
+    /* Translate all articles sq→en and update DOM live */
+    window._translateAllArts = function(arts){
+      if(!arts||!arts.length||!window._gtTranslate) return;
+      arts.forEach(function(a){
+        if(!a.id) return;
+        window._artTrans[a.id]=window._artTrans[a.id]||{};
+        if(a.name&&!window._artTrans[a.id].name){
+          window._gtTranslate.one(a.name).then(function(t){
+            window._artTrans[a.id].name=t;
+            // update cards already rendered in the grid
+            document.querySelectorAll('.art-card-name[data-aid="'+a.id+'"]').forEach(function(el){ el.textContent=t; });
+            // update detail overlay if open on this article
+            try{
+              var ov=document.getElementById('art-detail-overlay');
+              if(ov&&ov.style.display==='flex'&&_det.articles[_det.artIdx].id===a.id)
+                document.getElementById('art-detail-name').textContent=t;
+            }catch(e){}
+          });
+        }
+        if(a.desc&&!window._artTrans[a.id].desc){
+          window._gtTranslate.one(a.desc).then(function(t){
+            window._artTrans[a.id].desc=t;
+            try{
+              var ov=document.getElementById('art-detail-overlay');
+              if(ov&&ov.style.display==='flex'&&_det.articles[_det.artIdx].id===a.id)
+                document.getElementById('art-detail-desc').textContent=t;
+            }catch(e){}
+          });
+        }
+      });
+    };
+
     /* Supabase sync: render immediately from cache, then fetch fresh data and re-render */
     (async function(){
       route(); // instant render from localStorage cache (may be empty on first visit)
@@ -1273,6 +1312,10 @@
       var pageRefreshed = await sbSyncLocal('page_art_v1','intal_art_page_v1');
       if(pageRefreshed) { location.reload(); return; }
       route(); // re-render with fresh Supabase data
+      // if EN is active, translate all articles after fresh data loads
+      if(localStorage.getItem('intal_lang')==='en'){
+        window._translateAllArts(_state.allArticles||[]);
+      }
       sbTrack('pageView', {page:'artikujt'}); // track visit
       /* Apliko kërkimin nga URL nëse ka (?q=...) */
       if (window._pendingSearchQ) {
@@ -1430,6 +1473,8 @@
     try{ var ov=document.getElementById('art-detail-overlay'); if(ov&&ov.style.display==='flex') renderDetInfo(); }catch(e){}
     var cnt=document.getElementById('pg-count');
     if(cnt&&cnt.textContent){ var m=cnt.textContent.match(/^(\d+)\s/); if(m) cnt.textContent=m[1]+' '+_t('ARTIKUJ'); }
+    // translate article names/descs via Google Translate when switching to EN
+    if(lang==='en'){ try{ window._translateAllArts(_state.allArticles||[]); }catch(e){} }
     // re-apply hero texts with correct language
     try{
       var _d=window._artPageData;

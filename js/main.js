@@ -348,3 +348,24 @@ function applyDrawerContact() {
   } catch (e) {}
 }
 document.addEventListener('DOMContentLoaded', applyDrawerContact);
+
+/* ── Google Translate sq→en (free gtx endpoint, no API key) ── */
+window._gtTranslate = (function(){
+  var _cache = {};
+  try { _cache = JSON.parse(localStorage.getItem('intal_trans_v1')||'{}'); } catch(e){}
+  function _persist(){ try{ localStorage.setItem('intal_trans_v1', JSON.stringify(_cache)); }catch(e){} }
+  function one(text){
+    if(!text||!text.trim()) return Promise.resolve('');
+    var k = text.trim();
+    if(_cache[k]) return Promise.resolve(_cache[k]);
+    return fetch('https://translate.googleapis.com/translate_a/single?client=gtx&sl=sq&tl=en&dt=t&q='+encodeURIComponent(k))
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        var t = (d[0]||[]).map(function(x){ return x[0]||''; }).join('');
+        if(t){ _cache[k]=t; _persist(); }
+        return t||k;
+      })
+      .catch(function(){ return k; });
+  }
+  return { one: one, batch: function(arr){ return Promise.all(arr.map(one)); } };
+})();
