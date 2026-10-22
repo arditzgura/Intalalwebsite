@@ -243,6 +243,7 @@ var _openIdx = 0;
 var _PG_SIZE = 16;
 var _pgShown = 0;
 var _pgList = [];
+var _hasSelection = false;
 
 function getPhotoSrc(p){ if(!p) return ''; if(typeof p==='string') return p; return p.src||p.url||''; }
 
@@ -280,6 +281,7 @@ async function init(){
           var selSet = {};
           (obj._selectedIds||[]).forEach(function(id){ selSet[id]=true; });
           _arts = _arts.filter(function(a){ return !!selSet[a.id]; });
+          _hasSelection = true;
         }
       } else {
         _prices = obj;
@@ -288,8 +290,14 @@ async function init(){
   }
 
   setLang(_lang);
-  buildFilterBar();
-  renderGridAll(_arts, _activeSub, _activeKat);
+  if(_hasSelection){
+    // Catalog with specific selection: show all chosen articles directly, no filter bar
+    document.getElementById('dyn-filter-bar').style.display = 'none';
+    renderGridAll(_arts, 'te-gjitha', 'te-gjitha');
+  } else {
+    buildFilterBar();
+    renderGridAll(_arts, _activeSub, _activeKat);
+  }
 }
 
 // ── Filter helpers — supports both sub/kat and gjinia/kategoria fields ──
