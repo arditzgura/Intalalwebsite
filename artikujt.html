@@ -1273,9 +1273,21 @@
     window.addEventListener('hashchange',route);
     window.addEventListener('popstate',route);
 
+    /* Expose render helpers so the language script (separate IIFE) can call them */
+    window._reRenderFilterBar = function(){
+      renderFilterBarAll(_state.allArticles||[], _state.activeSub||'te-gjitha', _state.activeKat||'te-gjitha', _state.activeSubKat||'te-gjitha');
+    };
+    window._reRenderBreadcrumb = function(){ try{ renderBreadcrumb(); }catch(e){} };
+    window._reRenderDetInfo = function(){
+      try{ var ov=document.getElementById('art-detail-overlay'); if(ov&&ov.style.display==='flex') renderDetInfo(); }catch(e){}
+    };
+    window._reRenderGrid = function(){ try{ _pgRender(false); }catch(e){} };
+
     /* Translate all articles sq→en and update DOM live */
     window._translateAllArts = function(arts){
-      if(!arts||!arts.length||!window._gtTranslate) return;
+      var list = arts || _state.allArticles || [];
+      if(!list.length||!window._gtTranslate) return;
+      arts = list;
       arts.forEach(function(a){
         if(!a.id) return;
         window._artTrans[a.id]=window._artTrans[a.id]||{};
@@ -1465,16 +1477,15 @@
     if(alEl) alEl.classList.toggle('active',lang==='al');
     if(enEl) enEl.classList.toggle('active',lang==='en');
     document.documentElement.lang=lang==='en'?'en':'sq';
-    // re-render filter bar, breadcrumb and count if visible
-    try{
-      renderFilterBarAll(_state.allArticles||[],_state.activeSub||'te-gjitha',_state.activeKat||'te-gjitha',_state.activeSubKat||'te-gjitha');
-    }catch(e){}
-    try{ renderBreadcrumb(); }catch(e){}
-    try{ var ov=document.getElementById('art-detail-overlay'); if(ov&&ov.style.display==='flex') renderDetInfo(); }catch(e){}
+    // re-render filter bar, grid cards, breadcrumb and detail overlay
+    try{ window._reRenderFilterBar&&window._reRenderFilterBar(); }catch(e){}
+    try{ window._reRenderGrid&&window._reRenderGrid(); }catch(e){}
+    try{ window._reRenderBreadcrumb&&window._reRenderBreadcrumb(); }catch(e){}
+    try{ window._reRenderDetInfo&&window._reRenderDetInfo(); }catch(e){}
     var cnt=document.getElementById('pg-count');
     if(cnt&&cnt.textContent){ var m=cnt.textContent.match(/^(\d+)\s/); if(m) cnt.textContent=m[1]+' '+_t('ARTIKUJ'); }
     // translate article names/descs via Google Translate when switching to EN
-    if(lang==='en'){ try{ window._translateAllArts(_state.allArticles||[]); }catch(e){} }
+    if(lang==='en'){ try{ window._translateAllArts&&window._translateAllArts(); }catch(e){} }
     // re-apply hero texts with correct language
     try{
       var _d=window._artPageData;
