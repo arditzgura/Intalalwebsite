@@ -12,6 +12,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script src="js/firebase.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 :root { --art-side:180px; }
 @media(max-width:900px){ :root { --art-side:60px; } }
@@ -117,6 +118,13 @@
   <span class="kat-logo">intal</span>
   <span class="kat-label">Katalog Çmimesh</span>
   <div style="flex:1;display:flex;align-items:center;justify-content:flex-end;gap:10px;">
+    <!-- PDF button -->
+    <button id="pdf-btn" onclick="generatePDF()"
+      style="background:#C8003E;border:none;border-radius:4px;padding:6px 14px;color:#fff;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;gap:6px;flex-shrink:0;transition:opacity .15s;"
+      onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+      <span id="pdf-btn-label">Krijo PDF</span>
+    </button>
     <!-- Search -->
     <div id="search-wrap" style="display:flex;align-items:center;gap:6px;background:#1e1e1e;border-radius:20px;padding:4px 12px;transition:all .2s;">
       <i class="ri-search-line" style="color:#555;font-size:14px;flex-shrink:0;"></i>
@@ -580,6 +588,147 @@ document.addEventListener('keydown', function(e){
   if(e.key==='ArrowLeft') navArt(-1);
   if(e.key==='ArrowRight') navArt(1);
 });
+
+// ── PDF Generation ────────────────────────────────────────────
+function loadImgDataURL(src){
+  return new Promise(function(resolve){
+    var img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = function(){
+      try{
+        var c = document.createElement('canvas');
+        c.width = img.naturalWidth; c.height = img.naturalHeight;
+        c.getContext('2d').drawImage(img, 0, 0);
+        resolve(c.toDataURL('image/jpeg', 0.82));
+      }catch(e){ resolve(null); }
+    };
+    img.onerror = function(){ resolve(null); };
+    img.src = src + (src.includes('?') ? '&' : '?') + '_t=' + Date.now();
+  });
+}
+
+window.generatePDF = async function(){
+  if(!window.jspdf){ alert('jsPDF nuk u ngarkua. Provoni sërisht.'); return; }
+  var btn = document.getElementById('pdf-btn');
+  var lbl = document.getElementById('pdf-btn-label');
+  btn.disabled = true; lbl.textContent = 'Duke gjeneruar...';
+
+  try{
+    var jsPDF = window.jspdf.jsPDF;
+    var doc = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
+
+    // Layout constants (A4 = 210×297mm)
+    var M = 14;           // margin
+    var PW = 210;
+    var PH = 297;
+    var GAP_C = 6;        // column gap
+    var GAP_R = 8;        // row gap
+    var COLS = 3;
+    var UW = PW - 2*M;    // usable width = 182mm
+    var CW = (UW - (COLS-1)*GAP_C) / COLS;  // ≈ 56.7mm
+    var PH_IMG = CW * 4/3;   // photo height (3:4 ratio) ≈ 75.6mm
+    var INFO_H = 18;          // name + code + price below photo
+    var CARD_H = PH_IMG + INFO_H;
+
+    // Header height on first page
+    var HDR = 22;
+    var curY = M + HDR;
+    var col = 0;
+    var pageNum = 1;
+
+    function drawHeader(first){
+      doc.setFillColor(17,17,17);
+      doc.rect(0, 0, PW, 12, 'F');
+      doc.setFontSize(11); doc.setFont('helvetica','bold'); doc.setTextColor(200,0,62);
+      doc.text('intal', M, 8.5);
+      doc.setFontSize(7); doc.setFont('helvetica','normal'); doc.setTextColor(120,120,120);
+      doc.text('KATALOG ÇMIMESH', M+14, 8.5);
+      if(!first){
+        doc.setFontSize(7); doc.setTextColor(150,150,150);
+        doc.text('faqe '+pageNum, PW-M, 8.5, {align:'right'});
+      }
+      if(first){
+        // Date line
+        var now = new Date();
+        var dt = now.getDate()+'/'+(now.getMonth()+1)+'/'+now.getFullYear();
+        doc.setFontSize(7); doc.setTextColor(150,150,150);
+        doc.text(dt, PW-M, 8.5, {align:'right'});
+        // Thin separator
+        doc.setDrawColor(230,230,230); doc.setLineWidth(0.3);
+        doc.line(M, M+HDR-4, PW-M, M+HDR-4);
+      }
+    }
+
+    drawHeader(true);
+
+    var arts = _pgList.length ? _pgList : _arts;
+    for(var i=0; i<arts.length; i++){
+      var a = arts[i];
+      var x = M + col*(CW+GAP_C);
+      var y = curY;
+
+      // Photo
+      var photos = (a.photos||[]).map(getPhotoSrc).filter(Boolean);
+      var imgData = photos[0] ? await loadImgDataURL(photos[0]) : null;
+      if(imgData){
+        doc.addImage(imgData, 'JPEG', x, y, CW, PH_IMG, '', 'FAST');
+      } else {
+        doc.setFillColor(235,235,235); doc.rect(x, y, CW, PH_IMG, 'F');
+        doc.setFontSize(20); doc.setTextColor(200,200,200);
+        doc.text('🩲', x+CW/2, y+PH_IMG/2+4, {align:'center'});
+      }
+
+      // Name
+      doc.setFontSize(8); doc.setFont('helvetica','bold'); doc.setTextColor(30,30,30);
+      var nameLines = doc.splitTextToSize(a.name||'', CW);
+      doc.text(nameLines[0], x, y+PH_IMG+5);
+
+      // Code
+      if(a.code){
+        doc.setFontSize(6.5); doc.setFont('helvetica','normal'); doc.setTextColor(160,160,160);
+        doc.text('Art: '+a.code, x, y+PH_IMG+10);
+      }
+
+      // Price
+      var pr = _prices[a.id]||{};
+      var cur = _currency||'ALL';
+      if(pr.oferte||pr.tregu){
+        doc.setFontSize(8); doc.setFont('helvetica','bold');
+        if(pr.oferte){
+          doc.setTextColor(200,0,62);
+          doc.text(pr.oferte+' '+cur, x, y+PH_IMG+16);
+          if(pr.tregu){
+            doc.setFontSize(6.5); doc.setFont('helvetica','normal'); doc.setTextColor(160,160,160);
+            doc.text(pr.tregu+' '+cur, x+doc.getTextWidth(pr.oferte+' '+cur)+2, y+PH_IMG+16);
+          }
+        } else {
+          doc.setTextColor(30,30,30);
+          doc.text(pr.tregu+' '+cur, x, y+PH_IMG+16);
+        }
+      }
+
+      col++;
+      if(col>=COLS){
+        col=0;
+        curY += CARD_H + GAP_R;
+        // Check if next row fits
+        if(curY + CARD_H > PH - M){
+          doc.addPage();
+          pageNum++;
+          drawHeader(false);
+          curY = M + 16;
+        }
+      }
+    }
+
+    doc.save('Intal-Katalog.pdf');
+  }catch(err){
+    console.error(err);
+    alert('Gabim gjatë gjenerimit të PDF. Provoni sërisht.');
+  }finally{
+    btn.disabled=false; lbl.textContent='Krijo PDF';
+  }
+};
 
 init();
 </script>
