@@ -277,6 +277,7 @@ function setBurimi(v){
 /* ── Tab ─────────────────────────────────────────────────────── */
 function setTab(t){
   activeTab = t; typeFlt = ''; katFlt = '';
+  const katSel2 = document.getElementById('katFlt'); if(katSel2) katSel2.value = '';
   const isCash = t === 'cash';
   document.getElementById('tab-cash').className  = 'arka-tab' + (isCash  ? ' active-cash'  : '');
   document.getElementById('tab-banka').className = 'arka-tab' + (!isCash ? ' active-banka' : '');
@@ -578,7 +579,6 @@ function buildBankaList(){
 /* ── Render ──────────────────────────────────────────────────── */
 function renderList(){
   const q = document.getElementById('search').value.toLowerCase();
-  katFlt = document.getElementById('katFlt').value;
 
   let fullList = activeTab === 'cash' ? buildCashList() : buildBankaList();
 
@@ -657,7 +657,9 @@ function renderList(){
     ? `<span class="sort-arrow">${sortDir==='asc'?'↑':'↓'}</span>`
     : '<span class="sort-arrow muted">↕</span>';
 
-  const rows = list.map(x=>{
+  let rows;
+  try {
+  rows = list.map(x=>{
     const isH      = x.lloji === 'hyrje';
     const isAuto   = x._source === 'blerje' || x._source === 'shpenzim' || x._source === 'transfer-from-cash';
     const iconCls  = isH ? 'ri-arrow-down-circle-line' : 'ri-arrow-up-circle-line';
@@ -685,6 +687,8 @@ function renderList(){
       ? `<span class="badge ${x.statusi==='paguar'?'paguar':'pa-paguar'}" style="margin-left:4px">${x.statusi==='paguar'?'Paguar':'Pa paguar'}</span>`
       : '';
 
+    const editLlojiFor = x._source==='transfer' ? 'hyrje' : x.lloji;
+
     // Action buttons: auto-pulled = link to source page; manual = dup/edit/delete
     let actionsHtml;
     if(isAuto){
@@ -695,8 +699,6 @@ function renderList(){
         <button class="btn-icon" onclick="openModal('${editLlojiFor}','${x._id}')" title="Edito"><i class="ri-edit-line"></i></button>
         <button class="btn-icon danger" onclick="askDel('${x._id}')" title="Fshi"><i class="ri-delete-bin-line"></i></button>`;
     }
-
-    const editLlojiFor = x._source==='transfer' ? 'hyrje' : x.lloji;
     const rowClick = isAuto
       ? `onclick="_openDetailById('${x._id}','${x._source}')" style="cursor:pointer;"`
       : `onclick="openModal('${editLlojiFor}','${x._id}')" style="cursor:pointer;"`;
@@ -724,8 +726,13 @@ function renderList(){
       </td>
     </tr>`;
   }).join('');
+  } catch(e){
+    console.error('renderList map error:', e, e.stack);
+    wrap.innerHTML = `<div class="empty" style="color:var(--accent)"><i class="ri-error-warning-line"></i>Gabim teknik: ${e.message}<br><small style="font-size:10px;opacity:.7">${e.stack||''}</small></div>`;
+    return;
+  }
 
-  wrap.innerHTML = `<table>
+  wrap.innerHTML = `<div style="background:#fef9c3;padding:8px 16px;font-size:12px;font-weight:700;border-bottom:1px solid #fde68a">🐛 DEBUG: list=${list.length} rows_chars=${rows.length} first=${list[0]?list[0]._source+'/'+list[0].pershkrim:'none'}</div><table>
     <thead><tr>
       <th class="th-sort" onclick="setSort('emertimi')">Përshkrimi ${si('emertimi')}</th>
       <th class="th-sort" onclick="setSort('data')">Data ${si('data')}</th>

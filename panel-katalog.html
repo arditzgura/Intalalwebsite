@@ -505,6 +505,11 @@ function savePrice(id,field,val){
 // ── Save ──────────────────────────────────────────────
 async function saveAll(){
   collectInputs();
+  // Keep only articles that are checked AND have at least one price filled
+  Object.keys(_selectedIds).forEach(function(id){
+    var pr = _prices[id]||{};
+    if(!pr.oferte && !pr.tregu) delete _selectedIds[id];
+  });
   var key = _activeSlug==='default' ? 'katalog_cmime' : 'katalog_cmime_'+_activeSlug;
   var payload = {
     _currency: _currency,
@@ -534,22 +539,45 @@ function showToast(msg,dur){
 }
 function escHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-// ── PDF Generation ────────────────────────────────────────────
+// ── PDF Generation ───────────────────────────────────────────
 function _pdfImgUrl(p){ if(!p) return ''; if(typeof p==='string') return p; return p.src||p.url||''; }
 function _pdfLoadImg(src){
   return new Promise(function(resolve){
-    var img=new Image(); img.crossOrigin='anonymous';
+    var img=new Image();
+    // Try without CORS first so browser can load the image normally
     img.onload=function(){
       try{
         var c=document.createElement('canvas');
-        c.width=img.naturalWidth; c.height=img.naturalHeight;
+        c.width=img.naturalWidth||400; c.height=img.naturalHeight||400;
         c.getContext('2d').drawImage(img,0,0);
-        resolve(c.toDataURL('image/jpeg',0.82));
-      }catch(e){ resolve(null); }
+        resolve(c.toDataURL('image/jpeg',0.85));
+      }catch(e){
+        // CORS blocked canvas — retry with crossOrigin
+        var img2=new Image(); img2.crossOrigin='anonymous';
+        img2.onload=function(){
+          try{
+            var c2=document.createElement('canvas');
+            c2.width=img2.naturalWidth||400; c2.height=img2.naturalHeight||400;
+            c2.getContext('2d').drawImage(img2,0,0);
+            resolve(c2.toDataURL('image/jpeg',0.85));
+          }catch(e2){ resolve(null); }
+        };
+        img2.onerror=function(){ resolve(null); };
+        img2.src=src;
+      }
     };
     img.onerror=function(){ resolve(null); };
-    img.src=src+(src.includes('?')?'&':'?')+'_t='+Date.now();
+    img.src=src;
   });
+}
+function _pdfFormatComp(perberja, lang){
+  if(!perberja||!perberja.length) return '';
+  var M={'Pambuk':'Cotton','Viskon':'Viscose','Elastan':'Elastane','Poliester':'Polyester',
+         'Najon':'Nylon','Liri':'Linen','Lesh':'Wool','Modal':'Modal','Bambu':'Bamboo'};
+  return perberja.map(function(p){
+    var m=lang==='en'?(M[p.material]||p.material):p.material;
+    return (p.pct?p.pct+'% ':'')+m;
+  }).join(', ');
 }
 async function generatePDF(){
   if(!window.jspdf){ alert('jsPDF nuk u ngarkua. Rifreskoni faqen.'); return; }
@@ -564,72 +592,144 @@ async function generatePDF(){
   try{
     var jsPDF=window.jspdf.jsPDF;
     var doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
-    var M=14, PW=210, PH=297, COLS=3, GAP_C=6, GAP_R=8;
-    var UW=PW-2*M;
-    var CW=(UW-(COLS-1)*GAP_C)/COLS;
-    var PH_IMG=CW*4/3;
-    var INFO_H=18;
-    var CARD_H=PH_IMG+INFO_H;
-    var HDR=22;
-    var curY=M+HDR, col=0, pageNum=1;
 
-    function drawHeader(first){
-      doc.setFillColor(17,17,17); doc.rect(0,0,PW,12,'F');
-      doc.setFontSize(11); doc.setFont('helvetica','bold'); doc.setTextColor(200,0,62);
-      doc.text('intal',M,8.5);
-      doc.setFontSize(7); doc.setFont('helvetica','normal'); doc.setTextColor(120,120,120);
-      doc.text('KATALOG ÇMIMESH',M+14,8.5);
-      var clientName=_activeSlug==='default'?'Parazgjedhja':(_clients.find(function(c){return c.slug===_activeSlug;})||{name:_activeSlug}).name;
-      doc.setFontSize(7); doc.setTextColor(150,150,150);
-      doc.text(clientName+' — faqe '+pageNum, PW-M, 8.5,{align:'right'});
-      if(first){
-        doc.setDrawColor(220,220,220); doc.setLineWidth(0.3);
-        doc.line(M,M+HDR-4,PW-M,M+HDR-4);
+    var PW=210, PH=297, ML=16, MR=16;
+    // Column X anchors
+    var xImg=ML;        // image left edge
+    var imgW=28, imgH=30;
+    var xComp=ML+33;    // composition/name column
+    var xColor=ML+108;  // color circles
+    var xSize=ML+142;   // sizes
+    var xPrice=PW-MR;   // price right-aligned
+
+    var ROWS_PER_PAGE=8;
+    var HDR_H=54;       // header ends at y=54
+    var ROW_H=(PH-12-HDR_H)/ROWS_PER_PAGE; // ≈28.9mm
+    var pageNum=0;
+
+    var BG=[246,243,238], BLACK=[18,18,18], GRAY=[145,140,133],
+        LGRAY=[212,209,204], WARM=[148,120,83];
+
+    function drawPage(){
+      pageNum++;
+      doc.setFillColor(BG[0],BG[1],BG[2]); doc.rect(0,0,PW,PH,'F');
+      // "intal" logo
+      doc.setFontSize(26); doc.setFont('helvetica','bold'); doc.setTextColor(BLACK[0],BLACK[1],BLACK[2]);
+      doc.text('intal',ML,27);
+      var lw=doc.getTextWidth('intal');
+      doc.setDrawColor(BLACK[0],BLACK[1],BLACK[2]); doc.setLineWidth(0.5);
+      doc.line(ML,28.5,ML+lw,28.5);
+      // UNDERWEAR
+      doc.setFontSize(6); doc.setFont('helvetica','normal'); doc.setTextColor(WARM[0],WARM[1],WARM[2]);
+      doc.setCharSpace(3); doc.text('UNDERWEAR',ML,35.5); doc.setCharSpace(0);
+      // PRODUCT CATALOG top-right
+      doc.setFontSize(6); doc.setTextColor(GRAY[0],GRAY[1],GRAY[2]);
+      doc.setCharSpace(1.8); doc.text('PRODUCT CATALOG',PW-MR,10,{align:'right'}); doc.setCharSpace(0);
+      // Page number (from page 2)
+      if(pageNum>1){
+        doc.setFontSize(7); doc.setTextColor(GRAY[0],GRAY[1],GRAY[2]);
+        doc.text(''+pageNum,PW-MR,PH-5,{align:'right'});
       }
+      // Divider below logo area
+      doc.setDrawColor(LGRAY[0],LGRAY[1],LGRAY[2]); doc.setLineWidth(0.4);
+      doc.line(ML,42,PW-MR,42);
+      // Column header labels
+      doc.setFontSize(6); doc.setFont('helvetica','normal'); doc.setTextColor(GRAY[0],GRAY[1],GRAY[2]);
+      doc.setCharSpace(1.2);
+      doc.text('IMAGE',  xImg,   50);
+      doc.text('COMPOSITION', xComp, 50);
+      doc.text('COLOR',  xColor, 50);
+      doc.text('SIZE',   xSize,  50);
+      doc.text('PRICE',  xPrice, 50, {align:'right'});
+      doc.setCharSpace(0);
+      // Thin line below headers
+      doc.setDrawColor(LGRAY[0],LGRAY[1],LGRAY[2]); doc.setLineWidth(0.2);
+      doc.line(ML, HDR_H, PW-MR, HDR_H);
     }
-    drawHeader(true);
+
+    drawPage();
+    var cur=_currency||'ALL', curSym=cur==='EUR'?'€':cur, lang=_langPref||'al';
 
     for(var i=0;i<arts.length;i++){
+      if(i>0 && i%ROWS_PER_PAGE===0){ doc.addPage(); drawPage(); }
+      var ri=i%ROWS_PER_PAGE;
+      var rowY=HDR_H+ri*ROW_H;
+      var midY=rowY+ROW_H/2;
       var a=arts[i];
-      var x=M+col*(CW+GAP_C);
-      var y=curY;
+
+      // Row separator
+      doc.setDrawColor(LGRAY[0],LGRAY[1],LGRAY[2]); doc.setLineWidth(0.2);
+      doc.line(ML, rowY+ROW_H, PW-MR, rowY+ROW_H);
+
+      // ─ Image ─
+      var iy=midY-imgH/2;
       var photos=(a.photos||[]).map(_pdfImgUrl).filter(Boolean);
       var imgData=photos[0]?await _pdfLoadImg(photos[0]):null;
       if(imgData){
-        doc.addImage(imgData,'JPEG',x,y,CW,PH_IMG,'','FAST');
+        doc.addImage(imgData,'JPEG',xImg,iy,imgW,imgH,'','FAST');
       } else {
-        doc.setFillColor(235,235,235); doc.rect(x,y,CW,PH_IMG,'F');
+        doc.setFillColor(LGRAY[0],LGRAY[1],LGRAY[2]);
+        doc.rect(xImg,iy,imgW,imgH,'F');
       }
-      doc.setFontSize(8); doc.setFont('helvetica','bold'); doc.setTextColor(30,30,30);
-      var nameLines=doc.splitTextToSize(a.name||'',CW);
-      doc.text(nameLines[0],x,y+PH_IMG+5);
-      if(a.code){
-        doc.setFontSize(6.5); doc.setFont('helvetica','normal'); doc.setTextColor(160,160,160);
-        doc.text('Art: '+a.code,x,y+PH_IMG+10);
+
+      // ─ Name (bold) + Composition (warm) ─
+      var nameY=midY-3;
+      var compY=midY+4.5;
+      doc.setFontSize(10); doc.setFont('helvetica','bold'); doc.setTextColor(BLACK[0],BLACK[1],BLACK[2]);
+      var nameLines=doc.splitTextToSize(a.name||'', 68);
+      // Up to 2 lines of name
+      if(nameLines.length>1){
+        doc.text(nameLines[0], xComp, midY-7);
+        doc.text(nameLines[1], xComp, midY-1);
+        nameY=midY-1; compY=midY+6;
+      } else {
+        doc.text(nameLines[0], xComp, nameY);
       }
-      var pr=_prices[a.id]||{};
-      var cur=_currency||'ALL';
-      if(pr.oferte||pr.tregu){
-        doc.setFontSize(8); doc.setFont('helvetica','bold');
-        if(pr.oferte){
-          doc.setTextColor(200,0,62); doc.text(pr.oferte+' '+cur,x,y+PH_IMG+16);
-          if(pr.tregu){
-            doc.setFontSize(6.5); doc.setFont('helvetica','normal'); doc.setTextColor(160,160,160);
-            doc.text(pr.tregu+' '+cur,x+doc.getTextWidth(pr.oferte+' '+cur)+2,y+PH_IMG+16);
-          }
-        } else {
-          doc.setTextColor(30,30,30); doc.text(pr.tregu+' '+cur,x,y+PH_IMG+16);
+      var comp=_pdfFormatComp(a.perberja, lang);
+      if(comp){
+        doc.setFontSize(7); doc.setFont('helvetica','normal'); doc.setTextColor(WARM[0],WARM[1],WARM[2]);
+        var compLines=doc.splitTextToSize(comp, 68);
+        compLines.slice(0,2).forEach(function(cl,ci){
+          doc.text(cl, xComp, compY+ci*4.5);
+        });
+      }
+
+      // ─ Color circles ─
+      var ngjyrat=a.ngjyrat||[];
+      ngjyrat.slice(0,4).forEach(function(n,ni){
+        var cx=xColor+ni*8+4.5, cy=midY;
+        var hex=n.hex||n.color||'#ccc', r=200,g=200,b=200;
+        if(hex&&hex.length>=7){ r=parseInt(hex.slice(1,3),16); g=parseInt(hex.slice(3,5),16); b=parseInt(hex.slice(5,7),16); }
+        doc.setFillColor(r,g,b); doc.setDrawColor(185,182,177); doc.setLineWidth(0.3);
+        doc.circle(cx, cy, 3.5, 'FD');
+      });
+
+      // ─ Sizes (up to 2 lines: first 3 bold, rest smaller gray) ─
+      var sizes=a.sizes||a.masat||[];
+      if(sizes.length){
+        var s1=sizes.slice(0,3), s2=sizes.slice(3);
+        doc.setFontSize(8); doc.setFont('helvetica','bold'); doc.setTextColor(BLACK[0],BLACK[1],BLACK[2]);
+        doc.text(s1.join('  '), xSize, midY-(s2.length?2:0));
+        if(s2.length){
+          doc.setFontSize(6.5); doc.setFont('helvetica','normal'); doc.setTextColor(GRAY[0],GRAY[1],GRAY[2]);
+          doc.text('('+s2.join('  ')+')', xSize, midY+4);
         }
       }
-      col++;
-      if(col>=COLS){
-        col=0; curY+=CARD_H+GAP_R;
-        if(curY+CARD_H>PH-M){
-          doc.addPage(); pageNum++;
-          drawHeader(false); curY=M+16;
+
+      // ─ Price ─
+      var pr=_prices[a.id]||{};
+      var prMain=pr.oferte||pr.tregu||'';
+      var prOld=pr.oferte&&pr.tregu?pr.tregu:'';
+      if(prMain){
+        doc.setFontSize(10.5); doc.setFont('helvetica','bold'); doc.setTextColor(BLACK[0],BLACK[1],BLACK[2]);
+        doc.text(curSym+' '+prMain, xPrice, midY+(prOld?1:-0.5), {align:'right'});
+        if(prOld){
+          doc.setFontSize(6.5); doc.setFont('helvetica','normal'); doc.setTextColor(GRAY[0],GRAY[1],GRAY[2]);
+          doc.text(curSym+' '+prOld, xPrice, midY-5.5, {align:'right'});
         }
       }
     }
+
     doc.save('Intal-Katalog.pdf');
   }catch(err){
     console.error(err); alert('Gabim gjatë gjenerimit të PDF.');
