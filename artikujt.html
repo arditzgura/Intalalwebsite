@@ -6,11 +6,13 @@
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-1L8B69RQW9"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-1L8B69RQW9');</script>
   <meta charset="UTF-8">
+  <meta name="description" content="Artikujt e të brendshmeve Intal Albania — Meshkuj, Femra, Fëmijë. Blerje me shumicë direkt nga fabrika shqiptare." />
+  <link rel="canonical" href="https://intalal.com/artikujt" />
   <link rel="icon" type="image/png" href="favicon.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Artikujt — Intal Underwear</title>
   <meta property="og:title" content="Artikujt — Intal Underwear" />
-  <meta property="og:description" content="Koleksioni i plotë i të brendëshmes — Meshkuj, Femra, Fëmijë. Cilësi shqiptare direkt nga fabrika." />
+  <meta property="og:description" content="Koleksioni i plotë i të brendshmeve — Meshkuj, Femra, Fëmijë. Cilësi shqiptare direkt nga fabrika." />
   <meta property="og:url" content="https://intalal.com/artikujt" />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="https://intalal.com/og_image.png" />
@@ -18,7 +20,7 @@
   <meta property="og:image:type" content="image/png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content="Intal Underwear — Koleksioni i të Brendëshmes" />
+  <meta property="og:image:alt" content="Intal Underwear — Koleksioni i të brendshmeve" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:image" content="https://intalal.com/og_image.png" />
   <link rel="preconnect" href="https://cdn.jsdelivr.net">  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet" media="print" onload="this.media='all'">
@@ -328,7 +330,7 @@
     </div>
     <div class="contact-footer">
       <span class="contact-brand">Intal <strong>UNDERWEAR</strong></span>
-      <span class="contact-copy">© 2025 Intal Albania</span>
+      <span class="contact-copy">© <span class="cp-yr"></span> Intal Albania</span>
     </div>
   </div>
 
@@ -393,7 +395,7 @@
 
     </div>
     <div class="menu-drawer-footer">
-      <span class="menu-drawer-copy">© 2025 Intal Albania</span>
+      <span class="menu-drawer-copy">© <span class="cp-yr"></span> Intal Albania</span>
     </div>
   </aside>
 
@@ -875,7 +877,7 @@
       var filtered=f==='te-gjitha'?_state.articles:_state.articles.filter(function(a){ return artKatArr(a).includes(f); });
       var label=f==='te-gjitha'?(_state.cat||'Artikujt'):f;
       var title=label+' — Intal Underwear';
-      var desc='Koleksioni i plotë i të brendëshmes — '+label+'. Cilësi shqiptare direkt nga fabrika.';
+      var desc='Koleksioni i plotë i të brendshmeve — '+label+'. Cilësi shqiptare direkt nga fabrika.';
       updatePageOg(title,desc,firstPhotoFromList(filtered),window.location.href);
     };
 
@@ -892,7 +894,7 @@
       var filtered=newSub==='te-gjitha'?_state.allArticles:_state.allArticles.filter(function(a){ return artMatchesCat(a,newSub); });
       var label=newSub==='te-gjitha'?'Artikujt':newSub;
       var title=label+' — Intal Underwear';
-      var desc='Koleksioni i plotë i të brendëshmes — '+label+'. Cilësi shqiptare direkt nga fabrika.';
+      var desc='Koleksioni i plotë i të brendshmeve — '+label+'. Cilësi shqiptare direkt nga fabrika.';
       updatePageOg(title,desc,firstPhotoFromList(filtered),window.location.href);
     };
 
@@ -910,7 +912,7 @@
       if(kat==='te-gjitha'){ filtered=sub&&sub!=='te-gjitha'?_state.allArticles.filter(function(a){ return artMatchesCat(a,sub); }):_state.allArticles; }
       else { filtered=_state.allArticles.filter(function(a){ return (sub&&sub!=='te-gjitha'?artMatchesCat(a,sub):true)&&artKatArr(a).includes(kat); }); }
       var label=kat==='te-gjitha'?(sub&&sub!=='te-gjitha'?sub:'Artikujt'):kat;
-      updatePageOg(label+' — Intal Underwear','Koleksioni i plotë i të brendëshmes — '+label+'. Cilësi shqiptare direkt nga fabrika.',firstPhotoFromList(filtered),window.location.href);
+      updatePageOg(label+' — Intal Underwear','Koleksioni i plotë i të brendshmeve — '+label+'. Cilësi shqiptare direkt nga fabrika.',firstPhotoFromList(filtered),window.location.href);
     };
 
     // Level-2 filter for Stinore: season (Dimër, Verë) — toggle
@@ -1084,7 +1086,7 @@
       (function(){
         var photos=(a.photos||[]).map(getPhotoSrc).filter(Boolean);
         var imgSrc=photos[0]?(photos[0].startsWith('http')?photos[0]:'https://intalal.com/'+photos[0]):'https://intalal.com/og_image.png';
-        updatePageOg((a.name||'Artikull')+' — Intal Underwear', a.desc||'Koleksioni i plotë i të brendëshmes — Intal Albania.', imgSrc, window.location.href);
+        updatePageOg((a.name||'Artikull')+' — Intal Underwear', a.desc||'Koleksioni i plotë i të brendshmeve — Intal Albania.', imgSrc, window.location.href);
       })();
 
       /* MASAT */
@@ -1173,7 +1175,7 @@
     window.closeArtDetail=function(){
       var ov=document.getElementById('art-detail-overlay'); ov.style.display='none'; ov.querySelectorAll('.art-nav-btn').forEach(function(b){ b.remove(); }); clearArtHash(); floatBtns(true);
       /* Reset OG meta tags to page defaults */
-      updatePageOg('Artikujt — Intal Underwear','Koleksioni i plotë i të brendëshmes — Meshkuj, Femra, Fëmijë. Cilësi shqiptare direkt nga fabrika.','https://intalal.com/og_image.png',window.location.href);
+      updatePageOg('Artikujt — Intal Underwear','Koleksioni i plotë i të brendshmeve — Meshkuj, Femra, Fëmijë. Cilësi shqiptare direkt nga fabrika.','https://intalal.com/og_image.png',window.location.href);
     };
     document.getElementById('art-detail-overlay').addEventListener('click',function(e){ if(e.target===this) closeArtDetail(); });
     document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeArtDetail(); });
@@ -1578,5 +1580,6 @@
 })();
 </script>
 
+  <script>(function(){var y=new Date().getFullYear();document.querySelectorAll('.cp-yr').forEach(function(el){el.textContent=y;});})();</script>
 </body>
 </html>

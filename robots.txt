@@ -1,4 +1,11 @@
 User-agent: *
 Allow: /
+Disallow: /panel
+Disallow: /panel-dashboard
+Disallow: /panel-artikujt
+Disallow: /panel-pelhura
+Disallow: /panel-rreth-nesh
+Disallow: /panel-katalog
+Disallow: /panel-home
 
 Sitemap: https://intalal.com/sitemap.xml
