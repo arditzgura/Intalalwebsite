@@ -206,7 +206,7 @@
   </div>
   <div class="contact-footer">
     <span class="contact-brand">Intal UNDERWEAR</span>
-    <span>© 2025 Intal Albania</span>
+    <span>© <span id="cp-yr-kat"></span> Intal Albania</span>
   </div>
 </div>
 
@@ -753,6 +753,7 @@ window.generatePDF = async function(){
 };
 
 init();
+(function(){var y=new Date().getFullYear();var el=document.getElementById('cp-yr-kat');if(el)el.textContent=y;})();
 </script>
 </body>
 </html>
