@@ -453,14 +453,29 @@
       if(push) history.pushState(null,'',h||window.location.pathname.split('#')[0]);
       else history.replaceState(null,'',h||window.location.pathname.split('#')[0]);
     }
+    function _slugify(str){
+      return (str||'').toLowerCase()
+        .replace(/ë/g,'e').replace(/ç/g,'c').replace(/â/g,'a').replace(/î/g,'i').replace(/û/g,'u')
+        .replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,80);
+    }
+    function _artSlug(art){
+      if(!art) return '';
+      return _slugify((art.name||'')+(art.code?'-'+art.code:''));
+    }
     function setArtHash(artId){
-      var base=window.location.hash.replace(/\/~[^/]*$|^#~[^/]*$/,'');
-      var newHash=base?base+'/~'+encodeURIComponent(artId):'#~'+encodeURIComponent(artId);
-      history.pushState(null,'',newHash);
+      var allArts=(loadData()&&loadData().artikujt)||(_det&&_det.articles)||[];
+      var art=allArts.find(function(a){return a.id===artId;});
+      var slug=art?_artSlug(art):'';
+      if(slug){
+        history.pushState(null,'','/artikull/'+slug);
+      } else {
+        var base=window.location.hash.replace(/\/~[^/]*$|^#~[^/]*$/,'');
+        var newHash=base?base+'/~'+encodeURIComponent(artId):'#~'+encodeURIComponent(artId);
+        history.pushState(null,'',newHash);
+      }
     }
     function clearArtHash(){
-      var h=window.location.hash.replace(/\/~[^/]*$|^#~[^/]*$/,'');
-      history.replaceState(null,'',h||window.location.pathname.split('#')[0]);
+      history.replaceState(null,'','/artikujt');
     }
     window.shareCurrentPage=function(){
       var url=window.location.href.replace(/ /g,'%20');
@@ -583,7 +598,7 @@
 
     window.bcGoAll=function(){
       _state.activeSub='te-gjitha'; _state.activeKat='te-gjitha'; _state.activeSubKat='te-gjitha'; _state.cat=''; _state.filter='';
-      history.pushState(null,'','artikujt.html');
+      history.pushState(null,'','/artikujt');
       renderBreadcrumb();
       renderFilterBarAll(_state.allArticles,'te-gjitha','te-gjitha','te-gjitha');
       renderGridAll(_state.allArticles,'te-gjitha','te-gjitha','te-gjitha');
