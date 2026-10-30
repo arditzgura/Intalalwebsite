@@ -66,7 +66,7 @@ function ensureDir(dir) {
 }
 
 /* ── Article page template ───────────────────────────────────── */
-function articleHtml(art, slug) {
+function articleHtml(art, slug, suggestions) {
   const title   = esc(art.name || 'Artikull');
   const rawDesc = art.desc || `${art.name} nga Intal Albania — fabrikë shqiptare e të brendshmeve që nga 1994.`;
   const desc    = esc(rawDesc);
@@ -162,6 +162,20 @@ function articleHtml(art, slug) {
     .comp-wrap{margin-top:20px;}
     .comp-row{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:#fff;border-radius:6px;margin-bottom:4px;font-size:12px;font-weight:500;}
     .comp-row:last-child{margin-bottom:0;}
+
+    /* ── Suggestions ── */
+    .suggestions{max-width:1080px;margin:48px auto 0;padding:0 20px;}
+    .suggestions-title{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#aaa;font-weight:700;margin-bottom:16px;}
+    .suggestions-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+    @media(max-width:680px){.suggestions-grid{grid-template-columns:repeat(2,1fr);}}
+    .sugg-card{background:#fff;border-radius:12px;overflow:hidden;text-decoration:none;color:inherit;display:block;transition:box-shadow .2s;}
+    .sugg-card:hover{box-shadow:0 4px 20px rgba(0,0,0,.1);}
+    .sugg-card-img{aspect-ratio:1;overflow:hidden;background:#f0ede9;}
+    .sugg-card-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s;}
+    .sugg-card:hover .sugg-card-img img{transform:scale(1.04);}
+    .sugg-card-body{padding:10px 12px 12px;}
+    .sugg-card-name{font-size:12px;font-weight:700;line-height:1.3;margin-bottom:2px;}
+    .sugg-card-code{font-size:10px;color:#aaa;letter-spacing:1px;}
 
     /* ── CTA buttons ── */
     .cta-group{display:flex;flex-direction:column;gap:10px;margin-top:28px;padding-top:24px;border-top:1px solid #ebebeb;}
@@ -281,6 +295,20 @@ function articleHtml(art, slug) {
 
     </div>
   </div>
+
+  <!-- Suggestions -->
+  ${(suggestions && suggestions.length) ? `<section class="suggestions">
+    <p class="suggestions-title">Artikuj të ngjashëm</p>
+    <div class="suggestions-grid">
+      ${suggestions.map(s => `<a class="sugg-card" href="/artikull/${s.slug}">
+        <div class="sugg-card-img">${s.img ? `<img src="${s.img}" alt="${esc(s.name)}" loading="lazy">` : ''}</div>
+        <div class="sugg-card-body">
+          <div class="sugg-card-name">${esc(s.name)}</div>
+          ${s.code ? `<div class="sugg-card-code">Art. ${esc(s.code)}</div>` : ''}
+        </div>
+      </a>`).join('')}
+    </div>
+  </section>` : ''}
 
   <!-- Footer -->
   <div class="simple-footer">
@@ -438,17 +466,33 @@ async function main() {
     return candidate;
   }
 
-  // Generate article pages
-  const artDir = path.join(ROOT, 'artikull');
-  ensureDir(artDir);
+  // Build slug map for all articles first (needed for suggestions)
+  const artEntries = [];
   for (const art of artikujt) {
     if (!art.name) continue;
     const base = slugify(art.name + (art.code ? '-' + art.code : ''));
     const slug = uniqueSlug(base, usedSlugs);
     artSlugs.push(slug);
+    artEntries.push({ art, slug });
+  }
+
+  // Generate article pages with suggestions
+  const artDir = path.join(ROOT, 'artikull');
+  ensureDir(artDir);
+  for (const { art, slug } of artEntries) {
+    const firstWord = (art.name || '').trim().split(/\s+/)[0].toLowerCase();
+    const suggestions = artEntries
+      .filter(e => e.slug !== slug && (e.art.name || '').trim().split(/\s+/)[0].toLowerCase() === firstWord)
+      .slice(0, 8)
+      .map(e => ({
+        slug: e.slug,
+        name: e.art.name,
+        code: e.art.code || '',
+        img: (e.art.photos && e.art.photos[0]) ? (typeof e.art.photos[0] === 'string' ? e.art.photos[0] : (e.art.photos[0].src || e.art.photos[0].url || '')) : ''
+      }));
     const dir = path.join(artDir, slug);
     ensureDir(dir);
-    fs.writeFileSync(path.join(dir, 'index.html'), articleHtml(art, slug), 'utf8');
+    fs.writeFileSync(path.join(dir, 'index.html'), articleHtml(art, slug, suggestions), 'utf8');
   }
   console.log(`Generated ${artSlugs.length} article pages → /artikull/`);
 

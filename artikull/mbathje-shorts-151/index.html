@@ -66,6 +66,20 @@
     .comp-row{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:#fff;border-radius:6px;margin-bottom:4px;font-size:12px;font-weight:500;}
     .comp-row:last-child{margin-bottom:0;}
 
+    /* ── Suggestions ── */
+    .suggestions{max-width:1080px;margin:48px auto 0;padding:0 20px;}
+    .suggestions-title{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#aaa;font-weight:700;margin-bottom:16px;}
+    .suggestions-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+    @media(max-width:680px){.suggestions-grid{grid-template-columns:repeat(2,1fr);}}
+    .sugg-card{background:#fff;border-radius:12px;overflow:hidden;text-decoration:none;color:inherit;display:block;transition:box-shadow .2s;}
+    .sugg-card:hover{box-shadow:0 4px 20px rgba(0,0,0,.1);}
+    .sugg-card-img{aspect-ratio:1;overflow:hidden;background:#f0ede9;}
+    .sugg-card-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s;}
+    .sugg-card:hover .sugg-card-img img{transform:scale(1.04);}
+    .sugg-card-body{padding:10px 12px 12px;}
+    .sugg-card-name{font-size:12px;font-weight:700;line-height:1.3;margin-bottom:2px;}
+    .sugg-card-code{font-size:10px;color:#aaa;letter-spacing:1px;}
+
     /* ── CTA buttons ── */
     .cta-group{display:flex;flex-direction:column;gap:10px;margin-top:28px;padding-top:24px;border-top:1px solid #ebebeb;}
     .btn-wa{display:flex;align-items:center;justify-content:center;gap:10px;background:#25D366;color:#fff;text-decoration:none;border-radius:10px;padding:14px 20px;font-weight:700;font-size:13px;letter-spacing:0.5px;}
@@ -182,6 +196,62 @@
 
     </div>
   </div>
+
+  <!-- Suggestions -->
+  <section class="suggestions">
+    <p class="suggestions-title">Artikuj të ngjashëm</p>
+    <div class="suggestions-grid">
+      <a class="sugg-card" href="/artikull/mbathje-nothingman-150">
+        <div class="sugg-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/v1784715843/xonhzfkzdedfqdh6sdvr.png" alt="Mbathje Nothingman" loading="lazy"></div>
+        <div class="sugg-card-body">
+          <div class="sugg-card-name">Mbathje Nothingman</div>
+          <div class="sugg-card-code">Art. 150</div>
+        </div>
+      </a><a class="sugg-card" href="/artikull/mbathje-nothingman-150-1">
+        <div class="sugg-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/v1784715845/as6ns8cujbzzqxiizzlh.png" alt="Mbathje Nothingman" loading="lazy"></div>
+        <div class="sugg-card-body">
+          <div class="sugg-card-name">Mbathje Nothingman</div>
+          <div class="sugg-card-code">Art. 150</div>
+        </div>
+      </a><a class="sugg-card" href="/artikull/mbathje-nothingman-150-2">
+        <div class="sugg-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/v1784715848/fw9manutvhgpbqdzeeui.png" alt="Mbathje Nothingman" loading="lazy"></div>
+        <div class="sugg-card-body">
+          <div class="sugg-card-name">Mbathje Nothingman</div>
+          <div class="sugg-card-code">Art. 150</div>
+        </div>
+      </a><a class="sugg-card" href="/artikull/mbathje-shorts-151-1">
+        <div class="sugg-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/v1784715854/mau4dgyshraawohnexxb.webp" alt="Mbathje Shorts" loading="lazy"></div>
+        <div class="sugg-card-body">
+          <div class="sugg-card-name">Mbathje Shorts</div>
+          <div class="sugg-card-code">Art. 151</div>
+        </div>
+      </a><a class="sugg-card" href="/artikull/mbathje-shorts-151-2">
+        <div class="sugg-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/v1784715856/yk16perwoj62oovbmjll.webp" alt="Mbathje Shorts" loading="lazy"></div>
+        <div class="sugg-card-body">
+          <div class="sugg-card-name">Mbathje Shorts</div>
+          <div class="sugg-card-code">Art. 151</div>
+        </div>
+      </a><a class="sugg-card" href="/artikull/mbathje-stela-131">
+        <div class="sugg-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/v1784715858/sayj2n1gqjjm6tteob4l.webp" alt="Mbathje Stela" loading="lazy"></div>
+        <div class="sugg-card-body">
+          <div class="sugg-card-name">Mbathje Stela</div>
+          <div class="sugg-card-code">Art. 131</div>
+        </div>
+      </a><a class="sugg-card" href="/artikull/mbathje-stela-131-1">
+        <div class="sugg-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/v1784715861/naqfabdnlgztjz6ncxth.webp" alt="Mbathje Stela" loading="lazy"></div>
+        <div class="sugg-card-body">
+          <div class="sugg-card-name">Mbathje Stela</div>
+          <div class="sugg-card-code">Art. 131</div>
+        </div>
+      </a><a class="sugg-card" href="/artikull/mbathje-stela-131-2">
+        <div class="sugg-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/v1784715863/c8kfzv9chjy61jwlruu9.webp" alt="Mbathje Stela" loading="lazy"></div>
+        <div class="sugg-card-body">
+          <div class="sugg-card-name">Mbathje Stela</div>
+          <div class="sugg-card-code">Art. 131</div>
+        </div>
+      </a>
+    </div>
+  </section>
 
   <!-- Footer -->
   <div class="simple-footer">

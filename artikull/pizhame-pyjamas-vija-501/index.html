@@ -66,6 +66,20 @@
     .comp-row{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:#fff;border-radius:6px;margin-bottom:4px;font-size:12px;font-weight:500;}
     .comp-row:last-child{margin-bottom:0;}
 
+    /* ── Suggestions ── */
+    .suggestions{max-width:1080px;margin:48px auto 0;padding:0 20px;}
+    .suggestions-title{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#aaa;font-weight:700;margin-bottom:16px;}
+    .suggestions-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+    @media(max-width:680px){.suggestions-grid{grid-template-columns:repeat(2,1fr);}}
+    .sugg-card{background:#fff;border-radius:12px;overflow:hidden;text-decoration:none;color:inherit;display:block;transition:box-shadow .2s;}
+    .sugg-card:hover{box-shadow:0 4px 20px rgba(0,0,0,.1);}
+    .sugg-card-img{aspect-ratio:1;overflow:hidden;background:#f0ede9;}
+    .sugg-card-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s;}
+    .sugg-card:hover .sugg-card-img img{transform:scale(1.04);}
+    .sugg-card-body{padding:10px 12px 12px;}
+    .sugg-card-name{font-size:12px;font-weight:700;line-height:1.3;margin-bottom:2px;}
+    .sugg-card-code{font-size:10px;color:#aaa;letter-spacing:1px;}
+
     /* ── CTA buttons ── */
     .cta-group{display:flex;flex-direction:column;gap:10px;margin-top:28px;padding-top:24px;border-top:1px solid #ebebeb;}
     .btn-wa{display:flex;align-items:center;justify-content:center;gap:10px;background:#25D366;color:#fff;text-decoration:none;border-radius:10px;padding:14px 20px;font-weight:700;font-size:13px;letter-spacing:0.5px;}
@@ -182,6 +196,62 @@
 
     </div>
   </div>
+
+  <!-- Suggestions -->
+  <section class="suggestions">
+    <p class="suggestions-title">Artikuj të ngjashëm</p>
+    <div class="suggestions-grid">
+      <a class="sugg-card" href="/artikull/pizhame-pyjamas-lule-501">
+        <div class="sugg-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/v1784715960/vzdqobsg1vrxnu3e9yce.webp" alt="Pizhame PYJAMAS lule" loading="lazy"></div>
+        <div class="sugg-card-body">
+          <div class="sugg-card-name">Pizhame PYJAMAS lule</div>
+          <div class="sugg-card-code">Art. 501</div>
+        </div>
+      </a><a class="sugg-card" href="/artikull/pizhame-pyjamas-vija-501-1">
+        <div class="sugg-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/v1784715967/wlapc3py77bkejsbt61j.webp" alt="Pizhame PYJAMAS vija" loading="lazy"></div>
+        <div class="sugg-card-body">
+          <div class="sugg-card-name">Pizhame PYJAMAS vija</div>
+          <div class="sugg-card-code">Art. 501</div>
+        </div>
+      </a><a class="sugg-card" href="/artikull/pizhame-pyjamas-zemra-501">
+        <div class="sugg-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/v1784715970/y1gvjzcjchee1mnncbjb.webp" alt="Pizhame PYJAMAS zemra" loading="lazy"></div>
+        <div class="sugg-card-body">
+          <div class="sugg-card-name">Pizhame PYJAMAS zemra</div>
+          <div class="sugg-card-code">Art. 501</div>
+        </div>
+      </a><a class="sugg-card" href="/artikull/pizhame-pyjamas-arusha-501">
+        <div class="sugg-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/v1784715973/s7unhtluq0kzpkklmau0.webp" alt="Pizhame PYJAMAS arusha" loading="lazy"></div>
+        <div class="sugg-card-body">
+          <div class="sugg-card-name">Pizhame PYJAMAS arusha</div>
+          <div class="sugg-card-code">Art. 501</div>
+        </div>
+      </a><a class="sugg-card" href="/artikull/pizhame-pyjamas-fiongo-501">
+        <div class="sugg-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/v1784715977/obrchvoupvzod0a0h2fz.webp" alt="Pizhame PYJAMAS fiongo" loading="lazy"></div>
+        <div class="sugg-card-body">
+          <div class="sugg-card-name">Pizhame PYJAMAS fiongo</div>
+          <div class="sugg-card-code">Art. 501</div>
+        </div>
+      </a><a class="sugg-card" href="/artikull/pizhame-pyjamas-qershi-501">
+        <div class="sugg-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/v1784715980/a98nqxtjzwmmmbwahdrt.webp" alt="Pizhame PYJAMAS qershi" loading="lazy"></div>
+        <div class="sugg-card-body">
+          <div class="sugg-card-name">Pizhame PYJAMAS qershi</div>
+          <div class="sugg-card-code">Art. 501</div>
+        </div>
+      </a><a class="sugg-card" href="/artikull/pizhame-fanellat-550">
+        <div class="sugg-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/v1789016840/t2doxebbgey8haeunofs.webp" alt="Pizhame fanellat" loading="lazy"></div>
+        <div class="sugg-card-body">
+          <div class="sugg-card-name">Pizhame fanellat</div>
+          <div class="sugg-card-code">Art. 550</div>
+        </div>
+      </a><a class="sugg-card" href="/artikull/pizhame-fanellat-550-1">
+        <div class="sugg-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/v1789018080/l9dwcvtfkptdqwg72zrx.webp" alt="Pizhame fanellat" loading="lazy"></div>
+        <div class="sugg-card-body">
+          <div class="sugg-card-name">Pizhame fanellat</div>
+          <div class="sugg-card-code">Art. 550</div>
+        </div>
+      </a>
+    </div>
+  </section>
 
   <!-- Footer -->
   <div class="simple-footer">
