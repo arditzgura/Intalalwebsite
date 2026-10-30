@@ -71,7 +71,7 @@
     .suggestions-title{text-align:center;font-size:13px;letter-spacing:5px;text-transform:uppercase;color:#0a0a0a;font-weight:600;margin-bottom:40px;}
     .sugg-carousel{position:relative;}
     .sugg-track-wrap{overflow:hidden;}
-    .sugg-track{display:flex;gap:2px;transition:transform .45s cubic-bezier(.4,0,.2,1);user-select:none;}
+    .sugg-track{display:flex;gap:10px;transition:transform .45s cubic-bezier(.4,0,.2,1);user-select:none;}
     .sugg-card{flex:0 0 25%;min-width:0;text-decoration:none;color:inherit;display:block;cursor:pointer;}
     @media(max-width:900px){.sugg-card{flex:0 0 33.333%;}}
     @media(max-width:600px){.sugg-card{flex:0 0 50%;}}
@@ -325,7 +325,7 @@
       var track = document.getElementById('sugg-track');
       var wrap = document.getElementById('sugg-wrap');
       if(!track || !wrap) return;
-      var pos = 0, GAP = 2;
+      var pos = 0, GAP = 10;
       function cardW(){ return track.children[0] ? track.children[0].offsetWidth + GAP : wrap.offsetWidth / 4 + GAP; }
       function visCount(){ return Math.round(wrap.offsetWidth / cardW()); }
       function maxPos(){ return Math.max(0, track.children.length - visCount()); }
