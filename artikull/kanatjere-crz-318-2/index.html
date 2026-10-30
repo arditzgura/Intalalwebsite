@@ -37,7 +37,7 @@
     /* ── Product grid ── */
     .product-grid{display:grid;grid-template-columns:3fr clamp(60px,6vw,96px) 1.6fr;gap:16px clamp(8px,1.2vw,18px);align-items:start;}
     @media(max-width:900px){.product-grid{grid-template-columns:2fr clamp(52px,5vw,72px) 1.4fr;gap:12px 8px;}}
-    @media(max-width:680px){.product-grid{grid-template-columns:1fr;gap:0;} .gallery{order:1;} .thumbs-col{order:2;flex-direction:row;margin-top:8px;gap:6px;} .info{order:3;margin-top:20px;}}
+    @media(max-width:680px){.product-grid{grid-template-columns:1fr;gap:0;} .gallery{order:1;} .thumbs-col{order:2;flex-direction:row;margin-top:8px;gap:6px;} .info{order:3;margin-top:20px;} .gallery-nav{display:none;}}
 
     /* ── Gallery ── */
     .gallery{}
@@ -216,7 +216,7 @@
       </div>
 
       <!-- Vertical thumbnails -->
-      <div class="thumbs-col" id="thumbs"><button class="thumb active" onclick="setPhoto(0)" aria-label="Foto 1"><img src="https://res.cloudinary.com/djfrquwex/image/upload/v1784715828/jhrmgfpmwvl2ip9otryd.webp" alt="Kanatjere CRZ foto 1"></button><button class="thumb " onclick="setPhoto(1)" aria-label="Foto 2"><img src="https://res.cloudinary.com/djfrquwex/image/upload/v1784715828/q2qv2rptswswj3im7nzh.webp" alt="Kanatjere CRZ foto 2"></button><button class="thumb " onclick="setPhoto(2)" aria-label="Foto 3"><img src="https://res.cloudinary.com/djfrquwex/image/upload/v1784715829/kyqnzwibcwicqk32xebm.webp" alt="Kanatjere CRZ foto 3"></button></div>
+      <div class="thumbs-col" id="thumbs"><button class="thumb active" onclick="if(window.innerWidth<=680){openLightbox(0)}else{setPhoto(0)}" aria-label="Foto 1"><img src="https://res.cloudinary.com/djfrquwex/image/upload/v1784715828/jhrmgfpmwvl2ip9otryd.webp" alt="Kanatjere CRZ foto 1"></button><button class="thumb " onclick="if(window.innerWidth<=680){openLightbox(1)}else{setPhoto(1)}" aria-label="Foto 2"><img src="https://res.cloudinary.com/djfrquwex/image/upload/v1784715828/q2qv2rptswswj3im7nzh.webp" alt="Kanatjere CRZ foto 2"></button><button class="thumb " onclick="if(window.innerWidth<=680){openLightbox(2)}else{setPhoto(2)}" aria-label="Foto 3"><img src="https://res.cloudinary.com/djfrquwex/image/upload/v1784715829/kyqnzwibcwicqk32xebm.webp" alt="Kanatjere CRZ foto 3"></button></div>
 
       <!-- Info -->
       <div class="info">
@@ -375,6 +375,16 @@
       document.getElementById('lb-img').src = _photos[_idx];
       setPhoto(_idx);
     }
+    // Swipe support for lightbox
+    (function(){
+      var lb = document.getElementById('lightbox');
+      var _sx = 0;
+      lb.addEventListener('touchstart', function(e){ _sx = e.touches[0].clientX; }, {passive:true});
+      lb.addEventListener('touchend', function(e){
+        var dx = e.changedTouches[0].clientX - _sx;
+        if(Math.abs(dx) > 50) lbStep(dx < 0 ? 1 : -1);
+      }, {passive:true});
+    })();
     document.addEventListener('keydown', function(e){
       var lb = document.getElementById('lightbox');
       if(!lb.classList.contains('open')) return;
