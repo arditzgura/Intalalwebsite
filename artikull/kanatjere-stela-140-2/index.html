@@ -34,20 +34,23 @@
     .breadcrumb span{color:#888;}
 
     /* ── Product grid ── */
-    .product-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start;}
-    @media(max-width:680px){.product-grid{grid-template-columns:1fr;gap:28px;}}
+    .product-grid{display:grid;grid-template-columns:1fr 84px 1fr;gap:16px 14px;align-items:start;}
+    @media(max-width:900px){.product-grid{grid-template-columns:1fr 68px 1fr;gap:12px 10px;}}
+    @media(max-width:680px){.product-grid{grid-template-columns:1fr;gap:0;} .gallery{order:1;} .thumbs-col{order:2;flex-direction:row;margin-top:10px;gap:6px;} .info{order:3;margin-top:24px;}}
 
     /* ── Gallery ── */
     .gallery{}
-    .main-img-wrap{position:relative;overflow:hidden;background:#fff;aspect-ratio:1;box-shadow:0 2px 16px rgba(0,0,0,.06);}
+    .main-img-wrap{position:relative;overflow:hidden;background:#fff;aspect-ratio:1;}
     .main-img-wrap img{width:100%;height:100%;object-fit:cover;display:block;transition:opacity .25s;}
     .main-img-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:72px;color:#ddd;}
     .gallery-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.9);border:none;width:36px;height:36px;border-radius:50%;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.12);}
     .gallery-nav.prev{left:10px;}
     .gallery-nav.next{right:10px;}
     .gallery-nav:hover{background:#fff;}
-    .thumbs{display:flex;gap:8px;margin-top:12px;}
-    .thumb{border:2px solid transparent;overflow:hidden;flex:1;aspect-ratio:1;cursor:pointer;padding:0;background:none;min-width:0;transition:border-color .15s;}
+    /* vertical thumbs column */
+    .thumbs-col{display:flex;flex-direction:column;gap:8px;}
+    @media(max-width:680px){.thumbs-col{flex-direction:row;margin-top:10px;order:2;}}
+    .thumb{border:2px solid transparent;overflow:hidden;width:100%;aspect-ratio:1;cursor:pointer;padding:0;background:none;display:block;transition:border-color .15s;}
     .thumb.active{border-color:#C8003E;}
     .thumb img{width:100%;height:100%;object-fit:cover;display:block;}
 
@@ -73,6 +76,8 @@
     .sugg-track-wrap{overflow:hidden;}
     .sugg-track{display:flex;gap:10px;transition:transform .45s cubic-bezier(.4,0,.2,1);user-select:none;}
     .sugg-card{flex:0 0 25%;min-width:0;text-decoration:none;color:inherit;display:block;cursor:pointer;}
+    @media(min-width:1400px){.sugg-card{flex:0 0 16.667%;}}
+    @media(min-width:1200px) and (max-width:1399px){.sugg-card{flex:0 0 20%;}}
     @media(max-width:900px){.sugg-card{flex:0 0 33.333%;}}
     @media(max-width:600px){.sugg-card{flex:0 0 50%;}}
     .sugg-card-img{aspect-ratio:1;overflow:hidden;background:#edeae6;}
@@ -184,8 +189,10 @@
           <button class="gallery-nav prev" onclick="stepPhoto(-1)" aria-label="Para">&#8592;</button>
           <button class="gallery-nav next" onclick="stepPhoto(1)" aria-label="Pas">&#8594;</button>
         </div>
-        <div class="thumbs" id="thumbs"><button class="thumb active" onclick="setPhoto(0)" aria-label="Foto 1"><img src="https://res.cloudinary.com/djfrquwex/image/upload/v1784716007/cvpjupqqd3epnzsuhbp3.webp" alt="Kanatjere Stela foto 1"></button><button class="thumb " onclick="setPhoto(1)" aria-label="Foto 2"><img src="https://res.cloudinary.com/djfrquwex/image/upload/v1784716007/zsrnywegtpxagzkmygy1.webp" alt="Kanatjere Stela foto 2"></button><button class="thumb " onclick="setPhoto(2)" aria-label="Foto 3"><img src="https://res.cloudinary.com/djfrquwex/image/upload/v1784716008/nzc7l34zsaljnhkojg6j.webp" alt="Kanatjere Stela foto 3"></button></div>
       </div>
+
+      <!-- Vertical thumbnails -->
+      <div class="thumbs-col" id="thumbs"><button class="thumb active" onclick="setPhoto(0)" aria-label="Foto 1"><img src="https://res.cloudinary.com/djfrquwex/image/upload/v1784716007/cvpjupqqd3epnzsuhbp3.webp" alt="Kanatjere Stela foto 1"></button><button class="thumb " onclick="setPhoto(1)" aria-label="Foto 2"><img src="https://res.cloudinary.com/djfrquwex/image/upload/v1784716007/zsrnywegtpxagzkmygy1.webp" alt="Kanatjere Stela foto 2"></button><button class="thumb " onclick="setPhoto(2)" aria-label="Foto 3"><img src="https://res.cloudinary.com/djfrquwex/image/upload/v1784716008/nzc7l34zsaljnhkojg6j.webp" alt="Kanatjere Stela foto 3"></button></div>
 
       <!-- Info -->
       <div class="info">
