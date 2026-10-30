@@ -468,10 +468,12 @@
       return _slugify((art.name||'')+(art.code?'-'+art.code:''));
     }
     function _goArtPage(artId){
+      var id=String(artId||'');
+      if(_artSlugMap&&_artSlugMap[id]){window.location.href='/artikull/'+_artSlugMap[id];return;}
       var allArts=(loadData()&&loadData().artikujt)||[];
-      var art=allArts.find(function(a){return String(a.id)===String(artId);});
-      var slug=art?_artSlug(art):artId;
-      window.location.href='/artikull/'+slug;
+      var art=allArts.find(function(a){return String(a.id)===id;});
+      if(art){window.location.href='/artikull/'+_artSlug(art);return;}
+      window.location.href='/artikujt';
     }
     function setArtHash(artId){
       var allArts=(loadData()&&loadData().artikujt)||(_det&&_det.articles)||[];
