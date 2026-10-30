@@ -122,7 +122,7 @@ function articleHtml(art, slug, suggestions) {
     body{font-family:'Montserrat',sans-serif;background:#fff;color:#0a0a0a;min-height:100vh;padding-top:64px;}
 
     /* ── Layout ── */
-    .page{max-width:1200px;margin:0 auto;padding:28px 20px 60px;}
+    .page{width:100%;padding:28px 3vw 60px;}
 
     /* ── Breadcrumb ── */
     .breadcrumb{font-size:11px;color:#aaa;letter-spacing:0.5px;margin-bottom:20px;display:flex;align-items:center;gap:6px;}
@@ -131,8 +131,8 @@ function articleHtml(art, slug, suggestions) {
     .breadcrumb span{color:#888;}
 
     /* ── Product grid ── */
-    .product-grid{display:grid;grid-template-columns:3fr 76px 1.6fr;gap:16px 12px;align-items:start;}
-    @media(max-width:900px){.product-grid{grid-template-columns:2fr 62px 1.4fr;gap:12px 8px;}}
+    .product-grid{display:grid;grid-template-columns:3fr clamp(60px,6vw,96px) 1.6fr;gap:16px clamp(8px,1.2vw,18px);align-items:start;}
+    @media(max-width:900px){.product-grid{grid-template-columns:2fr clamp(52px,5vw,72px) 1.4fr;gap:12px 8px;}}
     @media(max-width:680px){.product-grid{grid-template-columns:1fr;gap:0;} .gallery{order:1;} .thumbs-col{order:2;flex-direction:row;margin-top:8px;gap:6px;} .info{order:3;margin-top:20px;}}
 
     /* ── Gallery ── */
