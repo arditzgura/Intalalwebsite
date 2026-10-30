@@ -67,24 +67,24 @@
     .comp-row:last-child{margin-bottom:0;}
 
     /* ── Suggestions carousel ── */
-    .suggestions{margin:56px 0 0;background:#fff;padding:40px 0 44px;}
-    .suggestions-inner{max-width:1080px;margin:0 auto;padding:0 20px;}
-    .suggestions-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;}
-    .suggestions-title{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#aaa;font-weight:700;}
-    .sugg-arrows{display:flex;gap:6px;}
-    .sugg-arr{background:none;border:1.5px solid #d0d0d0;border-radius:50%;width:34px;height:34px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:border-color .15s;}
-    .sugg-arr:hover{border-color:#0a0a0a;}
-    .sugg-arr svg{width:14px;height:14px;flex-shrink:0;}
+    .suggestions{margin:64px 0 0;background:#f7f5f2;padding:52px 0 60px;position:relative;}
+    .suggestions-title{text-align:center;font-size:13px;letter-spacing:5px;text-transform:uppercase;color:#0a0a0a;font-weight:600;margin-bottom:40px;}
+    .sugg-carousel{position:relative;}
     .sugg-track-wrap{overflow:hidden;}
-    .sugg-track{display:flex;gap:20px;transition:transform .4s cubic-bezier(.4,0,.2,1);}
-    .sugg-card{flex:0 0 calc(25% - 15px);min-width:0;text-decoration:none;color:inherit;display:block;}
-    @media(max-width:900px){.sugg-card{flex:0 0 calc(33.33% - 14px);}}
-    @media(max-width:600px){.sugg-card{flex:0 0 calc(50% - 10px);}}
-    .sugg-card-img{aspect-ratio:1;overflow:hidden;background:#f7f5f2;margin-bottom:14px;}
-    .sugg-card-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .35s;}
-    .sugg-card:hover .sugg-card-img img{transform:scale(1.04);}
-    .sugg-card-name{font-size:12px;font-weight:600;line-height:1.4;color:#0a0a0a;}
-    .sugg-card-sub{font-size:11px;color:#888;margin-top:3px;}
+    .sugg-track{display:flex;transition:transform .45s cubic-bezier(.4,0,.2,1);user-select:none;}
+    .sugg-card{flex:0 0 25%;min-width:0;text-decoration:none;color:inherit;display:block;cursor:pointer;}
+    @media(max-width:900px){.sugg-card{flex:0 0 33.333%;}}
+    @media(max-width:600px){.sugg-card{flex:0 0 50%;}}
+    .sugg-card-img{aspect-ratio:1;overflow:hidden;background:#edeae6;}
+    .sugg-card-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s;}
+    .sugg-card:hover .sugg-card-img img{transform:scale(1.03);}
+    .sugg-card-body{padding:14px 16px 0;}
+    .sugg-card-name{font-size:12px;font-weight:500;line-height:1.45;color:#0a0a0a;}
+    .sugg-card-sub{font-size:11px;color:#999;margin-top:2px;}
+    .sugg-arr{position:absolute;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;z-index:2;padding:8px;color:#0a0a0a;display:flex;align-items:center;justify-content:center;}
+    .sugg-arr.prev{left:10px;}
+    .sugg-arr.next{right:10px;}
+    .sugg-arr svg{width:18px;height:18px;}
 
     /* ── Lightbox ── */
     .lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9000;align-items:center;justify-content:center;}
@@ -222,31 +222,31 @@
 
   <!-- Suggestions carousel -->
   <section class="suggestions">
-    <div class="suggestions-inner">
-      <div class="suggestions-header">
-        <p class="suggestions-title">Artikuj të ngjashëm</p>
-        <div class="sugg-arrows">
-          <button class="sugg-arr" id="sugg-prev" onclick="suggScroll(-1)" aria-label="Para">
-            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 12L6 8l4-4"/></svg>
-          </button>
-          <button class="sugg-arr" id="sugg-next" onclick="suggScroll(1)" aria-label="Pas">
-            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 4l4 4-4 4"/></svg>
-          </button>
-        </div>
-      </div>
+    <p class="suggestions-title">Artikuj të ngjashëm</p>
+    <div class="sugg-carousel" id="sugg-carousel">
+      <button class="sugg-arr prev" id="sugg-prev" onclick="suggScroll(-1)" aria-label="Para">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
       <div class="sugg-track-wrap" id="sugg-wrap">
         <div class="sugg-track" id="sugg-track">
           <a class="sugg-card" href="/artikull/korse-me-kembe-161">
-            <div class="sugg-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/v1784716097/wcqxc7mhw9nu0djgszqf.webp" alt="Korse me kembe" loading="lazy"></div>
-            <div class="sugg-card-name">Korse me kembe</div>
-            <div class="sugg-card-sub">Art. 161</div>
+            <div class="sugg-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/v1784716097/wcqxc7mhw9nu0djgszqf.webp" alt="Korse me kembe" loading="lazy" draggable="false"></div>
+            <div class="sugg-card-body">
+              <div class="sugg-card-name">Korse me kembe</div>
+              <div class="sugg-card-sub">Art. 161</div>
+            </div>
           </a><a class="sugg-card" href="/artikull/korse-pa-kembe-162">
-            <div class="sugg-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/v1784716100/hz3yedfluozeqqe5r5ib.webp" alt="Korse pa kembe" loading="lazy"></div>
-            <div class="sugg-card-name">Korse pa kembe</div>
-            <div class="sugg-card-sub">Art. 162</div>
+            <div class="sugg-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/v1784716100/hz3yedfluozeqqe5r5ib.webp" alt="Korse pa kembe" loading="lazy" draggable="false"></div>
+            <div class="sugg-card-body">
+              <div class="sugg-card-name">Korse pa kembe</div>
+              <div class="sugg-card-sub">Art. 162</div>
+            </div>
           </a>
         </div>
       </div>
+      <button class="sugg-arr next" id="sugg-next" onclick="suggScroll(1)" aria-label="Pas">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
     </div>
   </section>
 
@@ -314,11 +314,11 @@
       var wrap = document.getElementById('sugg-wrap');
       if(!track || !wrap) return;
       var pos = 0;
-      function cardW(){ return track.children[0] ? track.children[0].offsetWidth + 20 : 280; }
+      function cardW(){ return track.children[0] ? track.children[0].offsetWidth : wrap.offsetWidth / 4; }
       function visCount(){ return Math.round(wrap.offsetWidth / cardW()); }
       function maxPos(){ return Math.max(0, track.children.length - visCount()); }
       function update(){
-        pos = Math.min(pos, maxPos());
+        pos = Math.max(0, Math.min(pos, maxPos()));
         track.style.transform = 'translateX(-' + (pos * cardW()) + 'px)';
       }
       window.suggScroll = function(d){
@@ -326,6 +326,35 @@
         update();
       };
       window.addEventListener('resize', update);
+
+      // Mouse drag
+      var dragStart = null, dragging = false;
+      track.addEventListener('mousedown', function(e){ dragStart = e.clientX; dragging = false; });
+      track.addEventListener('mousemove', function(e){
+        if(dragStart === null) return;
+        if(Math.abs(e.clientX - dragStart) > 5) dragging = true;
+      });
+      track.addEventListener('mouseup', function(e){
+        if(dragStart === null) return;
+        var dx = e.clientX - dragStart;
+        dragStart = null;
+        if(Math.abs(dx) > 50){ suggScroll(dx < 0 ? 1 : -1); }
+      });
+      track.addEventListener('mouseleave', function(){ dragStart = null; });
+      // Block link click when dragged
+      track.addEventListener('click', function(e){
+        if(dragging){ e.preventDefault(); dragging = false; }
+      }, true);
+
+      // Touch swipe
+      var tx = null;
+      track.addEventListener('touchstart', function(e){ tx = e.touches[0].clientX; }, {passive:true});
+      track.addEventListener('touchend', function(e){
+        if(tx === null) return;
+        var dx = e.changedTouches[0].clientX - tx;
+        tx = null;
+        if(Math.abs(dx) > 40){ suggScroll(dx < 0 ? 1 : -1); }
+      }, {passive:true});
     })();
   </script>
 </body>
