@@ -458,8 +458,13 @@
         .replace(/ë/g,'e').replace(/ç/g,'c').replace(/â/g,'a').replace(/î/g,'i').replace(/û/g,'u')
         .replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,80);
     }
+    var _artSlugMap = null;
+    (function(){
+      fetch('/artikull/slugs.json').then(function(r){return r.json();}).then(function(m){_artSlugMap=m;}).catch(function(){_artSlugMap={};});
+    })();
     function _artSlug(art){
       if(!art) return '';
+      if(_artSlugMap && art.id && _artSlugMap[String(art.id)]) return _artSlugMap[String(art.id)];
       return _slugify((art.name||'')+(art.code?'-'+art.code:''));
     }
     function setArtHash(artId){

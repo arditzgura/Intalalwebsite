@@ -716,6 +716,12 @@ async function main() {
     ensureDir(dir);
     fs.writeFileSync(path.join(dir, 'index.html'), articleHtml(art, slug, suggestions), 'utf8');
   }
+  // Write slug map: id → slug (for artikujt.html to resolve collisions)
+  const artSlugMap = {};
+  for (const { art, slug } of artEntries) {
+    if (art.id) artSlugMap[String(art.id)] = slug;
+  }
+  fs.writeFileSync(path.join(artDir, 'slugs.json'), JSON.stringify(artSlugMap), 'utf8');
   console.log(`Generated ${artSlugs.length} article pages → /artikull/`);
 
   // Generate fabric pages
