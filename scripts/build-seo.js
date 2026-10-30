@@ -138,8 +138,8 @@ function articleHtml(art, slug, suggestions) {
 
     /* ── Gallery ── */
     .gallery{}
-    .main-img-wrap{position:relative;background:#fff;}
-    .main-img-wrap img{width:100%;height:auto;display:block;transition:opacity .25s;}
+    .main-img-wrap{position:relative;background:#fff;aspect-ratio:3/4;overflow:hidden;}
+    .main-img-wrap img{width:100%;height:100%;object-fit:contain;display:block;transition:opacity .25s;}
     .main-img-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:72px;color:#ddd;}
     .gallery-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.9);border:none;width:36px;height:36px;border-radius:50%;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.12);}
     .gallery-nav.prev{left:10px;}
