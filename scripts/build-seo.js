@@ -115,10 +115,11 @@ function articleHtml(art, slug) {
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css">
+  <link rel="stylesheet" href="/css/main.css">
   <link rel="icon" type="image/png" href="/favicon.png">
   <style>
     *{box-sizing:border-box;margin:0;padding:0;}
-    body{font-family:'Montserrat',sans-serif;background:#f7f5f2;color:#0a0a0a;min-height:100vh;}
+    body{font-family:'Montserrat',sans-serif;background:#f7f5f2;color:#0a0a0a;min-height:100vh;padding-top:64px;}
 
     /* ── Layout ── */
     .page{max-width:1080px;margin:0 auto;padding:32px 20px 80px;}
