@@ -71,7 +71,7 @@
     .suggestions-title{text-align:center;font-size:13px;letter-spacing:5px;text-transform:uppercase;color:#0a0a0a;font-weight:600;margin-bottom:40px;}
     .sugg-carousel{position:relative;}
     .sugg-track-wrap{overflow:hidden;}
-    .sugg-track{display:flex;transition:transform .45s cubic-bezier(.4,0,.2,1);user-select:none;}
+    .sugg-track{display:flex;gap:2px;transition:transform .45s cubic-bezier(.4,0,.2,1);user-select:none;}
     .sugg-card{flex:0 0 25%;min-width:0;text-decoration:none;color:inherit;display:block;cursor:pointer;}
     @media(max-width:900px){.sugg-card{flex:0 0 33.333%;}}
     @media(max-width:600px){.sugg-card{flex:0 0 50%;}}
@@ -313,47 +313,53 @@
       var track = document.getElementById('sugg-track');
       var wrap = document.getElementById('sugg-wrap');
       if(!track || !wrap) return;
-      var pos = 0;
-      function cardW(){ return track.children[0] ? track.children[0].offsetWidth : wrap.offsetWidth / 4; }
+      var pos = 0, GAP = 2;
+      function cardW(){ return track.children[0] ? track.children[0].offsetWidth + GAP : wrap.offsetWidth / 4 + GAP; }
       function visCount(){ return Math.round(wrap.offsetWidth / cardW()); }
       function maxPos(){ return Math.max(0, track.children.length - visCount()); }
-      function update(){
-        pos = Math.max(0, Math.min(pos, maxPos()));
+      function moveTo(p, animated){
+        pos = Math.max(0, Math.min(p, maxPos()));
+        track.style.transition = animated === false ? 'none' : 'transform .45s cubic-bezier(.4,0,.2,1)';
         track.style.transform = 'translateX(-' + (pos * cardW()) + 'px)';
       }
-      window.suggScroll = function(d){
-        pos = Math.max(0, Math.min(pos + d, maxPos()));
-        update();
-      };
-      window.addEventListener('resize', update);
+      window.suggScroll = function(d){ moveTo(pos + d, true); };
+      window.addEventListener('resize', function(){ moveTo(pos, false); });
 
-      // Mouse drag
-      var dragStart = null, dragging = false;
-      track.addEventListener('mousedown', function(e){ dragStart = e.clientX; dragging = false; });
-      track.addEventListener('mousemove', function(e){
-        if(dragStart === null) return;
-        if(Math.abs(e.clientX - dragStart) > 5) dragging = true;
+      // Mouse drag (live feedback while dragging)
+      var dragStart = null, dragBase = 0, didDrag = false;
+      track.addEventListener('mousedown', function(e){
+        dragStart = e.clientX; dragBase = pos * cardW(); didDrag = false;
+        track.style.transition = 'none';
+        e.preventDefault();
       });
-      track.addEventListener('mouseup', function(e){
+      window.addEventListener('mousemove', function(e){
+        if(dragStart === null) return;
+        var dx = e.clientX - dragStart;
+        if(Math.abs(dx) > 4) didDrag = true;
+        track.style.transform = 'translateX(-' + Math.max(0, dragBase - dx) + 'px)';
+      });
+      window.addEventListener('mouseup', function(e){
         if(dragStart === null) return;
         var dx = e.clientX - dragStart;
         dragStart = null;
-        if(Math.abs(dx) > 50){ suggScroll(dx < 0 ? 1 : -1); }
+        if(Math.abs(dx) > 50){ moveTo(pos + (dx < 0 ? 1 : -1), true); }
+        else { moveTo(pos, true); }
       });
-      track.addEventListener('mouseleave', function(){ dragStart = null; });
-      // Block link click when dragged
-      track.addEventListener('click', function(e){
-        if(dragging){ e.preventDefault(); dragging = false; }
-      }, true);
+      track.addEventListener('click', function(e){ if(didDrag){ e.preventDefault(); } }, true);
 
       // Touch swipe
-      var tx = null;
-      track.addEventListener('touchstart', function(e){ tx = e.touches[0].clientX; }, {passive:true});
+      var tx = null, tb = 0;
+      track.addEventListener('touchstart', function(e){ tx = e.touches[0].clientX; tb = pos * cardW(); track.style.transition='none'; }, {passive:true});
+      track.addEventListener('touchmove', function(e){
+        if(tx===null) return;
+        var dx = e.touches[0].clientX - tx;
+        track.style.transform = 'translateX(-' + Math.max(0, tb - dx) + 'px)';
+      }, {passive:true});
       track.addEventListener('touchend', function(e){
-        if(tx === null) return;
-        var dx = e.changedTouches[0].clientX - tx;
-        tx = null;
-        if(Math.abs(dx) > 40){ suggScroll(dx < 0 ? 1 : -1); }
+        if(tx===null) return;
+        var dx = e.changedTouches[0].clientX - tx; tx = null;
+        if(Math.abs(dx) > 40){ moveTo(pos + (dx < 0 ? 1 : -1), true); }
+        else { moveTo(pos, true); }
       }, {passive:true});
     })();
   </script>
