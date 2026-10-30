@@ -17,20 +17,11 @@
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css">
   <link rel="icon" type="image/png" href="/favicon.png">
   <style>
     *{box-sizing:border-box;margin:0;padding:0;}
     body{font-family:'Montserrat',sans-serif;background:#f7f5f2;color:#0a0a0a;min-height:100vh;}
-
-    /* ── Navbar ── */
-    .nav{position:sticky;top:0;z-index:100;background:#fff;border-bottom:1px solid #ebebeb;display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:56px;}
-    .nav-brand{display:flex;align-items:center;gap:8px;text-decoration:none;}
-    .nav-logo{background:#C8003E;padding:4px 10px;border-radius:5px;line-height:1;}
-    .nav-logo-name{font-weight:900;font-size:15px;color:#fff;letter-spacing:-1px;}
-    .nav-logo-sub{font-size:6px;letter-spacing:4px;color:#fff;font-weight:700;display:block;margin-top:-2px;}
-    .nav-back{display:flex;align-items:center;gap:6px;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#888;text-decoration:none;font-weight:600;}
-    .nav-back:hover{color:#C8003E;}
-    .nav-back svg{width:14px;height:14px;}
 
     /* ── Layout ── */
     .page{max-width:1080px;margin:0 auto;padding:32px 20px 80px;}
@@ -82,26 +73,66 @@
     .btn-back{display:flex;align-items:center;justify-content:center;gap:8px;background:#fff;border:1.5px solid #e0e0e0;color:#0a0a0a;text-decoration:none;border-radius:10px;padding:13px 20px;font-weight:600;font-size:12px;letter-spacing:0.5px;}
     .btn-back:hover{border-color:#C8003E;color:#C8003E;}
 
-    /* ── Footer ── */
-    .footer{text-align:center;padding:32px 20px;font-size:11px;color:#bbb;letter-spacing:0.5px;border-top:1px solid #ebebeb;margin-top:48px;}
-    .footer a{color:#bbb;text-decoration:none;}
-    .footer a:hover{color:#C8003E;}
   </style>
 </head>
 <body>
 
-  <nav class="nav">
-    <a href="/" class="nav-brand">
-      <div class="nav-logo">
-        <span class="nav-logo-name">intal</span>
-        <span class="nav-logo-sub">UNDERWEAR</span>
+  <!-- Navbar -->
+  <nav class="navbar" role="navigation" aria-label="Navigimi kryesor">
+    <div class="navbar-inner">
+      <div class="navbar-left">
+        <button class="nav-hamburger" aria-label="Menu" onclick="openMenuDrawer()">
+          <i class="ri-menu-line"></i>
+        </button>
+        <div class="nav-links">
+          <a href="/" class="nav-link">Home</a>
+          <a href="/artikujt" class="nav-link active">Artikujt</a>
+          <a href="/pelhura" class="nav-link">Pelhura</a>
+          <a href="/rreth-nesh" class="nav-link">Rreth Nesh</a>
+        </div>
       </div>
-    </a>
-    <a href="/artikujt" class="nav-back">
-      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 12L6 8l4-4"/></svg>
-      Kthehu te Artikujt
-    </a>
+      <a href="/" class="navbar-brand">Intal Underwear</a>
+      <div class="navbar-right">
+        <div class="lang-toggle">
+          <span class="lang-opt active">AL</span>
+          <span class="lang-sep">|</span>
+          <span class="lang-opt">EN</span>
+        </div>
+      </div>
+    </div>
   </nav>
+
+  <!-- Menu drawer -->
+  <div class="menu-backdrop" id="menuBackdrop" onclick="closeMenuDrawer()"></div>
+  <aside class="menu-drawer" id="menuDrawer" aria-label="Meniu">
+    <div class="menu-drawer-header">
+      <span class="menu-drawer-brand">Intal <strong>Underwear</strong></span>
+      <button class="menu-drawer-close" onclick="closeMenuDrawer()" aria-label="Mbyll"><i class="ri-close-line"></i></button>
+    </div>
+    <div class="menu-drawer-body">
+      <nav class="menu-drawer-nav">
+        <a href="/" class="menu-drawer-link" onclick="closeMenuDrawer()">Home</a>
+        <a href="/artikujt" class="menu-drawer-link" onclick="closeMenuDrawer()">Artikujt</a>
+        <a href="/pelhura" class="menu-drawer-link" onclick="closeMenuDrawer()">Pelhura</a>
+        <a href="/rreth-nesh" class="menu-drawer-link" onclick="closeMenuDrawer()">Rreth Nesh</a>
+      </nav>
+      <div class="menu-drawer-divider"></div>
+      <p class="menu-drawer-eyebrow">NA KONTAKTONI</p>
+      <div class="menu-drawer-contacts">
+        <a class="menu-drawer-contact-item" href="tel:+355692776636">
+          <div class="menu-drawer-icon"><i class="ri-phone-line"></i></div>
+          <div><span class="menu-drawer-label">Telefon / WhatsApp</span><span class="menu-drawer-value">+355 692 776 636</span></div>
+        </a>
+        <a class="menu-drawer-contact-item" href="mailto:info@intal.com">
+          <div class="menu-drawer-icon"><i class="ri-mail-line"></i></div>
+          <div><span class="menu-drawer-label">Email</span><span class="menu-drawer-value">info@intal.com</span></div>
+        </a>
+      </div>
+    </div>
+    <div class="menu-drawer-footer">
+      <span class="menu-drawer-copy">© <span id="cp-yr-drawer"></span> Intal Albania</span>
+    </div>
+  </aside>
 
   <div class="page">
 
@@ -151,12 +182,27 @@
     </div>
   </div>
 
-  <footer class="footer">
-    <p>© <span id="cp-yr"></span> Intal Albania &nbsp;·&nbsp; <a href="/rreth-nesh">Rreth Nesh</a> &nbsp;·&nbsp; <a href="https://wa.me/355692776636">+355 69 277 6636</a></p>
-  </footer>
+  <!-- Footer -->
+  <div class="simple-footer">
+    <div class="contact-locations">
+      <a class="contact-loc" href="https://maps.google.com/?q=Rrobaqep%C3%ABsi+INTAL,+Rruga+Arbanes,+Vaqarr,+Tiran%C3%AB+1035" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;display:block;cursor:pointer;">
+        <p class="contact-loc-name">Selia Kryesore</p>
+        <p class="contact-loc-addr">Rrobaqepësi INTAL, Rruga Arbanes, Vaqarr, Tiranë 1035</p>
+      </a>
+      <a class="contact-loc" href="https://maps.google.com/?q=Intal,+Rruga+5+Maji+67%2F1,+Tiran%C3%AB+1032" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;display:block;cursor:pointer;">
+        <p class="contact-loc-name">Dyqani</p>
+        <p class="contact-loc-addr">Intal, Rruga 5 Maji 67/1, Tiranë 1032</p>
+      </a>
+    </div>
+    <div class="contact-footer">
+      <span class="contact-brand">Intal <strong>UNDERWEAR</strong></span>
+      <span class="contact-copy">© <span id="cp-yr"></span> Intal Albania</span>
+    </div>
+  </div>
 
+  <script src="/js/main.js"></script>
   <script>
-    (function(){document.getElementById('cp-yr').textContent=new Date().getFullYear();})();
+    (function(){var y=new Date().getFullYear();['cp-yr','cp-yr-drawer'].forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=y;});document.querySelectorAll('.cp-yr').forEach(function(el){el.textContent=y;});})();
     var _photos = ["https://res.cloudinary.com/djfrquwex/image/upload/v1784715964/ejle6l5nbmbuia9plxuz.webp","https://res.cloudinary.com/djfrquwex/image/upload/v1784715965/eoir2771u75gv5hoj9uv.webp","https://res.cloudinary.com/djfrquwex/image/upload/v1784715966/xvdoczd8mjufyurxfnbs.webp","https://res.cloudinary.com/djfrquwex/image/upload/v1784715966/rhgler86bkttdrviuvn2.webp"];
     var _idx = 0;
     function setPhoto(i){
