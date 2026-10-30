@@ -199,7 +199,7 @@ function articleHtml(art, slug, suggestions) {
 
     /* ── CTA buttons ── */
     .cta-group{display:flex;flex-direction:column;gap:8px;margin-top:18px;padding-top:16px;border-top:1px solid #ebebeb;}
-    .btn-pair{display:flex;gap:0;border-radius:8px;overflow:hidden;}
+    .btn-pair{display:flex;gap:0;border-radius:0;overflow:hidden;}
     .btn-kerkese{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;background:#0a0a0a;color:#fff;border:none;cursor:pointer;padding:9px 8px;font-family:inherit;font-weight:700;font-size:10px;letter-spacing:0.8px;text-transform:uppercase;white-space:nowrap;}
     .btn-kerkese:hover{background:#333;}
     .btn-share-half{flex:1;display:flex;align-items:center;justify-content:center;background:#f5f5f5;border:none;cursor:pointer;padding:9px 10px;color:#555;}
