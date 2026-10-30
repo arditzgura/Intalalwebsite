@@ -123,6 +123,7 @@ function articleHtml(art, slug, suggestions) {
 
     /* ── Layout ── */
     .page{width:100%;padding:28px 3vw 60px;}
+    .page-inner{max-width:1100px;margin:0 auto;}
 
     /* ── Breadcrumb ── */
     .breadcrumb{font-size:11px;color:#aaa;letter-spacing:0.5px;margin-bottom:20px;display:flex;align-items:center;gap:6px;}
@@ -268,6 +269,7 @@ function articleHtml(art, slug, suggestions) {
   </aside>
 
   <div class="page">
+  <div class="page-inner">
 
     <a href="/artikujt" class="back-top">
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 12L6 8l4-4"/></svg>
@@ -322,6 +324,7 @@ function articleHtml(art, slug, suggestions) {
       </div>
 
     </div>
+  </div>
   </div>
 
   <!-- Lightbox -->
