@@ -66,19 +66,34 @@
     .comp-row{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:#fff;border-radius:6px;margin-bottom:4px;font-size:12px;font-weight:500;}
     .comp-row:last-child{margin-bottom:0;}
 
-    /* ── Suggestions ── */
-    .suggestions{max-width:1080px;margin:48px auto 0;padding:0 20px;}
-    .suggestions-title{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#aaa;font-weight:700;margin-bottom:16px;}
-    .suggestions-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
-    @media(max-width:680px){.suggestions-grid{grid-template-columns:repeat(2,1fr);}}
-    .sugg-card{background:#fff;border-radius:12px;overflow:hidden;text-decoration:none;color:inherit;display:block;transition:box-shadow .2s;}
-    .sugg-card:hover{box-shadow:0 4px 20px rgba(0,0,0,.1);}
-    .sugg-card-img{aspect-ratio:1;overflow:hidden;background:#f0ede9;}
-    .sugg-card-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s;}
+    /* ── Suggestions carousel ── */
+    .suggestions{margin:56px 0 0;background:#fff;padding:40px 0 44px;}
+    .suggestions-inner{max-width:1080px;margin:0 auto;padding:0 20px;}
+    .suggestions-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;}
+    .suggestions-title{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#aaa;font-weight:700;}
+    .sugg-arrows{display:flex;gap:6px;}
+    .sugg-arr{background:none;border:1.5px solid #d0d0d0;border-radius:50%;width:34px;height:34px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:border-color .15s;}
+    .sugg-arr:hover{border-color:#0a0a0a;}
+    .sugg-arr svg{width:14px;height:14px;flex-shrink:0;}
+    .sugg-track-wrap{overflow:hidden;}
+    .sugg-track{display:flex;gap:20px;transition:transform .4s cubic-bezier(.4,0,.2,1);}
+    .sugg-card{flex:0 0 calc(25% - 15px);min-width:0;text-decoration:none;color:inherit;display:block;}
+    @media(max-width:900px){.sugg-card{flex:0 0 calc(33.33% - 14px);}}
+    @media(max-width:600px){.sugg-card{flex:0 0 calc(50% - 10px);}}
+    .sugg-card-img{aspect-ratio:1;overflow:hidden;background:#f7f5f2;margin-bottom:14px;}
+    .sugg-card-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .35s;}
     .sugg-card:hover .sugg-card-img img{transform:scale(1.04);}
-    .sugg-card-body{padding:10px 12px 12px;}
-    .sugg-card-name{font-size:12px;font-weight:700;line-height:1.3;margin-bottom:2px;}
-    .sugg-card-code{font-size:10px;color:#aaa;letter-spacing:1px;}
+    .sugg-card-name{font-size:12px;font-weight:600;line-height:1.4;color:#0a0a0a;}
+    .sugg-card-sub{font-size:11px;color:#888;margin-top:3px;}
+
+    /* ── Lightbox ── */
+    .lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9000;align-items:center;justify-content:center;}
+    .lightbox.open{display:flex;}
+    .lightbox-img{max-width:90vw;max-height:90vh;object-fit:contain;border-radius:4px;}
+    .lightbox-close{position:absolute;top:18px;right:22px;background:none;border:none;color:#fff;font-size:32px;cursor:pointer;line-height:1;}
+    .lightbox-prev,.lightbox-next{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.12);border:none;color:#fff;width:44px;height:44px;border-radius:50%;cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center;}
+    .lightbox-prev{left:16px;}
+    .lightbox-next{right:16px;}
 
     /* ── CTA buttons ── */
     .cta-group{display:flex;flex-direction:column;gap:10px;margin-top:28px;padding-top:24px;border-top:1px solid #ebebeb;}
@@ -164,7 +179,7 @@
       <!-- Gallery -->
       <div class="gallery">
         <div class="main-img-wrap" id="main-img-wrap">
-          <img id="main-img" src="https://res.cloudinary.com/djfrquwex/image/upload/v1784715967/wlapc3py77bkejsbt61j.webp" alt="Pizhame PYJAMAS vija">
+          <img id="main-img" src="https://res.cloudinary.com/djfrquwex/image/upload/v1784715967/wlapc3py77bkejsbt61j.webp" alt="Pizhame PYJAMAS vija" onclick="openLightbox(_idx)" style="cursor:zoom-in;">
           
           <button class="gallery-nav prev" onclick="stepPhoto(-1)" aria-label="Para">&#8592;</button>
           <button class="gallery-nav next" onclick="stepPhoto(1)" aria-label="Pas">&#8594;</button>
@@ -197,59 +212,65 @@
     </div>
   </div>
 
-  <!-- Suggestions -->
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+    <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+    <button class="lightbox-prev" onclick="lbStep(-1);event.stopPropagation()">&#8592;</button>
+    <img class="lightbox-img" id="lb-img" src="" alt="">
+    <button class="lightbox-next" onclick="lbStep(1);event.stopPropagation()">&#8594;</button>
+  </div>
+
+  <!-- Suggestions carousel -->
   <section class="suggestions">
-    <p class="suggestions-title">Artikuj të ngjashëm</p>
-    <div class="suggestions-grid">
-      <a class="sugg-card" href="/artikull/pizhame-pyjamas-lule-501">
-        <div class="sugg-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/v1784715960/vzdqobsg1vrxnu3e9yce.webp" alt="Pizhame PYJAMAS lule" loading="lazy"></div>
-        <div class="sugg-card-body">
-          <div class="sugg-card-name">Pizhame PYJAMAS lule</div>
-          <div class="sugg-card-code">Art. 501</div>
+    <div class="suggestions-inner">
+      <div class="suggestions-header">
+        <p class="suggestions-title">Artikuj të ngjashëm</p>
+        <div class="sugg-arrows">
+          <button class="sugg-arr" id="sugg-prev" onclick="suggScroll(-1)" aria-label="Para">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 12L6 8l4-4"/></svg>
+          </button>
+          <button class="sugg-arr" id="sugg-next" onclick="suggScroll(1)" aria-label="Pas">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 4l4 4-4 4"/></svg>
+          </button>
         </div>
-      </a><a class="sugg-card" href="/artikull/pizhame-pyjamas-vija-501">
-        <div class="sugg-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/v1784715964/ejle6l5nbmbuia9plxuz.webp" alt="Pizhame PYJAMAS vija" loading="lazy"></div>
-        <div class="sugg-card-body">
-          <div class="sugg-card-name">Pizhame PYJAMAS vija</div>
-          <div class="sugg-card-code">Art. 501</div>
+      </div>
+      <div class="sugg-track-wrap" id="sugg-wrap">
+        <div class="sugg-track" id="sugg-track">
+          <a class="sugg-card" href="/artikull/pizhame-pyjamas-lule-501">
+            <div class="sugg-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/v1784715960/vzdqobsg1vrxnu3e9yce.webp" alt="Pizhame PYJAMAS lule" loading="lazy"></div>
+            <div class="sugg-card-name">Pizhame PYJAMAS lule</div>
+            <div class="sugg-card-sub">Art. 501</div>
+          </a><a class="sugg-card" href="/artikull/pizhame-pyjamas-vija-501">
+            <div class="sugg-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/v1784715964/ejle6l5nbmbuia9plxuz.webp" alt="Pizhame PYJAMAS vija" loading="lazy"></div>
+            <div class="sugg-card-name">Pizhame PYJAMAS vija</div>
+            <div class="sugg-card-sub">Art. 501</div>
+          </a><a class="sugg-card" href="/artikull/pizhame-pyjamas-zemra-501">
+            <div class="sugg-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/v1784715970/y1gvjzcjchee1mnncbjb.webp" alt="Pizhame PYJAMAS zemra" loading="lazy"></div>
+            <div class="sugg-card-name">Pizhame PYJAMAS zemra</div>
+            <div class="sugg-card-sub">Art. 501</div>
+          </a><a class="sugg-card" href="/artikull/pizhame-pyjamas-arusha-501">
+            <div class="sugg-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/v1784715973/s7unhtluq0kzpkklmau0.webp" alt="Pizhame PYJAMAS arusha" loading="lazy"></div>
+            <div class="sugg-card-name">Pizhame PYJAMAS arusha</div>
+            <div class="sugg-card-sub">Art. 501</div>
+          </a><a class="sugg-card" href="/artikull/pizhame-pyjamas-fiongo-501">
+            <div class="sugg-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/v1784715977/obrchvoupvzod0a0h2fz.webp" alt="Pizhame PYJAMAS fiongo" loading="lazy"></div>
+            <div class="sugg-card-name">Pizhame PYJAMAS fiongo</div>
+            <div class="sugg-card-sub">Art. 501</div>
+          </a><a class="sugg-card" href="/artikull/pizhame-pyjamas-qershi-501">
+            <div class="sugg-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/v1784715980/a98nqxtjzwmmmbwahdrt.webp" alt="Pizhame PYJAMAS qershi" loading="lazy"></div>
+            <div class="sugg-card-name">Pizhame PYJAMAS qershi</div>
+            <div class="sugg-card-sub">Art. 501</div>
+          </a><a class="sugg-card" href="/artikull/pizhame-fanellat-550">
+            <div class="sugg-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/v1789016840/t2doxebbgey8haeunofs.webp" alt="Pizhame fanellat" loading="lazy"></div>
+            <div class="sugg-card-name">Pizhame fanellat</div>
+            <div class="sugg-card-sub">Art. 550</div>
+          </a><a class="sugg-card" href="/artikull/pizhame-fanellat-550-1">
+            <div class="sugg-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/v1789018080/l9dwcvtfkptdqwg72zrx.webp" alt="Pizhame fanellat" loading="lazy"></div>
+            <div class="sugg-card-name">Pizhame fanellat</div>
+            <div class="sugg-card-sub">Art. 550</div>
+          </a>
         </div>
-      </a><a class="sugg-card" href="/artikull/pizhame-pyjamas-zemra-501">
-        <div class="sugg-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/v1784715970/y1gvjzcjchee1mnncbjb.webp" alt="Pizhame PYJAMAS zemra" loading="lazy"></div>
-        <div class="sugg-card-body">
-          <div class="sugg-card-name">Pizhame PYJAMAS zemra</div>
-          <div class="sugg-card-code">Art. 501</div>
-        </div>
-      </a><a class="sugg-card" href="/artikull/pizhame-pyjamas-arusha-501">
-        <div class="sugg-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/v1784715973/s7unhtluq0kzpkklmau0.webp" alt="Pizhame PYJAMAS arusha" loading="lazy"></div>
-        <div class="sugg-card-body">
-          <div class="sugg-card-name">Pizhame PYJAMAS arusha</div>
-          <div class="sugg-card-code">Art. 501</div>
-        </div>
-      </a><a class="sugg-card" href="/artikull/pizhame-pyjamas-fiongo-501">
-        <div class="sugg-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/v1784715977/obrchvoupvzod0a0h2fz.webp" alt="Pizhame PYJAMAS fiongo" loading="lazy"></div>
-        <div class="sugg-card-body">
-          <div class="sugg-card-name">Pizhame PYJAMAS fiongo</div>
-          <div class="sugg-card-code">Art. 501</div>
-        </div>
-      </a><a class="sugg-card" href="/artikull/pizhame-pyjamas-qershi-501">
-        <div class="sugg-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/v1784715980/a98nqxtjzwmmmbwahdrt.webp" alt="Pizhame PYJAMAS qershi" loading="lazy"></div>
-        <div class="sugg-card-body">
-          <div class="sugg-card-name">Pizhame PYJAMAS qershi</div>
-          <div class="sugg-card-code">Art. 501</div>
-        </div>
-      </a><a class="sugg-card" href="/artikull/pizhame-fanellat-550">
-        <div class="sugg-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/v1789016840/t2doxebbgey8haeunofs.webp" alt="Pizhame fanellat" loading="lazy"></div>
-        <div class="sugg-card-body">
-          <div class="sugg-card-name">Pizhame fanellat</div>
-          <div class="sugg-card-code">Art. 550</div>
-        </div>
-      </a><a class="sugg-card" href="/artikull/pizhame-fanellat-550-1">
-        <div class="sugg-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/v1789018080/l9dwcvtfkptdqwg72zrx.webp" alt="Pizhame fanellat" loading="lazy"></div>
-        <div class="sugg-card-body">
-          <div class="sugg-card-name">Pizhame fanellat</div>
-          <div class="sugg-card-code">Art. 550</div>
-        </div>
-      </a>
+      </div>
     </div>
   </section>
 
@@ -283,6 +304,53 @@
       document.querySelectorAll('.thumb').forEach(function(t,ti){ t.classList.toggle('active', ti===_idx); });
     }
     function stepPhoto(d){ setPhoto(_idx+d); }
+
+    // Lightbox
+    function openLightbox(i){
+      _idx = i || 0;
+      var lb = document.getElementById('lightbox');
+      var lbImg = document.getElementById('lb-img');
+      lbImg.src = _photos[_idx] || '';
+      lb.classList.add('open');
+      document.body.style.overflow='hidden';
+    }
+    function closeLightbox(e){
+      if(e && e.target !== document.getElementById('lightbox') && !e.target.classList.contains('lightbox-close')) return;
+      document.getElementById('lightbox').classList.remove('open');
+      document.body.style.overflow='';
+    }
+    function lbStep(d){
+      _idx = ((_idx+d) % _photos.length + _photos.length) % _photos.length;
+      document.getElementById('lb-img').src = _photos[_idx];
+      setPhoto(_idx);
+    }
+    document.addEventListener('keydown', function(e){
+      var lb = document.getElementById('lightbox');
+      if(!lb.classList.contains('open')) return;
+      if(e.key==='Escape') closeLightbox({target:lb});
+      if(e.key==='ArrowLeft') lbStep(-1);
+      if(e.key==='ArrowRight') lbStep(1);
+    });
+
+    // Suggestions carousel
+    (function(){
+      var track = document.getElementById('sugg-track');
+      var wrap = document.getElementById('sugg-wrap');
+      if(!track || !wrap) return;
+      var pos = 0;
+      function cardW(){ return track.children[0] ? track.children[0].offsetWidth + 20 : 280; }
+      function visCount(){ return Math.round(wrap.offsetWidth / cardW()); }
+      function maxPos(){ return Math.max(0, track.children.length - visCount()); }
+      function update(){
+        pos = Math.min(pos, maxPos());
+        track.style.transform = 'translateX(-' + (pos * cardW()) + 'px)';
+      }
+      window.suggScroll = function(d){
+        pos = Math.max(0, Math.min(pos + d, maxPos()));
+        update();
+      };
+      window.addEventListener('resize', update);
+    })();
   </script>
 </body>
 </html>
