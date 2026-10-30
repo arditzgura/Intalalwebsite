@@ -597,13 +597,22 @@ async function main() {
     artEntries.push({ art, slug });
   }
 
+  // Nxjerr çelësin e kategorisë+gjinisë nga emri i artikullit
+  const GENDER_WORDS = new Set(['grash','gra','burrash','burra','femijesh','femijve','vajzash','vajzave','djemsh','djemve','djemve']);
+  function artKey(name) {
+    const words = (name || '').toLowerCase().trim().split(/\s+/);
+    const cat = words[0] || '';
+    const gender = words.find(w => GENDER_WORDS.has(w)) || '';
+    return `${cat}|${gender}`;
+  }
+
   // Generate article pages with suggestions
   const artDir = path.join(ROOT, 'artikull');
   ensureDir(artDir);
   for (const { art, slug } of artEntries) {
-    const firstWord = (art.name || '').trim().split(/\s+/)[0].toLowerCase();
+    const key = artKey(art.name);
     const suggestions = artEntries
-      .filter(e => e.slug !== slug && (e.art.name || '').trim().split(/\s+/)[0].toLowerCase() === firstWord)
+      .filter(e => e.slug !== slug && artKey(e.art.name) === key)
       .slice(0, 8)
       .map(e => ({
         slug: e.slug,
