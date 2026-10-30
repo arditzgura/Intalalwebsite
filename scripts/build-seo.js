@@ -597,29 +597,121 @@ async function main() {
     artEntries.push({ art, slug });
   }
 
-  // Nxjerr çelësin e kategorisë+gjinisë nga emri i artikullit
-  const GENDER_WORDS = new Set(['grash','gra','burrash','burra','femijesh','femijve','vajzash','vajzave','djemsh','djemve','djemve']);
-  function artKey(name) {
-    const words = (name || '').toLowerCase().trim().split(/\s+/);
-    const cat = words[0] || '';
-    const gender = words.find(w => GENDER_WORDS.has(w)) || '';
-    return `${cat}|${gender}`;
+  // ── Suggestion logic (4 nivele) ─────────────────────────────
+  const MIN_SUGGESTIONS = 4;
+  const MAX_SUGGESTIONS = 8;
+
+  // Harta e llojeve të afërta (bazuar në art.kat)
+  const RELATED_TYPES = {
+    'bluze':          ['fanella', 'kanatjere'],
+    'fanella':        ['bluze', 'kanatjere'],
+    'kanatjere':      ['bluze', 'fanella'],
+    'kemisha nate':   ['pizhame'],
+    'pizhame':        ['kemisha nate'],
+    'mbathje':        ['benevrek'],
+    'benevrek':       ['mbathje'],
+    'fustane':        ['kostume verore'],
+    'kostume verore': ['fustane'],
+    'dimer':          ['vere'],
+    'vere':           ['dimer'],
+  };
+
+  // Normalizon string: lowercase + heq diakritikë
+  function norm(s) {
+    return (s || '').toLowerCase()
+      .replace(/ë/g,'e').replace(/ç/g,'c').trim();
+  }
+
+  // Nxjerr llojet nga art.kat (array ose string); fallback: fjala e parë e emrit
+  function artTypes(art) {
+    const k = art.kat;
+    if (!k || (Array.isArray(k) && k.length === 0)) {
+      return [norm((art.name || '').trim().split(/\s+/)[0])];
+    }
+    return (Array.isArray(k) ? k : [k]).map(norm).filter(Boolean);
+  }
+
+  // Nxjerr gjininë nga art.sub (array ose string)
+  function artGenders(art) {
+    const s = art.sub;
+    if (!s || (Array.isArray(s) && s.length === 0)) return [''];
+    return (Array.isArray(s) ? s : [s]).map(norm).filter(Boolean);
+  }
+
+  // Numëron fjalë të përbashkëta mes dy emrave (për renditje brenda nivelit)
+  function commonWords(nameA, nameB) {
+    const wa = norm(nameA).split(/\s+/).filter(Boolean);
+    const wb = norm(nameB).split(/\s+/).filter(Boolean);
+    return wa.filter(w => wb.includes(w)).length;
+  }
+
+  function sortBySimilarity(entries, refName) {
+    return entries.slice().sort((a, b) =>
+      commonWords(b.art.name, refName) - commonWords(a.art.name, refName)
+    );
+  }
+
+  function getRelatedArticles(entry, allEntries) {
+    const myTypes   = artTypes(entry.art);
+    const myGenders = artGenders(entry.art);
+    const seen      = new Set([entry.slug]);
+    const result    = [];
+
+    function add(list) {
+      for (const e of list) {
+        if (seen.has(e.slug)) continue;
+        seen.add(e.slug);
+        result.push(e);
+        if (result.length >= MAX_SUGGESTIONS) return;
+      }
+    }
+
+    const others = allEntries.filter(e => e.slug !== entry.slug);
+
+    // Niveli 1: i njëjti lloj + e njëjta gjini
+    add(sortBySimilarity(others.filter(e => {
+      const t = artTypes(e.art), g = artGenders(e.art);
+      return myTypes.some(x => t.includes(x)) && myGenders.some(x => g.includes(x));
+    }), entry.art.name));
+
+    // Niveli 2: lloj i afërt + e njëjta gjini (plotëso deri në MIN)
+    if (result.length < MIN_SUGGESTIONS) {
+      const rel = myTypes.flatMap(t => RELATED_TYPES[t] || []);
+      add(sortBySimilarity(others.filter(e => {
+        const t = artTypes(e.art), g = artGenders(e.art);
+        return rel.some(x => t.includes(x)) && myGenders.some(x => g.includes(x));
+      }), entry.art.name));
+    }
+
+    // Niveli 3: i njëjti lloj, gjini tjetër
+    if (result.length < MIN_SUGGESTIONS) {
+      add(sortBySimilarity(others.filter(e =>
+        myTypes.some(x => artTypes(e.art).includes(x))
+      ), entry.art.name));
+    }
+
+    // Niveli 4 fallback: e njëjta gjini, çdo lloj
+    if (result.length < MIN_SUGGESTIONS) {
+      add(others.filter(e =>
+        myGenders.some(x => artGenders(e.art).includes(x))
+      ));
+    }
+
+    return result;
   }
 
   // Generate article pages with suggestions
   const artDir = path.join(ROOT, 'artikull');
   ensureDir(artDir);
-  for (const { art, slug } of artEntries) {
-    const key = artKey(art.name);
-    const suggestions = artEntries
-      .filter(e => e.slug !== slug && artKey(e.art.name) === key)
-      .slice(0, 8)
-      .map(e => ({
-        slug: e.slug,
-        name: e.art.name,
-        code: e.art.code || '',
-        img: (e.art.photos && e.art.photos[0]) ? (typeof e.art.photos[0] === 'string' ? e.art.photos[0] : (e.art.photos[0].src || e.art.photos[0].url || '')) : ''
-      }));
+  for (const entry of artEntries) {
+    const { art, slug } = entry;
+    const related  = getRelatedArticles(entry, artEntries);
+    const suggestions = related.map(e => ({
+      slug: e.slug,
+      name: e.art.name,
+      code: e.art.code || '',
+      img:  photoUrl(e.art.photos && e.art.photos[0])
+    }));
     const dir = path.join(artDir, slug);
     ensureDir(dir);
     fs.writeFileSync(path.join(dir, 'index.html'), articleHtml(art, slug, suggestions), 'utf8');
