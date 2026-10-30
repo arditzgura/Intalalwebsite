@@ -200,15 +200,15 @@ function articleHtml(art, slug, suggestions) {
     /* ── CTA buttons ── */
     .cta-group{display:flex;flex-direction:column;gap:8px;margin-top:18px;padding-top:16px;border-top:1px solid #ebebeb;}
     .btn-pair{display:flex;gap:0;border-radius:8px;overflow:hidden;}
-    .btn-kerkese{flex:2;display:flex;align-items:center;justify-content:center;gap:6px;background:#0a0a0a;color:#fff;border:none;cursor:pointer;padding:13px 10px;font-family:inherit;font-weight:700;font-size:11px;letter-spacing:1px;text-transform:uppercase;}
+    .btn-kerkese{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;background:#0a0a0a;color:#fff;border:none;cursor:pointer;padding:13px 10px;font-family:inherit;font-weight:700;font-size:11px;letter-spacing:1px;text-transform:uppercase;}
     .btn-kerkese:hover{background:#333;}
     .btn-share-half{flex:1;display:flex;align-items:center;justify-content:center;background:#f5f5f5;border:none;cursor:pointer;padding:13px 10px;color:#555;}
     .btn-share-half:hover{background:#e8e8e8;}
-    .btn-wa-half{flex:1;display:flex;align-items:center;justify-content:center;background:#25D366;color:#fff;text-decoration:none;padding:13px 10px;}
-    .btn-wa-half:hover{background:#1eb85a;}
-    .btn-pair-divider{width:1px;background:rgba(0,0,0,.08);flex-shrink:0;}
-    .btn-back{display:flex;align-items:center;justify-content:center;gap:6px;background:#fff;border:1.5px solid #e0e0e0;color:#0a0a0a;text-decoration:none;border-radius:8px;padding:10px 16px;font-weight:600;font-size:11px;letter-spacing:0.5px;}
-    .btn-back:hover{border-color:#C8003E;color:#C8003E;}
+    .btn-wa-half{flex:1;display:flex;align-items:center;justify-content:center;background:#fff;color:#25D366;text-decoration:none;padding:13px 10px;}
+    .btn-wa-half:hover{background:#f0faf5;}
+    .btn-pair-divider{width:1px;background:rgba(0,0,0,.1);flex-shrink:0;}
+    .btn-back{display:flex;align-items:center;justify-content:center;gap:6px;background:#fff;border:1.5px solid #d0d0d0;color:#999;text-decoration:none;border-radius:50px;padding:10px 20px;font-weight:600;font-size:11px;letter-spacing:0.5px;}
+    .btn-back:hover{border-color:#aaa;color:#666;}
     /* Order modal */
     .order-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:8000;align-items:flex-end;justify-content:center;}
     .order-modal.open{display:flex;}
@@ -343,7 +343,7 @@ function articleHtml(art, slug, suggestions) {
           </div>
           <a href="/artikujt" class="btn-back">
             <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 12L6 8l4-4"/></svg>
-            Shiko të gjithë artikujt
+            Back
           </a>
         </div>
       </div>
