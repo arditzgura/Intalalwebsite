@@ -117,23 +117,42 @@ body {
   justify-content: flex-end;
 }
 
-.search-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
+.navbar-search {
   display: flex;
   align-items: center;
-  color: var(--black);
+  gap: 6px;
+  border: 0.5px solid transparent;
+  border-radius: 3px;
+  padding: 4px 8px;
+  transition: border-color .2s, background .2s;
+  cursor: pointer;
+  background: none;
 }
+.navbar-search:hover,
+.navbar-search.open { border-color: var(--border); background: #fafafa; }
+.navbar-search i { font-size: 16px; color: var(--muted); flex-shrink: 0; }
+.navbar-search input {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 1px;
+  color: var(--black);
+  width: 0;
+  max-width: 0;
+  opacity: 0;
+  transition: width .25s ease, max-width .25s ease, opacity .2s;
+  font-family: inherit;
+}
+.navbar-search input::placeholder { color: var(--muted); }
+.navbar-search.open input { width: 110px; max-width: 110px; opacity: 1; }
+@media(max-width:600px) { .navbar-search.open input { width: 80px; max-width: 80px; } }
 
-.search-btn i,
 .nav-hamburger i {
   font-size: clamp(15px, 1.3vw, 18px);
   line-height: 1;
 }
-.search-btn.active { background: #f0f0f0; border-radius: 50%; }
-.search-btn.active i::before { content: '\EB99'; } /* ri-close-line kur aktiv */
 
 .nav-share-btn {
   display: flex;

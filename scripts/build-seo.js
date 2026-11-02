@@ -151,9 +151,9 @@ function articleHtml(art, slug, suggestions) {
 
     /* ── Product grid ── */
     .product-grid{display:flex;gap:clamp(8px,1.2vw,18px);align-items:flex-start;}
-    .thumbs-col{order:1;width:clamp(60px,6vw,96px);flex-shrink:0;display:flex;flex-direction:column;gap:6px;padding-top:0;}
-    .gallery{order:2;flex:3;min-width:0;padding-top:0;margin-top:0;}
-    .info{order:3;flex:1.6;min-width:0;}
+    .thumbs-col{width:clamp(60px,6vw,96px);flex-shrink:0;display:flex;flex-direction:column;gap:6px;}
+    .gallery{flex:3;min-width:0;}
+    .info{flex:1.6;min-width:0;}
     @media(max-width:900px){.product-grid{gap:8px;} .thumbs-col{width:clamp(52px,5vw,72px);} .gallery{flex:2;} .info{flex:1.4;}}
     @media(max-width:680px){.product-grid{flex-direction:column;gap:0;} .thumbs-col{order:2;width:100%;flex-direction:row;margin-top:8px;gap:6px;} .gallery{order:1;} .info{order:3;margin-top:20px;} .gallery-nav{display:none;}}
 
@@ -265,10 +265,9 @@ function articleHtml(art, slug, suggestions) {
       </div>
       <a href="/" class="navbar-brand">Intal Underwear</a>
       <div class="navbar-right">
-        <div class="lang-toggle">
-          <span class="lang-opt active">AL</span>
-          <span class="lang-sep">|</span>
-          <span class="lang-opt">EN</span>
+        <div class="navbar-search" id="navbar-search" onclick="toggleNavSearch(event)">
+          <i class="ri-search-line"></i>
+          <input type="search" id="navbar-search-input" placeholder="KËRKO" autocomplete="off" onclick="event.stopPropagation()">
         </div>
       </div>
     </div>
@@ -318,6 +317,9 @@ function articleHtml(art, slug, suggestions) {
 
     <div class="product-grid">
 
+      <!-- Vertical thumbnails (first in DOM = left column) -->
+      ${thumbsHtml ? `<div class="thumbs-col" id="thumbs">${thumbsHtml}</div>` : '<div style="width:clamp(60px,6vw,96px);flex-shrink:0;"></div>'}
+
       <!-- Gallery -->
       <div class="gallery">
         <div class="main-img-wrap" id="main-img-wrap">
@@ -329,9 +331,6 @@ function articleHtml(art, slug, suggestions) {
           <button class="gallery-nav next" onclick="stepPhoto(1)" aria-label="Pas">&#8594;</button>` : ''}
         </div>
       </div>
-
-      <!-- Vertical thumbnails -->
-      ${thumbsHtml ? `<div class="thumbs-col" id="thumbs">${thumbsHtml}</div>` : '<div></div>'}
 
       <!-- Info -->
       <div class="info">
@@ -415,6 +414,9 @@ function articleHtml(art, slug, suggestions) {
   <script src="/js/main.js"></script>
   <script>
     (function(){var y=new Date().getFullYear();['cp-yr','cp-yr-drawer'].forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=y;});document.querySelectorAll('.cp-yr').forEach(function(el){el.textContent=y;});})();
+    window.toggleNavSearch=function(e){var w=document.getElementById('navbar-search'),inp=document.getElementById('navbar-search-input');if(!w)return;if(!w.classList.contains('open')){w.classList.add('open');setTimeout(function(){inp&&inp.focus();},260);}};
+    document.addEventListener('click',function(e){var w=document.getElementById('navbar-search');if(w&&!w.contains(e.target))w.classList.remove('open');});
+    document.addEventListener('DOMContentLoaded',function(){var inp=document.getElementById('navbar-search-input');if(inp){inp.addEventListener('keydown',function(e){if(e.key==='Enter'&&inp.value.trim()){window.location.href='/artikujt#kerkim/'+encodeURIComponent(inp.value.trim());}});}});
     var _photos = ${photosJson};
     var _idx = 0;
     function setPhoto(i){
