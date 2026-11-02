@@ -30,9 +30,12 @@
   <noscript><link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet"></noscript>
   <link rel="stylesheet" href="css/main.css">
   <style>
-    :root { --art-side: 180px; }
+    :root { --art-side: 180px; --art-max: 1400px; }
     @media(max-width:900px){ :root { --art-side: 60px; } }
     @media(max-width:600px){ :root { --art-side: 20px; } }
+    #dyn-grid { max-width:var(--art-max); margin-left:auto; margin-right:auto; }
+    .pg-header { max-width:var(--art-max); margin-left:auto; margin-right:auto; }
+    #dyn-filter-bar > * { max-width:var(--art-max); margin-left:auto; margin-right:auto; width:100%; }
     .pg-header { padding:10px var(--side) 8px; border-bottom:.5px solid var(--border); display:flex; align-items:baseline; justify-content:space-between; gap:12px; }
     .pg-breadcrumb { display:flex; align-items:center; gap:6px; font-size:12px; font-weight:500; letter-spacing:.5px; }
     .pg-breadcrumb a { color:var(--muted); text-decoration:none; text-transform:uppercase; transition:color .15s; }
