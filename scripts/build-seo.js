@@ -82,8 +82,10 @@ function articleHtml(art, slug, suggestions) {
   const rawSub = art.sub ? (Array.isArray(art.sub) ? art.sub[0] : art.sub) : '';
   const rawKat = art.kat ? (Array.isArray(art.kat) ? art.kat[0] : art.kat) : '';
   const arrow = `<svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 12l4-4-4-4"/></svg>`;
-  const bcSub = rawSub ? `${arrow}<span>${cap(rawSub)}</span>` : '';
-  const bcKat = rawKat ? `${arrow}<span>${cap(rawKat)}</span>` : '';
+  const subHash = rawSub ? encodeURIComponent(rawSub.toLowerCase()) : '';
+  const katHash = rawKat ? encodeURIComponent(rawKat.toLowerCase()) : '';
+  const bcSub = rawSub ? `${arrow}<a href="/artikujt#${subHash}">${cap(rawSub)}</a>` : '';
+  const bcKat = rawKat ? `${arrow}<a href="/artikujt#${subHash ? subHash+'/' : ''}${katHash}">${cap(rawKat)}</a>` : '';
   const breadcrumbHtml = `<div class="breadcrumb">
       <a href="/">Kryefaqja</a>
       ${arrow}
