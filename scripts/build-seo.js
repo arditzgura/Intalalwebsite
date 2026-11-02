@@ -76,6 +76,22 @@ function articleHtml(art, slug, suggestions) {
   const canon   = `${BASE_URL}/artikull/${slug}`;
   const sizes   = (art.masat || art.sizes || []);
   const ngjyrat = (art.ngjyrat || []);
+
+  // Breadcrumb segments: gjinia + lloji
+  const cap = s => s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : '';
+  const rawSub = art.sub ? (Array.isArray(art.sub) ? art.sub[0] : art.sub) : '';
+  const rawKat = art.kat ? (Array.isArray(art.kat) ? art.kat[0] : art.kat) : '';
+  const arrow = `<svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 12l4-4-4-4"/></svg>`;
+  const bcSub = rawSub ? `${arrow}<span>${cap(rawSub)}</span>` : '';
+  const bcKat = rawKat ? `${arrow}<span>${cap(rawKat)}</span>` : '';
+  const breadcrumbHtml = `<div class="breadcrumb">
+      <a href="/">Kryefaqja</a>
+      ${arrow}
+      <a href="/artikujt">Artikujt</a>
+      ${bcSub}${bcKat}
+      ${arrow}
+      <span>${title}</span>
+    </div>`;
   const comp    = (art.perberja || []).map(p => `<div class="comp-row"><span>${esc(p.material||p.name||'')}</span><span>${esc(String(p.perqindje||p.pct||p.value||''))}%</span></div>`).join('');
 
   const thumbsHtml = photos.length > 1
@@ -294,13 +310,7 @@ function articleHtml(art, slug, suggestions) {
       MBRAPA
     </a>
 
-    <div class="breadcrumb">
-      <a href="/">Kryefaqja</a>
-      <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 12l4-4-4-4"/></svg>
-      <a href="/artikujt">Artikujt</a>
-      <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 12l4-4-4-4"/></svg>
-      <span>${title}</span>
-    </div>
+    ${breadcrumbHtml}
 
     <div class="product-grid">
 
