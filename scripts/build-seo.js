@@ -150,8 +150,9 @@ function articleHtml(art, slug, suggestions) {
     .breadcrumb span{color:#888;}
 
     /* ── Product grid ── */
-    .product-grid{display:grid;grid-template-columns:3fr clamp(60px,6vw,96px) 1.6fr;gap:16px clamp(8px,1.2vw,18px);align-items:start;}
-    @media(max-width:900px){.product-grid{grid-template-columns:2fr clamp(52px,5vw,72px) 1.4fr;gap:12px 8px;}}
+    .product-grid{display:grid;grid-template-columns:clamp(60px,6vw,96px) 3fr 1.6fr;gap:16px clamp(8px,1.2vw,18px);align-items:start;}
+    .gallery{order:2;} .thumbs-col{order:1;} .info{order:3;}
+    @media(max-width:900px){.product-grid{grid-template-columns:clamp(52px,5vw,72px) 2fr 1.4fr;gap:12px 8px;}}
     @media(max-width:680px){.product-grid{grid-template-columns:1fr;gap:0;} .gallery{order:1;} .thumbs-col{order:2;flex-direction:row;margin-top:8px;gap:6px;} .info{order:3;margin-top:20px;} .gallery-nav{display:none;}}
 
     /* ── Gallery ── */
