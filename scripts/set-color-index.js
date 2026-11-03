@@ -28,6 +28,12 @@ const UPDATES = [
   { id: '1788780390818', code: '222', colorIndex: 0 },  // E Bardhe
   { id: '1788780652530', code: '222', colorIndex: 1 },  // Gri (ishte 222-K)
   { id: '1788780655292', code: '222', colorIndex: 2 },  // E Zeze (ishte 222-K-K)
+
+  // Kod 230 — Benevrek burrash push (4 variante: Gri/E Zeze/Blu/Gri e Erret)
+  // Gri (colorIndex:0) mungon ende në Firebase — duhet shtuar
+  { id: '1792484466412', colorIndex: 1 },  // E Zeze
+  { id: '1792483888096', colorIndex: 2 },  // Blu (navy blue)
+  { id: '1792484464012', colorIndex: 3 },  // Gri e Erret
 ];
 // ─────────────────────────────────────────────────────────────────
 

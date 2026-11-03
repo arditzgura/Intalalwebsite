@@ -106,9 +106,11 @@ function articleHtml(art, slug, suggestions, colorVariants) {
   const colorsHtml = ngjyrat.length
     ? `<div class="section-label">NGJYRAT</div><div class="colors-row">${ngjyrat.map((c,i)=>{
         const variant = colorVariants && colorVariants[i];
-        const isCurrent = !variant || variant.slug === slug;
-        const dot = `<span class="color-dot${isCurrent?' active':''}" style="background:${esc(c.hex||'#ccc')}" title="${esc(c.name||'')}"></span>`;
-        return isCurrent ? dot : `<a href="/artikull/${variant.slug}" class="color-dot-link">${dot}</a>`;
+        const isCurrent = variant && variant.slug === slug;
+        const cls = isCurrent ? ' active' : (!variant ? ' unavailable' : '');
+        const dot = `<span class="color-dot${cls}" style="background:${esc(c.hex||'#ccc')}" title="${esc(c.name||'')}"></span>`;
+        if (isCurrent || !variant) return dot;
+        return `<a href="/artikull/${variant.slug}" class="color-dot-link">${dot}</a>`;
       }).join('')}</div>`
     : '';
 
@@ -185,6 +187,7 @@ function articleHtml(art, slug, suggestions, colorVariants) {
     .colors-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
     .color-dot{width:28px;height:28px;border-radius:50%;border:1px solid rgba(0,0,0,.12);display:inline-block;flex-shrink:0;transition:outline .1s;}
     .color-dot.active{outline:2px solid #0a0a0a;outline-offset:2px;}
+    .color-dot.unavailable{opacity:0.35;cursor:default;}
     .color-dot-link{display:inline-block;text-decoration:none;}
     .color-dot-link:hover .color-dot{outline:2px solid #0a0a0a;outline-offset:2px;}
     .comp-wrap{margin-top:14px;}

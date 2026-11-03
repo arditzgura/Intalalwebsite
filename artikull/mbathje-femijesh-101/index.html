@@ -69,6 +69,7 @@
     .colors-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
     .color-dot{width:28px;height:28px;border-radius:50%;border:1px solid rgba(0,0,0,.12);display:inline-block;flex-shrink:0;transition:outline .1s;}
     .color-dot.active{outline:2px solid #0a0a0a;outline-offset:2px;}
+    .color-dot.unavailable{opacity:0.35;cursor:default;}
     .color-dot-link{display:inline-block;text-decoration:none;}
     .color-dot-link:hover .color-dot{outline:2px solid #0a0a0a;outline-offset:2px;}
     .comp-wrap{margin-top:14px;}
@@ -229,7 +230,7 @@
         <div style="height:1px;background:#ebebeb;margin:16px 0 24px;"></div>
 
         <div class="section-label">MASAT</div><div class="chips-row"><span class="chip">2</span><span class="chip">3</span><span class="chip">4</span><span class="chip">5</span></div>
-        <div class="section-label">NGJYRAT</div><div class="colors-row"><span class="color-dot active" style="background:#FFFFFF" title="E Bardhe"></span><a href="/artikull/mbathje-crz-101" class="color-dot-link"><span class="color-dot" style="background:#2563EB" title="Blu"></span></a><a href="/artikull/mbathje-crz-101-1" class="color-dot-link"><span class="color-dot" style="background:#38BDF8" title="Bojeqiell"></span></a><span class="color-dot active" style="background:#16A34A" title="Jeshile"></span><span class="color-dot active" style="background:multi" title="Shumengjyresh"></span></div>
+        <div class="section-label">NGJYRAT</div><div class="colors-row"><span class="color-dot active" style="background:#FFFFFF" title="E Bardhe"></span><a href="/artikull/mbathje-crz-101" class="color-dot-link"><span class="color-dot" style="background:#2563EB" title="Blu"></span></a><a href="/artikull/mbathje-crz-101-1" class="color-dot-link"><span class="color-dot" style="background:#38BDF8" title="Bojeqiell"></span></a><span class="color-dot unavailable" style="background:#16A34A" title="Jeshile"></span><span class="color-dot unavailable" style="background:multi" title="Shumengjyresh"></span></div>
         
 
         <div class="cta-group">
