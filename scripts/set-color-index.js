@@ -1,14 +1,13 @@
 #!/usr/bin/env node
 /**
- * set-color-index.js — cakton fushën colorIndex te artikujt variantë në Firebase.
+ * set-color-index.js — cakton colorIndex dhe (opsionale) code te artikujt variantë.
  *
  * colorIndex: pozicioni i ngjyrës në array-in ngjyrat[] (0=e para, 1=e dyta, ...)
+ * code: kodi i produktit — duhet të jetë IDENTIK për të gjitha variantet e të njëjtit produkt.
  *
- * Si të ekzekutosh:
- *   node scripts/set-color-index.js
+ * Ekzekuto: node scripts/set-color-index.js
  *
- * Si të shtosh variantë të rinj:
- *   Shto hyrje te UPDATES më poshtë, me id-në e artikullit dhe colorIndex-in.
+ * Shto hyrje te UPDATES për çdo grup variantësh me problem.
  */
 
 const https = require('https');
@@ -18,15 +17,17 @@ const API_KEY    = 'AIzaSyCi0nHVXYruuRE33NDOrGLVhRwl0nupUfI';
 const DOC_URL    = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/konfigurimi/artikujt?key=${API_KEY}`;
 
 // ── Hyrjet për update ─────────────────────────────────────────────
-// id: ID i artikullit (string ose number), colorIndex: 0/1/2/...
+// id: ID i artikullit, colorIndex: 0/1/2/..., code (opsional): ndryshon kodin
 const UPDATES = [
   // Kod 221 — Mbathje UOMO (3 variante: E Bardhe, Gri, Blu)
-  { id: '1774854535365', colorIndex: 0 },  // E Bardhe (foto të bardha)
-  { id: '1774854543631', colorIndex: 2 },  // Blu (foto blu) ← ishte i lidhur gabimisht me Gri
-  { id: '1774854545973', colorIndex: 1 },  // Gri (foto gri) ← ishte i lidhur gabimisht me Blu
+  { id: '1774854535365', colorIndex: 0 },           // E Bardhe
+  { id: '1774854543631', colorIndex: 2 },           // Blu (foto blu)
+  { id: '1774854545973', colorIndex: 1 },           // Gri (foto gri)
 
-  // Shto hyrje të tjera këtu nëse ka variante të tjera me gabim:
-  // { id: 'ARTICLE_ID', colorIndex: 0 },
+  // Kod 222 — Bokse TRY ME (3 variante: E Bardhe, Gri, E Zeze)
+  { id: '1788780390818', code: '222', colorIndex: 0 },  // E Bardhe
+  { id: '1788780652530', code: '222', colorIndex: 1 },  // Gri (ishte 222-K)
+  { id: '1788780655292', code: '222', colorIndex: 2 },  // E Zeze (ishte 222-K-K)
 ];
 // ─────────────────────────────────────────────────────────────────
 
@@ -66,17 +67,23 @@ async function main() {
   const artikujt = JSON.parse(res.fields.value.stringValue);
   console.log(`  → ${artikujt.length} artikuj të gjetur`);
 
-  // Ndërto map id → index në array
   const idToIdx = {};
   artikujt.forEach((a, i) => { if (a.id) idToIdx[String(a.id)] = i; });
 
   let changed = 0;
-  for (const { id, colorIndex } of UPDATES) {
-    const idx = idToIdx[String(id)];
-    if (idx === undefined) { console.warn(`  ⚠ Artikulli me id=${id} nuk u gjet.`); continue; }
-    const old = artikujt[idx].colorIndex;
-    artikujt[idx].colorIndex = colorIndex;
-    console.log(`  ✓ id=${id} → colorIndex: ${old ?? '(pa vlerë)'} → ${colorIndex}`);
+  for (const update of UPDATES) {
+    const idx = idToIdx[String(update.id)];
+    if (idx === undefined) { console.warn(`  ⚠ Artikulli id=${update.id} nuk u gjet.`); continue; }
+    let msg = `  ✓ id=${update.id}`;
+    if (update.colorIndex !== undefined) {
+      msg += ` colorIndex:${artikujt[idx].colorIndex??'—'}→${update.colorIndex}`;
+      artikujt[idx].colorIndex = update.colorIndex;
+    }
+    if (update.code !== undefined) {
+      msg += ` code:${artikujt[idx].code??'—'}→${update.code}`;
+      artikujt[idx].code = update.code;
+    }
+    console.log(msg);
     changed++;
   }
 
