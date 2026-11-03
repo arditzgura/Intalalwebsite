@@ -728,12 +728,17 @@ async function main() {
     artEntries.push({ art, slug });
   }
 
-  // Group variants by code (same code = same product family, different colors)
-  const codeGroups = {};
+  // Group variants by code; use colorIndex when present, fallback to insertion order
+  const codeGroups = {}; // code → { [ngjyratIndex]: {art, slug} }
+  const codeGroupsPos = {}; // tracks next fallback position per code
   for (const { art, slug } of artEntries) {
     if (!art.code) continue;
-    if (!codeGroups[art.code]) codeGroups[art.code] = [];
-    codeGroups[art.code].push({ art, slug });
+    if (!codeGroups[art.code]) { codeGroups[art.code] = {}; codeGroupsPos[art.code] = 0; }
+    const idx = (art.colorIndex !== undefined && art.colorIndex !== null)
+      ? Number(art.colorIndex)
+      : codeGroupsPos[art.code];
+    codeGroups[art.code][idx] = { art, slug };
+    codeGroupsPos[art.code]++;
   }
 
   // ── Suggestion logic (4 nivele) ─────────────────────────────
