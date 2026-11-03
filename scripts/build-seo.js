@@ -183,10 +183,10 @@ function articleHtml(art, slug, suggestions, colorVariants) {
     .chips-row{display:flex;gap:6px;flex-wrap:wrap;}
     .chip{background:#fff;border:1.5px solid #e0e0e0;border-radius:0;padding:5px 10px;font-size:11px;font-weight:600;letter-spacing:0.5px;}
     .colors-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
-    .color-dot{width:28px;height:28px;border-radius:50%;border:2px solid rgba(0,0,0,.1);display:inline-block;flex-shrink:0;transition:transform .15s,box-shadow .15s;}
-    .color-dot.active{border-color:#0a0a0a;box-shadow:0 0 0 2px #fff,0 0 0 4px #0a0a0a;}
+    .color-dot{width:28px;height:28px;border-radius:50%;border:1px solid rgba(0,0,0,.12);display:inline-block;flex-shrink:0;transition:outline .1s;}
+    .color-dot.active{outline:2px solid #0a0a0a;outline-offset:2px;}
     .color-dot-link{display:inline-block;text-decoration:none;}
-    .color-dot-link:hover .color-dot{transform:scale(1.12);box-shadow:0 2px 8px rgba(0,0,0,.18);}
+    .color-dot-link:hover .color-dot{outline:2px solid #0a0a0a;outline-offset:2px;}
     .comp-wrap{margin-top:14px;}
     .comp-row{display:flex;justify-content:flex-start;gap:14px;align-items:center;padding:3px 0;margin-bottom:2px;font-size:14px;font-weight:400;background:none;}
     .comp-row:last-child{margin-bottom:0;}
