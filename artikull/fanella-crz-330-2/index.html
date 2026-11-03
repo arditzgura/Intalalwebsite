@@ -67,7 +67,10 @@
     .chips-row{display:flex;gap:6px;flex-wrap:wrap;}
     .chip{background:#fff;border:1.5px solid #e0e0e0;border-radius:0;padding:5px 10px;font-size:11px;font-weight:600;letter-spacing:0.5px;}
     .colors-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
-    .color-dot{width:28px;height:28px;border-radius:50%;border:2px solid rgba(0,0,0,.1);display:inline-block;flex-shrink:0;}
+    .color-dot{width:28px;height:28px;border-radius:50%;border:2px solid rgba(0,0,0,.1);display:inline-block;flex-shrink:0;transition:transform .15s,box-shadow .15s;}
+    .color-dot.active{border-color:#0a0a0a;box-shadow:0 0 0 2px #fff,0 0 0 4px #0a0a0a;}
+    .color-dot-link{display:inline-block;text-decoration:none;}
+    .color-dot-link:hover .color-dot{transform:scale(1.12);box-shadow:0 2px 8px rgba(0,0,0,.18);}
     .comp-wrap{margin-top:14px;}
     .comp-row{display:flex;justify-content:flex-start;gap:14px;align-items:center;padding:3px 0;margin-bottom:2px;font-size:14px;font-weight:400;background:none;}
     .comp-row:last-child{margin-bottom:0;}
@@ -226,7 +229,7 @@
         <p class="info-desc">Fanella burrash me menge te gjata me jake V dhe O</p>
 
         <div class="section-label">MASAT</div><div class="chips-row"><span class="chip">L</span><span class="chip">XL</span><span class="chip">2XL</span><span class="chip">3XL</span><span class="chip">4XL</span></div>
-        <div class="section-label">NGJYRAT</div><div class="colors-row"><span class="color-dot" style="background:#FFFFFF" title="E Bardhe"></span><span class="color-dot" style="background:#9CA3AF" title="Gri"></span><span class="color-dot" style="background:#111111" title="E Zeze"></span></div>
+        <div class="section-label">NGJYRAT</div><div class="colors-row"><a href="/artikull/fanella-crz-330" class="color-dot-link"><span class="color-dot" style="background:#FFFFFF" title="E Bardhe"></span></a><a href="/artikull/fanella-crz-330-1" class="color-dot-link"><span class="color-dot" style="background:#9CA3AF" title="Gri"></span></a><span class="color-dot active" style="background:#111111" title="E Zeze"></span></div>
         <div class="comp-wrap"><div class="section-label">PËRBËRJA</div><div class="comp-row"><span>Pambuk</span><span>100%</span></div></div>
 
         <div class="cta-group">

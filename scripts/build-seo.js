@@ -66,7 +66,7 @@ function ensureDir(dir) {
 }
 
 /* ── Article page template ───────────────────────────────────── */
-function articleHtml(art, slug, suggestions) {
+function articleHtml(art, slug, suggestions, colorVariants) {
   const title   = esc(art.name || 'Artikull');
   const rawDesc = art.desc || `${art.name} nga Intal Albania — fabrikë shqiptare e të brendshmeve që nga 1994.`;
   const desc    = esc(rawDesc);
@@ -104,7 +104,12 @@ function articleHtml(art, slug, suggestions) {
     : '';
 
   const colorsHtml = ngjyrat.length
-    ? `<div class="section-label">NGJYRAT</div><div class="colors-row">${ngjyrat.map(c=>`<span class="color-dot" style="background:${esc(c.hex||'#ccc')}" title="${esc(c.name||'')}"></span>`).join('')}</div>`
+    ? `<div class="section-label">NGJYRAT</div><div class="colors-row">${ngjyrat.map((c,i)=>{
+        const variant = colorVariants && colorVariants[i];
+        const isCurrent = !variant || variant.slug === slug;
+        const dot = `<span class="color-dot${isCurrent?' active':''}" style="background:${esc(c.hex||'#ccc')}" title="${esc(c.name||'')}"></span>`;
+        return isCurrent ? dot : `<a href="/artikull/${variant.slug}" class="color-dot-link">${dot}</a>`;
+      }).join('')}</div>`
     : '';
 
   const photosJson = JSON.stringify(photos);
@@ -178,7 +183,10 @@ function articleHtml(art, slug, suggestions) {
     .chips-row{display:flex;gap:6px;flex-wrap:wrap;}
     .chip{background:#fff;border:1.5px solid #e0e0e0;border-radius:0;padding:5px 10px;font-size:11px;font-weight:600;letter-spacing:0.5px;}
     .colors-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
-    .color-dot{width:28px;height:28px;border-radius:50%;border:2px solid rgba(0,0,0,.1);display:inline-block;flex-shrink:0;}
+    .color-dot{width:28px;height:28px;border-radius:50%;border:2px solid rgba(0,0,0,.1);display:inline-block;flex-shrink:0;transition:transform .15s,box-shadow .15s;}
+    .color-dot.active{border-color:#0a0a0a;box-shadow:0 0 0 2px #fff,0 0 0 4px #0a0a0a;}
+    .color-dot-link{display:inline-block;text-decoration:none;}
+    .color-dot-link:hover .color-dot{transform:scale(1.12);box-shadow:0 2px 8px rgba(0,0,0,.18);}
     .comp-wrap{margin-top:14px;}
     .comp-row{display:flex;justify-content:flex-start;gap:14px;align-items:center;padding:3px 0;margin-bottom:2px;font-size:14px;font-weight:400;background:none;}
     .comp-row:last-child{margin-bottom:0;}
@@ -720,6 +728,14 @@ async function main() {
     artEntries.push({ art, slug });
   }
 
+  // Group variants by code (same code = same product family, different colors)
+  const codeGroups = {};
+  for (const { art, slug } of artEntries) {
+    if (!art.code) continue;
+    if (!codeGroups[art.code]) codeGroups[art.code] = [];
+    codeGroups[art.code].push({ art, slug });
+  }
+
   // ── Suggestion logic (4 nivele) ─────────────────────────────
   const MIN_SUGGESTIONS = 4;
   const MAX_SUGGESTIONS = 8;
@@ -837,7 +853,8 @@ async function main() {
     }));
     const dir = path.join(artDir, slug);
     ensureDir(dir);
-    fs.writeFileSync(path.join(dir, 'index.html'), articleHtml(art, slug, suggestions), 'utf8');
+    const colorVariants = art.code && codeGroups[art.code] ? codeGroups[art.code] : null;
+    fs.writeFileSync(path.join(dir, 'index.html'), articleHtml(art, slug, suggestions, colorVariants), 'utf8');
   }
   // Write slug map: id → slug (for artikujt.html to resolve collisions)
   const artSlugMap = {};
