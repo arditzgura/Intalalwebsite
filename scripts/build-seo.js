@@ -81,17 +81,15 @@ function articleHtml(art, slug, suggestions) {
   const cap = s => s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : '';
   const rawSub = art.sub ? (Array.isArray(art.sub) ? art.sub[0] : art.sub) : '';
   const rawKat = art.kat ? (Array.isArray(art.kat) ? art.kat[0] : art.kat) : '';
-  const arrow = `<svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 12l4-4-4-4"/></svg>`;
+  const sep = `<span class="bc-sep">/</span>`;
   const subHash = rawSub ? encodeURIComponent(rawSub.toLowerCase()) : '';
   const katHash = rawKat ? encodeURIComponent(rawKat.toLowerCase()) : '';
-  const bcSub = rawSub ? `${arrow}<a href="/artikujt#${subHash}">${cap(rawSub)}</a>` : '';
-  const bcKat = rawKat ? `${arrow}<a href="/artikujt#${subHash ? subHash+'/' : ''}${katHash}">${cap(rawKat)}</a>` : '';
+  const bcSub = rawSub ? `${sep}<a href="/artikujt#${subHash}">${cap(rawSub)}</a>` : '';
+  const bcKat = rawKat ? `${sep}<a href="/artikujt#${subHash ? subHash+'/' : ''}${katHash}">${cap(rawKat)}</a>` : '';
   const breadcrumbHtml = `<div class="breadcrumb">
       <a href="/">Kryefaqja</a>
-      ${arrow}
-      <a href="/artikujt">Artikujt</a>
       ${bcSub}${bcKat}
-      ${arrow}
+      ${sep}
       <span>${title}</span>
     </div>`;
   const comp    = (art.perberja || []).map(p => `<div class="comp-row"><span>${esc(p.material||p.name||'')}</span><span>${esc(String(p.perqindje||p.pct||p.value||''))}%</span></div>`).join('');
@@ -144,16 +142,17 @@ function articleHtml(art, slug, suggestions) {
     .page-inner{max-width:1100px;margin:0 auto;}
 
     /* ── Breadcrumb ── */
-    .breadcrumb{font-size:11px;color:#aaa;letter-spacing:0.5px;margin-bottom:20px;display:flex;align-items:center;gap:6px;}
-    .breadcrumb a{color:#aaa;text-decoration:none;}
+    .breadcrumb{font-size:14px;color:#555;letter-spacing:0.3px;margin-bottom:20px;display:flex;align-items:center;gap:5px;flex-wrap:wrap;}
+    .breadcrumb a{color:#555;text-decoration:none;}
     .breadcrumb a:hover{color:#C8003E;}
-    .breadcrumb span{color:#888;}
+    .breadcrumb span{color:#222;}
+    .bc-sep{color:#999;font-weight:300;}
 
     /* ── Product grid ── */
     .product-grid{display:flex;gap:clamp(8px,1.2vw,18px);align-items:flex-start;}
-    .thumbs-col{width:clamp(60px,6vw,96px);flex-shrink:0;display:flex;flex-direction:column;gap:6px;}
-    .gallery{flex:3;min-width:0;}
-    .info{flex:1.6;min-width:0;}
+    .thumbs-col{width:clamp(60px,6vw,96px);flex-shrink:0;display:flex;flex-direction:column;gap:6px;align-self:flex-start;}
+    .gallery{flex:3;min-width:0;align-self:flex-start;}
+    .info{flex:1.6;min-width:0;align-self:flex-start;}
     @media(max-width:900px){.product-grid{gap:8px;} .thumbs-col{width:clamp(52px,5vw,72px);} .gallery{flex:2;} .info{flex:1.4;}}
     @media(max-width:680px){.product-grid{flex-direction:column;gap:0;} .thumbs-col{order:2;width:100%;flex-direction:row;margin-top:8px;gap:6px;} .gallery{order:1;} .info{order:3;margin-top:20px;} .gallery-nav{display:none;}}
 
