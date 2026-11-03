@@ -78,7 +78,7 @@ function articleHtml(art, slug, suggestions) {
   const ngjyrat = (art.ngjyrat || []);
 
   // Breadcrumb segments: gjinia + lloji
-  const cap = s => s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : '';
+  const cap = s => s ? s.toUpperCase() : '';
   const rawSub = art.sub ? (Array.isArray(art.sub) ? art.sub[0] : art.sub) : '';
   const rawKat = art.kat ? (Array.isArray(art.kat) ? art.kat[0] : art.kat) : '';
   const sep = `<span class="bc-sep">/</span>`;
@@ -87,10 +87,8 @@ function articleHtml(art, slug, suggestions) {
   const bcSub = rawSub ? `${sep}<a href="/artikujt#${subHash}">${cap(rawSub)}</a>` : '';
   const bcKat = rawKat ? `${sep}<a href="/artikujt#${subHash ? subHash+'/' : ''}${katHash}">${cap(rawKat)}</a>` : '';
   const breadcrumbHtml = `<div class="breadcrumb">
-      <a href="/">Kryefaqja</a>
+      <a href="/artikujt">ARTIKUJT</a>
       ${bcSub}${bcKat}
-      ${sep}
-      <span>${title}</span>
     </div>`;
   const comp    = (art.perberja || []).map(p => `<div class="comp-row"><span>${esc(p.material||p.name||'')}</span><span>${esc(String(p.perqindje||p.pct||p.value||''))}%</span></div>`).join('');
 
