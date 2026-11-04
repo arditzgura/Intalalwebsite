@@ -350,6 +350,7 @@
     window.toggleNavSearch=function(e){var w=document.getElementById('navbar-search'),inp=document.getElementById('navbar-search-input');if(!w)return;if(!w.classList.contains('open')){w.classList.add('open');setTimeout(function(){inp&&inp.focus();},260);}};
     document.addEventListener('click',function(e){var w=document.getElementById('navbar-search');if(w&&!w.contains(e.target))w.classList.remove('open');});
     document.addEventListener('DOMContentLoaded',function(){var inp=document.getElementById('navbar-search-input');if(inp){inp.addEventListener('keydown',function(e){if(e.key==='Enter'&&inp.value.trim()){window.location.href='/artikujt#kerkim/'+encodeURIComponent(inp.value.trim());}});}});
+    try{sessionStorage.setItem('intal_last_art_id','1778831225849');}catch(e){}
     var _photos = ["https://res.cloudinary.com/djfrquwex/image/upload/v1784715980/a98nqxtjzwmmmbwahdrt.webp","https://res.cloudinary.com/djfrquwex/image/upload/v1784715981/x4xr4eemxjihypac9bs9.webp","https://res.cloudinary.com/djfrquwex/image/upload/v1784715983/wc1y1cdoyntwoepaunj0.webp","https://res.cloudinary.com/djfrquwex/image/upload/v1784715984/uyq352nl4ggdbqyeqr3a.webp"];
     var _idx = 0;
     function setPhoto(i){
