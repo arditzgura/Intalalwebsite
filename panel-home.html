@@ -521,7 +521,17 @@ async function removeKatCover(k){
   refreshPreview();
 }
 
-fillForm();
+/* Ngarko nga Firebase si burim primar, localStorage si fallback */
+(async function(){
+  try {
+    var raw = await sbGet('page_home_v1');
+    if(raw){
+      var d = JSON.parse(raw);
+      try{ localStorage.setItem(KEY, JSON.stringify(d)); }catch(e){}
+    }
+  } catch(e){}
+  fillForm();
+})();
 </script>
 </body>
 </html>
