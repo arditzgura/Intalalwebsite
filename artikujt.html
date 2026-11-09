@@ -794,18 +794,20 @@
         _pgShown = slice.length;
         // scroll tek artikulli i fundit
         if(lastIdx >= 0 && lastIdx < _pgShown){
-          setTimeout(function(){
-            var card = grid.querySelector('[data-aid="'+lastId+'"]');
-            if(card){
-              var navbar = document.querySelector('.navbar');
-              var navH = navbar ? navbar.offsetHeight : 55;
-              var filterBar = document.getElementById('dyn-filter-bar');
-              var filterH = filterBar ? filterBar.offsetHeight : 0;
-              var top = card.getBoundingClientRect().top + window.scrollY - navH - filterH - 16;
-              window.scrollTo({top: Math.max(0, top), behavior: 'smooth'});
-            }
-            try{ sessionStorage.removeItem('intal_last_art_id'); }catch(e){}
-          }, 80);
+          requestAnimationFrame(function(){
+            requestAnimationFrame(function(){
+              var card = grid.querySelector('[data-aid="'+lastId+'"]');
+              if(card){
+                var navbar = document.querySelector('.navbar');
+                var navH = navbar ? navbar.offsetHeight : 55;
+                var filterBar = document.getElementById('dyn-filter-bar');
+                var filterH = filterBar ? filterBar.offsetHeight : 0;
+                var top = card.getBoundingClientRect().top + window.scrollY - navH - filterH - 16;
+                window.scrollTo({top: Math.max(0, top), behavior: 'instant'});
+              }
+              try{ sessionStorage.removeItem('intal_last_art_id'); }catch(e){}
+            });
+          });
         }
       } else {
         grid.innerHTML += slice.map(function(a){ return buildCardHtml(a,_pgOpener+'(\''+a.id+'\')'); }).join('');
