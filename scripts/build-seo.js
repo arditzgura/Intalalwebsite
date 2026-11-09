@@ -722,12 +722,25 @@ async function main() {
     return candidate;
   }
 
+  // Pre-count how many articles share the same code (to know if color suffix needed)
+  const codeCounts = {};
+  for (const art of artikujt) {
+    if (art.code) codeCounts[art.code] = (codeCounts[art.code] || 0) + 1;
+  }
+
   // Build slug map for all articles first (needed for suggestions)
   const artEntries = [];
   for (const art of artikujt) {
     if (!art.name) continue;
     const base = slugify(art.name + (art.code ? '-' + art.code : ''));
-    const slug = uniqueSlug(base, usedSlugs);
+    // Use color name in slug when colorIndex is set AND article has multiple variants
+    let colorSuffix = '';
+    const hasVariants = art.code && (codeCounts[art.code] || 0) > 1;
+    if (hasVariants && art.colorIndex !== undefined && art.colorIndex !== null) {
+      const colorEntry = art.ngjyrat && art.ngjyrat[Number(art.colorIndex)];
+      if (colorEntry && colorEntry.name) colorSuffix = '-' + slugify(colorEntry.name);
+    }
+    const slug = uniqueSlug(base + colorSuffix, usedSlugs);
     artSlugs.push(slug);
     artEntries.push({ art, slug });
   }
@@ -851,6 +864,21 @@ async function main() {
   // Generate article pages with suggestions
   const artDir = path.join(ROOT, 'artikull');
   ensureDir(artDir);
+
+  // Remove stale article folders (old numeric slugs like -1, -2 no longer in new slug set)
+  const newSlugSet = new Set(artSlugs);
+  if (fs.existsSync(artDir)) {
+    for (const existing of fs.readdirSync(artDir)) {
+      if (existing === 'slugs.json') continue;
+      if (!newSlugSet.has(existing)) {
+        const stale = path.join(artDir, existing);
+        if (fs.statSync(stale).isDirectory()) {
+          fs.rmSync(stale, { recursive: true, force: true });
+          console.log(`  Removed stale: /artikull/${existing}/`);
+        }
+      }
+    }
+  }
   for (const entry of artEntries) {
     const { art, slug } = entry;
     const related  = getRelatedArticles(entry, artEntries);
