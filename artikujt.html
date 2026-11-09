@@ -871,6 +871,13 @@
       if(!h.artId){ if(popupOpen){ ov.style.display='none'; ov.querySelectorAll('.art-nav-btn').forEach(function(b){b.remove();}); } }
       if(!h.cat){ showAll(data); }
       else if(h.cat==='pelhura'){ location.href='pelhura.html'; }
+      else if(h.cat==='kerkim'){
+        var q=decodeURIComponent(h.filter==='te-gjitha'?'':h.filter);
+        showAll(data);
+        var inp=document.getElementById('navbar-search-input');
+        if(inp){ inp.value=q; var wrap=document.getElementById('navbar-search'); if(wrap) wrap.classList.add('open'); }
+        if(window._searchCallback) window._searchCallback(q);
+      }
       else if(isSub(h.cat,data)){
         showAllWithFilters(data,h.cat,h.filter&&h.filter!=='te-gjitha'?h.filter:'te-gjitha',h.subfilter||'');
       }
@@ -1575,11 +1582,20 @@
   });
   document.addEventListener('DOMContentLoaded',function(){
     var inp = document.getElementById('navbar-search-input');
-    if(inp){ inp.addEventListener('keydown', function(e){
-      if(e.key==='Enter' && inp.value.trim()){
-        window.location.hash = 'kerkim/' + encodeURIComponent(inp.value.trim());
-      }
-    }); }
+    if(inp){
+      inp.addEventListener('keydown', function(e){
+        if(e.key==='Enter'){
+          var q=inp.value.trim();
+          if(q) window.location.hash='kerkim/'+encodeURIComponent(q);
+          else { window.location.hash=''; if(window._searchCallback) window._searchCallback(''); }
+        }
+        if(e.key==='Escape'){ inp.value=''; var wrap=document.getElementById('navbar-search'); if(wrap) wrap.classList.remove('open'); window.location.hash=''; if(window._searchCallback) window._searchCallback(''); }
+      });
+      inp.addEventListener('input', function(){
+        var q=inp.value.trim();
+        if(window._searchCallback) window._searchCallback(q);
+      });
+    }
     applyLang(_lang);
   });
   if(document.readyState!=='loading'){ applyLang(_lang); }
