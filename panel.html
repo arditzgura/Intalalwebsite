@@ -1201,6 +1201,11 @@ tr.drag-over{border-top:2.5px solid var(--pink);}
               <div style="font-size:10px;color:#888;margin-top:8px;margin-bottom:3px;">Ngjyrat e zgjedhura:</div>
               <div class="sel-preview" id="art-sel-ngjyrat"></div>
             </div>
+            <div class="fg full" id="art-colorindex-wrap" style="display:none;">
+              <label>Ngjyra e Këtij Artikulli</label>
+              <div style="font-size:10px;color:#aaa;margin-bottom:8px;">Zgjidhni cilën ngjyrë nga lista përfaqëson ky artikull (vendos colorIndex për URL dhe lidhjen me variantet).</div>
+              <div id="art-colorindex-dots" style="display:flex;flex-wrap:wrap;gap:10px;"></div>
+            </div>
             <div class="fg"><label>Ngjyra Sfondit</label><input type="color" id="art-color" value="#FFF0F5" style="height:36px;cursor:pointer;"></div>
             <div class="fg"><label>Emoji (pa foto)</label><input type="text" id="art-emoji" placeholder="&#129394;" maxlength="4"></div>
             <div class="fg full">
@@ -3047,16 +3052,39 @@ function addCustomNgjyra(type){
 function renderSelNgjyrat(type){
   var sel=type==='art'?artSelNgjyrat:pelSelNgjyrat;
   var el=document.getElementById(type+'-sel-ngjyrat');
-  if(!sel.length){el.innerHTML='<span style="font-size:11px;color:#ccc;">Asnje ngjyre</span>';return;}
-  el.innerHTML=sel.map(function(n,i){
+  if(!sel.length){el.innerHTML='<span style="font-size:11px;color:#ccc;">Asnje ngjyre</span>';}
+  else { el.innerHTML=sel.map(function(n,i){
     var isM=n.hex==='multi';
     var ds=isM?'':'background:'+n.hex+';'+(n.hex==='#FFFFFF'?'border-color:#ddd;':'');
     return '<div class="sel-item"><div class="si-dot '+(isM?'multi':'')+'" style="'+ds+'"></div>'+n.name+'<button onclick="removeSelNgjyra(\''+type+'\','+i+')">x</button></div>';
-  }).join('');
+  }).join(''); }
+  if(type==='art') renderColorIndexPicker();
 }
 function removeSelNgjyra(type,i){
   var sel=type==='art'?artSelNgjyrat:pelSelNgjyrat;
   sel.splice(i,1); buildDefNgjyrat(type); renderSelNgjyrat(type);
+}
+var _artColorIndex = null;
+function renderColorIndexPicker(){
+  var wrap=document.getElementById('art-colorindex-wrap');
+  var cont=document.getElementById('art-colorindex-dots');
+  if(!wrap||!cont) return;
+  if(!artSelNgjyrat.length){ wrap.style.display='none'; return; }
+  wrap.style.display='';
+  cont.innerHTML=artSelNgjyrat.map(function(n,i){
+    var isM=n.hex==='multi';
+    var ds=isM?'background:conic-gradient(red,yellow,green,blue,red);':'background:'+n.hex+';'+(n.hex==='#FFFFFF'?'border:2px solid #ddd;':'border:2px solid rgba(0,0,0,.1);');
+    var checked=(_artColorIndex===i)||(_artColorIndex===null&&i===0);
+    var ringStyle=checked?'outline:2.5px solid var(--accent);outline-offset:2px;':'';
+    return '<label style="display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;font-size:10px;color:#555;font-weight:'+(checked?'700':'400')+';letter-spacing:.5px;">'
+      +'<div onclick="setColorIndex('+i+')" style="width:28px;height:28px;border-radius:50%;'+ds+ringStyle+';cursor:pointer;"></div>'
+      +n.name
+      +'</label>';
+  }).join('');
+}
+function setColorIndex(i){
+  _artColorIndex=i;
+  renderColorIndexPicker();
 }
 
 function fileToB64(f){return new Promise(function(r){var fr=new FileReader();fr.onload=function(e){r(e.target.result);};fr.readAsDataURL(f);});}
@@ -3249,6 +3277,7 @@ function saveArt(){
     perberja:getAllPerb('art'),
     pelhuraId:document.getElementById('art-pelhura-id').value||'',
     ngjyrat:artSelNgjyrat.slice(),
+    colorIndex:(_artColorIndex!==null?_artColorIndex:undefined),
     artCerts:artCerts.slice()
   };
   var eid=document.getElementById('art-eid').value;
@@ -3335,7 +3364,7 @@ function editArt(id){
   document.getElementById('art-emoji').value=a.emoji||'';
   artPhotos=(a.photos||[]).slice(); renderThumbs('art');
   artSelMasa=(a.sizes||[]).slice(); buildDefMasa(); renderSelMasa();
-  artSelNgjyrat=(a.ngjyrat||[]).slice(); buildDefNgjyrat('art'); renderSelNgjyrat('art');
+  artSelNgjyrat=(a.ngjyrat||[]).slice(); _artColorIndex=(a.colorIndex!==undefined&&a.colorIndex!==null)?Number(a.colorIndex):null; buildDefNgjyrat('art'); renderSelNgjyrat('art');
   var defP=(a.perberja||[]).filter(function(p){return DEFAULT_MATERIALET.includes(p.material);});
   artSelPerb=defP.map(function(p){return p.material;}); buildDefPerb('art'); setPerb('art-perb',a.perberja||[]);
   rebuildArtPelhuraSelect();
@@ -3366,7 +3395,7 @@ function resetArtForm(){
   document.getElementById('art-color').value='#FFF0F5';
   artPhotos=[]; document.getElementById('art-thumbs').innerHTML='';
   artSelMasa=[]; buildDefMasa(); renderSelMasa();
-  artSelNgjyrat=[]; buildDefNgjyrat('art'); renderSelNgjyrat('art');
+  artSelNgjyrat=[]; _artColorIndex=null; buildDefNgjyrat('art'); renderSelNgjyrat('art');
   artSelPerb=[]; buildDefPerb('art'); document.getElementById('art-perb').innerHTML=''; rebuildArtPelhuraSelect(); document.getElementById('art-pelhura-id').value='';
   artCerts=[]; renderArtCertsList();
   document.getElementById('art-ftitle').textContent='Shto Artikull te Ri';
