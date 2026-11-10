@@ -21,6 +21,13 @@ if (fs.existsSync(_pershkrimFile)) {
   for (const item of _list) if (item.code) _pershkrimMap[item.code] = item.pershkrim;
 }
 
+const _pershkrimPelhuraFile = path.join(__dirname, '..', 'pershkrimet_pelhura.json');
+const _pershkrimPelhuraMap = {};
+if (fs.existsSync(_pershkrimPelhuraFile)) {
+  const _listP = JSON.parse(fs.readFileSync(_pershkrimPelhuraFile, 'utf8'));
+  for (const item of _listP) if (item.name) _pershkrimPelhuraMap[item.name] = item.pershkrim;
+}
+
 /* ── Config ─────────────────────────────────────────────────── */
 const PROJECT_ID  = 'intal-webiste';
 const API_KEY     = 'AIzaSyCi0nHVXYruuRE33NDOrGLVhRwl0nupUfI';
@@ -675,6 +682,10 @@ function fabricHtml(fab, slug) {
     .seo-art-chip{background:#f0f0f0;border-radius:20px;padding:4px 12px;font-size:12px;font-weight:500;}
     .seo-art-cta{display:inline-block;background:#C8003E;color:#fff;text-decoration:none;border-radius:8px;padding:12px 28px;font-weight:700;font-size:13px;letter-spacing:0.5px;margin-top:8px;}
     .seo-art-cta:hover{background:#a8002e;}
+    .pel-pershkrim{margin-top:20px;padding-top:16px;border-top:1px solid #f0f0f0;}
+    .pel-pershkrim ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:7px;}
+    .pel-pershkrim li{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:#555;line-height:1.5;}
+    .pel-pershkrim li::before{content:"•";color:#C8003E;font-size:14px;line-height:1.3;flex-shrink:0;}
   </style>
 </head>
 <body>
@@ -689,8 +700,12 @@ function fabricHtml(fab, slug) {
       <div class="seo-art-info">
         ${fab.code ? `<p class="seo-art-code">Kodi: ${esc(fab.code)}</p>` : ''}
         <h1 class="seo-art-name">${title}</h1>
-        ${fab.desc ? `<p class="seo-art-desc">${esc(fab.desc)}</p>` : ''}
         <a href="/pelhura" class="seo-art-cta">Shiko të gjitha pelhurat</a>
+        ${(() => {
+          const pts = fab.name && _pershkrimPelhuraMap[fab.name];
+          if (!pts || !pts.length) return '';
+          return `<div class="pel-pershkrim"><ul>${pts.map(b=>`<li>${esc(b)}</li>`).join('')}</ul></div>`;
+        })()}
       </div>
     </div>
   </div>
