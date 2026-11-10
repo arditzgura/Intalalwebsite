@@ -356,7 +356,7 @@ function articleHtml(art, slug, suggestions, colorVariants) {
       <div class="info">
         ${art.code ? `<p class="info-eyebrow">Art: ${esc(art.code)}</p>` : ''}
         <h1 class="info-name">${title}</h1>
-        ${art.desc ? `<p class="info-desc">${esc(rawDesc)}</p>` : '<div style="height:1px;background:#ebebeb;margin:16px 0 24px;"></div>'}
+        <div style="height:1px;background:#ebebeb;margin:16px 0 24px;"></div>
 
         ${sizesHtml}
         ${colorsHtml}
