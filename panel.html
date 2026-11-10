@@ -1209,6 +1209,11 @@ tr.drag-over{border-top:2.5px solid var(--pink);}
             <div class="fg"><label>Ngjyra Sfondit</label><input type="color" id="art-color" value="#FFF0F5" style="height:36px;cursor:pointer;"></div>
             <div class="fg"><label>Emoji (pa foto)</label><input type="text" id="art-emoji" placeholder="&#129394;" maxlength="4"></div>
             <div class="fg full">
+              <label>Përshkrimi (4 pika — shfaqet në faqen e artikullit)</label>
+              <textarea id="art-pershkrim" rows="5" placeholder="• Rreshti 1&#10;• Rreshti 2&#10;• Rreshti 3&#10;• Rreshti 4" style="width:100%;border:1.5px solid #e0e0e0;border-radius:8px;padding:10px 12px;font-size:12px;font-family:inherit;resize:vertical;outline:none;box-sizing:border-box;"></textarea>
+              <div style="font-size:10px;color:#aaa;margin-top:4px;">Çdo rresht = një pikë. Ndahen me Enter. Nuk nevojiten • karaktere.</div>
+            </div>
+            <div class="fg full">
               <label>Certifikata (shfaqen ne popup)</label>
               <div style="font-size:10px;color:#aaa;margin-bottom:6px;">Ngarkoni logot e certifikatave per kete artikull — shfaqen me sfond transparent ne popup.</div>
               <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;" id="art-certs-list">
@@ -3278,6 +3283,7 @@ function saveArt(){
     pelhuraId:document.getElementById('art-pelhura-id').value||'',
     ngjyrat:artSelNgjyrat.slice(),
     colorIndex:(_artColorIndex!==null?_artColorIndex:undefined),
+    pershkrim:(document.getElementById('art-pershkrim').value.trim().split('\n').map(function(l){return l.replace(/^[•\-\*]\s*/,'').trim();}).filter(function(l){return l.length>0;})),
     artCerts:artCerts.slice()
   };
   var eid=document.getElementById('art-eid').value;
@@ -3370,6 +3376,7 @@ function editArt(id){
   rebuildArtPelhuraSelect();
   document.getElementById('art-pelhura-id').value=a.pelhuraId||'';
   artCerts=(a.artCerts||[]).slice(); renderArtCertsList();
+  document.getElementById('art-pershkrim').value=(a.pershkrim&&a.pershkrim.length)?a.pershkrim.join('\n'):'';
   document.getElementById('art-ftitle').textContent='Ndrysho Artikullin';
   document.querySelector('#tc-art .fcard').scrollIntoView({behavior:'smooth'});
 }
@@ -3389,7 +3396,7 @@ function dupArt(id){
   saveArtSt(); renderArtSubFilters(); renderArtTbl(); renderStats(); renderPublic(); showToast('Artikulli u duplifikua!');
 }
 function resetArtForm(){
-  ['art-eid','art-name','art-code','art-desc','art-emoji'].forEach(function(id){document.getElementById(id).value='';});
+  ['art-eid','art-name','art-code','art-desc','art-emoji','art-pershkrim'].forEach(function(id){document.getElementById(id).value='';});
   artSelKat=[]; artSelSub=[];
   renderKatChips(); renderSubChips();
   document.getElementById('art-color').value='#FFF0F5';

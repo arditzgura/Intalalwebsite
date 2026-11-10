@@ -382,7 +382,9 @@ function articleHtml(art, slug, suggestions, colorVariants) {
             </a>
           </div>
         ${(() => {
-          const pts = art.code && _pershkrimMap[art.code];
+          const pts = (art.pershkrim && art.pershkrim.length ? art.pershkrim : null)
+                   || (art.code && _pershkrimMap[art.code])
+                   || null;
           if (!pts || !pts.length) return '';
           return `<div class="art-pershkrim"><ul>${pts.map(b=>`<li>${esc(b)}</li>`).join('')}</ul></div>`;
         })()}
