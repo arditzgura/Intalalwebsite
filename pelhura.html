@@ -341,13 +341,15 @@
           :'<div style="width:100%;height:100%;background:#e0e0e0;display:flex;align-items:center;justify-content:center;font-size:40px;">&#129525;</div>';
         var hoverAttr=hasM?' onmouseenter="hoverEnter(this)" onmouseleave="hoverLeave(this)"':'';
         var arr=hasM?'<button class="art-card-arr l" onclick="cardStep(event,this,-1)">&#8592;</button><button class="art-card-arr r" onclick="cardStep(event,this,1)">&#8594;</button>':'';
-        return '<div class="art-card" onclick="openDet(\''+a.id+'\')">'
+        var pelSlug=_pelSlugs[a.id];
+        var cardTag=pelSlug?'<a class="art-card" href="/pelhura/'+pelSlug+'/" style="text-decoration:none;color:inherit;display:block;">':'<div class="art-card" onclick="openDet(\''+a.id+'\')">';
+        var cardClose=pelSlug?'</a>':'</div>';
+        return cardTag
           +'<div class="art-card-img-wrap"'+pa+hoverAttr+'>'+imgEl+arr+'</div>'
           +'<div style="padding:12px 14px 16px;">'
           +'<p style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:3px;">'+(Array.isArray(a.kat)?a.kat.join(', '):(a.kat||''))+'</p>'
           +'<p style="font-size:14px;font-weight:500;letter-spacing:-0.2px;color:var(--black);">'+a.name+'</p>'
-          +(a.desc?'<p style="font-size:11px;color:var(--muted);margin-top:2px;">'+a.desc.slice(0,60)+'</p>':'')
-          +'</div></div>';
+          +'</div>'+cardClose;
       }).join('');
     }
 
@@ -584,14 +586,21 @@
         grid.innerHTML = found.map(function(a){
           var photos=(a.photos||[]).map(getPhotoSrc).filter(Boolean);
           var img0=photos[0]||'';
-          return '<div class="art-card" onclick="openDet(\''+a.id+'\')"><div class="art-card-img-wrap">'
+          var pelSlug=_pelSlugs[a.id];
+          var cT=pelSlug?'<a class="art-card" href="/pelhura/'+pelSlug+'/" style="text-decoration:none;color:inherit;display:block;">':'<div class="art-card" onclick="openDet(\''+a.id+'\')">';
+          var cC=pelSlug?'</a>':'</div>';
+          return cT+'<div class="art-card-img-wrap">'
             +(img0?'<img src="'+img0+'" data-idx="0" style="width:100%;height:100%;object-fit:cover;display:block;">':'<div style="width:100%;height:100%;background:#e0e0e0;display:flex;align-items:center;justify-content:center;font-size:40px;">&#129525;</div>')
             +'</div><div style="padding:12px 14px 16px;"><p style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:3px;">'+(Array.isArray(a.kat)?a.kat.join(', '):(a.kat||''))+'</p>'
-            +'<p style="font-size:14px;font-weight:500;letter-spacing:-0.2px;color:var(--black);">'+a.name+'</p></div></div>';
+            +'<p style="font-size:14px;font-weight:500;letter-spacing:-0.2px;color:var(--black);">'+a.name+'</p></div>'+cC;
         }).join('');
       }
       if (window._setSearchCount) window._setSearchCount(found.length, _all.length);
     };
+
+    // Load pelhura slug map for SEO URLs
+    var _pelSlugs={};
+    fetch('/pelhura/slugs.json').then(function(r){return r.json();}).then(function(m){_pelSlugs=m||{};}).catch(function(){});
 
     // Init — render immediately from cache, then always fetch fresh from Supabase and re-render
     (async function(){

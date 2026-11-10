@@ -940,15 +940,20 @@ async function main() {
   // We write into a subfolder inside /pelhura/ but that clashes with pelhura.html
   // Instead write to /pelhura/<slug>/index.html — GitHub Pages serves dirs fine
   const pelSlugSet = new Set();
+  const pelSlugMap = {}; // id → slug
   for (const fab of pelhurat) {
     if (!fab.name) continue;
     const base = slugify(fab.name + (fab.code ? '-' + fab.code : ''));
     const slug = uniqueSlug(base, pelSlugSet);
     pelSlugs.push(slug);
+    if (fab.id) pelSlugMap[fab.id] = slug;
     const dir = path.join(ROOT, 'pelhura', slug);
     ensureDir(dir);
     fs.writeFileSync(path.join(dir, 'index.html'), fabricHtml(fab, slug), 'utf8');
   }
+  const pelBaseDir = path.join(ROOT, 'pelhura');
+  ensureDir(pelBaseDir);
+  fs.writeFileSync(path.join(pelBaseDir, 'slugs.json'), JSON.stringify(pelSlugMap), 'utf8');
   console.log(`Generated ${pelSlugs.length} fabric pages → /pelhura/<slug>/`);
 
   // Write sitemap
