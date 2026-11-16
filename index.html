@@ -1605,7 +1605,7 @@
       await sbSyncCache(); // sync artikujt + pelhurat + kategorisettings
       var gotFresh = await sbSyncLocal('page_home_v1','intal_home_v1');
       renderShowcase();   // re-render with fresh data
-      applyHomeData();    // apliko hero/about/services të reja (kritike për përdorues të rinj)
+      if (typeof applyHomeData === 'function') applyHomeData();
       sbTrack('pageView', {page:'home'});
     })();
   })();
