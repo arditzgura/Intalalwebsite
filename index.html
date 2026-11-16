@@ -522,7 +522,7 @@
       </div>
     </div>
   </nav>
-
+  <main id="main-content">
   <!-- ── Hero ────────────────────────────────────────────────── -->
   <section class="hero" aria-label="Hero">
   <!-- LCP img: ngarkohet menjëherë, vendoset si background nga JS -->
@@ -789,12 +789,13 @@
     </div>
 
     <!-- Footer strip -->
-    <div class="contact-footer">
+    <footer class="contact-footer">
       <span class="contact-brand">Intal <strong>UNDERWEAR</strong></span>
       <span class="contact-copy">© <span id="cp-yr"></span> Intal Albania</span>
-      <button onclick="openAdminModal()" style="display:block;width:100%;height:28px;background:#0a0a0a;border:none;cursor:pointer;margin-top:4px;outline:none;"></button>
-    </div>
+      <button onclick="openAdminModal()" style="display:block;width:100%;height:28px;background:#0a0a0a;border:none;cursor:pointer;margin-top:4px;"></button>
+    </footer>
   </section>
+  </main>
 
   <!-- Admin modal built by JS on demand — not rendered in static HTML for SEO -->
   <!-- ── Menu left drawer ──────────────────────────────────── -->
@@ -1121,6 +1122,7 @@
   <script>
     window.addEventListener('load', function(){
       if(typeof gsap==='undefined'||typeof ScrollTrigger==='undefined') return;
+      if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     (() => {
       gsap.registerPlugin(ScrollTrigger);
       const ease = 'power3.out';
