@@ -759,7 +759,7 @@
       var img0=photos[0]||'';
       var hasM=photos.length>1;
       var pa=hasM?' data-photos=\''+JSON.stringify(photos).replace(/'/g,'&#39;')+'\'':'';
-      var imgEl=img0?'<img src="'+img0+'" data-idx="0" style="width:100%;height:100%;object-fit:cover;display:block;">'
+      var imgEl=img0?'<img src="'+clImg(img0,600)+'" data-idx="0" style="width:100%;height:100%;object-fit:cover;display:block;" width="600" height="800">'
         :'<div style="width:100%;height:100%;background:#e0e0e0;display:flex;align-items:center;justify-content:center;font-size:40px;">&#128085;</div>';
       var hoverAttr=hasM?' onmouseenter="hoverEnter(this)" onmouseleave="hoverLeave(this)"':'';
       var arr=hasM?'<button class="art-card-arr l" onclick="cardStep(event,this,-1)">&#8592;</button><button class="art-card-arr r" onclick="cardStep(event,this,1)">&#8594;</button>':'';
@@ -1069,10 +1069,10 @@
       nextBtn.innerHTML='&#8594;'; nextBtn.disabled=(ai>=total-1);
 
       var mi=photos.length
-        ?'<img src="'+photos[idx]+'" style="width:100%;height:100%;object-fit:contain;display:block;cursor:pointer;" onclick="setPI('+(idx+1)+')">'
+        ?'<img src="'+clImg(photos[idx],1200)+'" style="width:100%;height:100%;object-fit:contain;display:block;cursor:pointer;" onclick="setPI('+(idx+1)+')" alt="'+(a.name||'')+'">'
         :'<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:60px;">&#128085;</div>';
       var th='';
-      if(photos.length>1){ th='<div id="art-det-thumbs">'; photos.forEach(function(ph,i){ th+='<img src="'+ph+'" class="det-th'+(i===idx?' active':'')+'" onclick="setPI('+i+')" alt="">'; }); th+='</div>'; }
+      if(photos.length>1){ th='<div id="art-det-thumbs">'; photos.forEach(function(ph,i){ th+='<button type="button" class="det-th-btn'+(i===idx?' active':'')+'" onclick="setPI('+i+')" aria-label="Foto '+(i+1)+'" style="background:none;border:none;padding:0;cursor:pointer;"><img src="'+clImg(ph,200)+'" class="det-th'+(i===idx?' active':'')+'" alt="Foto '+(i+1)+'"></button>'; }); th+='</div>'; }
       window._photoZoomed=false;
       document.getElementById('art-detail-photos').innerHTML='<div id="det-main-wrap" style="position:relative;flex:1;overflow:hidden;min-height:0;">'+mi+'</div>'+th;
       // Touch: swipe (1-gisht, jo i zmadhuar) + pinch-zoom + pan + double-tap reset

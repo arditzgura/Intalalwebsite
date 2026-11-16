@@ -19,7 +19,7 @@ function _fbInit() { return _fbDb; }
 
 /* ---- Cloudinary image helper (e njëjta si me Supabase) ---- */
 function sbImgUrl(url) {
-  return url || '';
+  return clImg(url || '');
 }
 
 /* ---- CRUD bazë ---- */
