@@ -159,13 +159,12 @@ function articleHtml(art, slug, suggestions, colorVariants) {
   {"@context":"https://schema.org","@type":"Product","name":"${title.replace(/\\/g,'\\\\').replace(/"/g,'\\"')}","description":"${desc.replace(/\\/g,'\\\\').replace(/"/g,'\\"')}","brand":{"@type":"Brand","name":"Intal Albania"},"sku":"${esc(art.code||slug)}","image":"${esc(ogImg)}","offers":{"@type":"Offer","availability":"https://schema.org/InStock","seller":{"@type":"Organization","name":"Intal Albania","url":"${BASE_URL}"}}}
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css">
   <link rel="stylesheet" href="/css/main.css">
   <link rel="icon" type="image/png" href="/favicon.png">
   <style>
     *{box-sizing:border-box;margin:0;padding:0;}
-    body{font-family:'Montserrat',sans-serif;background:#fff;color:#0a0a0a;min-height:100vh;padding-top:64px;}
+    body{font-family:'Switzer',sans-serif;background:#fff;color:#0a0a0a;min-height:100vh;padding-top:64px;}
 
     /* ── Layout ── */
     .page{width:100%;padding:28px 3vw 60px;}
@@ -679,7 +678,7 @@ function fabricHtml(fab, slug) {
   <link rel="stylesheet" href="/css/main.css">
   <link rel="icon" type="image/png" href="/favicon.png">
   <style>
-    body{font-family:'Montserrat',sans-serif;margin:0;padding:0;background:#fafafa;color:#0a0a0a;}
+    body{font-family:'Switzer',sans-serif;margin:0;padding:0;background:#fafafa;color:#0a0a0a;}
     .seo-art{max-width:860px;margin:0 auto;padding:32px 16px 64px;}
     .seo-art-back{display:inline-flex;align-items:center;gap:6px;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:#888;text-decoration:none;margin-bottom:24px;}
     .seo-art-back:hover{color:#C8003E;}
