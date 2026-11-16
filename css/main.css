@@ -133,7 +133,7 @@ body {
 .navbar-search i { font-size: 16px; color: var(--muted); flex-shrink: 0; }
 .navbar-search input {
   border: none;
-  outline: none;
+  outline: none; /* input brenda search — focus-visible e mbulon */
   background: transparent;
   font-size: 11px;
   font-weight: 400;
@@ -1315,4 +1315,45 @@ a.menu-drawer-loc:hover .menu-drawer-loc-addr {
 
 .simple-footer .contact-footer {
   padding: 28px 0;
+}
+
+/* ── Tokens shtesë (kontrast mbi sfond të errët) ──────────── */
+:root {
+  --on-dark:        #fafafa;
+  --on-dark-muted:  #a3a3a3;
+  --on-dark-subtle: #8a8a8a;
+}
+
+/* ── Focus indicator (WCAG 2.4.7) ───────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+/* Mbi sfond të zi: outline i bardhë */
+.menu-drawer :focus-visible,
+.navbar--dark :focus-visible {
+  outline-color: #fff;
+}
+
+/* ── Touch targets ≥44×44px (WCAG 2.5.5) ───────────────── */
+.nav-hamburger {
+  padding: 14px;
+  margin: -14px;
+}
+.menu-drawer-close {
+  padding: 12px;
+  margin: -12px;
+}
+
+/* ── Reduced motion ─────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *,
+  *::before,
+  *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
 }

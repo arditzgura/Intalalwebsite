@@ -342,7 +342,7 @@ function articleHtml(art, slug, suggestions, colorVariants) {
     </div>
   </aside>
 
-  <div class="page">
+  <main class="page">
   <div class="page-inner">
 
     <a href="/artikujt" class="back-top">
@@ -437,8 +437,9 @@ function articleHtml(art, slug, suggestions, colorVariants) {
     </div>
   </section>` : ''}
 
+  </main>
   <!-- Footer -->
-  <div class="simple-footer">
+  <footer class="simple-footer">
     <div class="contact-locations">
       <a class="contact-loc" href="https://maps.google.com/?q=Rrobaqep%C3%ABsi+INTAL,+Rruga+Arbanes,+Vaqarr,+Tiran%C3%AB+1035" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;display:block;cursor:pointer;">
         <p class="contact-loc-name">Selia Kryesore</p>
@@ -449,11 +450,11 @@ function articleHtml(art, slug, suggestions, colorVariants) {
         <p class="contact-loc-addr">Intal, Rruga 5 Maji 67/1, Tiranë 1032</p>
       </a>
     </div>
-    <div class="contact-footer">
+    <footer class="contact-footer">
       <span class="contact-brand">Intal <strong>UNDERWEAR</strong></span>
       <span class="contact-copy">© <span id="cp-yr"></span> Intal Albania</span>
-    </div>
-  </div>
+    </footer>
+  </footer>
 
   <script src="/js/main.js"></script>
   <script>
