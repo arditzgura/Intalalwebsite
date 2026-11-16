@@ -42,8 +42,6 @@
   }
   </script>
   <!-- Preconnect për burime externe -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://cdn.jsdelivr.net">  <!-- Preload hero image nga cache me prioritet maksimal -->
   <script>
   try{
@@ -258,7 +256,7 @@
       color: #fff;
       margin-bottom: 14px;
       line-height: 1;
-      font-family: Georgia, 'Times New Roman', serif;
+      font-family: 'Switzer', sans-serif;
     }
     .showcase-body-cta {
       display: inline-flex;
@@ -430,8 +428,8 @@
       color: var(--muted);
     }
   </style>
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-<script>emailjs.init('w5NLtDcnAYxXvl09w');</script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js" defer></script>
+<script>document.addEventListener('DOMContentLoaded',function(){if(typeof emailjs!=='undefined')emailjs.init('w5NLtDcnAYxXvl09w');});</script>
   <!-- JSON-LD: Organization + LocalBusiness -->
   <script type="application/ld+json">
   {
@@ -529,7 +527,7 @@
   <section class="hero" aria-label="Hero">
   <!-- LCP img: ngarkohet menjëherë, vendoset si background nga JS -->
   <img id="hero-lcp-img"
-    src="https://res.cloudinary.com/djfrquwex/image/upload/v1785145894/fzowtsxvids8lsz2ef26.webp"
+    src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1600/v1785145894/fzowtsxvids8lsz2ef26.webp"
     fetchpriority="high" decoding="async" aria-hidden="true"
     alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;">
     <div class="hero-content">
@@ -1269,10 +1267,10 @@
           : 'Zbulo koleksionin e plotë të '+kat.toLowerCase()+' me cilësi të lartë prodhimi shqiptar.');
         var desc = customDesc || defaultDesc;
         var displayName = tCat(kat);
-        html += '<div onclick="location.href=\''+href+'\'">'
+        html += '<a href="'+href+'" style="text-decoration:none;color:inherit;display:block;">'
           +'<div class="showcase-card">'
           +'<div class="showcase-img-wrap">'
-          +(img ? '<img src="'+img+'" alt="'+kat+'" loading="lazy">' : '')
+          +(img ? '<img src="'+clImg(img,600)+'" alt="'+kat+'" loading="lazy">' : '')
           +'</div>'
           +'<div class="showcase-body">'
           +'<p class="showcase-body-eyebrow">'+cardEyebrow+'</p>'
@@ -1281,7 +1279,7 @@
           +'</div>'
           +'</div>'
           +'<div class="showcase-sublabel"><strong>'+displayName+'</strong> <span>&middot; '+desc+'</span></div>'
-          +'</div>';
+          +'</a>';
       });
       grid.innerHTML = html || '<p style="color:var(--muted);font-size:13px;">Nuk ka kategori. Shto nga paneli admin.</p>';
       /* Vendos numrin e kolonave dinamikisht (të gjitha në një rresht) */
@@ -1305,20 +1303,23 @@
         var hasMulti = photos.length > 1;
         var photosJson = hasMulti ? ' data-photos=\''+JSON.stringify(photos).replace(/'/g,'&#39;')+'\'' : '';
         var imgEl = img0
-          ? '<img src="'+img0+'" data-idx="0" style="width:100%;height:100%;object-fit:cover;display:block;">'
+          ? '<img src="'+clImg(img0,600)+'" data-idx="0" style="width:100%;height:100%;object-fit:cover;display:block;" width="600" height="800">'
           : '<div style="width:100%;height:100%;background:#e0e0e0;display:flex;align-items:center;justify-content:center;font-size:40px;">&#128085;</div>';
         var hoverAttr = hasMulti ? ' onmouseenter="hoverEnter(this)" onmouseleave="hoverLeave(this)"' : '';
         var arrows = hasMulti
           ? '<button class="art-card-arr l" onclick="cardStep(event,this,-1)">&#8592;</button>'
             +'<button class="art-card-arr r" onclick="cardStep(event,this,1)">&#8594;</button>'
           : '';
-        return '<div class="art-card" onclick="openArtDetail(\''+a.id+'\')">'
+        var artSlug = window._slugs && window._slugs[a.id];
+        var cardOpen = artSlug ? '<a class="art-card" href="/artikull/'+artSlug+'/" style="text-decoration:none;color:inherit;display:block;">' : '<div class="art-card" onclick="openArtDetail(\''+a.id+'\')">';
+        var cardClose2 = artSlug ? '</a>' : '</div>';
+        return cardOpen
           +'<div class="art-card-img-wrap"'+photosJson+hoverAttr+'>'+imgEl+arrows+'</div>'
           +'<div style="padding:14px 16px 18px;">'
           +'<p style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;">'+(a.kat||'')+'</p>'
           +'<p style="font-size:14px;font-weight:500;letter-spacing:-0.2px;color:var(--black);">'+a.name+'</p>'
           +(a.code?'<p style="font-size:11px;color:var(--muted);margin-top:3px;">'+a.code+'</p>':'')
-          +'</div></div>';
+          +'</div>'+cardClose2;
       }).join('');
     }
 
@@ -1478,14 +1479,16 @@
       nextBtn.disabled = !hasNext;
 
       var mainImg = photos.length
-        ? '<img src="'+photos[idx]+'" style="width:100%;height:100%;object-fit:cover;display:block;cursor:pointer;" onclick="window.setPhotoIdx('+(idx+1)+')">'
+        ? '<img src="'+clImg(photos[idx],1200)+'" style="width:100%;height:100%;object-fit:cover;display:block;cursor:pointer;" onclick="window.setPhotoIdx('+(idx+1)+')" alt="'+(_detailState.articles[_detailState.artIdx].name||'')+'">'
         : '<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:60px;background:#f0f0f0;">&#128085;</div>';
 
       var thumbs = '';
       if(photos.length > 1){
         thumbs = '<div id="art-det-thumbs">';
         photos.forEach(function(ph, i){
-          thumbs += '<img src="'+ph+'" class="det-th'+(i===idx?' active':'')+'" onclick="window.setPhotoIdx('+i+')">';
+          thumbs += '<button type="button" class="det-th-btn'+(i===idx?' active':'')+'" onclick="window.setPhotoIdx('+i+')" aria-label="Foto '+(i+1)+'" style="background:none;border:none;padding:0;cursor:pointer;">'
+            +'<img src="'+clImg(ph,200)+'" class="det-th'+(i===idx?' active':'')+'" alt="Foto '+(i+1)+'">'
+            +'</button>';
         });
         thumbs += '</div>';
       }
@@ -1916,9 +1919,9 @@
 <!-- Floating contact buttons -->
 <div id="float-btns" style="position:fixed;bottom:24px;right:20px;z-index:9999;display:flex;flex-direction:column;align-items:center;gap:10px;">
   <a href="https://wa.me/355692776636" target="_blank" rel="noopener" aria-label="WhatsApp"
-     style="width:52px;height:52px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(37,211,102,.45);transition:transform .18s,box-shadow .18s;text-decoration:none;"
-     onmouseover="this.style.transform='scale(1.1)';this.style.boxShadow='0 6px 22px rgba(37,211,102,.6)'"
-     onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 4px 16px rgba(37,211,102,.45)'">
+     style="width:52px;height:52px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(0,0,0,.25);transition:transform .18s,box-shadow .18s;text-decoration:none;"
+     onmouseover="this.style.transform='scale(1.1)';this.style.boxShadow='0 6px 20px rgba(0,0,0,.35)'"
+     onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 4px 14px rgba(0,0,0,.25)'">
     <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M16 3C8.82 3 3 8.82 3 16c0 2.34.63 4.6 1.83 6.57L3 29l6.6-1.8A13 13 0 0 0 16 29c7.18 0 13-5.82 13-13S23.18 3 16 3z" fill="#fff"/>
       <path d="M16 5.2A10.8 10.8 0 0 0 5.2 16c0 2 .54 3.96 1.57 5.66l.27.44-1.14 4.16 4.27-1.12.43.25A10.8 10.8 0 1 0 16 5.2zm6.3 15.34c-.26.73-1.52 1.4-2.1 1.48-.54.08-1.22.11-1.97-.12-.45-.14-1.03-.33-1.77-.65-3.12-1.35-5.16-4.5-5.32-4.71-.15-.21-1.27-1.69-1.27-3.22s.8-2.28 1.09-2.6c.28-.3.62-.38.83-.38l.6.01c.19.01.45-.07.7.54.27.62.9 2.2.98 2.36.08.15.13.34.03.55-.1.2-.15.33-.3.5-.14.18-.3.4-.43.53-.15.15-.3.31-.13.6.17.3.76 1.25 1.63 2.02 1.12 1 2.06 1.3 2.36 1.46.3.15.47.12.64-.07.18-.2.76-.88 .96-1.18.2-.3.4-.25.67-.15.27.1 1.73.82 2.03.96.3.15.5.22.57.34.08.12.08.7-.18 1.43z" fill="#25D366"/>
@@ -1936,7 +1939,7 @@
 
 <!-- PROMO POPUP -->
 <div id="promo-popup-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:5000;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(4px);" onclick="if(event.target===this)closePromoPopup()">
-  <div style="position:relative;max-width:480px;width:100%;animation:promoPopIn .35s cubic-bezier(.34,1.4,.64,1);">
+  <div style="position:relative;max-width:480px;width:100%;animation:promoPopIn .35s cubic-bezier(.22,1,.36,1);">
     <button onclick="closePromoPopup()" style="position:absolute;top:-14px;right:-14px;z-index:2;background:#111;color:#fff;border:none;border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.4);line-height:1;">&#x2715;</button>
     <div style="border-radius:12px;overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,.4);cursor:pointer;" onclick="openPromoLink()">
       <img id="promo-popup-img" src="" style="width:100%;display:block;max-height:80vh;object-fit:contain;">
@@ -1999,15 +2002,15 @@
       bg.setAttribute('style','display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;align-items:center;justify-content:center;backdrop-filter:blur(6px);');
       bg.innerHTML='<div style="background:#fff;border-radius:14px;padding:2rem;width:90%;max-width:320px;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,.4);">'
         +'<div style="background:#C8003E;padding:6px 14px;border-radius:6px;display:inline-block;margin-bottom:1.2rem;">'
-        +'<div style="font-family:\'Montserrat\',sans-serif;font-weight:900;font-size:18px;color:#fff;letter-spacing:-1px;line-height:1;">intal</div>'
-        +'<div style="font-family:\'Montserrat\',sans-serif;font-size:7px;letter-spacing:4px;color:#fff;margin-top:-2px;font-weight:700;">ADMIN</div>'
+        +'<div style="font-family:\'Switzer\',sans-serif;font-weight:900;font-size:18px;color:#fff;letter-spacing:-1px;line-height:1;">intal</div>'
+        +'<div style="font-family:\'Switzer\',sans-serif;font-size:7px;letter-spacing:4px;color:#fff;margin-top:-2px;font-weight:700;">ADMIN</div>'
         +'</div>'
-        +'<h2 style="font-family:\'Montserrat\',sans-serif;font-size:16px;font-weight:700;margin-bottom:4px;">Hyrja në Panel</h2>'
+        +'<h2 style="font-family:\'Switzer\',sans-serif;font-size:16px;font-weight:700;margin-bottom:4px;">Hyrja në Panel</h2>'
         +'<p style="font-size:12px;color:#888;margin-bottom:1.2rem;">Vendosni kredencialet e administratorit</p>'
         +'<input type="text" id="al-user" placeholder="Përdoruesi" autocomplete="off" style="width:100%;background:#f8f8f8;border:1px solid #e2e8f0;border-radius:7px;padding:9px 13px;font-size:13px;margin-bottom:8px;box-sizing:border-box;outline:none;" onkeydown="if(event.key===\'Enter\')adminLogin()">'
         +'<input type="password" id="al-pass" placeholder="Fjalëkalimi" style="width:100%;background:#f8f8f8;border:1px solid #e2e8f0;border-radius:7px;padding:9px 13px;font-size:13px;margin-bottom:8px;box-sizing:border-box;outline:none;" onkeydown="if(event.key===\'Enter\')adminLogin()">'
         +'<div id="al-err" style="display:none;color:#C53030;font-size:11px;margin-bottom:8px;">Kredenciale të gabuara!</div>'
-        +'<button onclick="adminLogin()" style="width:100%;background:#C8003E;color:#fff;border:none;border-radius:7px;padding:11px;font-family:\'Montserrat\',sans-serif;font-weight:700;font-size:13px;cursor:pointer;margin-bottom:8px;">Hyr</button>'
+        +'<button onclick="adminLogin()" style="width:100%;background:#C8003E;color:#fff;border:none;border-radius:7px;padding:11px;font-family:\'Switzer\',sans-serif;font-weight:700;font-size:13px;cursor:pointer;margin-bottom:8px;">Hyr</button>'
         +'<button onclick="document.getElementById(\'admin-login-modal\').style.display=\'none\'" style="width:100%;background:transparent;border:none;color:#aaa;font-size:12px;cursor:pointer;padding:4px;">Anulo</button>'
         +'</div>';
       document.body.appendChild(bg);

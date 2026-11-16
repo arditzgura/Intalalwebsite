@@ -2,6 +2,16 @@
    Intal Underwear — Shared JavaScript
    ============================================================ */
 
+/* Cloudinary responsive transform helper */
+function clImg(url, w) {
+  if (!url || url.indexOf('res.cloudinary.com') === -1) return url || '';
+  if (url.indexOf('f_auto') !== -1) {
+    if (!w || url.indexOf('w_') !== -1) return url;
+    return url.replace('/image/upload/', '/image/upload/w_' + w + ',');
+  }
+  return url.replace('/image/upload/', '/image/upload/f_auto,q_auto' + (w ? ',w_' + w : '') + '/');
+}
+
 /* ── Navbar + Filter bar — fshihen/shfaqen bashkë ────────── */
 document.addEventListener('DOMContentLoaded', function () {
   var navbar = document.querySelector('.navbar');

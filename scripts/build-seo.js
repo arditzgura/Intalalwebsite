@@ -13,6 +13,15 @@ const fs   = require('fs');
 const path = require('path');
 const https = require('https');
 
+function clImg(url, w) {
+  if (!url || url.indexOf('res.cloudinary.com') === -1) return url || '';
+  if (url.indexOf('f_auto') !== -1) {
+    if (!w || url.indexOf('w_') !== -1) return url;
+    return url.replace('/image/upload/', '/image/upload/w_' + w + ',');
+  }
+  return url.replace('/image/upload/', '/image/upload/f_auto,q_auto' + (w ? ',w_' + w : '') + '/');
+}
+
 /* ── Përshkrimet ─────────────────────────────────────────────── */
 const _pershkrimFile = path.join(__dirname, '..', 'pershkrimet.json');
 const _pershkrimMap = {};
@@ -85,7 +94,8 @@ function articleHtml(art, slug, suggestions, colorVariants) {
   const title   = esc(art.name || 'Artikull');
   const rawDesc = art.desc || `${art.name} nga Intal Albania — fabrikë shqiptare e të brendshmeve që nga 1994.`;
   const desc    = esc(rawDesc);
-  const photos  = (art.photos || []).map(p => typeof p === 'string' ? p : (p.src || p.url || '')).filter(Boolean);
+  const photos  = (art.photos || []).map(p => clImg(typeof p === 'string' ? p : (p.src || p.url || ''), 1200)).filter(Boolean);
+  const photosTh = photos.map(p => clImg(p, 200));
   const photo   = photos[0] || '';
   const ogImg   = photo || `${BASE_URL}/og_image.png`;
   const canon   = `${BASE_URL}/artikull/${slug}`;
@@ -110,7 +120,7 @@ function articleHtml(art, slug, suggestions, colorVariants) {
   const thumbsHtml = photos.length > 1
     ? photos.map((src, i) =>
         `<button class="thumb ${i===0?'active':''}" onclick="if(window.innerWidth<=680){openLightbox(${i})}else{setPhoto(${i})}" aria-label="Foto ${i+1}">` +
-        `<img src="${esc(src)}" alt="${title} foto ${i+1}"></button>`
+        `<img src="${esc(photosTh[i]||src)}" alt="${title} foto ${i+1}"></button>`
       ).join('')
     : '';
 
