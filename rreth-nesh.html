@@ -859,6 +859,24 @@
           grid.innerHTML=html;
         }
       }
+      // FAQ
+      if(d.faq && d.faq.length){
+        var faqList = document.getElementById('rn-faq-list');
+        if(faqList){
+          var faqHtml = '';
+          d.faq.forEach(function(item, i){
+            if(!item.q && !item.a) return;
+            faqHtml += '<div class="rn-faq-item">'
+              +'<dt class="rn-faq-q" id="rn-faq-'+i+'-q" onclick="this.parentElement.classList.toggle(\'open\')">'
+              +(item.q||'')
+              +'</dt>'
+              +'<dd class="rn-faq-a" id="rn-faq-'+i+'-a">'+(item.a||'')+'</dd>'
+              +'</div>';
+          });
+          faqList.innerHTML = faqHtml;
+        }
+      }
+
     } catch(e){ console.warn('Rreth Nesh render error:', e); }
     } // end applyData
 

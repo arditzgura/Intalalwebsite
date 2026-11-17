@@ -62,6 +62,12 @@
   #save-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--black);color:#fff;padding:8px 20px;border-radius:4px;font-size:12px;font-weight:500;letter-spacing:.5px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999;}
   #save-toast.show{opacity:1;}
 
+  /* ── FAQ items ── */
+  .faq-item-wrap { background:var(--bg); border:.5px solid var(--border); border-radius:6px; padding:12px 14px; margin-bottom:10px; position:relative; }
+  .faq-item-num { font-size:9px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--muted); margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; }
+  .faq-del-btn { background:none; border:none; color:var(--muted); cursor:pointer; font-size:14px; padding:0; line-height:1; }
+  .faq-del-btn:hover { color:var(--accent); }
+
   /* ── Partners grid ── */
   .partners-grid-edit{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:4px;}
   .pslot{position:relative;aspect-ratio:3/2;background:var(--bg);border:.5px dashed var(--border);border-radius:4px;overflow:hidden;cursor:pointer;transition:border-color .15s;}
@@ -101,6 +107,7 @@
     <div class="ptab" data-tab="overview">Kompania</div>
     <div class="ptab" data-tab="mv">Misioni</div>
     <div class="ptab" data-tab="values">Vlerat</div>
+    <div class="ptab" data-tab="faq">FAQ</div>
     <div class="ptab" data-tab="partners">Partnerët</div>
     <div class="ptab" data-tab="cta">CTA</div>
   </div>
@@ -177,6 +184,15 @@
       </div>
     </div>
 
+    <!-- FAQ -->
+    <div class="panel-section" id="tab-faq">
+      <div style="margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);">6 Pyetjet e Shpeshta</span>
+        <button id="faq-add-btn" style="background:var(--black);color:#fff;border:none;padding:5px 12px;font-size:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;border-radius:3px;cursor:pointer;">+ Pyetje</button>
+      </div>
+      <div id="faq-items-wrap"></div>
+    </div>
+
     <!-- PARTNERS -->
     <div class="panel-section" id="tab-partners">
       <div class="pfield"><label>Etiketa e Seksionit (AL)</label><input type="text" id="pt-eyebrow"></div>
@@ -239,6 +255,14 @@
       {title:'Besueshmëri', text:'Mbi 500 partnerë biznesi zgjedhin Intal çdo ditë. Besimi i tyre ndaj nesh është pasqyrë e qëndrueshmërisë dhe profesionalizmit tonë.'}
     ],
     cta:{ eyebrow:'Kontakt', heading:'Bashkohuni me ne', btn:'Na Kontaktoni' },
+    faq:[
+      {q:'A shitet vetëm me shumicë?', a:'Po. Intal Albania shet ekskluzivisht me shumicë, direkt nga fabrika. Nuk ka shitje me pakicë. Produktet janë të destinuara për dyqane, distributorë dhe biznese.'},
+      {q:'Sa është sasia minimale e porosisë?', a:'Sasia minimale është e negociueshme sipas artikullit — zakonisht nga 12 deri 24 copë për variant. Kontaktoni direkt për ofertë specifike sipas nevojave tuaja.'},
+      {q:'Çfarë materialesh përdor Intal Albania?', a:'Intal Albania përdor kryesisht 100% pambuk natyral, ribana 30/1 dhe suprem print. Këto materiale garantojnë cilësi, qëndrueshmëri dhe rehati për përdorim të përditshëm.'},
+      {q:'A ofrohet private label?', a:'Po. Ofrojmë prodhim me etiketë private (private label) — produktet mund të prodhohen me markën dhe ambalazhin tuaj sipas kërkesës. Kontaktoni për detaje dhe MOQ.'},
+      {q:'A eksporton Intal Albania?', a:'Po. Eksportojmë rregullisht në vendet e rajonit: Kosovë, Maqedoni të Veriut, Mal të Zi dhe Serbi. Bashkëpunojmë me mbi 500 partnerë biznesi në gjithë rajonin.'},
+      {q:'Si mund të kontaktoj Intal Albania?', a:'Na kontaktoni nëpërmjet WhatsApp / Telefon: +355 69 277 6636, Email: info@intalal.com, ose vizitoni fabrikën: Rrobaqepësi INTAL, Rruga Arbanes, Vaqarr, Tiranë 1035.'}
+    ],
     partners:{
       eyebrow:'Bashkëpunimi',
       heading:'Partnerë të besuar në gjithë rajonin',
@@ -253,6 +277,7 @@
         var d=JSON.parse(r);
         // merge missing keys from DEFAULTS
         if(!d.partners) d.partners=JSON.parse(JSON.stringify(DEFAULTS.partners));
+        if(!d.faq) d.faq=JSON.parse(JSON.stringify(DEFAULTS.faq));
         return d;
       }
     }catch(e){}
@@ -296,6 +321,13 @@
     d.cta.eyebrow = document.getElementById('cta-eyebrow').value;
     d.cta.heading = document.getElementById('cta-heading').value;
     d.cta.btn     = document.getElementById('cta-btn').value;
+    // faq
+    d.faq = [];
+    document.querySelectorAll('.faq-item-wrap').forEach(function(item){
+      var qi = item.querySelector('.faq-q-inp');
+      var ai = item.querySelector('.faq-a-inp');
+      d.faq.push({ q: qi?qi.value:'', a: ai?ai.value:'' });
+    });
     // partners
     d.partners.eyebrow = document.getElementById('pt-eyebrow').value;
     d.partners.heading = document.getElementById('pt-heading').value;
@@ -342,6 +374,8 @@
     document.getElementById('cta-eyebrow').value = d.cta.eyebrow||'';
     document.getElementById('cta-heading').value = d.cta.heading||'';
     document.getElementById('cta-btn').value     = d.cta.btn||'';
+    // faq
+    buildFaqItems(d.faq||[]);
     // partners
     var pt = d.partners||{};
     document.getElementById('pt-eyebrow').value = pt.eyebrow||'';
@@ -398,6 +432,42 @@
       grid.appendChild(slot);
     }
   }
+
+  // FAQ helpers
+  function buildFaqItems(faqArr){
+    var wrap = document.getElementById('faq-items-wrap');
+    wrap.innerHTML = '';
+    (faqArr.length ? faqArr : DEFAULTS.faq).forEach(function(item, i){
+      addFaqRow(item.q||'', item.a||'');
+    });
+  }
+
+  function addFaqRow(q, a){
+    var wrap = document.getElementById('faq-items-wrap');
+    var idx = wrap.children.length + 1;
+    var div = document.createElement('div');
+    div.className = 'faq-item-wrap';
+    div.innerHTML =
+      '<div class="faq-item-num"><span>Pyetja '+idx+'</span>'
+      +'<button class="faq-del-btn" title="Fshi" onclick="this.closest(\'.faq-item-wrap\').remove();saveData(getFormData());refreshPreview();renumberFaq();">✕</button></div>'
+      +'<div class="pfield"><label>Pyetja</label><input type="text" class="faq-q-inp" value="'+escVal(q)+'"></div>'
+      +'<div class="pfield"><label>Përgjigja</label><textarea class="faq-a-inp" style="min-height:70px;">'+escVal(a)+'</textarea></div>';
+    wrap.appendChild(div);
+  }
+
+  window.renumberFaq = function(){
+    document.querySelectorAll('.faq-item-wrap').forEach(function(el, i){
+      var lbl = el.querySelector('.faq-item-num span');
+      if(lbl) lbl.textContent = 'Pyetja '+(i+1);
+    });
+  };
+
+  function escVal(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+  document.getElementById('faq-add-btn').addEventListener('click', function(){
+    addFaqRow('','');
+    renumberFaq();
+  });
 
   buildPartnerSlots();
 
