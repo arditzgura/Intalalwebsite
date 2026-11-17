@@ -218,6 +218,18 @@ var _katSettings = [];
 var _activeSub = 'te-gjitha';
 var _activeKat = 'te-gjitha';
 var _lang = 'al';
+var _artSlugMap = {};
+
+function _slugify(str){
+  return (str||'').toLowerCase()
+    .replace(/ë/g,'e').replace(/ç/g,'c').replace(/â/g,'a').replace(/î/g,'i').replace(/û/g,'u')
+    .replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,80);
+}
+function _artSlug(art){
+  if(!art) return '';
+  if(_artSlugMap && art.id && _artSlugMap[String(art.id)]) return _artSlugMap[String(art.id)];
+  return _slugify((art.name||'')+(art.code?'-'+art.code:''));
+}
 
 var _TR = {
   al: {
@@ -265,6 +277,8 @@ function getPhotoSrc(p){ if(!p) return ''; if(typeof p==='string') return p; ret
 async function init(){
   // Always force-refresh so client always sees the latest articles
   try{ localStorage.removeItem('intal_cache_ts'); }catch(e){}
+  // Load slug map for article page links
+  fetch('/artikull/slugs.json').then(function(r){return r.json();}).then(function(m){_artSlugMap=m||{};}).catch(function(){});
   await sbSyncCache();
   var cache = {};
   try{ cache = JSON.parse(localStorage.getItem('intal_cache_v1')||'{}'); }catch(e){}
@@ -453,14 +467,19 @@ function buildCard(a){
       +'</div>';
   }
 
-  return '<div class="art-card" onclick="openDet(\''+a.id+'\')">'
+  var slug = _artSlug(a);
+  var cardOpen = slug
+    ? '<a class="art-card" href="/artikull/'+slug+'/" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;display:block;">'
+    : '<div class="art-card" onclick="openDet(\''+a.id+'\')">';
+  var cardClose = slug ? '</a>' : '</div>';
+  return cardOpen
     +'<div class="art-card-img-wrap"'+pa+hoverAttr+'>'+imgEl+arr+'</div>'
     +'<div style="padding:6px 10px 4px;display:flex;justify-content:space-between;align-items:flex-start;gap:6px;">'
     +'<p class="art-card-name" style="font-size:13px;font-weight:500;letter-spacing:-.2px;color:var(--black);margin:0;word-break:break-word;">'+a.name+'</p>'
     +(a.code?'<p class="art-card-code" style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin:0;white-space:nowrap;flex-shrink:0;padding-top:1px;">Art: '+a.code+'</p>':'')
     +'</div>'
     +priceHtml
-    +'</div>';
+    +cardClose;
 }
 
 // ── Card hover/swipe ─────────────────────────────────
