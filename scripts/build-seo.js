@@ -156,7 +156,7 @@ function articleHtml(art, slug, suggestions, colorVariants) {
   <meta property="og:image" content="${esc(ogImg)}" />
   <meta property="og:site_name" content="Intal Albania" />
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"Product","name":"${title.replace(/\\/g,'\\\\').replace(/"/g,'\\"')}","description":"${desc.replace(/\\/g,'\\\\').replace(/"/g,'\\"')}","brand":{"@type":"Brand","name":"Intal Albania"},"sku":"${esc(art.code||slug)}","image":"${esc(ogImg)}","offers":{"@type":"Offer","availability":"https://schema.org/InStock","seller":{"@type":"Organization","name":"Intal Albania","url":"${BASE_URL}"}}}
+  {"@context":"https://schema.org","@type":"Product","name":"${title.replace(/\\/g,'\\\\').replace(/"/g,'\\"')}","description":"${desc.replace(/\\/g,'\\\\').replace(/"/g,'\\"')}","brand":{"@type":"Brand","name":"Intal Albania"},"sku":"${esc(art.code||slug)}","image":"${esc(ogImg)}","url":"${BASE_URL}/artikull/${slug}/","material":"100% pambuk natyral / ribana","category":"Të brendshme / Underwear","offers":{"@type":"Offer","availability":"https://schema.org/InStock","priceCurrency":"ALL","seller":{"@type":"Organization","name":"Intal Albania","url":"${BASE_URL}"}}}
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css">

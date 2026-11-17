@@ -310,6 +310,75 @@
       color: var(--border);
     }
 
+    /* ── FAQ ────────────────────────────────────────────────────── */
+    .rn-faq {
+      background: var(--white);
+      border-top: 0.5px solid var(--border);
+    }
+    .rn-faq-header {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      margin-bottom: clamp(32px, 5vw, 56px);
+    }
+    .rn-faq-eyebrow {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .rn-faq-heading {
+      font-size: clamp(18px, 2vw, 26px);
+      font-weight: 500;
+      letter-spacing: -0.3px;
+      color: var(--black);
+    }
+    .rn-faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      border-top: 0.5px solid var(--border);
+      max-width: 800px;
+    }
+    .rn-faq-item {
+      border-bottom: 0.5px solid var(--border);
+      overflow: hidden;
+    }
+    .rn-faq-q {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 20px 0;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--black);
+      list-style: none;
+      user-select: none;
+    }
+    .rn-faq-q::after {
+      content: '+';
+      font-size: 20px;
+      font-weight: 300;
+      color: var(--muted);
+      flex-shrink: 0;
+      transition: transform 0.2s;
+    }
+    .rn-faq-item.open .rn-faq-q::after {
+      transform: rotate(45deg);
+    }
+    .rn-faq-a {
+      display: none;
+      font-size: 14px;
+      line-height: 1.75;
+      color: var(--muted);
+      padding-bottom: 20px;
+    }
+    .rn-faq-item.open .rn-faq-a {
+      display: block;
+    }
+
     /* ── Contact CTA ────────────────────────────────────────────── */
     .rn-cta {
       background: var(--black);
@@ -368,18 +437,18 @@
     "mainEntity": [
       {
         "@type": "Question",
-        "name": "A shet Intal Albania me shumicë?",
+        "name": "A shitet vetëm me shumicë?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Po. Intal Albania shet ekskluzivisht me shumicë, direkt nga fabrika në Tiranë. Nuk ka shitje me pakicë. Për porosi kontaktoni nëpërmjet faqes zyrtare intalal.com."
+          "text": "Po. Intal Albania shet ekskluzivisht me shumicë, direkt nga fabrika. Nuk ka shitje me pakicë. Produktet janë të destinuara për dyqane, distributorë dhe biznese."
         }
       },
       {
         "@type": "Question",
-        "name": "Ku prodhohen të brendshmet Intal?",
+        "name": "Sa është sasia minimale e porosisë?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Të brendshmet Intal prodhohen në Tiranë, Shqipëri. Intal Albania është fabrikë shqiptare aktive që nga viti 1994, me mbi 30 vite eksperiencë në prodhim tekstili."
+          "text": "Sasia minimale është e negociueshme sipas artikullit — zakonisht nga 12 deri 24 copë për variant. Kontaktoni direkt për ofertë specifike sipas nevojave tuaja."
         }
       },
       {
@@ -387,23 +456,23 @@
         "name": "Çfarë materialesh përdor Intal Albania?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Intal Albania përdor kryesisht 100% pambuk, ribana 30/1 dhe suprem print. Këto materiale garantojnë cilësi dhe rehatje për përdorim të përditshëm."
+          "text": "Intal Albania përdor kryesisht 100% pambuk natyral, ribana 30/1 dhe suprem print. Këto materiale garantojnë cilësi, qëndrueshmëri dhe rehati për përdorim të përditshëm."
         }
       },
       {
         "@type": "Question",
-        "name": "Cilat numra disponohen për të brendshmet Intal?",
+        "name": "A ofron Intal Albania private label?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Të brendshmet Intal disponohen në numrat S, M, L, XL, 2XL, 3XL dhe 4XL, për meshkuj, femra dhe fëmijë."
+          "text": "Po. Ofrojmë prodhim me etiketë private (private label) — produktet mund të prodhohen me markën dhe ambalazhin tuaj sipas kërkesës. Kontaktoni për detaje dhe sasi minimale."
         }
       },
       {
         "@type": "Question",
-        "name": "Sa vjeçe është kompania Intal Albania?",
+        "name": "A eksporton Intal Albania?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Intal Albania u themelua në vitin 1994 në Tiranë. Në vitin 2026 ka mbi 30 vite aktivitet në prodhimin e të brendshmeve në Shqipëri."
+          "text": "Po. Eksportojmë rregullisht në vendet e rajonit: Kosovë, Maqedoni të Veriut, Mal të Zi dhe Serbi. Bashkëpunojmë me mbi 500 partnerë biznesi në gjithë rajonin."
         }
       },
       {
@@ -411,7 +480,7 @@
         "name": "Si mund të kontaktoj Intal Albania për porosi me shumicë?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Për porosi me shumicë kontaktoni Intal Albania në: Telefon / WhatsApp: +355 69 277 6636, Email: info@intal.com. Adresa: Rrobaqepësi INTAL, Rruga Arbanes, Vaqarr, Tiranë 1035."
+          "text": "Na kontaktoni nëpërmjet WhatsApp / Telefon: +355 69 277 6636, Email: info@intalal.com, ose vizitoni fabrikën: Rrobaqepësi INTAL, Rruga Arbanes, Vaqarr, Tiranë 1035."
         }
       }
     ]
@@ -466,7 +535,7 @@
         <h2 class="rn-overview-heading" id="rn-ov-heading">Prodhues Shqiptar i brendshmeve Premium</h2>
       </div>
       <div class="rn-overview-right">
-        <p class="rn-overview-body" id="rn-ov-body">Intal Albania është fabrikë shqiptare e të brendshmeve, themeluar në Tiranë në vitin 1994. Me mbi <span id="rn-exp-yr">30</span> vite eksperiencë në industrinë e tekstilit, prodhon të brendshme pambuku dhe sintetike për meshkuj, femra dhe fëmijë. Çdo produkt kryhet me standarde të larta cilësie, duke garantuar rehati dhe qëndrueshmëri. Kompania ofron shitje me shumicë direkt nga fabrika dhe bashkëpunon me mbi 500 partnerë biznesi në të gjithë rajonin.</p>
+        <p class="rn-overview-body" id="rn-ov-body">Intal Albania është fabrikë shqiptare e të brendshmeve, themeluar në Tiranë në vitin 1994. Me mbi <span id="rn-exp-yr">30</span> vite eksperiencë, prodhojmë brendshme për meshkuj, femra dhe fëmijë duke përdorur kryesisht 100% pambuk natyral, ribana dhe suprem. Shesim ekskluzivisht me shumicë direkt nga fabrika — sasia minimale e porosisë është e negociueshme sipas artikullit. Eksportojmë në vendet e rajonit: Kosovë, Maqedoni të Veriut, Mal të Zi dhe Serbi. Ofrojmë gjithashtu shërbim private label — prodhim me etiketë tuajën sipas kërkesës.</p>
         <div class="rn-stats">
           <div class="rn-stat">
             <span class="rn-stat-num" id="rn-stat-0-num">15+</span>
@@ -525,6 +594,40 @@
         <p class="rn-value-text" id="rn-val-2-text">Mbi 500 partnerë biznesi zgjedhin Intal çdo ditë. Besimi i tyre ndaj nesh është pasqyrë e qëndrueshmërisë dhe profesionalizmit tonë.</p>
       </div>
     </div>
+  </section>
+
+  <!-- ── FAQ ─────────────────────────────────────────────────── -->
+  <section class="rn-faq rn-section" id="rn-faq-section">
+    <div class="rn-faq-header">
+      <p class="rn-faq-eyebrow" id="rn-faq-eyebrow">FAQ</p>
+      <h2 class="rn-faq-heading" id="rn-faq-heading">Pyetjet e shpeshta</h2>
+    </div>
+    <dl class="rn-faq-list" id="rn-faq-list">
+      <div class="rn-faq-item">
+        <dt class="rn-faq-q" id="rn-faq-0-q" onclick="this.parentElement.classList.toggle('open')">A shitet vetëm me shumicë?</dt>
+        <dd class="rn-faq-a" id="rn-faq-0-a">Po. Intal Albania shet ekskluzivisht me shumicë, direkt nga fabrika. Nuk ka shitje me pakicë. Produktet janë të destinuara për dyqane, distributorë dhe biznese.</dd>
+      </div>
+      <div class="rn-faq-item">
+        <dt class="rn-faq-q" id="rn-faq-1-q" onclick="this.parentElement.classList.toggle('open')">Sa është sasia minimale e porosisë?</dt>
+        <dd class="rn-faq-a" id="rn-faq-1-a">Sasia minimale është e negociueshme sipas artikullit — zakonisht nga 12 deri 24 copë për variant. Kontaktoni direkt për ofertë specifike sipas nevojave tuaja.</dd>
+      </div>
+      <div class="rn-faq-item">
+        <dt class="rn-faq-q" id="rn-faq-2-q" onclick="this.parentElement.classList.toggle('open')">Çfarë materialesh përdor Intal Albania?</dt>
+        <dd class="rn-faq-a" id="rn-faq-2-a">Intal Albania përdor kryesisht 100% pambuk natyral, ribana 30/1 dhe suprem print. Këto materiale garantojnë cilësi, qëndrueshmëri dhe rehati për përdorim të përditshëm.</dd>
+      </div>
+      <div class="rn-faq-item">
+        <dt class="rn-faq-q" id="rn-faq-3-q" onclick="this.parentElement.classList.toggle('open')">A ofrohet private label?</dt>
+        <dd class="rn-faq-a" id="rn-faq-3-a">Po. Ofrojmë prodhim me etiketë private (private label) — produktet mund të prodhohen me markën dhe ambalazhin tuaj sipas kërkesës. Kontaktoni për detaje dhe MOQ.</dd>
+      </div>
+      <div class="rn-faq-item">
+        <dt class="rn-faq-q" id="rn-faq-4-q" onclick="this.parentElement.classList.toggle('open')">A eksporton Intal Albania?</dt>
+        <dd class="rn-faq-a" id="rn-faq-4-a">Po. Eksportojmë rregullisht në vendet e rajonit: Kosovë, Maqedoni të Veriut, Mal të Zi dhe Serbi. Bashkëpunojmë me mbi 500 partnerë biznesi në gjithë rajonin.</dd>
+      </div>
+      <div class="rn-faq-item">
+        <dt class="rn-faq-q" id="rn-faq-5-q" onclick="this.parentElement.classList.toggle('open')">Si mund të kontaktoj Intal Albania?</dt>
+        <dd class="rn-faq-a" id="rn-faq-5-a">Na kontaktoni nëpërmjet WhatsApp / Telefon: +355 69 277 6636, Email: info@intalal.com, ose vizitoni fabrikën: Rrobaqepësi INTAL, Rruga Arbanes, Vaqarr, Tiranë 1035.</dd>
+      </div>
+    </dl>
   </section>
 
   <!-- ── Partners ─────────────────────────────────────────────── -->
@@ -785,7 +888,7 @@
         'loc1-name':'Selia Kryesore','loc2-name':'Dyqani',
         'rn-hero-eyebrow':'Na Njihni','rn-hero-heading':'Rreth Intal',
         'rn-ov-eyebrow':'Kompania','rn-ov-heading':'Prodhues Shqiptar i brendshmeve Premium',
-        'rn-ov-body':'Intal është një nga prodhuesit kryesorë të brendshmeve në Shqipëri, me mbi '+(new Date().getFullYear()-1994)+' vite eksperiencë në industrinë e tekstilit. Kompania jonë është e dedikuar për prodhimin e brendshmeve premium duke përdorur materialet më të mira vendase dhe ndërkombëtare. Nga materiali deri te produkti final, çdo hap i prodhimit kryhet me standarde të larta cilësie, duke garantuar rehati dhe qëndrueshmëri afatgjatë. Ne bashkëpunojmë me mbi 500 partnerë biznesi në të gjithë rajonin, duke ofruar zgjidhje të personalizuara për çdo nevojë.',
+        'rn-ov-body':'Intal Albania është fabrikë shqiptare e të brendshmeve, themeluar në Tiranë në vitin 1994. Me mbi '+(new Date().getFullYear()-1994)+' vite eksperiencë, prodhojmë brendshme për meshkuj, femra dhe fëmijë duke përdorur kryesisht 100% pambuk natyral, ribana dhe suprem. Shesim ekskluzivisht me shumicë direkt nga fabrika — sasia minimale është e negociueshme sipas artikullit. Eksportojmë në Kosovë, Maqedoni të Veriut, Mal të Zi dhe Serbi. Ofrojmë gjithashtu shërbim private label sipas kërkesës.',
         'rn-stat-0-lbl':'Vite Eksperiencë','rn-stat-1-lbl':'Prodhim Vendor','rn-stat-2-lbl':'Partnerë',
         'rn-mv-eyebrow':'Drejtimi Ynë',
         'rn-mv-0-title':'Vizioni Ynë','rn-mv-0-text':'Të bëhemi referencë kryesore e brendshmeve premium në rajon, duke udhëhequr me cilësi, inovacion dhe vlera shqiptare.',
@@ -794,7 +897,14 @@
         'rn-val-0-title':'Cilësi','rn-val-0-text':'Çdo produkt i Intal kalon kontrolle rigoroze të cilësisë. Përdorim vetëm materialet më të mira për të garantuar produkte që zgjasin dhe kënaqin.',
         'rn-val-1-title':'Rehati','rn-val-1-text':'Dizajnimi ynë ka rehatin si prioritet kryesor. Çdo prerje dhe material zgjidhet me kujdes për të ofruar ndjenjën e komfortit gjatë gjithë ditës.',
         'rn-val-2-title':'Besueshmëri','rn-val-2-text':'Mbi 500 partnerë biznesi zgjedhin Intal çdo ditë. Besimi i tyre ndaj nesh është pasqyrë e qëndrueshmërisë dhe profesionalizmit tonë.',
-        'rn-cta-eyebrow':'Kontakt','rn-cta-heading':'Bashkohuni me ne','rn-cta-btn':'Na Kontaktoni'
+        'rn-cta-eyebrow':'Kontakt','rn-cta-heading':'Bashkohuni me ne','rn-cta-btn':'Na Kontaktoni',
+        'rn-faq-eyebrow':'FAQ','rn-faq-heading':'Pyetjet e shpeshta',
+        'rn-faq-0-q':'A shitet vetëm me shumicë?','rn-faq-0-a':'Po. Intal Albania shet ekskluzivisht me shumicë, direkt nga fabrika. Nuk ka shitje me pakicë. Produktet janë të destinuara për dyqane, distributorë dhe biznese.',
+        'rn-faq-1-q':'Sa është sasia minimale e porosisë?','rn-faq-1-a':'Sasia minimale është e negociueshme sipas artikullit — zakonisht nga 12 deri 24 copë për variant. Kontaktoni direkt për ofertë specifike sipas nevojave tuaja.',
+        'rn-faq-2-q':'Çfarë materialesh përdor Intal Albania?','rn-faq-2-a':'Intal Albania përdor kryesisht 100% pambuk natyral, ribana 30/1 dhe suprem print. Këto materiale garantojnë cilësi, qëndrueshmëri dhe rehati për përdorim të përditshëm.',
+        'rn-faq-3-q':'A ofrohet private label?','rn-faq-3-a':'Po. Ofrojmë prodhim me etiketë private (private label) — produktet mund të prodhohen me markën dhe ambalazhin tuaj sipas kërkesës. Kontaktoni për detaje dhe MOQ.',
+        'rn-faq-4-q':'A eksporton Intal Albania?','rn-faq-4-a':'Po. Eksportojmë rregullisht në vendet e rajonit: Kosovë, Maqedoni të Veriut, Mal të Zi dhe Serbi. Bashkëpunojmë me mbi 500 partnerë biznesi në gjithë rajonin.',
+        'rn-faq-5-q':'Si mund të kontaktoj Intal Albania?','rn-faq-5-a':'Na kontaktoni nëpërmjet WhatsApp / Telefon: +355 69 277 6636, Email: info@intalal.com, ose vizitoni fabrikën: Rrobaqepësi INTAL, Rruga Arbanes, Vaqarr, Tiranë 1035.'
       },
       en:{
         'nav-home':'Home','nav-art':'Products','nav-pel':'Fabric','nav-rr':'About Us','nav-kontakt':'Contact',
@@ -803,7 +913,7 @@
         'loc1-name':'Headquarters','loc2-name':'Store',
         'rn-hero-eyebrow':'Get to Know Us','rn-hero-heading':'About Intal',
         'rn-ov-eyebrow':'Company','rn-ov-heading':'Albanian Premium Underwear Manufacturer',
-        'rn-ov-body':'Intal is one of Albania\'s leading underwear manufacturers, with over 15 years of experience in the textile industry. Our company is dedicated to producing premium underwear using the finest domestic and international materials. From raw material to finished product, every step of production meets the highest quality standards, ensuring long-lasting comfort and durability. We collaborate with over 500 business partners across the region, offering tailored solutions for every need.',
+        'rn-ov-body':'Intal Albania is an Albanian underwear factory established in Tirana in 1994. With over '+(new Date().getFullYear()-1994)+' years of experience, we manufacture underwear for men, women and children using primarily 100% natural cotton, ribana and supreme fabrics. We sell exclusively wholesale, directly from the factory — minimum order quantities are negotiable per item. We export to Kosovo, North Macedonia, Montenegro and Serbia. We also offer private label services upon request.',
         'rn-stat-0-lbl':'Years of Experience','rn-stat-1-lbl':'Local Production','rn-stat-2-lbl':'Partners',
         'rn-mv-eyebrow':'Our Direction',
         'rn-mv-0-title':'Our Vision','rn-mv-0-text':'To become the leading premium underwear reference in the region, driven by quality, innovation, and Albanian values.',
@@ -812,7 +922,14 @@
         'rn-val-0-title':'Quality','rn-val-0-text':'Every Intal product passes rigorous quality controls. We use only the finest materials to ensure products that last and satisfy.',
         'rn-val-1-title':'Comfort','rn-val-1-text':'Comfort is the top priority in our design. Every cut and material is carefully chosen to provide a feeling of all-day comfort.',
         'rn-val-2-title':'Reliability','rn-val-2-text':'Over 500 business partners choose Intal every day. Their trust in us reflects our consistency and professionalism.',
-        'rn-cta-eyebrow':'Contact','rn-cta-heading':'Work With Us','rn-cta-btn':'Contact Us'
+        'rn-cta-eyebrow':'Contact','rn-cta-heading':'Work With Us','rn-cta-btn':'Contact Us',
+        'rn-faq-eyebrow':'FAQ','rn-faq-heading':'Frequently Asked Questions',
+        'rn-faq-0-q':'Do you sell wholesale only?','rn-faq-0-a':'Yes. Intal Albania sells exclusively wholesale, directly from the factory. There is no retail. Products are intended for shops, distributors and businesses.',
+        'rn-faq-1-q':'What is the minimum order quantity?','rn-faq-1-a':'Minimum order quantities are negotiable per item — typically from 12 to 24 pieces per variant. Contact us directly for a specific quote based on your needs.',
+        'rn-faq-2-q':'What materials does Intal Albania use?','rn-faq-2-a':'Intal Albania uses primarily 100% natural cotton, ribana 30/1 and supreme print fabrics. These materials guarantee quality, durability and comfort for everyday use.',
+        'rn-faq-3-q':'Do you offer private label?','rn-faq-3-a':'Yes. We offer private label production — products can be manufactured under your own brand and packaging upon request. Contact us for details and MOQ.',
+        'rn-faq-4-q':'Does Intal Albania export?','rn-faq-4-a':'Yes. We regularly export to regional markets: Kosovo, North Macedonia, Montenegro and Serbia. We work with over 500 business partners across the region.',
+        'rn-faq-5-q':'How can I contact Intal Albania?','rn-faq-5-a':'Contact us via WhatsApp / Phone: +355 69 277 6636, Email: info@intalal.com, or visit the factory: INTAL Garment Factory, Rruga Arbanes, Vaqarr, Tirana 1035.'
       }
     };
     var _lang=localStorage.getItem('intal_lang')||'al';
@@ -832,7 +949,10 @@
         'rn-mv-0-title','rn-mv-0-text','rn-mv-1-title','rn-mv-1-text',
         'rn-values-eyebrow','rn-values-heading',
         'rn-val-0-title','rn-val-0-text','rn-val-1-title','rn-val-1-text','rn-val-2-title','rn-val-2-text',
-        'rn-cta-eyebrow','rn-cta-heading','rn-cta-btn'];
+        'rn-cta-eyebrow','rn-cta-heading','rn-cta-btn',
+        'rn-faq-eyebrow','rn-faq-heading',
+        'rn-faq-0-q','rn-faq-0-a','rn-faq-1-q','rn-faq-1-a','rn-faq-2-q','rn-faq-2-a',
+        'rn-faq-3-q','rn-faq-3-a','rn-faq-4-q','rn-faq-4-a','rn-faq-5-q','rn-faq-5-a'];
       ids.forEach(function(id){
         var el=document.getElementById(id);
         if(el&&dict[id]) el.textContent=dict[id];
