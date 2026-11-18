@@ -145,23 +145,22 @@
   /* Product grid as flex column */
   .det-product-grid { flex-direction:column!important; padding:0!important; gap:0!important; flex:1!important; min-height:0!important; display:flex!important; overflow:hidden!important; }
 
-  /* Gallery: 3/4 of popup height */
-  .det-gallery { order:1; width:100%!important; flex:0 0 75dvh!important; position:relative!important; background:#f5f5f5; overflow:hidden; }
-  .det-main-img-wrap { width:100%!important; height:100%!important; aspect-ratio:unset!important; border-radius:0!important; max-height:none!important; }
-  .det-main-img-wrap img { object-fit:contain!important; }
+  /* Gallery: 3:4 aspect ratio, full width, no extra space */
+  .det-gallery { order:1; width:100%!important; flex:0 0 auto!important; position:relative!important; background:#f5f5f5; }
+  .det-main-img-wrap { width:100%!important; aspect-ratio:3/4!important; border-radius:0!important; max-height:none!important; height:auto!important; }
+  .det-main-img-wrap img { object-fit:contain!important; background:#f5f5f5; }
 
-  /* Nav arrows overlaid on photo, centered vertically */
-  .art-nav-btn { top:36vw!important; background:rgba(130,130,130,.75)!important; color:#fff!important; box-shadow:none!important; }
-  .art-nav-btn.prev { left:10px!important; }
-  .art-nav-btn.next { right:10px!important; }
+  /* Hide article-nav arrows on mobile (use swipe on info instead) */
+  .art-nav-btn { display:none!important; }
 
-  /* Mobile horizontal thumb strip */
+  /* Mobile horizontal thumb strip — zero gap, directly below photo */
   #det-thumbs-mobile {
-    display:flex!important; gap:6px; overflow-x:auto; padding:8px 14px;
-    background:#fff; scrollbar-width:none; border-bottom:1px solid #f0f0f0;
+    display:flex!important; gap:0; overflow-x:auto; padding:0;
+    background:#fff; scrollbar-width:none;
   }
   #det-thumbs-mobile::-webkit-scrollbar { display:none; }
-  #det-thumbs-mobile .det-th { width:52px!important; height:52px!important; flex:0 0 52px!important; }
+  #det-thumbs-mobile .det-th { width:25%!important; height:auto!important; aspect-ratio:1!important; flex:0 0 25%!important; border:2px solid transparent; border-radius:0!important; }
+  #det-thumbs-mobile .det-th img { object-fit:cover!important; }
 
   /* Info: flex:1, scrollable */
   .det-info { order:2; flex:1!important; overflow-y:auto!important; padding:0!important; min-height:0!important; width:100%!important; }
@@ -785,32 +784,55 @@ window.detNavPhoto = function(dir){
 };
 
 window.closeArtDetail = function(){
+  var box = document.getElementById('art-detail-box');
+  if(box){ box.style.transition=''; box.style.transform=''; }
   document.getElementById('art-detail-overlay').style.display='none';
   document.body.style.overflow='';
 };
 
-// ── Touch gestures: swipe down → close, left/right → prev/next article ──
+// ── Touch gestures ──
 (function(){
-  var tx0=0, ty0=0, _gallery=null;
+  var tx0=0, ty0=0, _onGallery=false, _box=null;
+
   document.addEventListener('touchstart', function(e){
     var ov = document.getElementById('art-detail-overlay');
     if(ov.style.display!=='flex') return;
-    _gallery = document.querySelector('.det-gallery');
+    _box = document.getElementById('art-detail-box');
+    var gallery = document.querySelector('.det-gallery');
+    _onGallery = gallery && gallery.contains(e.target);
     tx0=e.touches[0].clientX; ty0=e.touches[0].clientY;
   }, {passive:true});
+
+  // Live drag on gallery: translate box downward while dragging
+  document.addEventListener('touchmove', function(e){
+    if(!_onGallery || !_box) return;
+    var dy = e.touches[0].clientY - ty0;
+    if(dy > 0) _box.style.transform = 'translateY('+dy+'px)';
+  }, {passive:true});
+
   document.addEventListener('touchend', function(e){
     var ov = document.getElementById('art-detail-overlay');
     if(ov.style.display!=='flex') return;
     var dx = e.changedTouches[0].clientX - tx0;
     var dy = e.changedTouches[0].clientY - ty0;
     var adx=Math.abs(dx), ady=Math.abs(dy);
-    // swipe down on photo to close (only when touch started on gallery)
-    if(_gallery && _gallery.contains(e.target) && dy>80 && ady>adx*1.2){
-      closeArtDetail(); return;
-    }
-    // swipe left/right anywhere on popup → next/prev article
-    if(adx>60 && adx>ady*1.5){
-      navArt(dx<0?1:-1);
+
+    if(_onGallery){
+      if(dy > 80 && ady > adx * 1.2){
+        // Swipe down on photo → animate slide down and close
+        if(_box){ _box.style.transition='transform .3s ease'; _box.style.transform='translateY(100vh)'; }
+        setTimeout(function(){ closeArtDetail(); if(_box){_box.style.transition=''; _box.style.transform='';} }, 320);
+      } else {
+        // Snap back
+        if(_box){ _box.style.transition='transform .2s ease'; _box.style.transform=''; setTimeout(function(){ if(_box) _box.style.transition=''; }, 220); }
+        // Also handle left/right on photo to change photo
+        if(adx > 50 && adx > ady * 1.5) detNavPhoto(dx < 0 ? 1 : -1);
+      }
+    } else {
+      // Reset any accidental translate
+      if(_box){ _box.style.transition=''; _box.style.transform=''; }
+      // Swipe left/right on info → next/prev article
+      if(adx > 60 && adx > ady * 1.5) navArt(dx < 0 ? 1 : -1);
     }
   }, {passive:true});
 })();
