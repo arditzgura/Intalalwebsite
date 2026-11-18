@@ -256,6 +256,206 @@
 .contact-loc-addr { font-size:12px; color:#888; line-height:1.5; }
 .contact-footer { border-top:.5px solid #222; padding-top:16px; display:flex; justify-content:space-between; align-items:center; font-size:11px; color:#444; }
 .contact-brand { font-weight:700; letter-spacing:.5px; color:#555; }
+
+/* ══════════════════════════════════════════════════════════════
+   ARTICLE SHEET — bottom sheet mobile
+   ══════════════════════════════════════════════════════════════ */
+
+/* Backdrop */
+.as-backdrop {
+  display:none; position:fixed; inset:0; z-index:9500;
+  background:rgba(0,0,0,.55);
+  opacity:0; transition:opacity .35s cubic-bezier(.32,.72,0,1);
+}
+.as-backdrop.as-on { display:block; opacity:1; }
+
+/* Sheet */
+.as-sheet {
+  display:none; position:fixed; left:0; right:0; bottom:0; z-index:9600;
+  height:92dvh; max-height:92dvh;
+  background:#fff; border-radius:18px 18px 0 0;
+  box-shadow:0 -8px 40px rgba(0,0,0,.22);
+  transform:translateY(100%);
+  transition:transform .35s cubic-bezier(.32,.72,0,1);
+  outline:none;
+  display:flex; flex-direction:column;
+  overflow:hidden;
+  /* prefers-reduced-motion */
+}
+@media(prefers-reduced-motion:reduce){
+  .as-sheet, .as-backdrop { transition:none!important; }
+}
+.as-sheet { display:flex; } /* sovrascrive display:none con flex */
+.as-sheet:not(.as-on) { pointer-events:none; visibility:hidden; transform:translateY(100%); }
+.as-sheet.as-on { visibility:visible; transform:translateY(0); }
+
+/* Handle */
+.as-handle-zone {
+  flex:0 0 auto; display:flex; align-items:center; justify-content:center;
+  padding:10px 0 6px; cursor:grab; user-select:none; -webkit-user-select:none;
+}
+.as-handle {
+  width:36px; height:4px; background:#ddd; border-radius:2px;
+}
+
+/* Gallery */
+.as-gallery {
+  flex:0 0 auto; position:relative;
+  width:100%; aspect-ratio:4/5;
+  background:#111; overflow:hidden;
+}
+.as-track {
+  display:flex; height:100%;
+  transform:translateX(0);
+  will-change:transform;
+}
+.as-slide {
+  flex:0 0 100%; height:100%;
+}
+.as-slide img {
+  width:100%; height:100%; object-fit:cover; display:block;
+  user-select:none; -webkit-user-select:none;
+  pointer-events:none;
+}
+.as-no-photo {
+  width:100%; height:100%; display:flex; align-items:center;
+  justify-content:center; font-size:72px; color:#555;
+}
+.as-counter {
+  position:absolute; top:10px; right:12px;
+  font-size:11px; font-weight:600; color:#fff;
+  background:rgba(0,0,0,.45); padding:2px 7px; border-radius:10px;
+  letter-spacing:.5px; pointer-events:none;
+}
+.as-dots-row {
+  position:absolute; bottom:8px; left:0; right:0;
+  display:flex; justify-content:center; gap:5px;
+  pointer-events:none;
+}
+.as-dot {
+  width:5px; height:5px; border-radius:50%;
+  background:rgba(255,255,255,.4);
+  transition:background .2s;
+}
+.as-dot-on { background:#fff; }
+
+/* Body (scrollable details) */
+.as-body {
+  flex:1; overflow-y:auto; overflow-x:hidden;
+  padding:12px 16px 0;
+  -webkit-overflow-scrolling:touch;
+}
+.as-code-el {
+  font-size:9px; letter-spacing:2.5px; text-transform:uppercase;
+  color:#aaa; margin:0 0 4px;
+}
+.as-name {
+  font-size:20px; font-weight:800; letter-spacing:-.3px;
+  line-height:1.2; color:#0a0a0a; margin:0 0 10px;
+}
+.as-price-el { margin-bottom:10px; }
+.as-price-label { display:block; font-size:9px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:#bbb; margin-bottom:4px; }
+.as-price-row { display:flex; align-items:center; gap:7px; }
+.as-price-tregu { font-size:17px; font-weight:600; color:#bbb; text-decoration:line-through; }
+.as-price-arrow { font-size:13px; color:#ccc; }
+.as-price-oferte { font-size:19px; font-weight:800; color:#C8003E; letter-spacing:-.3px; }
+.as-price-req { font-size:13px; color:#888; font-style:italic; }
+
+.as-section-label { font-size:9px; letter-spacing:2px; text-transform:uppercase; color:#aaa; font-weight:700; margin:0 0 8px; }
+
+/* Swatches */
+.as-colors-el { margin-bottom:12px; }
+.as-swatches { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:4px; }
+.as-swatch {
+  background:none; border:2px solid transparent; border-radius:50%;
+  padding:2px; cursor:pointer; transition:border-color .15s;
+  min-width:44px; min-height:44px;
+  display:flex; align-items:center; justify-content:center;
+}
+.as-swatch-on { border-color:#0a0a0a; }
+.as-swatch-dot {
+  width:28px; height:28px; border-radius:50%;
+  border:1px solid rgba(0,0,0,.12); display:block;
+}
+.as-color-name { font-size:11px; color:#555; margin:0; min-height:14px; }
+
+/* Size chips */
+.as-sizes-el { margin-bottom:12px; }
+.as-chips { display:flex; gap:6px; flex-wrap:wrap; }
+.as-chip {
+  background:#fff; border:1.5px solid #e0e0e0;
+  padding:7px 14px; font-size:12px; font-weight:600;
+  letter-spacing:.4px; cursor:pointer; border-radius:3px;
+  min-height:44px; transition:all .15s;
+}
+.as-chip-on { background:#0a0a0a; color:#fff; border-color:#0a0a0a; }
+
+/* Composition */
+.as-comp-el { margin-bottom:12px; }
+.as-comp-row { display:flex; gap:8px; align-items:baseline; padding:2px 0; font-size:13px; }
+.as-comp-pct { font-weight:700; color:#0a0a0a; min-width:36px; }
+.as-comp-mat { color:#555; }
+
+/* Description */
+.as-desc-el { margin-bottom:12px; }
+.as-desc-txt { font-size:13px; line-height:1.6; color:#555; margin:0 0 6px; }
+.as-desc-clamped { display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+.as-desc-more { background:none; border:none; font-size:12px; font-weight:600; color:#0a0a0a; cursor:pointer; padding:0; letter-spacing:.3px; min-height:44px; }
+
+/* CTA sticky */
+.as-cta {
+  flex:0 0 auto;
+  padding:10px 16px calc(10px + env(safe-area-inset-bottom));
+  background:#fff;
+  border-top:1px solid #f0f0f0;
+}
+.as-wa-btn {
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  background:#25D366; color:#fff;
+  border-radius:8px; padding:14px 20px;
+  font-size:13px; font-weight:700; letter-spacing:.3px;
+  text-decoration:none; width:100%;
+  box-shadow:0 4px 16px rgba(37,211,102,.25);
+  transition:background .15s;
+  min-height:52px;
+}
+.as-wa-btn:hover, .as-wa-btn:active { background:#1fa855; }
+
+/* ── Lightbox ── */
+.as-lb {
+  display:none; position:fixed; inset:0; z-index:9800;
+  background:#000;
+}
+.as-lb.as-on { display:flex; align-items:center; justify-content:center; }
+.as-lb-track {
+  width:100%; height:100%; display:flex; align-items:center;
+}
+.as-lb-slide {
+  display:none; width:100%; height:100%;
+  align-items:center; justify-content:center;
+}
+.as-lb-slide.as-lb-active { display:flex; }
+.as-lb-slide img {
+  max-width:100%; max-height:100%;
+  object-fit:contain; transform-origin:center; user-select:none;
+  pointer-events:none;
+}
+.as-lb-close {
+  position:absolute; top:max(16px,env(safe-area-inset-top)); right:16px;
+  z-index:10; background:rgba(255,255,255,.12); border:none;
+  color:#fff; border-radius:50%; width:38px; height:38px;
+  font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+}
+.as-lb-counter {
+  position:absolute; bottom:max(20px,env(safe-area-inset-bottom)); left:0; right:0;
+  text-align:center; font-size:12px; color:rgba(255,255,255,.6); letter-spacing:.5px;
+  pointer-events:none;
+}
+
+/* Desktop: sheet nuk shfaqet (> 769px) */
+@media(min-width:769px){
+  #as-root { display:none!important; }
+}
 </style>
 </head>
 <body>
@@ -1107,6 +1307,25 @@ window.generatePDF = async function(){
 
 init();
 (function(){var y=new Date().getFullYear();var el=document.getElementById('cp-yr-kat');if(el)el.textContent=y;})();
+</script>
+<script src="js/article-sheet.js"></script>
+<script>
+// Mbi mobile (<= 768px) openDet delegon tek ArticleSheet
+(function(){
+  var _origOpenDet = window.openDet;
+  window.openDet = function(id){
+    if(window.innerWidth > 768){
+      // Desktop: popup origjinal
+      return _origOpenDet(id);
+    }
+    // Mobile: sheet i ri
+    var art = (_arts || []).find(function(x){ return x.id===id; });
+    if(!art) return;
+    var list = _pgList || _arts || [];
+    var idx = list.findIndex(function(x){ return x.id===id; });
+    ArticleSheet.open(art, list, idx);
+  };
+})();
 </script>
 </body>
 </html>
