@@ -149,14 +149,16 @@
   /* Product grid: flex column, fills box */
   .det-product-grid { display:flex!important; flex-direction:column!important; flex:1!important; min-height:0!important; padding:0!important; position:relative!important; }
 
-  /* Gallery: flex:1, fills space above thumb strip */
+  /* Gallery: flex column — photo on top, thumbs directly below */
   .det-gallery {
     flex:1!important; min-height:0!important;
     width:100%!important; position:relative!important;
     background:#111!important;
+    display:flex!important; flex-direction:column!important;
   }
   .det-main-img-wrap {
-    width:100%!important; height:100%!important;
+    flex:1!important; min-height:0!important;
+    width:100%!important; height:auto!important;
     aspect-ratio:unset!important; border-radius:0!important; max-height:none!important;
     background:#111!important;
   }
