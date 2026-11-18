@@ -132,12 +132,13 @@
   /* Overlay fills screen */
   #art-detail-overlay { padding:0!important; align-items:flex-end!important; background:rgba(0,0,0,.85)!important; backdrop-filter:none!important; }
 
-  /* Box: full screen, relative container */
+  /* Box: full screen, flex column */
   #art-detail-box {
     width:100vw!important; height:100dvh!important; max-height:100dvh!important;
     border-radius:0!important; box-shadow:none!important;
     overflow:hidden!important; position:relative!important;
-    display:block!important; background:#111!important;
+    display:flex!important; flex-direction:column!important;
+    background:#111!important;
   }
 
   /* Desktop close + desktop thumbs: hidden */
@@ -145,13 +146,14 @@
   .det-thumbs-col { display:none!important; }
   .art-nav-btn { display:none!important; }
 
-  /* Product grid: fills the box */
-  .det-product-grid { position:absolute!important; inset:0!important; display:block!important; padding:0!important; }
+  /* Product grid: flex column, fills box */
+  .det-product-grid { display:flex!important; flex-direction:column!important; flex:1!important; min-height:0!important; padding:0!important; position:relative!important; }
 
-  /* Gallery: fills entire box as background photo */
+  /* Gallery: flex:1, fills space above thumb strip */
   .det-gallery {
-    position:absolute!important; inset:0!important;
-    width:100%!important; height:100%!important;
+    flex:1!important; min-height:0!important;
+    width:100%!important; position:relative!important;
+    background:#111!important;
   }
   .det-main-img-wrap {
     width:100%!important; height:100%!important;
@@ -162,21 +164,22 @@
   /* Photo nav arrows: centered on photo */
   .det-gallery-nav { background:rgba(100,100,100,.7)!important; color:#fff!important; box-shadow:none!important; }
 
-  /* Thumbnail strip: top overlay strip */
+  /* Thumbnail strip: directly below photo, flex row */
   #det-thumbs-mobile {
     display:flex!important;
-    position:absolute!important; top:0; left:0; right:0; z-index:12;
-    background:rgba(0,0,0,.55);
-    gap:4px; padding:10px 10px 8px;
-    overflow-x:auto; scrollbar-width:none;
+    flex:0 0 auto!important;
+    background:#111!important;
+    gap:3px; padding:6px 8px;
+    overflow-x:auto; scrollbar-width:none; z-index:5;
   }
   #det-thumbs-mobile::-webkit-scrollbar { display:none; }
   #det-thumbs-mobile .det-th {
-    width:52px!important; height:52px!important; flex:0 0 52px!important;
-    border:2px solid transparent; border-radius:4px!important;
+    width:56px!important; height:56px!important; flex:0 0 56px!important;
+    border:2px solid transparent; border-radius:3px!important;
+    opacity:.7;
   }
-  #det-thumbs-mobile .det-th.active { border-color:#fff!important; }
-  #det-thumbs-mobile .det-th img { object-fit:cover!important; border-radius:2px; }
+  #det-thumbs-mobile .det-th.active { border-color:#fff!important; opacity:1!important; }
+  #det-thumbs-mobile .det-th img { object-fit:cover!important; border-radius:1px; }
 
   /* ── Bottom sheet ── */
   .det-info {
