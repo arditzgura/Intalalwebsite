@@ -120,66 +120,110 @@
 .art-nav-btn.prev { left:max(8px, calc(50% - min(550px,47vw) - 50px)); }
 .art-nav-btn.next { right:max(8px, calc(50% - min(550px,47vw) - 50px)); }
 
-/* ── Mobile info layout elements (hidden on desktop) ── */
+/* ── Desktop-only elements ── */
 .det-mob-header { display:none; }
 .det-mob-close { display:none; }
 .det-name-price-row { display:block; }
 .det-comp-colors-row { display:block; }
 #det-thumbs-mobile { display:none; }
 
-/* ── Mobile: full-screen, photo 3:4 on top, details scroll below ── */
+/* ── MOBILE: higgsfield-style full-screen + bottom sheet ── */
 @media(max-width:700px){
-  /* Overlay */
-  #art-detail-overlay { padding:0!important; align-items:flex-end!important; }
-  /* Box: full screen, flex column, scrollable */
+  /* Overlay fills screen */
+  #art-detail-overlay { padding:0!important; align-items:flex-end!important; background:rgba(0,0,0,.85)!important; backdrop-filter:none!important; }
+
+  /* Box: full screen, relative container */
   #art-detail-box {
     width:100vw!important; height:100dvh!important; max-height:100dvh!important;
     border-radius:0!important; box-shadow:none!important;
-    display:flex!important; flex-direction:column!important;
-    overflow:hidden!important;
+    overflow:hidden!important; position:relative!important;
+    display:block!important; background:#111!important;
   }
-  /* Hide desktop close + desktop thumbs */
+
+  /* Desktop close + desktop thumbs: hidden */
   #det-close-btn { display:none!important; }
   .det-thumbs-col { display:none!important; }
-
-  /* Product grid as flex column */
-  .det-product-grid { flex-direction:column!important; padding:0!important; gap:0!important; flex:1!important; min-height:0!important; display:flex!important; overflow:hidden!important; }
-
-  /* Gallery: 3:4 aspect ratio, full width, no extra space */
-  .det-gallery { order:1; width:100%!important; flex:0 0 auto!important; position:relative!important; background:#f5f5f5; }
-  .det-main-img-wrap { width:100%!important; aspect-ratio:3/4!important; border-radius:0!important; max-height:none!important; height:auto!important; }
-  .det-main-img-wrap img { object-fit:contain!important; background:#f5f5f5; }
-
-  /* Hide article-nav arrows on mobile (use swipe on info instead) */
   .art-nav-btn { display:none!important; }
 
-  /* Mobile horizontal thumb strip — zero gap, directly below photo */
+  /* Product grid: fills the box */
+  .det-product-grid { position:absolute!important; inset:0!important; display:block!important; padding:0!important; }
+
+  /* Gallery: fills entire box as background photo */
+  .det-gallery {
+    position:absolute!important; inset:0!important;
+    width:100%!important; height:100%!important;
+  }
+  .det-main-img-wrap {
+    width:100%!important; height:100%!important;
+    aspect-ratio:unset!important; border-radius:0!important; max-height:none!important;
+    background:#111!important;
+  }
+  .det-main-img-wrap img { object-fit:contain!important; }
+  /* Photo nav arrows: centered on photo */
+  .det-gallery-nav { background:rgba(100,100,100,.7)!important; color:#fff!important; box-shadow:none!important; }
+
+  /* Thumbnail strip: top overlay strip */
   #det-thumbs-mobile {
-    display:flex!important; gap:0; overflow-x:auto; padding:0;
-    background:#fff; scrollbar-width:none;
+    display:flex!important;
+    position:absolute!important; top:0; left:0; right:0; z-index:12;
+    background:rgba(0,0,0,.55);
+    gap:4px; padding:10px 10px 8px;
+    overflow-x:auto; scrollbar-width:none;
   }
   #det-thumbs-mobile::-webkit-scrollbar { display:none; }
-  #det-thumbs-mobile .det-th { width:25%!important; height:auto!important; aspect-ratio:1!important; flex:0 0 25%!important; border:2px solid transparent; border-radius:0!important; }
-  #det-thumbs-mobile .det-th img { object-fit:cover!important; }
+  #det-thumbs-mobile .det-th {
+    width:52px!important; height:52px!important; flex:0 0 52px!important;
+    border:2px solid transparent; border-radius:4px!important;
+  }
+  #det-thumbs-mobile .det-th.active { border-color:#fff!important; }
+  #det-thumbs-mobile .det-th img { object-fit:cover!important; border-radius:2px; }
 
-  /* Info: flex:1, scrollable */
-  .det-info { order:2; flex:1!important; overflow-y:auto!important; padding:0!important; min-height:0!important; width:100%!important; }
+  /* ── Bottom sheet ── */
+  .det-info {
+    position:absolute!important; bottom:0; left:0; right:0; z-index:20!important;
+    background:#fff!important;
+    border-radius:16px 16px 0 0!important;
+    box-shadow:0 -6px 24px rgba(0,0,0,.28)!important;
+    transform:translateY(calc(100% - 115px));
+    transition:transform .35s cubic-bezier(.4,0,.2,1);
+    max-height:88dvh!important;
+    overflow-y:hidden!important;
+    padding:0!important; min-height:0!important; width:100%!important;
+    will-change:transform;
+  }
+  .det-info.sheet-open {
+    transform:translateY(0)!important;
+    overflow-y:auto!important;
+  }
 
-  /* Mobile header: code + X button */
-  .det-mob-header { display:flex!important; align-items:center; justify-content:space-between; padding:12px 16px 0; }
+  /* Drag handle bar */
+  .det-mob-header {
+    display:flex!important; flex-direction:column; align-items:center;
+    padding:10px 16px 6px; cursor:grab;
+  }
+  .det-mob-header::before {
+    content:''; display:block; width:36px; height:4px;
+    background:#ddd; border-radius:2px; margin-bottom:10px;
+  }
+
+  /* Peek row: code (left) + X (right) */
+  .det-mob-header-row {
+    display:flex; align-items:center; justify-content:space-between;
+    width:100%;
+  }
   .det-mob-close {
     display:flex!important; align-items:center; justify-content:center;
     background:#0a0a0a; color:#fff; border:none; border-radius:50%;
     width:30px; height:30px; font-size:14px; cursor:pointer; flex-shrink:0;
   }
 
-  /* Name + price: side by side */
-  .det-name-price-row { display:flex!important; align-items:flex-start; justify-content:space-between; gap:10px; padding:4px 16px 0; }
+  /* Name + price row */
+  .det-name-price-row { display:flex!important; align-items:flex-start; justify-content:space-between; gap:10px; padding:2px 16px 0; }
   .det-name-col { flex:1; min-width:0; }
   .det-info-name { font-size:18px!important; margin:0!important; }
   #art-detail-kat { font-size:10px!important; }
 
-  /* Price block: label top, prices on same line */
+  /* Price block */
   .popup-prices { flex-direction:column!important; align-items:flex-end!important; gap:2px!important; padding:0!important; background:none!important; border:none!important; margin:0!important; flex-shrink:0; }
   .pp-label { text-align:right; display:block; width:100%; }
   .pp-prices-line { display:flex; align-items:center; gap:6px; justify-content:flex-end; }
@@ -190,16 +234,14 @@
   /* Divider */
   .det-divider { margin:10px 16px!important; }
 
-  /* Composition + colors: 2 columns */
+  /* 2-column: composition + colors */
   .det-comp-colors-row { display:grid!important; grid-template-columns:1fr 1fr; gap:0; padding:0 16px; }
   .det-comp-col { padding-right:12px; border-right:1px solid #f0f0f0; }
   .det-ngjyrat-col { padding-left:12px; }
-  /* Sizes */
+
   #art-detail-masat { padding:0 16px; }
-  /* Description hidden on mobile to keep it compact */
   #art-detail-desc { display:none!important; }
-  /* CTA */
-  .det-cta-group { padding:12px 16px 24px!important; }
+  .det-cta-group { padding:12px 16px 28px!important; }
 }
 
 /* Footer */
@@ -283,10 +325,12 @@
       <!-- Info panel -->
       <div class="det-info">
 
-        <!-- Mobile info header: code (left) + X button (right) -->
-        <div class="det-mob-header">
-          <p class="det-info-eyebrow" id="art-detail-code"></p>
-          <button class="det-mob-close" onclick="closeArtDetail()">&#10005;</button>
+        <!-- Mobile: drag handle + peek row (code + X) -->
+        <div class="det-mob-header" id="det-sheet-handle">
+          <div class="det-mob-header-row">
+            <p class="det-info-eyebrow" id="art-detail-code"></p>
+            <button class="det-mob-close" onclick="closeArtDetail()">&#10005;</button>
+          </div>
         </div>
 
         <!-- Name + price row (mobile: side by side) -->
@@ -652,6 +696,8 @@ window.openDet = function(id){
   if(!a) return;
   _openList = _pgList;
   _openIdx = _pgList.findIndex(function(x){ return x.id===id; });
+  // Reset sheet to collapsed state
+  if(window._setSheet) _setSheet(false);
   renderPopup(a);
   var ov = document.getElementById('art-detail-overlay');
   ov.style.display='flex';
@@ -790,55 +836,96 @@ window.closeArtDetail = function(){
   document.body.style.overflow='';
 };
 
-// ── Touch gestures ──
+// ── Touch gestures (higgsfield-style) ──
 (function(){
-  var tx0=0, ty0=0, _onGallery=false, _box=null;
+  var tx0=0, ty0=0;
+  var _zone=''; // 'gallery' | 'sheet'
+  var _box=null, _sheet=null;
+  var _sheetOpen=false;
+
+  function isMobile(){ return window.innerWidth<=700; }
+
+  function getSheet(){ return document.querySelector('.det-info'); }
+  function getGallery(){ return document.querySelector('.det-gallery'); }
+  function getBox(){ return document.getElementById('art-detail-box'); }
+
+  // Expand or collapse sheet
+  window._setSheet = function(open){
+    var s=getSheet(); if(!s) return;
+    _sheetOpen=open;
+    s.classList.toggle('sheet-open', open);
+    if(!open) s.scrollTop=0;
+  };
 
   document.addEventListener('touchstart', function(e){
-    var ov = document.getElementById('art-detail-overlay');
+    var ov=document.getElementById('art-detail-overlay');
     if(ov.style.display!=='flex') return;
-    _box = document.getElementById('art-detail-box');
-    var gallery = document.querySelector('.det-gallery');
-    _onGallery = gallery && gallery.contains(e.target);
     tx0=e.touches[0].clientX; ty0=e.touches[0].clientY;
-  }, {passive:true});
+    _box=getBox(); _sheet=getSheet();
+    var gallery=getGallery();
+    if(_sheet && _sheet.contains(e.target)) _zone='sheet';
+    else if(gallery && gallery.contains(e.target)) _zone='gallery';
+    else _zone='';
+  },{passive:true});
 
-  // Live drag on gallery: translate box downward while dragging
+  // Live drag: box down when swiping down on gallery
   document.addEventListener('touchmove', function(e){
-    if(!_onGallery || !_box) return;
-    var dy = e.touches[0].clientY - ty0;
-    if(dy > 0) _box.style.transform = 'translateY('+dy+'px)';
-  }, {passive:true});
+    if(!isMobile()||!_box) return;
+    var dy=e.touches[0].clientY-ty0;
+    if(_zone==='gallery' && dy>0 && !_sheetOpen){
+      _box.style.transform='translateY('+dy+'px)';
+    }
+  },{passive:true});
 
   document.addEventListener('touchend', function(e){
-    var ov = document.getElementById('art-detail-overlay');
+    var ov=document.getElementById('art-detail-overlay');
     if(ov.style.display!=='flex') return;
-    var dx = e.changedTouches[0].clientX - tx0;
-    var dy = e.changedTouches[0].clientY - ty0;
+    var dx=e.changedTouches[0].clientX-tx0;
+    var dy=e.changedTouches[0].clientY-ty0;
     var adx=Math.abs(dx), ady=Math.abs(dy);
 
-    if(_onGallery){
-      if(dy > 80 && ady > adx * 1.2){
-        // Swipe down on photo → animate slide down and close
-        if(_box){ _box.style.transition='transform .3s ease'; _box.style.transform='translateY(100vh)'; }
-        setTimeout(function(){ closeArtDetail(); if(_box){_box.style.transition=''; _box.style.transform='';} }, 320);
-      } else {
-        // Snap back
-        if(_box){ _box.style.transition='transform .2s ease'; _box.style.transform=''; setTimeout(function(){ if(_box) _box.style.transition=''; }, 220); }
-        // Also handle left/right on photo to change photo
-        if(adx > 50 && adx > ady * 1.5) detNavPhoto(dx < 0 ? 1 : -1);
-      }
-    } else {
-      // Reset any accidental translate
-      if(_box){ _box.style.transition=''; _box.style.transform=''; }
-      // Swipe left/right on info → next/prev article
-      if(adx > 60 && adx > ady * 1.5) navArt(dx < 0 ? 1 : -1);
+    if(!isMobile()){
+      // Desktop: nothing special
+      if(_box){_box.style.transition='';_box.style.transform='';}
+      return;
     }
-  }, {passive:true});
+
+    if(_zone==='gallery'){
+      if(dy>80 && ady>adx*1.2 && !_sheetOpen){
+        // Swipe down on photo → close popup with slide-down animation
+        if(_box){_box.style.transition='transform .32s ease';_box.style.transform='translateY(100vh)';}
+        setTimeout(function(){closeArtDetail();if(_box){_box.style.transition='';_box.style.transform='';}},340);
+      } else if(dy<-60 && ady>adx*1.2){
+        // Swipe up on photo → expand sheet
+        if(_box){_box.style.transition='transform .2s ease';_box.style.transform='';setTimeout(function(){if(_box)_box.style.transition='';},220);}
+        _setSheet(true);
+      } else {
+        // Snap box back
+        if(_box){_box.style.transition='transform .2s ease';_box.style.transform='';setTimeout(function(){if(_box)_box.style.transition='';},220);}
+        // Left/right on photo → change photo
+        if(adx>50&&adx>ady*1.5) detNavPhoto(dx<0?1:-1);
+      }
+    } else if(_zone==='sheet'){
+      if(!_sheetOpen && dy<-60 && ady>adx*1.2){
+        // Swipe up on sheet (collapsed) → expand
+        _setSheet(true);
+      } else if(_sheetOpen && dy>60 && ady>adx*1.2 && (_sheet&&_sheet.scrollTop<=0)){
+        // Swipe down on sheet (expanded, at top) → collapse
+        _setSheet(false);
+      } else if(_sheetOpen){
+        // Left/right on expanded sheet → next/prev article
+        if(adx>70&&adx>ady*1.5&&(_sheet&&_sheet.scrollTop<=0)) navArt(dx<0?1:-1);
+      } else {
+        // Left/right on collapsed sheet → next/prev article
+        if(adx>60&&adx>ady*1.5) navArt(dx<0?1:-1);
+      }
+    }
+  },{passive:true});
 })();
 
 window.navArt = function(dir){
   _openIdx = Math.max(0, Math.min(_openList.length-1, _openIdx+dir));
+  if(window._setSheet) _setSheet(false);
   renderPopup(_openList[_openIdx]);
   updateNavBtns();
 };
