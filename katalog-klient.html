@@ -145,10 +145,10 @@
   /* Product grid as flex column */
   .det-product-grid { flex-direction:column!important; padding:0!important; gap:0!important; flex:1!important; min-height:0!important; display:flex!important; overflow:hidden!important; }
 
-  /* Gallery: 3:4 aspect ratio, full width */
-  .det-gallery { order:1; width:100%!important; flex:0 0 auto!important; position:relative!important; background:#f5f5f5; }
-  .det-main-img-wrap { width:100%!important; aspect-ratio:3/4!important; border-radius:0!important; max-height:72vw!important; }
-  .det-main-img-wrap img { object-fit:cover!important; }
+  /* Gallery: 3/4 of popup height */
+  .det-gallery { order:1; width:100%!important; flex:0 0 75dvh!important; position:relative!important; background:#f5f5f5; overflow:hidden; }
+  .det-main-img-wrap { width:100%!important; height:100%!important; aspect-ratio:unset!important; border-radius:0!important; max-height:none!important; }
+  .det-main-img-wrap img { object-fit:contain!important; }
 
   /* Nav arrows overlaid on photo, centered vertically */
   .art-nav-btn { top:36vw!important; background:rgba(130,130,130,.75)!important; color:#fff!important; box-shadow:none!important; }
@@ -180,12 +180,13 @@
   .det-info-name { font-size:18px!important; margin:0!important; }
   #art-detail-kat { font-size:10px!important; }
 
-  /* Price block: compact, right-aligned */
+  /* Price block: label top, prices on same line */
   .popup-prices { flex-direction:column!important; align-items:flex-end!important; gap:2px!important; padding:0!important; background:none!important; border:none!important; margin:0!important; flex-shrink:0; }
-  .pp-label { text-align:right; }
+  .pp-label { text-align:right; display:block; width:100%; }
+  .pp-prices-line { display:flex; align-items:center; gap:6px; justify-content:flex-end; }
   .pp-tregu-val { font-size:13px!important; }
-  .pp-oferte-val { font-size:16px!important; }
-  .pp-arrow { display:none!important; }
+  .pp-oferte-val { font-size:15px!important; }
+  .pp-arrow { display:inline!important; font-size:12px!important; color:#ccc; }
 
   /* Divider */
   .det-divider { margin:10px 16px!important; }
@@ -297,9 +298,11 @@
           </div>
           <div id="popup-prices" class="popup-prices" style="display:none;">
             <span class="pp-label">Çmimi</span>
-            <span class="pp-tregu-val" id="pp-tregu-val"></span>
-            <span class="pp-arrow">→</span>
-            <span class="pp-oferte-val" id="pp-oferte-val"></span>
+            <div class="pp-prices-line">
+              <span class="pp-tregu-val" id="pp-tregu-val"></span>
+              <span class="pp-arrow">→</span>
+              <span class="pp-oferte-val" id="pp-oferte-val"></span>
+            </div>
           </div>
         </div>
 
