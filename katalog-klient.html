@@ -59,55 +59,79 @@
 .card-price-tregu { font-size:13px; font-weight:600; color:#bbb; text-decoration:line-through; letter-spacing:-.2px; }
 .card-price-oferte { font-size:13px; font-weight:700; color:#C8003E; letter-spacing:-.2px; }
 
-/* Article popup — layout like online article page */
-#art-detail-overlay { display:none; position:fixed; inset:0; z-index:9000; background:rgba(0,0,0,.55); backdrop-filter:blur(4px); align-items:center; justify-content:center; padding:1.2rem; }
-#art-detail-box { background:#fff; border-radius:8px; width:min(1200px,96vw); max-height:92vh; display:flex; overflow:hidden; box-shadow:0 32px 80px rgba(0,0,0,.35); position:relative; }
+/* ── Article popup overlay ── */
+#art-detail-overlay { display:none; position:fixed; inset:0; z-index:9000; background:rgba(0,0,0,.6); backdrop-filter:blur(3px); align-items:center; justify-content:center; padding:16px; }
+
+/* ── Popup box — scrollable wrapper ── */
+#art-detail-box { background:#fff; border-radius:8px; width:min(1100px,96vw); max-height:94vh; overflow-y:auto; overflow-x:hidden; box-shadow:0 32px 80px rgba(0,0,0,.35); position:relative; scrollbar-width:thin; scrollbar-color:#ddd #fff; }
+#art-detail-box::-webkit-scrollbar { width:4px; }
+#art-detail-box::-webkit-scrollbar-thumb { background:#ddd; }
+
+/* ── Close button ── */
+#det-close-btn { position:sticky; top:0; right:0; z-index:10; float:right; margin:12px 12px 0 0; background:#f0f0f0; border:none; border-radius:50%; width:30px; height:30px; cursor:pointer; font-size:14px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+
+/* ── Product grid inside popup (mirrors .product-grid on /artikull/) ── */
+.det-product-grid { display:flex; gap:clamp(8px,1.2vw,18px); align-items:flex-start; padding:16px 20px 24px; clear:both; }
 
 /* Thumbs column */
-#det-thumbs-col { width:72px; flex-shrink:0; display:flex; flex-direction:column; gap:6px; padding:16px 0 16px 14px; overflow-y:auto; scrollbar-width:none; background:#fff; align-self:flex-start; max-height:calc(92vh); }
-#det-thumbs-col::-webkit-scrollbar { display:none; }
-.det-th { width:60px; height:60px; border:2px solid transparent; overflow:hidden; cursor:pointer; padding:0; background:none; display:block; flex-shrink:0; transition:border-color .15s; }
+.det-thumbs-col { width:clamp(56px,5.5vw,80px); flex-shrink:0; display:flex; flex-direction:column; gap:6px; align-self:flex-start; }
+.det-th { border:2px solid transparent; overflow:hidden; width:100%; aspect-ratio:1; cursor:pointer; padding:0; background:none; display:block; transition:border-color .15s; }
 .det-th.active { border-color:#C8003E; }
 .det-th img { width:100%; height:100%; object-fit:cover; display:block; }
 
-/* Main gallery */
-#art-detail-photos { flex:3; min-width:0; background:#fff; position:relative; overflow:hidden; display:flex; align-items:flex-start; justify-content:center; align-self:stretch; }
-#det-main-wrap { width:100%; height:100%; display:flex; align-items:flex-start; justify-content:center; }
-#det-main-wrap img { width:100%; height:100%; object-fit:contain; display:block; object-position:center top; }
-.det-gallery-nav { position:absolute; top:50%; transform:translateY(-50%); background:rgba(255,255,255,.9); border:none; width:36px; height:36px; border-radius:50%; font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 8px rgba(0,0,0,.12); z-index:2; }
+/* Gallery */
+.det-gallery { flex:3; min-width:0; align-self:flex-start; }
+.det-main-img-wrap { position:relative; background:#fff; aspect-ratio:3/4; overflow:hidden; }
+.det-main-img-wrap img { width:100%; height:100%; object-fit:contain; display:block; }
+.det-main-placeholder { width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-size:72px; color:#ddd; }
+.det-gallery-nav { position:absolute; top:50%; transform:translateY(-50%); background:rgba(255,255,255,.9); border:none; width:36px; height:36px; border-radius:50%; font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 8px rgba(0,0,0,.12); }
 .det-gallery-nav.prev { left:10px; }
 .det-gallery-nav.next { right:10px; }
 .det-gallery-nav:hover { background:#fff; }
 
-/* Info side */
-.art-det-side { flex:1.6; min-width:240px; display:flex; flex-direction:column; max-height:calc(92vh); border-left:.5px solid #ebebeb; }
-.art-det-info { flex:1; overflow-y:auto; padding:24px 24px 12px; }
-.art-det-info::-webkit-scrollbar { width:4px; } .art-det-info::-webkit-scrollbar-thumb { background:#ddd; }
-.art-det-footer { padding:14px 24px 20px; flex-shrink:0; border-top:1px solid #ebebeb; display:flex; gap:8px; }
-
-/* Nav arrows between articles */
-.art-nav-btn { position:fixed; top:50%; background:rgba(255,255,255,.9); border:none; color:#111; width:36px; height:36px; border-radius:50%; font-size:18px; display:flex; align-items:center; justify-content:center; cursor:pointer; z-index:9100; padding:0; box-shadow:0 2px 8px rgba(0,0,0,.14); }
-.art-nav-btn:disabled { opacity:.25; cursor:default; }
-.art-nav-btn.prev { left:calc(50% - min(600px,48vw) - 48px); }
-.art-nav-btn.next { right:calc(50% - min(600px,48vw) - 48px); }
-@media(max-width:700px){ .art-nav-btn { top:12px!important; background:none!important; box-shadow:none!important; color:#fff!important; } .art-nav-btn.prev { left:8px; } .art-nav-btn.next { right:8px; } }
+/* Info panel */
+.det-info { flex:1.6; min-width:0; align-self:flex-start; }
+.det-info-eyebrow { font-size:9px; letter-spacing:2.5px; text-transform:uppercase; color:#aaa; margin-bottom:6px; }
+.det-info-name { font-size:clamp(17px,1.8vw,22px); font-weight:800; letter-spacing:-.3px; line-height:1.2; margin-bottom:4px; color:#0a0a0a; }
+.det-divider { height:1px; background:#ebebeb; margin:14px 0 20px; }
+.det-section-label { font-size:10px; letter-spacing:2px; text-transform:uppercase; color:#aaa; font-weight:700; margin-bottom:10px; margin-top:18px; }
+.det-chips-row { display:flex; gap:6px; flex-wrap:wrap; }
+.det-chip { background:#fff; border:1.5px solid #e0e0e0; padding:5px 12px; font-size:11px; font-weight:600; letter-spacing:.5px; }
+.det-colors-row { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+.det-color-dot { width:28px; height:28px; border-radius:50%; border:1px solid rgba(0,0,0,.12); display:inline-block; flex-shrink:0; }
+.det-comp-row { display:flex; justify-content:flex-start; gap:14px; align-items:center; padding:3px 0; font-size:13px; }
+.det-cta-group { margin-top:18px; padding-top:16px; border-top:1px solid #ebebeb; }
+.det-btn-pair { display:flex; gap:0; overflow:hidden; }
+.det-btn-contact { flex:1; display:flex; align-items:center; justify-content:center; gap:6px; background:#0a0a0a; color:#fff; border:none; cursor:pointer; padding:11px 8px; font-family:inherit; font-weight:700; font-size:10px; letter-spacing:1px; text-transform:uppercase; text-decoration:none; }
+.det-btn-contact:hover { background:#333; }
+.det-btn-wa { flex:0 0 44px; display:flex; align-items:center; justify-content:center; background:#fff; color:#25D366; text-decoration:none; border-left:1px solid rgba(0,0,0,.08); }
+.det-btn-wa:hover { background:#f0faf5; }
 
 /* Price block */
-.popup-prices { margin:12px 0 6px; padding:12px 14px; background:#fafafa; border:1px solid #f0f0f0; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.popup-prices { margin:12px 0 4px; padding:12px 14px; background:#fafafa; border:1px solid #f0f0f0; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
 .pp-label { font-size:9px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:#bbb; margin-right:2px; }
 .pp-tregu-val { font-size:18px; font-weight:600; color:#bbb; text-decoration:line-through; letter-spacing:-.3px; }
 .pp-arrow { font-size:14px; color:#ccc; }
 .pp-oferte-val { font-size:18px; font-weight:800; color:#C8003E; letter-spacing:-.3px; }
 
-/* Mobile popup */
+/* Nav between articles */
+.art-nav-btn { position:fixed; top:50%; background:rgba(255,255,255,.92); border:none; color:#111; width:36px; height:36px; border-radius:50%; font-size:18px; display:flex; align-items:center; justify-content:center; cursor:pointer; z-index:9100; padding:0; box-shadow:0 2px 8px rgba(0,0,0,.18); }
+.art-nav-btn:disabled { opacity:.25; cursor:default; }
+.art-nav-btn.prev { left:max(8px, calc(50% - min(550px,47vw) - 50px)); }
+.art-nav-btn.next { right:max(8px, calc(50% - min(550px,47vw) - 50px)); }
+
+/* Mobile */
 @media(max-width:700px){
   #art-detail-overlay { padding:0!important; align-items:flex-end!important; }
-  #art-detail-box { flex-direction:column!important; width:100vw!important; max-height:98vh!important; height:98vh!important; border-radius:16px 16px 0 0!important; box-shadow:none!important; }
-  #det-thumbs-col { display:none!important; }
-  #art-detail-photos { flex:none!important; height:52vw!important; max-height:260px!important; align-self:auto!important; }
-  .art-det-side { flex:1!important; min-width:0!important; border-left:none!important; border-top:.5px solid #ebebeb; max-height:none!important; }
-  .art-det-info { padding:14px 18px 8px!important; }
-  .art-det-footer { padding:10px 18px 18px!important; }
+  #art-detail-box { width:100vw!important; max-height:97vh!important; border-radius:16px 16px 0 0!important; box-shadow:none!important; }
+  .det-thumbs-col { display:none!important; }
+  .det-product-grid { flex-direction:column!important; padding:12px 14px 24px!important; gap:0!important; }
+  .det-gallery { order:1; width:100%; }
+  .det-main-img-wrap { aspect-ratio:4/3!important; }
+  .det-info { order:2; margin-top:16px; width:100%; }
+  .art-nav-btn { top:14px!important; background:rgba(0,0,0,.35)!important; color:#fff!important; box-shadow:none!important; }
+  .art-nav-btn.prev { left:10px; }
+  .art-nav-btn.next { right:10px; }
 }
 
 /* Footer */
@@ -167,29 +191,32 @@
 
 <div id="art-detail-overlay" onclick="if(event.target===this)closeArtDetail()">
   <div id="art-detail-box">
-    <!-- Thumbs column -->
-    <div id="det-thumbs-col"></div>
-    <!-- Main photo -->
-    <div id="art-detail-photos">
-      <div id="det-main-wrap"></div>
-      <button class="det-gallery-nav prev" id="det-nav-prev" onclick="detNavPhoto(-1)">&#8592;</button>
-      <button class="det-gallery-nav next" id="det-nav-next" onclick="detNavPhoto(1)">&#8594;</button>
-    </div>
-    <!-- Info side -->
-    <div class="art-det-side">
-      <div class="art-det-info">
-        <!-- Header row -->
-        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:4px;">
-          <p id="art-detail-kat" style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#aaa;margin:0;line-height:1.6;"></p>
-          <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
-            <p id="art-detail-code" style="font-size:9px;color:#aaa;letter-spacing:1px;margin:0;"></p>
-            <button onclick="closeArtDetail()" style="background:#f0f0f0;border:none;border-radius:50%;width:26px;height:26px;cursor:pointer;font-size:13px;line-height:26px;text-align:center;flex-shrink:0;">&#10005;</button>
-          </div>
-        </div>
-        <h2 id="art-detail-name" style="font-size:clamp(17px,1.6vw,22px);font-weight:800;letter-spacing:-.4px;margin:0 0 6px;line-height:1.2;color:#0a0a0a;"></h2>
-        <p id="art-detail-desc" style="font-size:12px;line-height:1.65;color:#555;margin:0;padding-bottom:14px;border-bottom:1px solid #ebebeb;"></p>
+    <!-- Sticky close button -->
+    <button id="det-close-btn" onclick="closeArtDetail()" aria-label="Mbyll">&#10005;</button>
 
-        <!-- PRICES IN POPUP -->
+    <!-- Product grid: same layout as /artikull/ page -->
+    <div class="det-product-grid">
+
+      <!-- Thumbs column -->
+      <div class="det-thumbs-col" id="det-thumbs-col"></div>
+
+      <!-- Gallery -->
+      <div class="det-gallery">
+        <div class="det-main-img-wrap" id="det-main-img-wrap">
+          <div id="det-main-wrap"></div>
+          <button class="det-gallery-nav prev" id="det-nav-prev" onclick="detNavPhoto(-1)" style="display:none;">&#8592;</button>
+          <button class="det-gallery-nav next" id="det-nav-next" onclick="detNavPhoto(1)" style="display:none;">&#8594;</button>
+        </div>
+      </div>
+
+      <!-- Info -->
+      <div class="det-info">
+        <p class="det-info-eyebrow" id="art-detail-code"></p>
+        <h2 class="det-info-name" id="art-detail-name"></h2>
+        <p id="art-detail-kat" style="font-size:11px;color:#aaa;margin:0;"></p>
+        <div class="det-divider"></div>
+
+        <!-- Prices -->
         <div id="popup-prices" class="popup-prices" style="display:none;">
           <span class="pp-label">Çmimi</span>
           <span class="pp-tregu-val" id="pp-tregu-val"></span>
@@ -197,13 +224,22 @@
           <span class="pp-oferte-val" id="pp-oferte-val"></span>
         </div>
 
-        <div id="art-detail-masat" style="margin-top:14px;margin-bottom:14px;"></div>
-        <div id="art-detail-ngjyrat" style="margin-bottom:14px;"></div>
+        <div id="art-detail-masat"></div>
+        <div id="art-detail-ngjyrat"></div>
         <div id="art-detail-perberja"></div>
+        <p id="art-detail-desc" style="font-size:12px;line-height:1.65;color:#555;margin:14px 0 0;"></p>
+
+        <!-- CTA -->
+        <div class="det-cta-group">
+          <div class="det-btn-pair">
+            <a href="https://wa.me/355692776636" target="_blank" class="det-btn-contact">Na Kontaktoni</a>
+            <a href="https://wa.me/355692776636" target="_blank" class="det-btn-wa" aria-label="WhatsApp">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            </a>
+          </div>
+        </div>
       </div>
-      <div class="art-det-footer">
-        <a href="https://wa.me/355692776636" target="_blank" style="flex:1;background:#0a0a0a;color:#fff;border:none;padding:11px 10px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center;">Na Kontaktoni</a>
-      </div>
+
     </div>
   </div>
 </div>
@@ -543,9 +579,9 @@ function renderPopup(a){
   _detPhotos = (a.photos||[]).map(getPhotoSrc).filter(Boolean);
   _detIdx = 0;
 
-  document.getElementById('art-detail-kat').textContent = [getArtKats(a).join(', '), getArtSubs(a).join(', ')].filter(Boolean).join(' · ').toUpperCase();
   document.getElementById('art-detail-code').textContent = a.code ? 'Art: '+a.code : '';
   document.getElementById('art-detail-name').textContent = a.name||'';
+  document.getElementById('art-detail-kat').textContent = [getArtKats(a).join(', '), getArtSubs(a).join(', ')].filter(Boolean).join(' · ').toUpperCase();
   document.getElementById('art-detail-desc').textContent = a.pershkrim||'';
 
   // Prices
@@ -564,9 +600,9 @@ function renderPopup(a){
   // Sizes
   var masatEl = document.getElementById('art-detail-masat');
   if(a.sizes && a.sizes.length){
-    masatEl.innerHTML = '<p style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#aaa;margin:0 0 10px;">MASAT</p>'
-      +'<div style="display:flex;flex-wrap:wrap;gap:6px;">'+a.sizes.map(function(s){
-        return '<span style="padding:5px 12px;border:1.5px solid #e0e0e0;font-size:11px;font-weight:600;letter-spacing:.5px;">'+s+'</span>';
+    masatEl.innerHTML = '<p class="det-section-label">MASAT</p>'
+      +'<div class="det-chips-row">'+a.sizes.map(function(s){
+        return '<span class="det-chip">'+s+'</span>';
       }).join('')+'</div>';
   } else { masatEl.innerHTML=''; }
 
@@ -574,13 +610,13 @@ function renderPopup(a){
   var ngj = document.getElementById('art-detail-ngjyrat');
   var ngjyrat = a.ngjyrat || [];
   ngj.innerHTML = ngjyrat.length
-    ? '<p style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#aaa;margin:0 0 10px;">NGJYRAT</p>'
-      +'<div style="display:flex;flex-wrap:wrap;gap:10px;align-items:flex-start;">'
+    ? '<p class="det-section-label">NGJYRAT</p>'
+      +'<div class="det-colors-row">'
       +ngjyrat.map(function(n){
         var hex = (typeof n==='object') ? (n.hex||n.color||'#ccc') : '#ccc';
         var label = (typeof n==='object') ? (n.name||n.label||'') : String(n||'');
         return '<div style="display:flex;flex-direction:column;align-items:center;gap:4px;">'
-          +'<div style="width:28px;height:28px;border-radius:50%;background:'+hex+';border:1px solid rgba(0,0,0,.12);"></div>'
+          +'<span class="det-color-dot" style="background:'+hex+';" title="'+label+'"></span>'
           +'<span style="font-size:9px;color:#777;max-width:44px;text-align:center;line-height:1.3;">'+label+'</span>'
           +'</div>';
       }).join('')+'</div>'
@@ -589,18 +625,20 @@ function renderPopup(a){
   // Composition
   var perb = document.getElementById('art-detail-perberja');
   var comp = a.perberja || a.composition || [];
-  if(comp.length){
-    perb.innerHTML = '<p style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#aaa;margin:0 0 10px;">PËRBËRJA</p>'
+  if(comp && comp.length){
+    perb.innerHTML = '<p class="det-section-label">PËRBËRJA</p>'
       +'<div>'+comp.map(function(c){
         var mat = typeof c==='object'?(c.mat||c.material||c.name||''):String(c||'');
         var pct = typeof c==='object'?(c.pct||c.percent||c.value||''):'';
-        return '<div style="display:flex;justify-content:flex-start;align-items:center;gap:14px;padding:3px 0;font-size:13px;">'
+        return '<div class="det-comp-row">'
           +(pct?'<span style="font-weight:600;color:#0a0a0a;min-width:36px;">'+pct+'%</span>':'')
           +'<span style="color:#555;">'+mat+'</span></div>';
       }).join('')+'</div>';
   } else { perb.innerHTML=''; }
 
-  // Photos — thumbs column + main
+  // Scroll to top
+  document.getElementById('art-detail-box').scrollTop = 0;
+
   _renderDetPhotos();
 }
 
@@ -610,15 +648,17 @@ function _renderDetPhotos(){
   var prevBtn = document.getElementById('det-nav-prev');
   var nextBtn = document.getElementById('det-nav-next');
 
+  // Main image
   if(_detPhotos.length){
-    mainWrap.innerHTML = '<img src="'+_detPhotos[_detIdx]+'" style="width:100%;height:100%;object-fit:contain;display:block;object-position:center top;">';
+    mainWrap.innerHTML = '<img src="'+_detPhotos[_detIdx]+'" alt="" style="width:100%;height:100%;object-fit:contain;display:block;">';
   } else {
-    mainWrap.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-size:60px;">&#128085;</div>';
+    mainWrap.innerHTML = '<div class="det-main-placeholder">&#128085;</div>';
   }
 
+  // Thumbs
   if(_detPhotos.length > 1){
     thumbsCol.innerHTML = _detPhotos.map(function(ph,i){
-      return '<button class="det-th'+(i===_detIdx?' active':'')+'" onclick="setPI('+i+')">'
+      return '<button class="det-th'+(i===_detIdx?' active':'')+'" onclick="setPI('+i+')" aria-label="Foto '+(i+1)+'">'
         +'<img src="'+ph+'" alt=""></button>';
     }).join('');
     prevBtn.style.display = nextBtn.style.display = '';
