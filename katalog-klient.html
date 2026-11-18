@@ -120,18 +120,31 @@
 .art-nav-btn.prev { left:max(8px, calc(50% - min(550px,47vw) - 50px)); }
 .art-nav-btn.next { right:max(8px, calc(50% - min(550px,47vw) - 50px)); }
 
-/* Mobile */
+/* ── Mobile: full-screen, photo top half, details scrollable bottom ── */
 @media(max-width:700px){
   #art-detail-overlay { padding:0!important; align-items:flex-end!important; }
-  #art-detail-box { width:100vw!important; max-height:97vh!important; border-radius:16px 16px 0 0!important; box-shadow:none!important; }
+  #art-detail-box {
+    width:100vw!important; height:100dvh!important; max-height:100dvh!important;
+    border-radius:0!important; box-shadow:none!important;
+    display:flex!important; flex-direction:column!important;
+    overflow:hidden!important;
+  }
+  #det-close-btn { position:absolute!important; top:12px!important; right:12px!important; z-index:20!important; background:rgba(0,0,0,.45)!important; color:#fff!important; float:none!important; margin:0!important; }
   .det-thumbs-col { display:none!important; }
-  .det-product-grid { flex-direction:column!important; padding:12px 14px 24px!important; gap:0!important; }
-  .det-gallery { order:1; width:100%; }
-  .det-main-img-wrap { aspect-ratio:4/3!important; }
-  .det-info { order:2; margin-top:16px; width:100%; }
-  .art-nav-btn { top:14px!important; background:rgba(0,0,0,.35)!important; color:#fff!important; box-shadow:none!important; }
-  .art-nav-btn.prev { left:10px; }
-  .art-nav-btn.next { right:10px; }
+  .det-product-grid { flex-direction:column!important; padding:0!important; gap:0!important; flex:1!important; min-height:0!important; display:flex!important; }
+  /* Photo: fixed 50% of screen */
+  .det-gallery { flex:0 0 50dvh!important; order:1; width:100%!important; overflow:hidden!important; position:relative!important; }
+  .det-main-img-wrap { width:100%!important; height:100%!important; aspect-ratio:unset!important; border-radius:0!important; }
+  .det-main-img-wrap img { object-fit:cover!important; }
+  /* Swipe indicator bar */
+  .det-gallery::after { content:''; display:block; position:absolute; bottom:8px; left:50%; transform:translateX(-50%); width:40px; height:4px; background:rgba(255,255,255,.6); border-radius:2px; pointer-events:none; }
+  /* Details: remaining 50%, scrollable */
+  .det-info { flex:1!important; order:2; overflow-y:auto!important; padding:16px 18px 32px!important; min-height:0!important; width:100%!important; }
+  .det-cta-group { padding-bottom:16px; }
+  /* Article nav arrows: on photo */
+  .art-nav-btn { top:calc(25dvh - 18px)!important; background:rgba(0,0,0,.35)!important; color:#fff!important; box-shadow:none!important; border-radius:50%!important; }
+  .art-nav-btn.prev { left:12px!important; }
+  .art-nav-btn.next { right:12px!important; }
 }
 
 /* Footer */
@@ -690,6 +703,32 @@ window.closeArtDetail = function(){
   document.getElementById('art-detail-overlay').style.display='none';
   document.body.style.overflow='';
 };
+
+// ── Touch gestures: swipe down → close, left/right → prev/next article ──
+(function(){
+  var tx0=0, ty0=0, _gallery=null;
+  document.addEventListener('touchstart', function(e){
+    var ov = document.getElementById('art-detail-overlay');
+    if(ov.style.display!=='flex') return;
+    _gallery = document.querySelector('.det-gallery');
+    tx0=e.touches[0].clientX; ty0=e.touches[0].clientY;
+  }, {passive:true});
+  document.addEventListener('touchend', function(e){
+    var ov = document.getElementById('art-detail-overlay');
+    if(ov.style.display!=='flex') return;
+    var dx = e.changedTouches[0].clientX - tx0;
+    var dy = e.changedTouches[0].clientY - ty0;
+    var adx=Math.abs(dx), ady=Math.abs(dy);
+    // swipe down on photo to close (only when touch started on gallery)
+    if(_gallery && _gallery.contains(e.target) && dy>80 && ady>adx*1.2){
+      closeArtDetail(); return;
+    }
+    // swipe left/right anywhere on popup → next/prev article
+    if(adx>60 && adx>ady*1.5){
+      navArt(dx<0?1:-1);
+    }
+  }, {passive:true});
+})();
 
 window.navArt = function(dir){
   _openIdx = Math.max(0, Math.min(_openList.length-1, _openIdx+dir));
