@@ -269,10 +269,12 @@
 }
 .as-backdrop.as-on { display:block; opacity:1; }
 
-/* Sheet — mbush ekranin e plotë */
+/* Sheet — 92dvh nga poshtë */
 .as-sheet {
-  position:fixed; inset:0; z-index:9600;
-  background:#111;
+  position:fixed; left:0; right:0; bottom:0; z-index:9600;
+  height:92dvh; background:#111;
+  border-radius:18px 18px 0 0;
+  box-shadow:0 -8px 40px rgba(0,0,0,.3);
   transform:translateY(100%);
   transition:transform .35s cubic-bezier(.32,.72,0,1);
   outline:none; overflow:hidden;
@@ -281,7 +283,7 @@
 .as-sheet.as-on { transform:translateY(0); visibility:visible; pointer-events:auto; }
 @media(prefers-reduced-motion:reduce){ .as-sheet, .as-backdrop, .as-panel { transition:none!important; } }
 
-/* Galeria — mbush të gjithë sheetin */
+/* Galeria — mbush të gjithë sheetin (panel mbivendoset sipër) */
 .as-gallery {
   position:absolute; inset:0; overflow:hidden;
 }
@@ -298,7 +300,7 @@
 
 /* Counter + dots mbi foto */
 .as-counter {
-  position:absolute; top:max(14px,env(safe-area-inset-top)); right:14px;
+  position:absolute; top:14px; right:14px;
   font-size:11px; font-weight:600; color:#fff;
   background:rgba(0,0,0,.45); padding:2px 8px; border-radius:10px;
   letter-spacing:.5px; pointer-events:none; z-index:5;
@@ -306,9 +308,9 @@
 .as-dots-row {
   position:absolute; left:0; right:0; z-index:5; pointer-events:none;
   display:flex; justify-content:center; gap:5px;
+  /* mbi panelin e mbyllur: 23dvh + 10px nga poshtë */
+  bottom:calc(23dvh + 10px);
 }
-/* dots sopra il panel: positionate dinamicamente tramite bottom calc */
-.as-dots-row { bottom:calc(110px + 14px); }
 .as-dot { width:5px; height:5px; border-radius:50%; background:rgba(255,255,255,.4); transition:background .2s; }
 .as-dot-on { background:#fff; }
 
@@ -320,12 +322,13 @@
   cursor:pointer; display:flex; align-items:center; justify-content:center;
 }
 
-/* Paneli i detajeve — bottom sheet mbi foto */
+/* Paneli i detajeve — peek 1/4 e sheetit (23dvh), rrëshqet lart mbi foto */
 .as-panel {
   position:absolute; left:0; right:0; bottom:0; z-index:20;
   background:#fff; border-radius:18px 18px 0 0;
   box-shadow:0 -6px 32px rgba(0,0,0,.3);
-  transform:translateY(calc(100% - 110px));
+  /* collapsed: shfaq 23dvh (≈1/4 e 92dvh) */
+  transform:translateY(calc(100% - 23dvh));
   transition:transform .35s cubic-bezier(.32,.72,0,1);
   display:flex; flex-direction:column;
   max-height:88dvh; overflow:hidden;

@@ -256,8 +256,8 @@
   }
 
   // ── Panel expand/collapse ───────────────────────────────────────
-  // peek: lartësia e dukshme kur panel është i mbyllur
-  var PEEK = 110; // px
+  // peek = 23dvh ≈ 1/4 e sheetit (92dvh)
+  function getPeek() { return Math.round(window.innerHeight * 0.23); }
 
   function setPanel(open, animate) {
     _panelOpen = open;
@@ -274,7 +274,7 @@
       var body = document.getElementById('as-body');
       if (body) body.style.overflowY = 'auto';
     } else {
-      panel.style.transform = 'translateY(calc(100% - ' + PEEK + 'px))';
+      panel.style.transform = 'translateY(calc(100% - ' + getPeek() + 'px))';
       var body2 = document.getElementById('as-body');
       if (body2) { body2.style.overflowY = 'hidden'; body2.scrollTop = 0; }
     }
@@ -510,7 +510,7 @@
             // Swipe lart → zgjerim live
             e.preventDefault();
             panel.style.transition = 'none';
-            var base = panel.offsetHeight - PEEK;
+            var base = panel.offsetHeight - getPeek();
             var newY = Math.max(0, base + dy);
             panel.style.transform = 'translateY(' + newY + 'px)';
             _poff = dy;
