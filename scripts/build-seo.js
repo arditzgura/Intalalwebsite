@@ -1088,14 +1088,14 @@ function fabricHtml(fab, slug, suggestions) {
 /* ── Sitemap ─────────────────────────────────────────────────── */
 function buildSitemap(artSlugs, pelSlugs) {
   const staticUrls = [
-    { loc: `${BASE_URL}/`,           priority: '1.0' },
-    { loc: `${BASE_URL}/artikujt`,   priority: '0.9' },
-    { loc: `${BASE_URL}/pelhura`,    priority: '0.8' },
-    { loc: `${BASE_URL}/rreth-nesh`, priority: '0.7' },
+    { loc: `${BASE_URL}/`,             priority: '1.0' },
+    { loc: `${BASE_URL}/artikujt/`,   priority: '0.9' },
+    { loc: `${BASE_URL}/pelhura/`,    priority: '0.8' },
+    { loc: `${BASE_URL}/rreth-nesh/`, priority: '0.7' },
   ];
 
-  const artUrls = artSlugs.map(s => ({ loc: `${BASE_URL}/artikull/${s}`, priority: '0.6' }));
-  const pelUrls = pelSlugs.map(s => ({ loc: `${BASE_URL}/pelhura/${s}`,  priority: '0.5' }));
+  const artUrls = artSlugs.map(s => ({ loc: `${BASE_URL}/artikull/${s}/`, priority: '0.6' }));
+  const pelUrls = pelSlugs.map(s => ({ loc: `${BASE_URL}/pelhura/${s}/`,  priority: '0.5' }));
 
   const all = [...staticUrls, ...artUrls, ...pelUrls];
   const rows = all.map(u => `  <url>\n    <loc>${u.loc}</loc>\n    <lastmod>${TODAY}</lastmod>\n    <priority>${u.priority}</priority>\n  </url>`).join('\n\n');
