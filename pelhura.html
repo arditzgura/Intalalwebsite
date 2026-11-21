@@ -601,10 +601,11 @@
 
     // Load pelhura slug map for SEO URLs
     var _pelSlugs={};
-    fetch('/pelhura/slugs.json').then(function(r){return r.json();}).then(function(m){_pelSlugs=m||{};}).catch(function(){});
+    var _pelSlugsReady=fetch('/pelhura/slugs.json').then(function(r){return r.json();}).then(function(m){_pelSlugs=m||{};}).catch(function(){});
 
     // Init — render immediately from cache, then always fetch fresh from Supabase and re-render
     (async function(){
+      await _pelSlugsReady; // wait for slugs before first render so cards get <a href> links
       var data=loadData();
       _all=data&&data.pelhurat?data.pelhurat:[];
       renderFilterBar(_all,'te-gjitha');
