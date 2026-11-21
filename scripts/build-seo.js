@@ -98,7 +98,7 @@ function articleHtml(art, slug, suggestions, colorVariants) {
   const photosTh = photos.map(p => clImg(p, 200));
   const photo   = photos[0] || '';
   const ogImg   = photo || `${BASE_URL}/og_image.png`;
-  const canon   = `${BASE_URL}/artikull/${slug}`;
+  const canon   = `${BASE_URL}/artikull/${slug}/`;
   const sizes   = (art.masat || art.sizes || []);
   const ngjyrat = (art.ngjyrat || []);
 
@@ -646,7 +646,7 @@ function fabricHtml(fab, slug, suggestions) {
   const photosTh = photos.map(p => clImg(p, 200));
   const photo  = photos[0] || '';
   const ogImg  = photo || `${BASE_URL}/og_image.png`;
-  const canon  = `${BASE_URL}/pelhura/${slug}`;
+  const canon  = `${BASE_URL}/pelhura/${slug}/`;
   const ngjyrat = (fab.ngjyrat || []);
   const comp    = (fab.perberja || []).map(p => `<div class="comp-row"><span>${esc(p.material||p.name||'')}</span><span>${esc(String(p.perqindje||p.pct||p.value||''))}%</span></div>`).join('');
   const photosJson = JSON.stringify(photos);

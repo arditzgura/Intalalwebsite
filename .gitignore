@@ -2,3 +2,7 @@
 *.log
 Thumbs.db
 .DS_Store
+
+autopost/
+webapp/
+IMPECCABLE-FIXES.md
