@@ -786,5 +786,48 @@
 
 
   <script>(function(){var y=new Date().getFullYear();document.querySelectorAll('.cp-yr').forEach(function(el){el.textContent=y;});})();</script>
+
+<style>
+  /* ps-page-btn — link tek faqja e plotë brenda sheet-it */
+  .ps-page-btn{display:inline-flex;align-items:center;gap:6px;color:#C8003E;font-size:12px;font-weight:700;letter-spacing:.3px;text-decoration:none;margin-top:8px;padding:4px 0;}
+  .ps-page-btn:hover{text-decoration:underline;}
+  /* as-section-label nuk ekziston në pelhura.html, e shtojmë */
+  .as-section-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#aaa;font-weight:700;margin-bottom:8px;margin-top:14px;display:block;}
+  .as-color-name{font-size:12px;color:#555;min-height:16px;margin:2px 0 6px;}
+  .as-no-photo{display:flex;align-items:center;justify-content:center;height:100%;font-size:72px;color:#555;}
+</style>
+<script src="js/pelhura-sheet.js"></script>
+<script>
+// Mobile (≤768px): çdo kartë pelhure hap PelhuraSheet
+(function(){
+  var _orig = window.openDet;
+  window.openDet = function(id){
+    if(window.innerWidth > 768){ if(_orig) return _orig(id); return; }
+    var fab = (_all||[]).find(function(x){ return x.id===id; });
+    if(!fab) return;
+    var slug = (_pelSlugs && _pelSlugs[id]) || null;
+    // lista me {fab, slug} për swipe majtas/djathtas
+    var list = (_all||[]).map(function(x){ return {fab:x, slug:(_pelSlugs&&_pelSlugs[x.id])||null}; });
+    var idx = list.findIndex(function(x){ return x.fab.id===id; });
+    PelhuraSheet.open(fab, list, idx, slug);
+  };
+  // Kartat me slug hapin gjithashtu sheet-in në mobile (jo URL direkt)
+  document.addEventListener('click', function(e){
+    if(window.innerWidth > 768) return;
+    var link = e.target.closest('a.art-card[href^="/pelhura/"]');
+    if(!link) return;
+    var href = link.getAttribute('href');
+    var m = href.match(/\/pelhura\/([^\/]+)\//);
+    if(!m) return;
+    var slug = m[1];
+    var fab = (_all||[]).find(function(x){ return (_pelSlugs&&_pelSlugs[x.id])===slug; });
+    if(!fab) return;
+    e.preventDefault();
+    var list = (_all||[]).map(function(x){ return {fab:x, slug:(_pelSlugs&&_pelSlugs[x.id])||null}; });
+    var idx = list.findIndex(function(x){ return x.fab===fab; });
+    PelhuraSheet.open(fab, list, idx, slug);
+  }, true);
+})();
+</script>
 </body>
 </html>
