@@ -187,7 +187,7 @@ function articleHtml(art, slug, suggestions, colorVariants) {
 
     /* ── Gallery ── */
     .gallery{}
-    .main-img-wrap{position:relative;background:#fff;height:clamp(380px,72vh,820px);overflow:hidden;}
+    .main-img-wrap{position:relative;background:#fff;aspect-ratio:3/4;overflow:hidden;}
     .main-img-wrap img{width:100%;height:100%;object-fit:contain;display:block;transition:opacity .25s;}
     .main-img-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:72px;color:#ddd;}
     .gallery-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.9);border:none;width:36px;height:36px;border-radius:50%;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.12);}
@@ -702,7 +702,7 @@ function fabricHtml(fab, slug, suggestions) {
     .info{flex:1.6;min-width:0;align-self:flex-start;}
     @media(max-width:900px){.product-grid{gap:8px;} .thumbs-col{width:clamp(52px,5vw,72px);} .gallery{flex:2;} .info{flex:1.4;}}
     @media(max-width:680px){.product-grid{flex-direction:column;gap:0;} .thumbs-col{order:2;width:100%;flex-direction:row;margin-top:8px;gap:6px;} .gallery{order:1;} .info{order:3;margin-top:20px;} .gallery-nav{display:none;}}
-    .main-img-wrap{position:relative;background:#f5f5f5;height:clamp(380px,72vh,820px);overflow:hidden;}
+    .main-img-wrap{position:relative;background:#f5f5f5;aspect-ratio:3/4;overflow:hidden;}
     .main-img-wrap img{width:100%;height:100%;object-fit:contain;display:block;transition:opacity .25s;}
     .main-img-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:72px;color:#ddd;}
     .gallery-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.9);border:none;width:36px;height:36px;border-radius:50%;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.12);}
