@@ -80,6 +80,10 @@ function esc(str) {
   return (str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
+function jesc(str) {
+  return (str || '').replace(/\\/g,'\\\\').replace(/"/g,'\\"').replace(/\n/g,'\\n').replace(/\r/g,'');
+}
+
 function photoUrl(p) {
   if (!p) return '';
   return typeof p === 'string' ? p : (p.src || p.url || '');
@@ -198,7 +202,41 @@ function articleHtml(art, slug, suggestions, colorVariants) {
   <meta property="og:image" content="${esc(ogImg)}" />
   <meta property="og:site_name" content="Intal Albania" />
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"Product","name":"${title.replace(/\\/g,'\\\\').replace(/"/g,'\\"')}","description":"${desc.replace(/\\/g,'\\\\').replace(/"/g,'\\"')}","brand":{"@type":"Brand","name":"Intal Albania"},"sku":"${esc(art.code||slug)}","image":"${esc(ogImg)}","url":"${BASE_URL}/artikull/${slug}/","material":"100% pambuk natyral / ribana","category":"Të brendshme / Underwear","offers":{"@type":"Offer","availability":"https://schema.org/InStock","priceCurrency":"ALL","seller":{"@type":"Organization","name":"Intal Albania","url":"${BASE_URL}"}}}
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Product",
+        "name": "${jesc(art.name||'')}",
+        "description": "${jesc(rawDesc)}",
+        "sku": "${jesc(art.code||slug)}",
+        "image": ${photos.length ? JSON.stringify(photos) : `["${jesc(ogImg)}"]`},
+        "url": "${BASE_URL}/artikull/${slug}/",
+        "brand": {"@type": "Brand", "name": "Intal Albania"},
+        "manufacturer": {
+          "@type": "Organization",
+          "name": "Intal Albania",
+          "url": "${BASE_URL}",
+          "address": {"@type": "PostalAddress", "addressLocality": "Tiranë", "addressCountry": "AL"}
+        },
+        "material": "${jesc(((art.perberja||[])[0]||{}).material||'Pambuk')} ${jesc(String(((art.perberja||[])[0]||{}).perqindje||((art.perberja||[])[0]||{}).pct||((art.perberja||[])[0]||{}).value||'100'))}%",
+        "category": "Të brendshme",${sizes.length ? `\n        "size": ${JSON.stringify(sizes)},` : ''}${ngjyrat.length ? `\n        "color": "${jesc(ngjyrat.map(c=>c.name||'').filter(Boolean).join(', '))}",` : ''}
+        "offers": {
+          "@type": "Offer",
+          "availability": "https://schema.org/InStock",
+          "priceCurrency": "ALL",
+          "seller": {"@type": "Organization", "name": "Intal Albania", "url": "${BASE_URL}"}
+        }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {"@type": "ListItem", "position": 1, "name": "Artikujt", "item": "${BASE_URL}/artikujt/"}${rawSub ? `,\n          {"@type": "ListItem", "position": 2, "name": "${jesc(rawSub.charAt(0).toUpperCase()+rawSub.slice(1))}", "item": "${BASE_URL}/artikujt/${encodeURIComponent(rawSub.toLowerCase())}/"}` : ''}${rawKat ? `,\n          {"@type": "ListItem", "position": ${rawSub?3:2}, "name": "${jesc(rawKat.charAt(0).toUpperCase()+rawKat.slice(1))}", "item": "${BASE_URL}/artikujt/${rawSub?encodeURIComponent(rawSub.toLowerCase())+'/':''}${encodeURIComponent(rawKat.toLowerCase())}/"}` : ''},
+          {"@type": "ListItem", "position": ${rawSub&&rawKat?4:rawSub||rawKat?3:2}, "name": "${jesc(art.name||slug)}", "item": "${BASE_URL}/artikull/${slug}/"}
+        ]
+      }
+    ]
+  }
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css">
@@ -742,7 +780,40 @@ function fabricHtml(fab, slug, suggestions) {
   <meta property="og:image" content="${esc(ogImg)}" />
   <meta property="og:site_name" content="Intal Albania" />
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"Product","name":"${title.replace(/\\/g,'\\\\').replace(/"/g,'\\"')}","description":"${desc.replace(/\\/g,'\\\\').replace(/"/g,'\\"')}","brand":{"@type":"Brand","name":"Intal Albania"},"sku":"${esc(fab.code||slug)}","image":"${esc(ogImg)}","url":"${BASE_URL}/pelhura/${slug}/","offers":{"@type":"Offer","availability":"https://schema.org/InStock","seller":{"@type":"Organization","name":"Intal Albania","url":"${BASE_URL}"}}}
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Product",
+        "name": "${jesc(fab.name||'')}",
+        "description": "${jesc(rawDesc)}",
+        "sku": "${jesc(fab.code||slug)}",
+        "image": ${photos.length ? JSON.stringify(photos) : `["${jesc(ogImg)}"]`},
+        "url": "${BASE_URL}/pelhura/${slug}/",
+        "brand": {"@type": "Brand", "name": "Intal Albania"},
+        "manufacturer": {
+          "@type": "Organization",
+          "name": "Intal Albania",
+          "url": "${BASE_URL}",
+          "address": {"@type": "PostalAddress", "addressLocality": "Tiranë", "addressCountry": "AL"}
+        },
+        "material": "${jesc(((fab.perberja||[])[0]||{}).material||'Pambuk')} ${jesc(String(((fab.perberja||[])[0]||{}).perqindje||((fab.perberja||[])[0]||{}).pct||((fab.perberja||[])[0]||{}).value||'100'))}%",
+        "category": "Pelhurë tekstili",${ngjyrat.length ? `\n        "color": "${jesc(ngjyrat.map(c=>c.name||'').filter(Boolean).join(', '))}",` : ''}
+        "offers": {
+          "@type": "Offer",
+          "availability": "https://schema.org/InStock",
+          "seller": {"@type": "Organization", "name": "Intal Albania", "url": "${BASE_URL}"}
+        }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {"@type": "ListItem", "position": 1, "name": "Pelhura", "item": "${BASE_URL}/pelhura/"},
+          {"@type": "ListItem", "position": 2, "name": "${jesc(fab.name||slug)}", "item": "${BASE_URL}/pelhura/${slug}/"}
+        ]
+      }
+    ]
+  }
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css">
@@ -1257,7 +1328,7 @@ function catalogCss() {
 
 /* ── Catalog page template ───────────────────────────────────── */
 function catalogPageHtml(opts) {
-  const { title, desc, canon, h1, intro, breadcrumb, sublinks, sections } = opts;
+  const { title, desc, canon, h1, intro, breadcrumb, sublinks, sections, ldJson } = opts;
   const nf = catalogNavFooter();
 
   const sublinksHtml = (sublinks && sublinks.length)
@@ -1296,6 +1367,7 @@ function catalogPageHtml(opts) {
   <meta property="og:type" content="website" />
   <meta property="og:image" content="${BASE_URL}/og_image.png" />
   <meta property="og:site_name" content="Intal Albania" />
+  ${ldJson ? `<script type="application/ld+json">\n  ${ldJson}\n  </script>` : ''}
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css">
   <link rel="stylesheet" href="/css/main.css">
@@ -1435,7 +1507,8 @@ function generateCategoryPages(artEntries) {
     }
 
     const breadcrumb = `<a href="/artikujt/">ARTIKUJT</a><span class="bc-sep">/</span><span>${label.toUpperCase()}</span>`;
-    const html = catalogPageHtml({ title, desc, canon, h1, intro, breadcrumb, sublinks, sections });
+    const subLdJson = JSON.stringify({"@context":"https://schema.org","@graph":[{"@type":"CollectionPage","name":title,"description":desc,"url":canon},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Artikujt","item":`${BASE_URL}/artikujt/`},{"@type":"ListItem","position":2,"name":label,"item":canon}]}]});
+    const html = catalogPageHtml({ title, desc, canon, h1, intro, breadcrumb, sublinks, sections, ldJson: subLdJson });
     const dir = path.join(ROOT, 'artikujt', subKey);
     ensureDir(dir);
     fs.writeFileSync(path.join(dir, 'index.html'), html, 'utf8');
@@ -1453,6 +1526,7 @@ function generateCategoryPages(artEntries) {
       const katH1 = `${katLabel} për ${label}`;
       const katIntro = `${katLabel} pambuku për ${label.toLowerCase()} prodhuar nga fabrika Intal Albania. Disponibël me shumicë, direkt nga prodhuesi.`;
       const katBreadcrumb = `<a href="/artikujt/">ARTIKUJT</a><span class="bc-sep">/</span><a href="/artikujt/${subKey}/">${label.toUpperCase()}</a><span class="bc-sep">/</span><span>${katLabel.toUpperCase()}</span>`;
+      const katLdJson = JSON.stringify({"@context":"https://schema.org","@graph":[{"@type":"CollectionPage","name":katTitle,"description":katDesc,"url":katCanon},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Artikujt","item":`${BASE_URL}/artikujt/`},{"@type":"ListItem","position":2,"name":label,"item":`${BASE_URL}/artikujt/${subKey}/`},{"@type":"ListItem","position":3,"name":katLabel,"item":katCanon}]}]});
       const katHtml = catalogPageHtml({
         title: katTitle,
         desc: katDesc,
@@ -1461,6 +1535,7 @@ function generateCategoryPages(artEntries) {
         intro: katIntro,
         breadcrumb: katBreadcrumb,
         sublinks: [],
+        ldJson: katLdJson,
         sections: [{ title: '', items: katEntries.map(e => ({
           href: `/artikull/${e.slug}/`,
           name: e.art.name || '',
@@ -1521,7 +1596,8 @@ function generateArtikujtPage(artEntries) {
   }
 
   const breadcrumb = `<span>ARTIKUJT</span>`;
-  const html = catalogPageHtml({ title, desc, canon, h1, intro, breadcrumb, sublinks, sections });
+  const artLdJson = JSON.stringify({"@context":"https://schema.org","@graph":[{"@type":"CollectionPage","name":title,"description":desc,"url":canon},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Artikujt","item":canon}]}]});
+  const html = catalogPageHtml({ title, desc, canon, h1, intro, breadcrumb, sublinks, sections, ldJson: artLdJson });
   const dir = path.join(ROOT, 'artikujt');
   ensureDir(dir);
   fs.writeFileSync(path.join(dir, 'index.html'), html, 'utf8');
@@ -1562,6 +1638,9 @@ function generatePelhuraPage(pelEntries) {
   <meta property="og:type" content="website" />
   <meta property="og:image" content="${BASE_URL}/og_image.png" />
   <meta property="og:site_name" content="Intal Albania" />
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@graph":[{"@type":"CollectionPage","name":"${jesc(title)}","description":"${jesc(desc)}","url":"${canon}"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Pelhura","item":"${canon}"}]}]}
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css">
   <link rel="stylesheet" href="/css/main.css">

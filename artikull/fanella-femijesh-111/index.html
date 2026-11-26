@@ -13,7 +13,45 @@
   <meta property="og:image" content="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784716050/cbyrthdodlhtrur83ci3.webp" />
   <meta property="og:site_name" content="Intal Albania" />
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"Product","name":"Fanella femijesh","description":"Fanellë për fëmijë, e bërë nga pambuk i pastër për lëkurë të ndjeshme. Përbërja: 100% Pambuk. Ngjyrat: E Bardhë. Numrat: 2, 4, 6, 8, 10.","brand":{"@type":"Brand","name":"Intal Albania"},"sku":"111","image":"https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784716050/cbyrthdodlhtrur83ci3.webp","url":"https://intalal.com/artikull/fanella-femijesh-111/","material":"100% pambuk natyral / ribana","category":"Të brendshme / Underwear","offers":{"@type":"Offer","availability":"https://schema.org/InStock","priceCurrency":"ALL","seller":{"@type":"Organization","name":"Intal Albania","url":"https://intalal.com"}}}
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Product",
+        "name": "Fanella femijesh",
+        "description": "Fanellë për fëmijë, e bërë nga pambuk i pastër për lëkurë të ndjeshme. Përbërja: 100% Pambuk. Ngjyrat: E Bardhë. Numrat: 2, 4, 6, 8, 10.",
+        "sku": "111",
+        "image": ["https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784716050/cbyrthdodlhtrur83ci3.webp","https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784716051/fbyottiovj2pbaiymtrk.webp","https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784716052/m1gbcxoglavnrmnewter.webp"],
+        "url": "https://intalal.com/artikull/fanella-femijesh-111/",
+        "brand": {"@type": "Brand", "name": "Intal Albania"},
+        "manufacturer": {
+          "@type": "Organization",
+          "name": "Intal Albania",
+          "url": "https://intalal.com",
+          "address": {"@type": "PostalAddress", "addressLocality": "Tiranë", "addressCountry": "AL"}
+        },
+        "material": "Pambuk 100%",
+        "category": "Të brendshme",
+        "size": ["2","4","6","8","10"],
+        "color": "E Bardhe",
+        "offers": {
+          "@type": "Offer",
+          "availability": "https://schema.org/InStock",
+          "priceCurrency": "ALL",
+          "seller": {"@type": "Organization", "name": "Intal Albania", "url": "https://intalal.com"}
+        }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {"@type": "ListItem", "position": 1, "name": "Artikujt", "item": "https://intalal.com/artikujt/"},
+          {"@type": "ListItem", "position": 2, "name": "Femije", "item": "https://intalal.com/artikujt/femije/"},
+          {"@type": "ListItem", "position": 3, "name": "Fanella", "item": "https://intalal.com/artikujt/femije/fanella/"},
+          {"@type": "ListItem", "position": 4, "name": "Fanella femijesh", "item": "https://intalal.com/artikull/fanella-femijesh-111/"}
+        ]
+      }
+    ]
+  }
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css">

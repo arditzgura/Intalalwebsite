@@ -13,7 +13,45 @@
   <meta property="og:image" content="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784715935/wynw2vpigpq7dvfh1qkf.webp" />
   <meta property="og:site_name" content="Intal Albania" />
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"Product","name":"Fustane","description":"Fustane grash verore me ngjyra të gjalla, të bëra nga një përzierje e lehtë pambuku me viskon. Përbërja: 90% Pambuk, 10% Viskon. Ngjyrat:…","brand":{"@type":"Brand","name":"Intal Albania"},"sku":"500","image":"https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784715935/wynw2vpigpq7dvfh1qkf.webp","url":"https://intalal.com/artikull/fustane-500-4/","material":"100% pambuk natyral / ribana","category":"Të brendshme / Underwear","offers":{"@type":"Offer","availability":"https://schema.org/InStock","priceCurrency":"ALL","seller":{"@type":"Organization","name":"Intal Albania","url":"https://intalal.com"}}}
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Product",
+        "name": "Fustane",
+        "description": "Fustane grash verore me ngjyra të gjalla, të bëra nga një përzierje e lehtë pambuku me viskon. Përbërja: 90% Pambuk, 10% Viskon. Ngjyrat:…",
+        "sku": "500",
+        "image": ["https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784715935/wynw2vpigpq7dvfh1qkf.webp","https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784715936/rhxnxoxostszirropxyj.webp"],
+        "url": "https://intalal.com/artikull/fustane-500-4/",
+        "brand": {"@type": "Brand", "name": "Intal Albania"},
+        "manufacturer": {
+          "@type": "Organization",
+          "name": "Intal Albania",
+          "url": "https://intalal.com",
+          "address": {"@type": "PostalAddress", "addressLocality": "Tiranë", "addressCountry": "AL"}
+        },
+        "material": "Pambuk 90%",
+        "category": "Të brendshme",
+        "size": ["XL","2XL","3XL","4XL"],
+        "color": "Shumengjyresh",
+        "offers": {
+          "@type": "Offer",
+          "availability": "https://schema.org/InStock",
+          "priceCurrency": "ALL",
+          "seller": {"@type": "Organization", "name": "Intal Albania", "url": "https://intalal.com"}
+        }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {"@type": "ListItem", "position": 1, "name": "Artikujt", "item": "https://intalal.com/artikujt/"},
+          {"@type": "ListItem", "position": 2, "name": "Stinore", "item": "https://intalal.com/artikujt/stinore/"},
+          {"@type": "ListItem", "position": 3, "name": "Vere", "item": "https://intalal.com/artikujt/stinore/vere/"},
+          {"@type": "ListItem", "position": 4, "name": "Fustane", "item": "https://intalal.com/artikull/fustane-500-4/"}
+        ]
+      }
+    ]
+  }
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css">
