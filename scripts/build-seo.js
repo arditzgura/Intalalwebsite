@@ -1224,7 +1224,8 @@ function fabricHtml(fab, slug, suggestions) {
 }
 
 /* ── Catalog page shared nav/footer ─────────────────────────── */
-function catalogNavFooter() {
+function catalogNavFooter(activeLink = 'artikujt') {
+  const isActive = (key) => activeLink === key ? ' active' : '';
   return {
     nav: `  <!-- Navbar -->
   <nav class="navbar" role="navigation" aria-label="Navigimi kryesor">
@@ -1235,8 +1236,8 @@ function catalogNavFooter() {
         </button>
         <div class="nav-links">
           <a href="/" class="nav-link">Home</a>
-          <a href="/artikujt/" class="nav-link active">Artikujt</a>
-          <a href="/pelhura/" class="nav-link">Pelhura</a>
+          <a href="/artikujt/" class="nav-link${isActive('artikujt')}">Artikujt</a>
+          <a href="/pelhura/" class="nav-link${isActive('pelhura')}">Pelhura</a>
           <a href="/rreth-nesh/" class="nav-link">Rreth Nesh</a>
           <a href="/me-shumice/" class="nav-link">Me Shumicë</a>
         </div>
@@ -1620,7 +1621,7 @@ function generatePelhuraPage(pelEntries) {
   const desc = 'Pelhurat e Intal Albania: ribana 30/1 dhe suprem print. Material pambuku natyral për prodhim të brendshmeve cilësore. Shitje me shumicë.';
   const h1 = 'Pelhurat e prodhimit';
   const intro = 'Materialet tona — ribana pambuku 30/1 dhe suprem print — janë baza e çdo artikulli Intal. Disponibël me shumicë për qepësi dhe prodhues.';
-  const nf = catalogNavFooter();
+  const nf = catalogNavFooter('pelhura');
 
   const cardsHtml = pelEntries.map(({ fab, slug }) => {
     const img = clImg(photoUrl((fab.photos || [])[0]), 400);
