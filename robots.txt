@@ -7,5 +7,6 @@ Disallow: /panel-pelhura
 Disallow: /panel-rreth-nesh
 Disallow: /panel-katalog
 Disallow: /panel-home
+Disallow: /panel-me-shumice
 
 Sitemap: https://intalal.com/sitemap.xml

@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+<meta charset="UTF-8">
+  <meta name="robots" content="noindex,nofollow" />
+  <link rel="icon" type="image/png" href="favicon.png">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Panel — Me Shumicë</title>
+<link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="js/firebase.js"></script>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  :root{
+    --bg:#f4f4f4;--white:#fff;--black:#111;--border:#e2e2e2;--muted:#888;
+    --accent:#C8003E;--panel:400px;
+  }
+  body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);display:flex;height:100vh;overflow:hidden;}
+
+  /* ── Sidebar panel ── */
+  #panel{width:var(--panel);flex-shrink:0;background:var(--white);border-right:.5px solid var(--border);display:flex;flex-direction:column;height:100vh;overflow:hidden;}
+  #panel-top{padding:16px 20px;border-bottom:.5px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0;}
+  #panel-top .logo{background:var(--accent);padding:4px 10px;border-radius:4px;font-weight:900;font-size:13px;color:#fff;letter-spacing:-0.5px;}
+  #panel-top .title{font-size:13px;font-weight:600;color:var(--black);}
+  #panel-top .back{margin-left:auto;font-size:11px;color:var(--muted);text-decoration:none;display:flex;align-items:center;gap:4px;}
+  #panel-top .back:hover{color:var(--black);}
+
+  #panel-tabs{display:flex;border-bottom:.5px solid var(--border);flex-shrink:0;overflow-x:auto;}
+  .ptab{padding:10px 14px;font-size:11px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all .15s;}
+  .ptab.active{color:var(--black);border-bottom-color:var(--black);}
+  .ptab:hover{color:var(--black);}
+
+  #panel-body{flex:1;overflow-y:auto;padding:20px;}
+  .panel-section{display:none;}
+  .panel-section.active{display:block;}
+
+  .pfield{margin-bottom:16px;}
+  .pfield label{display:block;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+  .pfield input[type=text],.pfield textarea{width:100%;background:var(--bg);border:.5px solid var(--border);border-radius:4px;padding:8px 10px;font-size:13px;color:var(--black);resize:vertical;font-family:inherit;transition:border-color .15s;}
+  .pfield input[type=text]:focus,.pfield textarea:focus{outline:none;border-color:var(--black);}
+  .pfield textarea{min-height:80px;}
+
+  .pgroup{background:var(--bg);border:.5px solid var(--border);border-radius:6px;padding:14px;margin-bottom:14px;}
+  .pgroup-title{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:12px;}
+
+  .img-upload-wrap{position:relative;border:.5px dashed var(--border);border-radius:4px;overflow:hidden;aspect-ratio:16/5;background:var(--bg);cursor:pointer;transition:border-color .15s;}
+  .img-upload-wrap:hover{border-color:var(--black);}
+  .img-upload-wrap img{width:100%;height:100%;object-fit:cover;display:block;}
+  .img-upload-wrap .img-placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:var(--muted);font-size:11px;letter-spacing:.5px;}
+  .img-upload-wrap .img-placeholder i{font-size:22px;}
+  .img-upload-wrap input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;}
+  .img-clear{margin-top:6px;font-size:11px;color:var(--muted);cursor:pointer;background:none;border:none;padding:0;}
+  .img-clear:hover{color:var(--accent);}
+
+  #panel-footer{padding:14px 20px;border-top:.5px solid var(--border);flex-shrink:0;display:flex;gap:8px;}
+  .btn-save{flex:1;background:var(--black);color:#fff;border:none;padding:10px;font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border-radius:3px;transition:opacity .15s;}
+  .btn-save:hover{opacity:.8;}
+  .btn-reset{background:none;border:.5px solid var(--border);color:var(--muted);padding:10px 14px;font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border-radius:3px;transition:all .15s;}
+  .btn-reset:hover{border-color:var(--black);color:var(--black);}
+  #save-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--black);color:#fff;padding:8px 20px;border-radius:4px;font-size:12px;font-weight:500;letter-spacing:.5px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999;}
+  #save-toast.show{opacity:1;}
+
+  /* ── FAQ items ── */
+  .faq-item-wrap{background:var(--bg);border:.5px solid var(--border);border-radius:6px;padding:12px 14px;margin-bottom:10px;position:relative;}
+  .faq-item-num{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;}
+  .faq-del-btn{background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;padding:0;line-height:1;}
+  .faq-del-btn:hover{color:var(--accent);}
+
+  /* ── Preview iframe ── */
+  #preview-wrap{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+  #preview-bar{padding:8px 16px;background:var(--white);border-bottom:.5px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0;}
+  #preview-bar span{font-size:11px;color:var(--muted);letter-spacing:.5px;}
+  #preview-bar .url{flex:1;background:var(--bg);border:.5px solid var(--border);border-radius:20px;padding:5px 14px;font-size:11px;color:var(--muted);}
+  #preview-bar .refresh-btn{background:none;border:none;cursor:pointer;color:var(--muted);font-size:16px;padding:4px;}
+  #preview-bar .refresh-btn:hover{color:var(--black);}
+  #preview-iframe{flex:1;border:none;width:100%;background:#fff;}
+</style>
+</head>
+<body>
+
+<!-- ── Sidebar ── -->
+<div id="panel">
+  <div id="panel-top">
+    <div class="logo">intal</div>
+    <span class="title">Me Shumicë — Editor</span>
+    <a href="panel.html" class="back"><i class="ri-arrow-left-line"></i> Panel</a>
+  </div>
+
+  <div id="panel-tabs">
+    <div class="ptab active" data-tab="hero">Hero</div>
+    <div class="ptab" data-tab="stats">Statistika</div>
+    <div class="ptab" data-tab="benefits">Avantazhet</div>
+    <div class="ptab" data-tab="cats">Kategoritë</div>
+    <div class="ptab" data-tab="process">Procesi</div>
+    <div class="ptab" data-tab="faq">FAQ</div>
+    <div class="ptab" data-tab="cta">CTA</div>
+  </div>
+
+  <div id="panel-body">
+
+    <!-- HERO -->
+    <div class="panel-section active" id="tab-hero">
+      <div class="pfield">
+        <label>Imazhi i Sfondit</label>
+        <div class="img-upload-wrap" id="hero-img-wrap">
+          <img id="hero-img-preview" src="" style="display:none;">
+          <div class="img-placeholder"><i class="ri-image-add-line"></i><span>Ngarko Imazh</span></div>
+          <input type="file" accept="image/*" id="hero-img-input">
+        </div>
+        <button class="img-clear" id="hero-img-clear">✕ Hiq imazhin</button>
+      </div>
+      <div class="pfield" id="hero-pos-controls" style="display:none;">
+        <label style="display:flex;justify-content:space-between;"><span>Pozicioni Horizontal</span><span id="hero-pos-x-val" style="color:#111;font-weight:700;">50%</span></label>
+        <input type="range" id="hero-pos-x" min="0" max="100" value="50" style="width:100%;margin:6px 0 12px;" oninput="document.getElementById('hero-pos-x-val').textContent=this.value+'%'">
+        <label style="display:flex;justify-content:space-between;"><span>Pozicioni Vertikal</span><span id="hero-pos-y-val" style="color:#111;font-weight:700;">50%</span></label>
+        <input type="range" id="hero-pos-y" min="0" max="100" value="50" style="width:100%;margin:6px 0 0;" oninput="document.getElementById('hero-pos-y-val').textContent=this.value+'%'">
+      </div>
+      <div class="pfield"><label>Teksti i Vogël (eyebrow)</label><input type="text" id="hero-eyebrow"></div>
+      <div class="pfield"><label>Titulli Kryesor (H1)</label><input type="text" id="hero-h1"></div>
+      <div class="pfield"><label>Teksti Nënshkrues</label><textarea id="hero-sub"></textarea></div>
+      <div class="pfield"><label>Teksti i Butonit CTA</label><input type="text" id="hero-cta-text"></div>
+    </div>
+
+    <!-- STATS -->
+    <div class="panel-section" id="tab-stats">
+      <div class="pgroup">
+        <div class="pgroup-title">Statistika 1</div>
+        <div class="pfield"><label>Numri</label><input type="text" id="stat-0-num"></div>
+        <div class="pfield"><label>Etiketa</label><input type="text" id="stat-0-lbl"></div>
+      </div>
+      <div class="pgroup">
+        <div class="pgroup-title">Statistika 2</div>
+        <div class="pfield"><label>Numri</label><input type="text" id="stat-1-num"></div>
+        <div class="pfield"><label>Etiketa</label><input type="text" id="stat-1-lbl"></div>
+      </div>
+      <div class="pgroup">
+        <div class="pgroup-title">Statistika 3</div>
+        <div class="pfield"><label>Numri</label><input type="text" id="stat-2-num"></div>
+        <div class="pfield"><label>Etiketa</label><input type="text" id="stat-2-lbl"></div>
+      </div>
+      <div class="pgroup">
+        <div class="pgroup-title">Statistika 4</div>
+        <div class="pfield"><label>Numri</label><input type="text" id="stat-3-num"></div>
+        <div class="pfield"><label>Etiketa</label><input type="text" id="stat-3-lbl"></div>
+      </div>
+    </div>
+
+    <!-- BENEFITS (Avantazhet) -->
+    <div class="panel-section" id="tab-benefits">
+      <div class="pfield"><label>Etiketa e Seksionit</label><input type="text" id="ben-eyebrow"></div>
+      <div class="pfield"><label>Titulli</label><input type="text" id="ben-heading"></div>
+      <div class="pfield"><label>Teksti Hyrës</label><textarea id="ben-lead"></textarea></div>
+      <div class="pgroup">
+        <div class="pgroup-title">Avantazhi 1</div>
+        <div class="pfield"><label>Titulli</label><input type="text" id="ben-0-title"></div>
+        <div class="pfield"><label>Teksti</label><textarea id="ben-0-text"></textarea></div>
+      </div>
+      <div class="pgroup">
+        <div class="pgroup-title">Avantazhi 2</div>
+        <div class="pfield"><label>Titulli</label><input type="text" id="ben-1-title"></div>
+        <div class="pfield"><label>Teksti</label><textarea id="ben-1-text"></textarea></div>
+      </div>
+      <div class="pgroup">
+        <div class="pgroup-title">Avantazhi 3</div>
+        <div class="pfield"><label>Titulli</label><input type="text" id="ben-2-title"></div>
+        <div class="pfield"><label>Teksti</label><textarea id="ben-2-text"></textarea></div>
+      </div>
+      <div class="pgroup">
+        <div class="pgroup-title">Avantazhi 4</div>
+        <div class="pfield"><label>Titulli</label><input type="text" id="ben-3-title"></div>
+        <div class="pfield"><label>Teksti</label><textarea id="ben-3-text"></textarea></div>
+      </div>
+      <div class="pgroup">
+        <div class="pgroup-title">Avantazhi 5</div>
+        <div class="pfield"><label>Titulli</label><input type="text" id="ben-4-title"></div>
+        <div class="pfield"><label>Teksti</label><textarea id="ben-4-text"></textarea></div>
+      </div>
+      <div class="pgroup">
+        <div class="pgroup-title">Avantazhi 6</div>
+        <div class="pfield"><label>Titulli</label><input type="text" id="ben-5-title"></div>
+        <div class="pfield"><label>Teksti</label><textarea id="ben-5-text"></textarea></div>
+      </div>
+    </div>
+
+    <!-- CATEGORIES -->
+    <div class="panel-section" id="tab-cats">
+      <div class="pfield"><label>Etiketa e Seksionit</label><input type="text" id="cats-eyebrow"></div>
+      <div class="pfield"><label>Titulli</label><input type="text" id="cats-heading"></div>
+      <div class="pfield"><label>Teksti Hyrës</label><textarea id="cats-lead"></textarea></div>
+    </div>
+
+    <!-- PROCESS -->
+    <div class="panel-section" id="tab-process">
+      <div class="pfield"><label>Etiketa e Seksionit</label><input type="text" id="proc-eyebrow"></div>
+      <div class="pfield"><label>Titulli</label><input type="text" id="proc-heading"></div>
+      <div class="pfield"><label>Teksti Hyrës</label><textarea id="proc-lead"></textarea></div>
+      <div class="pgroup">
+        <div class="pgroup-title">Hapi 1</div>
+        <div class="pfield"><label>Titulli</label><input type="text" id="step-0-title"></div>
+        <div class="pfield"><label>Teksti</label><textarea id="step-0-text"></textarea></div>
+      </div>
+      <div class="pgroup">
+        <div class="pgroup-title">Hapi 2</div>
+        <div class="pfield"><label>Titulli</label><input type="text" id="step-1-title"></div>
+        <div class="pfield"><label>Teksti</label><textarea id="step-1-text"></textarea></div>
+      </div>
+      <div class="pgroup">
+        <div class="pgroup-title">Hapi 3</div>
+        <div class="pfield"><label>Titulli</label><input type="text" id="step-2-title"></div>
+        <div class="pfield"><label>Teksti</label><textarea id="step-2-text"></textarea></div>
+      </div>
+      <div class="pgroup">
+        <div class="pgroup-title">Hapi 4</div>
+        <div class="pfield"><label>Titulli</label><input type="text" id="step-3-title"></div>
+        <div class="pfield"><label>Teksti</label><textarea id="step-3-text"></textarea></div>
+      </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="panel-section" id="tab-faq">
+      <div style="margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);">Pyetjet e Shpeshta</span>
+        <button id="faq-add-btn" style="background:var(--black);color:#fff;border:none;padding:5px 12px;font-size:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;border-radius:3px;cursor:pointer;">+ Pyetje</button>
+      </div>
+      <div id="faq-items-wrap"></div>
+    </div>
+
+    <!-- CTA -->
+    <div class="panel-section" id="tab-cta">
+      <div class="pfield"><label>Titulli</label><input type="text" id="cta-heading"></div>
+      <div class="pfield"><label>Teksti Hyrës</label><textarea id="cta-lead"></textarea></div>
+      <div class="pfield"><label>Teksti Butonit WhatsApp</label><input type="text" id="cta-wa-text"></div>
+      <div class="pfield"><label>Teksti Butonit Email</label><input type="text" id="cta-email-text"></div>
+    </div>
+
+  </div><!-- /panel-body -->
+
+  <div id="panel-footer">
+    <button class="btn-save" id="btn-save">Ruaj & Refresh</button>
+    <button class="btn-reset" id="btn-reset" title="Kthe vlerat fillestare">Rikthe</button>
+  </div>
+</div>
+
+<!-- ── Preview ── -->
+<div id="preview-wrap">
+  <div id="preview-bar">
+    <span>PREVIEW</span>
+    <div class="url">me-shumice/index.html</div>
+    <button class="refresh-btn" id="btn-refresh" title="Rifresko"><i class="ri-refresh-line"></i></button>
+  </div>
+  <iframe id="preview-iframe" src="me-shumice/index.html"></iframe>
+</div>
+
+<div id="save-toast">Ndryshimet u ruajtën ✓</div>
+
+<script>
+(function(){
+
+  var DEFAULTS = {
+    hero: {
+      eyebrow: 'Partnerët e Biznesit',
+      h1: 'Të Brendshme me Shumicë\nDirekt nga Fabrika',
+      sub: 'Intal Albania prodhon dhe shet me shumicë të brendshme pambuku 100% — meshkuj, femra dhe fëmijë. Mbi 30 vite eksperiencë, çmime fabrike, eksport në rajon.',
+      ctaText: 'Na Kontaktoni Sot',
+      bgImage: '', bgX: 50, bgY: 50
+    },
+    stats: [
+      { num: '30+', lbl: 'Vite Eksperiencë' },
+      { num: '143', lbl: 'Artikuj në Koleksion' },
+      { num: '100%', lbl: 'Pambuk Natyral' },
+      { num: '4+', lbl: 'Vende Eksporti' }
+    ],
+    benefits: {
+      eyebrow: 'Pse Intal',
+      heading: 'Avantazhet e Partneritetit',
+      lead: 'Kur zgjidhni Intal Albania si furnizues, fitoni një partner të besueshëm me tradita solide në prodhimin e brendshmeve cilësore.',
+      items: [
+        { title: 'Çmime Fabrike', text: 'Blini direkt nga prodhuesi — pa ndërmjetës, pa marzhe shtesë. Çmimet janë konkurrente sepse jeni blerësi i parë pas prodhimit.' },
+        { title: 'Pambuk 100% Natyral', text: 'Ribana 30/1 dhe suprem print — materiale të certifikuara, të ajrosura dhe të sigurta për lëkurën. Cilësi e qëndrueshme në çdo koleksion.' },
+        { title: 'Sasi Fleksibël', text: 'Sasia minimale e porosisë është e negociueshme sipas artikullit. Kemi zgjidhje për dyqane të vogla dhe shpërndarës të mëdhenj.' },
+        { title: 'Eksport Rajonal', text: 'Furnizojmë partnerë në Kosovë, Maqedoni të Veriut, Mal të Zi dhe Serbi. Eksperiencë e konsoliduar në eksport dhe logjistikë rajonale.' },
+        { title: 'Private Label', text: 'Prodhojmë me etiketën tuaj sipas kërkesës. Zgjidhja ideale për marka që duan produkte cilësore me identitetin e tyre.' },
+        { title: 'Furnizim i Rregullt', text: 'Me kapacitet prodhimi të qëndrueshëm, garantojmë furnizim të rregullt dhe afate reale dorëzimi për të gjithë partnerët tanë.' }
+      ]
+    },
+    cats: {
+      eyebrow: 'Koleksioni',
+      heading: 'Produktet me Shumicë',
+      lead: 'Koleksion i plotë i të brendshmeve pambuku — bluza, fanella, kanatjere, mbathje, pizhame dhe kostume verore për meshkuj, femra dhe fëmijë.'
+    },
+    process: {
+      eyebrow: 'Si Funksionon',
+      heading: 'Procesi i Porosisë me Shumicë',
+      lead: 'Katër hapa të thjeshtë për të filluar bashkëpunimin me Intal Albania.',
+      steps: [
+        { title: 'Na Kontaktoni', text: 'Dërgoni mesazh WhatsApp ose email me kategorinë që ju intereson dhe sasinë e përafërt të porosisë.' },
+        { title: 'Diskutojmë Kushtet', text: 'Ju ofrojmë listën e çmimeve, mostrën nëse keni nevojë dhe dakordohemi për sasinë, ngjyrat dhe masat.' },
+        { title: 'Konfirmoni Porosinë', text: 'Pas konfirmimit të porosisë, fillojmë prodhimin ose përgatitjen nga stoku ekzistues.' },
+        { title: 'Dorëzimi', text: 'Tërhiqni nga fabrika (Vaqarr, Tiranë), nga dyqani ynë (Rruga 5 Maji), ose bisedojmë për transport deri tek ju.' }
+      ]
+    },
+    faq: [
+      { q: 'Cila është sasia minimale e porosisë me shumicë?', a: 'Sasia minimale është fleksibël dhe negociohet sipas artikullit dhe kategorisë. Kontaktoni na drejtpërdrejt për të diskutuar kushtet sipas nevojave tuaja specifike.' },
+      { q: 'A eksportoni jashtë Shqipërisë?', a: 'Po. Eksportojmë rregullisht në Kosovë, Maqedoni të Veriut, Mal të Zi dhe Serbi. Ofrojmë gjithashtu shërbim private label — prodhim me etiketën tuaj sipas kërkesës.' },
+      { q: 'Çfarë materialesh përdorni për prodhim?', a: 'Përdorim kryesisht 100% pambuk natyral — ribana 30/1 dhe suprem print. Materialet tona janë të certifikuara, të ajrosura dhe të sigurta për lëkurën në çdo grup moshe.' },
+      { q: 'A ofrohet shërbimi private label?', a: 'Po. Prodhojmë me etiketën tuaj sipas kërkesës. Ky shërbim është ideal për marka dhe dyqane që duan produkte cilësore me identitetin e tyre vizual.' },
+      { q: 'Si mund të bëj një porosi me shumicë?', a: 'Na kontaktoni nëpërmjet WhatsApp/Telefon: +355 69 277 6636, ose Email: info@intalal.com. Mund të vizitoni edhe fabrikën: Rrobaqepësi INTAL, Rruga Arbanes, Vaqarr, Tiranë 1035.' }
+    ],
+    cta: {
+      heading: 'Filloni Bashkëpunimin Sot',
+      lead: 'Jemi të gatshëm t\'ju ofrojmë çmimet tona dhe të diskutojmë kushtet e partneritetit. Na kontaktoni dhe do të merrni përgjigje brenda 24 orësh.',
+      waText: 'WhatsApp',
+      emailText: 'info@intalal.com'
+    }
+  };
+
+  function loadData(){
+    try{
+      var r = localStorage.getItem('intal_ms_v1');
+      if(r) return JSON.parse(r);
+    }catch(e){}
+    return JSON.parse(JSON.stringify(DEFAULTS));
+  }
+
+  function saveData(d){
+    var str = JSON.stringify(d);
+    localStorage.setItem('intal_ms_v1', str);
+    if(d._saved) sbSet('page_ms_v1', str).catch(function(){});
+  }
+
+  function getFormData(){
+    var d = loadData();
+    // Hero
+    d.hero.eyebrow  = document.getElementById('hero-eyebrow').value;
+    d.hero.h1       = document.getElementById('hero-h1').value;
+    d.hero.sub      = document.getElementById('hero-sub').value;
+    d.hero.ctaText  = document.getElementById('hero-cta-text').value;
+    d.hero.bgX      = parseInt(document.getElementById('hero-pos-x').value)||50;
+    d.hero.bgY      = parseInt(document.getElementById('hero-pos-y').value)||50;
+    // Stats
+    for(var i=0;i<4;i++){
+      d.stats[i] = {
+        num: document.getElementById('stat-'+i+'-num').value,
+        lbl: document.getElementById('stat-'+i+'-lbl').value
+      };
+    }
+    // Benefits
+    d.benefits.eyebrow = document.getElementById('ben-eyebrow').value;
+    d.benefits.heading = document.getElementById('ben-heading').value;
+    d.benefits.lead    = document.getElementById('ben-lead').value;
+    for(var b=0;b<6;b++){
+      d.benefits.items[b] = {
+        title: document.getElementById('ben-'+b+'-title').value,
+        text:  document.getElementById('ben-'+b+'-text').value
+      };
+    }
+    // Categories
+    d.cats.eyebrow = document.getElementById('cats-eyebrow').value;
+    d.cats.heading = document.getElementById('cats-heading').value;
+    d.cats.lead    = document.getElementById('cats-lead').value;
+    // Process
+    d.process.eyebrow = document.getElementById('proc-eyebrow').value;
+    d.process.heading = document.getElementById('proc-heading').value;
+    d.process.lead    = document.getElementById('proc-lead').value;
+    for(var s=0;s<4;s++){
+      d.process.steps[s] = {
+        title: document.getElementById('step-'+s+'-title').value,
+        text:  document.getElementById('step-'+s+'-text').value
+      };
+    }
+    // FAQ
+    d.faq = [];
+    document.querySelectorAll('.faq-item-wrap').forEach(function(item){
+      var qi = item.querySelector('.faq-q-inp');
+      var ai = item.querySelector('.faq-a-inp');
+      d.faq.push({ q: qi?qi.value:'', a: ai?ai.value:'' });
+    });
+    // CTA
+    d.cta.heading    = document.getElementById('cta-heading').value;
+    d.cta.lead       = document.getElementById('cta-lead').value;
+    d.cta.waText     = document.getElementById('cta-wa-text').value;
+    d.cta.emailText  = document.getElementById('cta-email-text').value;
+    return d;
+  }
+
+  function fillForm(d){
+    // Hero
+    document.getElementById('hero-eyebrow').value   = d.hero.eyebrow||'';
+    document.getElementById('hero-h1').value        = d.hero.h1||'';
+    document.getElementById('hero-sub').value       = d.hero.sub||'';
+    document.getElementById('hero-cta-text').value  = d.hero.ctaText||'';
+    if(d.hero.bgImage){
+      document.getElementById('hero-img-preview').src = d.hero.bgImage;
+      document.getElementById('hero-img-preview').style.display = 'block';
+      document.getElementById('hero-pos-controls').style.display = 'block';
+      document.getElementById('hero-pos-x').value = d.hero.bgX!==undefined?d.hero.bgX:50;
+      document.getElementById('hero-pos-y').value = d.hero.bgY!==undefined?d.hero.bgY:50;
+      document.getElementById('hero-pos-x-val').textContent = (d.hero.bgX!==undefined?d.hero.bgX:50)+'%';
+      document.getElementById('hero-pos-y-val').textContent = (d.hero.bgY!==undefined?d.hero.bgY:50)+'%';
+    }
+    // Stats
+    var stats = d.stats||[];
+    for(var i=0;i<4;i++){
+      var st = stats[i]||{};
+      document.getElementById('stat-'+i+'-num').value = st.num||'';
+      document.getElementById('stat-'+i+'-lbl').value = st.lbl||'';
+    }
+    // Benefits
+    var ben = d.benefits||{};
+    document.getElementById('ben-eyebrow').value = ben.eyebrow||'';
+    document.getElementById('ben-heading').value = ben.heading||'';
+    document.getElementById('ben-lead').value    = ben.lead||'';
+    var benItems = ben.items||[];
+    for(var b=0;b<6;b++){
+      var bi = benItems[b]||{};
+      document.getElementById('ben-'+b+'-title').value = bi.title||'';
+      document.getElementById('ben-'+b+'-text').value  = bi.text||'';
+    }
+    // Categories
+    var cats = d.cats||{};
+    document.getElementById('cats-eyebrow').value = cats.eyebrow||'';
+    document.getElementById('cats-heading').value = cats.heading||'';
+    document.getElementById('cats-lead').value    = cats.lead||'';
+    // Process
+    var proc = d.process||{};
+    document.getElementById('proc-eyebrow').value = proc.eyebrow||'';
+    document.getElementById('proc-heading').value = proc.heading||'';
+    document.getElementById('proc-lead').value    = proc.lead||'';
+    var steps = proc.steps||[];
+    for(var s=0;s<4;s++){
+      var st2 = steps[s]||{};
+      document.getElementById('step-'+s+'-title').value = st2.title||'';
+      document.getElementById('step-'+s+'-text').value  = st2.text||'';
+    }
+    // FAQ
+    buildFaqItems(d.faq||[]);
+    // CTA
+    var cta = d.cta||{};
+    document.getElementById('cta-heading').value   = cta.heading||'';
+    document.getElementById('cta-lead').value      = cta.lead||'';
+    document.getElementById('cta-wa-text').value   = cta.waText||'';
+    document.getElementById('cta-email-text').value = cta.emailText||'';
+  }
+
+  // FAQ helpers
+  function buildFaqItems(faqArr){
+    var wrap = document.getElementById('faq-items-wrap');
+    wrap.innerHTML = '';
+    (faqArr.length ? faqArr : DEFAULTS.faq).forEach(function(item){
+      addFaqRow(item.q||'', item.a||'');
+    });
+  }
+
+  function addFaqRow(q, a){
+    var wrap = document.getElementById('faq-items-wrap');
+    var idx = wrap.children.length + 1;
+    var div = document.createElement('div');
+    div.className = 'faq-item-wrap';
+    div.innerHTML =
+      '<div class="faq-item-num"><span>Pyetja '+idx+'</span>'
+      +'<button class="faq-del-btn" title="Fshi" onclick="this.closest(\'.faq-item-wrap\').remove();saveData(getFormData());refreshPreview();renumberFaq();">✕</button></div>'
+      +'<div class="pfield"><label>Pyetja</label><input type="text" class="faq-q-inp" value="'+escVal(q)+'"></div>'
+      +'<div class="pfield"><label>Përgjigja</label><textarea class="faq-a-inp" style="min-height:70px;">'+escVal(a)+'</textarea></div>';
+    wrap.appendChild(div);
+  }
+
+  window.renumberFaq = function(){
+    document.querySelectorAll('.faq-item-wrap').forEach(function(el, i){
+      var lbl = el.querySelector('.faq-item-num span');
+      if(lbl) lbl.textContent = 'Pyetja '+(i+1);
+    });
+  };
+
+  function escVal(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+  document.getElementById('faq-add-btn').addEventListener('click', function(){
+    addFaqRow('','');
+    renumberFaq();
+  });
+
+  // Tabs
+  document.querySelectorAll('.ptab').forEach(function(tab){
+    tab.addEventListener('click', function(){
+      document.querySelectorAll('.ptab').forEach(function(t){ t.classList.remove('active'); });
+      document.querySelectorAll('.panel-section').forEach(function(s){ s.classList.remove('active'); });
+      tab.classList.add('active');
+      document.getElementById('tab-'+tab.dataset.tab).classList.add('active');
+    });
+  });
+
+  // Image upload
+  document.getElementById('hero-img-input').addEventListener('change', function(e){
+    var file = e.target.files[0]; if(!file) return;
+    var ext = file.name.split('.').pop() || 'jpg';
+    var path = 'page-images/ms-hero.' + ext;
+    sbUploadImg(file, path).then(function(url){
+      var src = url || null;
+      if(!src){
+        var reader = new FileReader();
+        reader.onload = function(ev){
+          src = ev.target.result;
+          document.getElementById('hero-img-preview').src = src;
+          document.getElementById('hero-img-preview').style.display = 'block';
+          document.getElementById('hero-pos-controls').style.display = 'block';
+          var d = loadData(); d.hero.bgImage = src; d._saved = true; saveData(d);
+          refreshPreview();
+        };
+        reader.readAsDataURL(file);
+        return;
+      }
+      document.getElementById('hero-img-preview').src = src;
+      document.getElementById('hero-img-preview').style.display = 'block';
+      document.getElementById('hero-pos-controls').style.display = 'block';
+      var d = loadData(); d.hero.bgImage = src; d._saved = true; saveData(d);
+      refreshPreview();
+    });
+  });
+
+  document.getElementById('hero-img-clear').addEventListener('click', function(){
+    document.getElementById('hero-img-preview').src = '';
+    document.getElementById('hero-img-preview').style.display = 'none';
+    document.getElementById('hero-pos-controls').style.display = 'none';
+    var d = loadData(); d.hero.bgImage = ''; saveData(d);
+    refreshPreview();
+  });
+
+  // Auto-save on input (debounced)
+  var autoTimer;
+  document.getElementById('panel-body').addEventListener('input', function(){
+    clearTimeout(autoTimer);
+    autoTimer = setTimeout(function(){
+      saveData(getFormData());
+      refreshPreview();
+    }, 600);
+  });
+
+  // Save button
+  document.getElementById('btn-save').addEventListener('click', function(){
+    var d = getFormData();
+    d._saved = true;
+    saveData(d);
+    refreshPreview();
+    showToast();
+  });
+
+  // Reset button
+  document.getElementById('btn-reset').addEventListener('click', function(){
+    if(!confirm('Kthehen vlerat fillestare. Vazhdo?')) return;
+    localStorage.removeItem('intal_ms_v1');
+    fillForm(JSON.parse(JSON.stringify(DEFAULTS)));
+    saveData(JSON.parse(JSON.stringify(DEFAULTS)));
+    refreshPreview();
+  });
+
+  // Refresh preview
+  function refreshPreview(){
+    var iframe = document.getElementById('preview-iframe');
+    iframe.src = 'me-shumice/index.html?t=' + Date.now();
+  }
+
+  document.getElementById('btn-refresh').addEventListener('click', refreshPreview);
+
+  function showToast(){
+    var t = document.getElementById('save-toast');
+    t.classList.add('show');
+    setTimeout(function(){ t.classList.remove('show'); }, 2000);
+  }
+
+  // Expose for inline onclick handlers
+  window.saveData = saveData;
+  window.getFormData = getFormData;
+  window.refreshPreview = refreshPreview;
+
+  // Init
+  fillForm(loadData());
+})();
+</script>
+</body>
+</html>
