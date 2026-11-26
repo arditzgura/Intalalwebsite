@@ -89,6 +89,19 @@ function ensureDir(dir) {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 }
 
+/* ── Alt text helper ─────────────────────────────────────────── */
+function artAlt(art, photoIdx) {
+  const name = art.name || 'Artikull';
+  const mat  = (art.perberja || [])[0];
+  const matStr = mat ? `, ${mat.material || mat.name || 'pambuk'} ${mat.perqindje || mat.pct || mat.value || '100'}%` : '';
+  const subMap = { meshkuj:'për meshkuj', femra:'për femra', femije:'për fëmijë', fëmijë:'për fëmijë' };
+  const rawSub = art.sub ? (Array.isArray(art.sub) ? art.sub[0] : art.sub) : '';
+  const subStr = subMap[(rawSub||'').toLowerCase()] ? ', ' + subMap[(rawSub||'').toLowerCase()] : '';
+  const idx = photoIdx || 0;
+  const viewStr = idx === 0 ? ', pamje përpara' : `, foto ${idx + 1}`;
+  return `${name}${matStr}${subStr}${viewStr}`;
+}
+
 /* ── Article page template ───────────────────────────────────── */
 function articleHtml(art, slug, suggestions, colorVariants) {
   const title   = esc(art.name || 'Artikull');
@@ -120,7 +133,7 @@ function articleHtml(art, slug, suggestions, colorVariants) {
   const thumbsHtml = photos.length > 1
     ? photos.map((src, i) =>
         `<button class="thumb ${i===0?'active':''}" onclick="if(window.innerWidth<=680){openLightbox(${i})}else{setPhoto(${i})}" aria-label="Foto ${i+1}">` +
-        `<img src="${esc(photosTh[i]||src)}" alt="${title} foto ${i+1}"></button>`
+        `<img src="${esc(photosTh[i]||src)}" alt="${esc(artAlt(art, i))}"></button>`
       ).join('')
     : '';
 
@@ -328,7 +341,7 @@ function articleHtml(art, slug, suggestions, colorVariants) {
       <div class="menu-drawer-contacts">
         <a class="menu-drawer-contact-item" href="tel:+355692776636">
           <div class="menu-drawer-icon"><i class="ri-phone-line"></i></div>
-          <div><span class="menu-drawer-label">Telefon / WhatsApp</span><span class="menu-drawer-value">+355 692 776 636</span></div>
+          <div><span class="menu-drawer-label">Telefon / WhatsApp</span><span class="menu-drawer-value">+355 69 277 6636</span></div>
         </a>
         <a class="menu-drawer-contact-item" href="mailto:info@intal.com">
           <div class="menu-drawer-icon"><i class="ri-mail-line"></i></div>
@@ -360,7 +373,7 @@ function articleHtml(art, slug, suggestions, colorVariants) {
       <div class="gallery">
         <div class="main-img-wrap" id="main-img-wrap">
           ${photo
-            ? `<img id="main-img" src="${esc(photo)}" alt="${title}" onclick="openLightbox(_idx)" style="cursor:zoom-in;">`
+            ? `<img id="main-img" src="${esc(photo)}" alt="${esc(artAlt(art, 0))}" onclick="openLightbox(_idx)" style="cursor:zoom-in;">`
             : `<div class="main-img-placeholder">👕</div>`}
           ${photos.length > 1 ? `
           <button class="gallery-nav prev" onclick="stepPhoto(-1)" aria-label="Para">&#8592;</button>
@@ -818,7 +831,7 @@ function fabricHtml(fab, slug, suggestions) {
       <div class="menu-drawer-contacts">
         <a class="menu-drawer-contact-item" href="tel:+355692776636">
           <div class="menu-drawer-icon"><i class="ri-phone-line"></i></div>
-          <div><span class="menu-drawer-label">Telefon / WhatsApp</span><span class="menu-drawer-value">+355 692 776 636</span></div>
+          <div><span class="menu-drawer-label">Telefon / WhatsApp</span><span class="menu-drawer-value">+355 69 277 6636</span></div>
         </a>
         <a class="menu-drawer-contact-item" href="mailto:info@intal.com">
           <div class="menu-drawer-icon"><i class="ri-mail-line"></i></div>
