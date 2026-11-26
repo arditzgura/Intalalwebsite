@@ -102,10 +102,39 @@ function artAlt(art, photoIdx) {
   return `${name}${matStr}${subStr}${viewStr}`;
 }
 
+/* ── Meta description builder ────────────────────────────────── */
+function buildMetaDesc(art) {
+  // Use AI description bullets from pershkrimet.json if available
+  const pts = (art.pershkrim && art.pershkrim.length ? art.pershkrim : null)
+           || (art.code && _pershkrimMap[art.code])
+           || null;
+  if (pts && pts.length >= 2) {
+    // Combine first two bullets; trim to 155 chars at word boundary
+    let d = pts[0] + ' ' + pts[1];
+    if (d.length > 155) {
+      d = d.slice(0, 152);
+      const lastSpace = d.lastIndexOf(' ');
+      if (lastSpace > 100) d = d.slice(0, lastSpace);
+      d += '…';
+    }
+    return d;
+  }
+  // Fallback template
+  const sub  = art.sub ? (Array.isArray(art.sub) ? art.sub[0] : art.sub) : '';
+  const kat  = art.kat ? (Array.isArray(art.kat) ? art.kat[0] : art.kat) : '';
+  const mat  = (art.perberja || [])[0];
+  const matStr = mat ? `${mat.material || 'Pambuk'} ${mat.perqindje || mat.pct || mat.value || '100'}%` : '100% Pambuk';
+  const sizes = (art.masat || art.sizes || []);
+  const szStr = sizes.length ? `Masa: ${sizes.join(', ')}.` : '';
+  let d = `${art.name || kat} për ${sub || 'të gjithë'}. ${matStr}. ${szStr} Prodhim shqiptar, shitje me shumicë — Intal Albania.`.replace(/\s{2,}/g, ' ').trim();
+  if (d.length > 160) d = d.slice(0, 157) + '…';
+  return d;
+}
+
 /* ── Article page template ───────────────────────────────────── */
 function articleHtml(art, slug, suggestions, colorVariants) {
   const title   = esc(art.name || 'Artikull');
-  const rawDesc = art.desc || `${art.name} nga Intal Albania — fabrikë shqiptare e të brendshmeve që nga 1994.`;
+  const rawDesc = buildMetaDesc(art);
   const desc    = esc(rawDesc);
   const photos  = (art.photos || []).map(p => clImg(typeof p === 'string' ? p : (p.src || p.url || ''), 1200)).filter(Boolean);
   const photosTh = photos.map(p => clImg(p, 200));
@@ -651,9 +680,28 @@ function articleHtml(art, slug, suggestions, colorVariants) {
 }
 
 /* ── Fabric page template ────────────────────────────────────── */
+function buildFabricMetaDesc(fab) {
+  const pts = (fab.pershkrim && fab.pershkrim.length ? fab.pershkrim : null)
+           || (fab.name && _pershkrimPelhuraMap[fab.name])
+           || null;
+  if (pts && pts.length >= 2) {
+    let d = pts[0] + ' ' + pts[1];
+    if (d.length > 155) {
+      d = d.slice(0, 152);
+      const lastSpace = d.lastIndexOf(' ');
+      if (lastSpace > 100) d = d.slice(0, lastSpace);
+      d += '…';
+    }
+    return d;
+  }
+  const mat  = (fab.perberja || [])[0];
+  const matStr = mat ? `${mat.material || 'Pambuk'} ${mat.perqindje || mat.pct || mat.value || '100'}%` : '100% Pambuk';
+  return `Pelhurë ${fab.name || ''} nga Intal Albania. ${matStr}. Material cilësor për prodhim të brendshmeve, shitje me shumicë.`.replace(/\s{2,}/g, ' ').trim();
+}
+
 function fabricHtml(fab, slug, suggestions) {
   const title  = esc(fab.name || 'Pelhurë');
-  const rawDesc = fab.desc || `Pelhurë ${fab.name} nga Intal Albania — material cilësor për prodhim të brendshmeve.`;
+  const rawDesc = buildFabricMetaDesc(fab);
   const desc   = esc(rawDesc);
   const photos = (fab.photos || []).map(p => clImg(typeof p === 'string' ? p : (p.src || p.url || ''), 1200)).filter(Boolean);
   const photosTh = photos.map(p => clImg(p, 200));
