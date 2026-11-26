@@ -1377,7 +1377,7 @@
       var html = '';
       kats.forEach(function(kat, i){
         var img = sbImgUrl(kryesoreFoto[kat] || firstPhotoOfCat(artikujt, kat) || FALLBACK_IMGS[i % FALLBACK_IMGS.length]);
-        var href = kat.toLowerCase()==='pelhura' ? '/pelhura/' : '/artikujt/#'+encodeURIComponent(kat.toLowerCase());
+        var href = kat.toLowerCase()==='pelhura' ? '/pelhura/' : '/artikujt#'+encodeURIComponent(kat.toLowerCase());
         var customDesc = data && data.kategoriSettings && data.kategoriSettings.kryesoreDesc && data.kategoriSettings.kryesoreDesc[kat];
         var defaultDesc = tDict['sc-desc-'+kat] || (lang==='en'
           ? 'Explore the complete '+tCat(kat).toLowerCase()+' collection with high-quality Albanian production.'

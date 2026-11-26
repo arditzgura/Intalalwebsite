@@ -595,6 +595,12 @@
         var arr=Array.isArray(s)?s:[s];
         return !arr.some(function(x){ return (x||'').toLowerCase()==='pelhura'; });
       });
+      // normalize activeSub case to match actual data values
+      if(activeSub&&activeSub!=='te-gjitha'){
+        var norm=null;
+        artKats.some(function(a){ var arr=Array.isArray(a.sub)?a.sub:[a.sub]; return arr.some(function(v){ if((v||'').toLowerCase()===activeSub.toLowerCase()){norm=v;return true;} }); });
+        if(norm) activeSub=norm;
+      }
       _state.cat=''; _state.activeSub=activeSub; _state.activeKat=activeKat||'te-gjitha';
       _state.activeSubKat=activeSubKat||'te-gjitha';
       _state.articles=artKats; _state.allArticles=artKats;
