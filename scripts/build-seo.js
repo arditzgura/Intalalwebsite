@@ -1580,7 +1580,7 @@ function generateArtikujtPage(artEntries) {
     { href: '/artikujt/meshkuj/', label: 'Meshkuj' },
     { href: '/artikujt/femra/', label: 'Femra' },
     { href: '/artikujt/femije/', label: 'Fëmijë' },
-    { href: '#sec-stinore', label: 'Stinore' },
+    { href: '/artikujt/stinore/', label: 'Stinore' },
   ];
 
   // Group by sub for sections
