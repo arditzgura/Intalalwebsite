@@ -1360,7 +1360,8 @@ function catalogPageHtml(opts) {
       </a>`;
     }).join('');
     const secTitle = sec.title ? `<div class="cat-section-title">${esc(sec.title)}</div>` : '';
-    contentHtml += `<div class="cat-section">${secTitle}<div class="art-grid">${cardsHtml}</div></div>`;
+    const secId = sec.id ? ` id="${sec.id}"` : '';
+    contentHtml += `<div class="cat-section"${secId}>${secTitle}<div class="art-grid">${cardsHtml}</div></div>`;
   }
 
   return `<!DOCTYPE html>
@@ -1412,12 +1413,14 @@ const SUB_LABELS = {
   femra: 'Femra',
   femije: 'Fëmijë',
   'fëmijë': 'Fëmijë',
+  stinore: 'Stinore',
 };
 const SUB_URL = {
   meshkuj: 'meshkuj',
   femra: 'femra',
   femije: 'femije',
   'fëmijë': 'femije',
+  stinore: 'stinore',
 };
 const KAT_LABELS = {
   bluze: 'Bluza',
@@ -1577,6 +1580,7 @@ function generateArtikujtPage(artEntries) {
     { href: '/artikujt/meshkuj/', label: 'Meshkuj' },
     { href: '/artikujt/femra/', label: 'Femra' },
     { href: '/artikujt/femije/', label: 'Fëmijë' },
+    { href: '#sec-stinore', label: 'Stinore' },
   ];
 
   // Group by sub for sections
@@ -1589,12 +1593,13 @@ function generateArtikujtPage(artEntries) {
     groups[subKey].items.push(entry);
   }
 
-  const orderedSubs = ['meshkuj', 'femra', 'femije', 'tjera'];
+  const orderedSubs = ['meshkuj', 'femra', 'femije', 'stinore', 'tjera'];
   const sections = [];
   for (const subKey of orderedSubs) {
     if (!groups[subKey] || groups[subKey].items.length === 0) continue;
     sections.push({
       title: groups[subKey].label,
+      id: subKey === 'stinore' ? 'sec-stinore' : undefined,
       items: groups[subKey].items.map(e => ({
         href: `/artikull/${e.slug}/`,
         name: e.art.name || '',
