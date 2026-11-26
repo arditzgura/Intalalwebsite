@@ -1835,7 +1835,8 @@ function buildSitemap(artEntries, pelEntries, catUrls, pelDups) {
     { loc: `${BASE_URL}/`,             lastmod: TODAY, priority: '1.0' },
     { loc: `${BASE_URL}/artikujt/`,   lastmod: TODAY, priority: '0.9' },
     { loc: `${BASE_URL}/pelhura/`,    lastmod: TODAY, priority: '0.8' },
-    { loc: `${BASE_URL}/rreth-nesh/`, lastmod: TODAY, priority: '0.7' },
+    { loc: `${BASE_URL}/rreth-nesh/`,  lastmod: TODAY, priority: '0.7' },
+    { loc: `${BASE_URL}/me-shumice/`, lastmod: TODAY, priority: '0.8' },
   ];
 
   // Category URLs with lastmod
