@@ -1098,8 +1098,489 @@ function fabricHtml(fab, slug, suggestions) {
 </html>`;
 }
 
+/* ── Catalog page shared nav/footer ─────────────────────────── */
+function catalogNavFooter() {
+  return {
+    nav: `  <!-- Navbar -->
+  <nav class="navbar" role="navigation" aria-label="Navigimi kryesor">
+    <div class="navbar-inner">
+      <div class="navbar-left">
+        <button class="nav-hamburger" aria-label="Menu" onclick="openMenuDrawer()">
+          <i class="ri-menu-line"></i>
+        </button>
+        <div class="nav-links">
+          <a href="/" class="nav-link">Home</a>
+          <a href="/artikujt/" class="nav-link active">Artikujt</a>
+          <a href="/pelhura/" class="nav-link">Pelhura</a>
+          <a href="/rreth-nesh/" class="nav-link">Rreth Nesh</a>
+        </div>
+      </div>
+      <a href="/" class="navbar-brand">Intal Underwear</a>
+      <div class="navbar-right">
+        <div class="navbar-search" id="navbar-search" onclick="toggleNavSearch(event)">
+          <i class="ri-search-line"></i>
+          <input type="search" id="navbar-search-input" placeholder="KËRKO" autocomplete="off" onclick="event.stopPropagation()">
+        </div>
+      </div>
+    </div>
+  </nav>
+  <div class="menu-backdrop" id="menuBackdrop" onclick="closeMenuDrawer()"></div>
+  <aside class="menu-drawer" id="menuDrawer" aria-label="Meniu">
+    <div class="menu-drawer-header">
+      <span class="menu-drawer-brand">Intal <strong>Underwear</strong></span>
+      <button class="menu-drawer-close" onclick="closeMenuDrawer()" aria-label="Mbyll"><i class="ri-close-line"></i></button>
+    </div>
+    <div class="menu-drawer-body">
+      <nav class="menu-drawer-nav">
+        <a href="/" class="menu-drawer-link" onclick="closeMenuDrawer()">Home</a>
+        <a href="/artikujt/" class="menu-drawer-link" onclick="closeMenuDrawer()">Artikujt</a>
+        <a href="/pelhura/" class="menu-drawer-link" onclick="closeMenuDrawer()">Pelhura</a>
+        <a href="/rreth-nesh/" class="menu-drawer-link" onclick="closeMenuDrawer()">Rreth Nesh</a>
+      </nav>
+      <div class="menu-drawer-divider"></div>
+      <p class="menu-drawer-eyebrow">NA KONTAKTONI</p>
+      <div class="menu-drawer-contacts">
+        <a class="menu-drawer-contact-item" href="tel:+355692776636">
+          <div class="menu-drawer-icon"><i class="ri-phone-line"></i></div>
+          <div><span class="menu-drawer-label">Telefon / WhatsApp</span><span class="menu-drawer-value">+355 69 277 6636</span></div>
+        </a>
+        <a class="menu-drawer-contact-item" href="mailto:info@intalal.com">
+          <div class="menu-drawer-icon"><i class="ri-mail-line"></i></div>
+          <div><span class="menu-drawer-label">Email</span><span class="menu-drawer-value">info@intalal.com</span></div>
+        </a>
+      </div>
+    </div>
+    <div class="menu-drawer-footer">
+      <span class="menu-drawer-copy">© <span id="cp-yr-drawer"></span> Intal Albania</span>
+    </div>
+  </aside>`,
+    footer: `  <footer class="simple-footer">
+    <div class="contact-locations">
+      <a class="contact-loc" href="https://maps.google.com/?q=Rrobaqep%C3%ABsi+INTAL,+Rruga+Arbanes,+Vaqarr,+Tiran%C3%AB+1035" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;display:block;cursor:pointer;">
+        <p class="contact-loc-name">Selia Kryesore</p>
+        <p class="contact-loc-addr">Rrobaqepësi INTAL, Rruga Arbanes, Vaqarr, Tiranë 1035</p>
+      </a>
+      <a class="contact-loc" href="https://maps.google.com/?q=Intal,+Rruga+5+Maji+67%2F1,+Tiran%C3%AB+1032" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;display:block;cursor:pointer;">
+        <p class="contact-loc-name">Pika e shitjes</p>
+        <p class="contact-loc-addr">Intal, Rruga 5 Maji 67/1, Tiranë 1032</p>
+      </a>
+    </div>
+    <footer class="contact-footer">
+      <span class="contact-brand">Intal <strong>UNDERWEAR</strong></span>
+      <span class="contact-copy">© <span id="cp-yr"></span> Intal Albania</span>
+    </footer>
+  </footer>`,
+    script: `  <script src="/js/main.js"></script>
+  <script>
+    (function(){var y=new Date().getFullYear();['cp-yr','cp-yr-drawer'].forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=y;});})();
+    window.toggleNavSearch=function(e){var w=document.getElementById('navbar-search'),inp=document.getElementById('navbar-search-input');if(!w)return;if(!w.classList.contains('open')){w.classList.add('open');setTimeout(function(){inp&&inp.focus();},260);}};
+    document.addEventListener('click',function(e){var w=document.getElementById('navbar-search');if(w&&!w.contains(e.target))w.classList.remove('open');});
+    document.addEventListener('DOMContentLoaded',function(){var inp=document.getElementById('navbar-search-input');if(inp){inp.addEventListener('keydown',function(e){if(e.key==='Enter'&&inp.value.trim()){window.location.href='/artikujt/#kerkim/'+encodeURIComponent(inp.value.trim());}});}});
+  </script>`
+  };
+}
+
+function catalogCss() {
+  return `    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Switzer',sans-serif;background:#fff;color:#0a0a0a;min-height:100vh;padding-top:64px;}
+    .cat-page{max-width:1200px;margin:0 auto;padding:28px 20px 80px;}
+    .breadcrumb{font-size:13px;color:#555;margin-bottom:16px;display:flex;align-items:center;gap:5px;flex-wrap:wrap;}
+    .breadcrumb a{color:#555;text-decoration:none;}
+    .breadcrumb a:hover{color:#C8003E;}
+    .bc-sep{color:#999;font-weight:300;}
+    .cat-h1{font-size:clamp(22px,3vw,32px);font-weight:800;letter-spacing:-0.5px;margin-bottom:12px;}
+    .cat-intro{font-size:14px;line-height:1.6;color:#555;max-width:640px;margin-bottom:32px;}
+    .cat-sublinks{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:32px;}
+    .cat-sublink{padding:7px 14px;border:1.5px solid #e0e0e0;font-size:11px;font-weight:600;letter-spacing:0.5px;text-decoration:none;color:#0a0a0a;text-transform:uppercase;transition:all .15s;}
+    .cat-sublink:hover,.cat-sublink.active{background:#0a0a0a;color:#fff;border-color:#0a0a0a;}
+    .art-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:28px 20px;}
+    @media(max-width:1000px){.art-grid{grid-template-columns:repeat(3,1fr);}}
+    @media(max-width:680px){.art-grid{grid-template-columns:repeat(2,1fr);gap:16px 10px;}}
+    .art-card{text-decoration:none;color:inherit;display:block;}
+    .art-card-img{aspect-ratio:3/4;overflow:hidden;background:#f0f0f0;}
+    .art-card-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s;}
+    .art-card:hover .art-card-img img{transform:scale(1.04);}
+    .art-card-body{padding:10px 0 0;}
+    .art-card-name{font-size:12px;font-weight:600;line-height:1.4;color:#0a0a0a;}
+    .art-card-code{font-size:10px;color:#999;margin-top:3px;}
+    .cat-section{margin-top:40px;}
+    .cat-section-title{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#aaa;font-weight:700;margin-bottom:20px;padding-bottom:8px;border-bottom:1px solid #f0f0f0;}`;
+}
+
+/* ── Catalog page template ───────────────────────────────────── */
+function catalogPageHtml(opts) {
+  const { title, desc, canon, h1, intro, breadcrumb, sublinks, sections } = opts;
+  const nf = catalogNavFooter();
+
+  const sublinksHtml = (sublinks && sublinks.length)
+    ? `<div class="cat-sublinks">${sublinks.map(sl =>
+        `<a href="${esc(sl.href)}" class="cat-sublink${sl.active?' active':''}">${esc(sl.label)}</a>`
+      ).join('')}</div>`
+    : '';
+
+  let contentHtml = '';
+  for (const sec of (sections || [])) {
+    const cardsHtml = sec.items.map(item => {
+      const img = item.img ? `<img src="${esc(item.img)}" alt="${esc(item.alt||item.name)}" loading="lazy">` : '';
+      return `<a class="art-card" href="${esc(item.href)}">
+        <div class="art-card-img">${img}</div>
+        <div class="art-card-body">
+          <div class="art-card-name">${esc(item.name)}</div>
+          ${item.code ? `<div class="art-card-code">Art. ${esc(item.code)}</div>` : ''}
+        </div>
+      </a>`;
+    }).join('');
+    const secTitle = sec.title ? `<div class="cat-section-title">${esc(sec.title)}</div>` : '';
+    contentHtml += `<div class="cat-section">${secTitle}<div class="art-grid">${cardsHtml}</div></div>`;
+  }
+
+  return `<!DOCTYPE html>
+<html lang="sq">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${esc(title)}</title>
+  <meta name="description" content="${esc(desc)}" />
+  <link rel="canonical" href="${esc(canon)}" />
+  <meta property="og:title" content="${esc(title)}" />
+  <meta property="og:description" content="${esc(desc)}" />
+  <meta property="og:url" content="${esc(canon)}" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="${BASE_URL}/og_image.png" />
+  <meta property="og:site_name" content="Intal Albania" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <style>
+${catalogCss()}
+  </style>
+</head>
+<body>
+
+${nf.nav}
+
+  <main>
+    <div class="cat-page">
+      <div class="breadcrumb">${breadcrumb || ''}</div>
+      <h1 class="cat-h1">${esc(h1)}</h1>
+      <p class="cat-intro">${esc(intro)}</p>
+      ${sublinksHtml}
+      ${contentHtml}
+    </div>
+  </main>
+
+${nf.footer}
+${nf.script}
+</body>
+</html>`;
+}
+
+/* ── Sub/kat normalization maps ──────────────────────────────── */
+const SUB_LABELS = {
+  meshkuj: 'Meshkuj',
+  femra: 'Femra',
+  femije: 'Fëmijë',
+  'fëmijë': 'Fëmijë',
+};
+const SUB_URL = {
+  meshkuj: 'meshkuj',
+  femra: 'femra',
+  femije: 'femije',
+  'fëmijë': 'femije',
+};
+const KAT_LABELS = {
+  bluze: 'Bluza',
+  fanella: 'Fanella',
+  kanatjere: 'Kanatjere',
+  'kemisha nate': 'Këmisha nate',
+  pizhame: 'Pizhame',
+  mbathje: 'Mbathje',
+  benevrek: 'Benevrek',
+  fustane: 'Fustane',
+  'kostume verore': 'Kostume verore',
+  bokse: 'Bokse',
+  korse: 'Korse',
+  tuta: 'Tuta',
+};
+
+function normSub(s) { return (s||'').toLowerCase().replace(/ë/g,'e').replace(/ç/g,'c').trim(); }
+function normKat(k) { return (k||'').toLowerCase().replace(/ë/g,'e').replace(/ç/g,'c').trim(); }
+
+function getArtSub(art) {
+  const s = art.sub;
+  if (!s || (Array.isArray(s) && s.length === 0)) return null;
+  const raw = Array.isArray(s) ? s[0] : s;
+  return normSub(raw);
+}
+
+function getArtKat(art) {
+  const k = art.kat;
+  if (!k || (Array.isArray(k) && k.length === 0)) return null;
+  const raw = Array.isArray(k) ? k[0] : k;
+  return normKat(raw);
+}
+
+/* ── Category page generator ─────────────────────────────────── */
+function generateCategoryPages(artEntries) {
+  const catUrls = [];
+
+  // Group: sub → kat → entries
+  const bySubKat = {};
+  for (const entry of artEntries) {
+    const sub = getArtSub(entry.art);
+    const kat = getArtKat(entry.art);
+    if (!sub || !SUB_URL[sub]) continue;
+    const subKey = SUB_URL[sub];
+    if (!bySubKat[subKey]) bySubKat[subKey] = {};
+    const katKey = kat ? slugify(kat) : '__none__';
+    if (!bySubKat[subKey][katKey]) bySubKat[subKey][katKey] = { kat, entries: [] };
+    bySubKat[subKey][katKey].entries.push(entry);
+  }
+
+  // Also group: sub → all entries
+  const bySub = {};
+  for (const entry of artEntries) {
+    const sub = getArtSub(entry.art);
+    if (!sub || !SUB_URL[sub]) continue;
+    const subKey = SUB_URL[sub];
+    if (!bySub[subKey]) bySub[subKey] = [];
+    bySub[subKey].push(entry);
+  }
+
+  // Generate top-level sub pages: /artikujt/meshkuj/, /artikujt/femra/, /artikujt/femije/
+  for (const [subKey, entries] of Object.entries(bySub)) {
+    if (entries.length < 2) continue;
+    const label = SUB_LABELS[subKey] || subKey;
+    const canon = `${BASE_URL}/artikujt/${subKey}/`;
+    const title = `Të brendshme për ${label.toLowerCase()} | Intal Albania`;
+    const desc = `Koleksioni i plotë i të brendshmeve për ${label.toLowerCase()} — bluza, fanella, kanatjere, mbathje dhe më shumë. Prodhim Intal Albania, shitje me shumicë.`;
+    const h1 = `Të brendshme për ${label}`;
+    const intro = `Koleksioni i të brendshmeve për ${label.toLowerCase()} prodhuar nga Intal Albania — fabrikë shqiptare me mbi 30 vite eksperiencë. Pambuk 100%, disponibël me shumicë.`;
+
+    // Build sub-category links (only those with ≥2 products)
+    const sublinks = [];
+    const katKeys = Object.keys(bySubKat[subKey] || {}).filter(k => k !== '__none__' && bySubKat[subKey][k].entries.length >= 2);
+    for (const katKey of katKeys) {
+      const { kat } = bySubKat[subKey][katKey];
+      const katLabel = KAT_LABELS[kat] || (kat ? kat.charAt(0).toUpperCase() + kat.slice(1) : katKey);
+      sublinks.push({ href: `/artikujt/${subKey}/${katKey}/`, label: katLabel });
+    }
+
+    // Sections: group by kat
+    const sections = [];
+    const orderedKats = [...katKeys, '__none__'].filter(k => bySubKat[subKey] && bySubKat[subKey][k] && bySubKat[subKey][k].entries.length >= 1);
+    for (const katKey of orderedKats) {
+      if (!bySubKat[subKey] || !bySubKat[subKey][katKey]) continue;
+      const { kat, entries: katEntries } = bySubKat[subKey][katKey];
+      const katLabel = kat ? (KAT_LABELS[kat] || (kat.charAt(0).toUpperCase() + kat.slice(1))) : '';
+      sections.push({
+        title: katLabel,
+        items: katEntries.map(e => ({
+          href: `/artikull/${e.slug}/`,
+          name: e.art.name || '',
+          code: e.art.code || '',
+          img: clImg(photoUrl((e.art.photos || [])[0]), 400),
+          alt: artAlt(e.art, 0),
+        }))
+      });
+    }
+
+    const breadcrumb = `<a href="/artikujt/">ARTIKUJT</a><span class="bc-sep">/</span><span>${label.toUpperCase()}</span>`;
+    const html = catalogPageHtml({ title, desc, canon, h1, intro, breadcrumb, sublinks, sections });
+    const dir = path.join(ROOT, 'artikujt', subKey);
+    ensureDir(dir);
+    fs.writeFileSync(path.join(dir, 'index.html'), html, 'utf8');
+    catUrls.push({ loc: canon, priority: '0.75' });
+    console.log(`  Category: /artikujt/${subKey}/  (${entries.length} art.)`);
+
+    // Generate sub-category pages: /artikujt/meshkuj/bluze/, etc.
+    for (const katKey of katKeys) {
+      const { kat, entries: katEntries } = bySubKat[subKey][katKey];
+      if (katEntries.length < 2) continue;
+      const katLabel = KAT_LABELS[kat] || (kat ? kat.charAt(0).toUpperCase() + kat.slice(1) : katKey);
+      const katCanon = `${BASE_URL}/artikujt/${subKey}/${katKey}/`;
+      const katTitle = `${katLabel} pambuku për ${label.toLowerCase()} me shumicë | Intal Albania`;
+      const katDesc = `${katLabel} pambuku për ${label.toLowerCase()} — prodhim Intal Albania, Tiranë. Cilësi e lartë, shitje me shumicë, masa të plota.`;
+      const katH1 = `${katLabel} për ${label}`;
+      const katIntro = `${katLabel} pambuku për ${label.toLowerCase()} prodhuar nga fabrika Intal Albania. Disponibël me shumicë, direkt nga prodhuesi.`;
+      const katBreadcrumb = `<a href="/artikujt/">ARTIKUJT</a><span class="bc-sep">/</span><a href="/artikujt/${subKey}/">${label.toUpperCase()}</a><span class="bc-sep">/</span><span>${katLabel.toUpperCase()}</span>`;
+      const katHtml = catalogPageHtml({
+        title: katTitle,
+        desc: katDesc,
+        canon: katCanon,
+        h1: katH1,
+        intro: katIntro,
+        breadcrumb: katBreadcrumb,
+        sublinks: [],
+        sections: [{ title: '', items: katEntries.map(e => ({
+          href: `/artikull/${e.slug}/`,
+          name: e.art.name || '',
+          code: e.art.code || '',
+          img: clImg(photoUrl((e.art.photos || [])[0]), 400),
+          alt: artAlt(e.art, 0),
+        }))}],
+      });
+      const katDir = path.join(ROOT, 'artikujt', subKey, katKey);
+      ensureDir(katDir);
+      fs.writeFileSync(path.join(katDir, 'index.html'), katHtml, 'utf8');
+      catUrls.push({ loc: katCanon, priority: '0.70' });
+      console.log(`    Sub-cat: /artikujt/${subKey}/${katKey}/  (${katEntries.length} art.)`);
+    }
+  }
+
+  return catUrls;
+}
+
+/* ── Artikujt catalog page ───────────────────────────────────── */
+function generateArtikujtPage(artEntries) {
+  const canon = `${BASE_URL}/artikujt/`;
+  const title = 'Artikujt — Koleksioni i të brendshmeve | Intal Albania';
+  const desc = 'Koleksioni i plotë i të brendshmeve Intal Albania — Meshkuj, Femra, Fëmijë. Pambuk 100%, shitje me shumicë direkt nga fabrika shqiptare.';
+  const h1 = 'Koleksioni i të brendshmeve';
+  const intro = 'Të gjitha artikujt e Intal Albania — bluza, fanella, kanatjere, mbathje dhe more. Prodhim shqiptar me mbi 30 vite eksperiencë, pambuk 100%, shitje me shumicë.';
+
+  const sublinks = [
+    { href: '/artikujt/meshkuj/', label: 'Meshkuj' },
+    { href: '/artikujt/femra/', label: 'Femra' },
+    { href: '/artikujt/femije/', label: 'Fëmijë' },
+  ];
+
+  // Group by sub for sections
+  const groups = {};
+  for (const entry of artEntries) {
+    const sub = getArtSub(entry.art);
+    const subKey = (sub && SUB_URL[sub]) ? SUB_URL[sub] : 'tjera';
+    const label = SUB_LABELS[subKey] || SUB_LABELS[sub] || subKey;
+    if (!groups[subKey]) groups[subKey] = { label, items: [] };
+    groups[subKey].items.push(entry);
+  }
+
+  const orderedSubs = ['meshkuj', 'femra', 'femije', 'tjera'];
+  const sections = [];
+  for (const subKey of orderedSubs) {
+    if (!groups[subKey] || groups[subKey].items.length === 0) continue;
+    sections.push({
+      title: groups[subKey].label,
+      items: groups[subKey].items.map(e => ({
+        href: `/artikull/${e.slug}/`,
+        name: e.art.name || '',
+        code: e.art.code || '',
+        img: clImg(photoUrl((e.art.photos || [])[0]), 400),
+        alt: artAlt(e.art, 0),
+      }))
+    });
+  }
+
+  const breadcrumb = `<span>ARTIKUJT</span>`;
+  const html = catalogPageHtml({ title, desc, canon, h1, intro, breadcrumb, sublinks, sections });
+  const dir = path.join(ROOT, 'artikujt');
+  ensureDir(dir);
+  fs.writeFileSync(path.join(dir, 'index.html'), html, 'utf8');
+  console.log(`Generated /artikujt/index.html (${artEntries.length} artikuj)`);
+}
+
+/* ── Pelhura catalog page ────────────────────────────────────── */
+function generatePelhuraPage(pelEntries) {
+  const canon = `${BASE_URL}/pelhura/`;
+  const title = 'Pelhura — Materialet e prodhimit | Intal Albania';
+  const desc = 'Pelhurat e Intal Albania: ribana 30/1 dhe suprem print. Material pambuku natyral për prodhim të brendshmeve cilësore. Shitje me shumicë.';
+  const h1 = 'Pelhurat e prodhimit';
+  const intro = 'Materialet tona — ribana pambuku 30/1 dhe suprem print — janë baza e çdo artikulli Intal. Disponibël me shumicë për qepësi dhe prodhues.';
+  const nf = catalogNavFooter();
+
+  const cardsHtml = pelEntries.map(({ fab, slug }) => {
+    const img = clImg(photoUrl((fab.photos || [])[0]), 400);
+    return `<a class="art-card" href="/pelhura/${slug}/">
+      <div class="art-card-img">${img ? `<img src="${esc(img)}" alt="${esc(fab.name||'')}" loading="lazy">` : ''}</div>
+      <div class="art-card-body">
+        <div class="art-card-name">${esc(fab.name||'')}</div>
+        ${fab.code ? `<div class="art-card-code">${esc(fab.code)}</div>` : ''}
+      </div>
+    </a>`;
+  }).join('');
+
+  const html = `<!DOCTYPE html>
+<html lang="sq">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${esc(title)}</title>
+  <meta name="description" content="${esc(desc)}" />
+  <link rel="canonical" href="${canon}" />
+  <meta property="og:title" content="${esc(title)}" />
+  <meta property="og:description" content="${esc(desc)}" />
+  <meta property="og:url" content="${canon}" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="${BASE_URL}/og_image.png" />
+  <meta property="og:site_name" content="Intal Albania" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <style>
+${catalogCss()}
+  </style>
+</head>
+<body>
+${nf.nav}
+  <main>
+    <div class="cat-page">
+      <div class="breadcrumb"><span>PELHURA</span></div>
+      <h1 class="cat-h1">${esc(h1)}</h1>
+      <p class="cat-intro">${esc(intro)}</p>
+      <div class="cat-section"><div class="art-grid">${cardsHtml}</div></div>
+    </div>
+  </main>
+${nf.footer}
+${nf.script}
+</body>
+</html>`;
+
+  fs.writeFileSync(path.join(ROOT, 'pelhura', 'index.html'), html, 'utf8');
+  console.log(`Generated /pelhura/index.html (${pelEntries.length} pelhura)`);
+}
+
+/* ── Homepage static showcase inject ────────────────────────── */
+function injectHomepageShowcase(artEntries) {
+  const idxPath = path.join(ROOT, 'index.html');
+  let src = fs.readFileSync(idxPath, 'utf8');
+
+  // Pick up to 12 featured articles: 4 meshkuj + 4 femra + 4 femije
+  const pick = (sub, n) => artEntries
+    .filter(e => { const s = getArtSub(e.art); return s && SUB_URL[s] === sub; })
+    .slice(0, n);
+  const featured = [...pick('meshkuj', 4), ...pick('femra', 4), ...pick('femije', 4)];
+
+  const cardsHtml = featured.map(({ art, slug }) => {
+    const img = clImg(photoUrl((art.photos || [])[0]), 600);
+    const imgTag = img ? `<img src="${esc(img)}" alt="${esc(artAlt(art, 0))}" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;">` : '';
+    const sub = getArtSub(art);
+    const subLabel = (sub && SUB_LABELS[SUB_URL[sub]]) || '';
+    return `      <a href="/artikull/${slug}/" class="showcase-card" style="text-decoration:none;color:inherit;display:block;">
+        <div style="aspect-ratio:3/4;overflow:hidden;background:#f0f0f0;">${imgTag}</div>
+        <div style="padding:10px 0 0;">
+          <div style="font-size:11px;color:#999;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;">${esc(subLabel)}</div>
+          <div style="font-size:13px;font-weight:600;">${esc(art.name||'')}</div>
+        </div>
+      </a>`;
+  }).join('\n');
+
+  const staticBlock = `\n      <!-- static-showcase-start -->\n${cardsHtml}\n      <!-- static-showcase-end -->`;
+
+  // Replace existing static block or the placeholder comment
+  if (src.includes('<!-- static-showcase-start -->')) {
+    src = src.replace(/<!-- static-showcase-start -->[\s\S]*?<!-- static-showcase-end -->/, staticBlock.trim());
+  } else {
+    src = src.replace('<!-- rendered dynamically -->', staticBlock);
+  }
+
+  fs.writeFileSync(idxPath, src, 'utf8');
+  console.log(`Injected ${featured.length} static products into homepage showcase`);
+}
+
 /* ── Sitemap ─────────────────────────────────────────────────── */
-function buildSitemap(artSlugs, pelSlugs) {
+function buildSitemap(artSlugs, pelSlugs, catUrls) {
   const staticUrls = [
     { loc: `${BASE_URL}/`,             priority: '1.0' },
     { loc: `${BASE_URL}/artikujt/`,   priority: '0.9' },
@@ -1110,7 +1591,7 @@ function buildSitemap(artSlugs, pelSlugs) {
   const artUrls = artSlugs.map(s => ({ loc: `${BASE_URL}/artikull/${s}/`, priority: '0.6' }));
   const pelUrls = pelSlugs.map(s => ({ loc: `${BASE_URL}/pelhura/${s}/`,  priority: '0.5' }));
 
-  const all = [...staticUrls, ...artUrls, ...pelUrls];
+  const all = [...staticUrls, ...(catUrls || []), ...artUrls, ...pelUrls];
   const rows = all.map(u => `  <url>\n    <loc>${u.loc}</loc>\n    <lastmod>${TODAY}</lastmod>\n    <priority>${u.priority}</priority>\n  </url>`).join('\n\n');
 
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n\n${rows}\n\n</urlset>\n`;
@@ -1351,10 +1832,16 @@ async function main() {
   fs.writeFileSync(path.join(pelBaseDir, 'slugs.json'), JSON.stringify(pelSlugMap), 'utf8');
   console.log(`Generated ${pelSlugs.length} fabric pages → /pelhura/<slug>/`);
 
+  // Generate catalog & category pages (Faza 3)
+  generateArtikujtPage(artEntries);
+  generatePelhuraPage(pelEntries);
+  const catUrls = generateCategoryPages(artEntries);
+  injectHomepageShowcase(artEntries);
+
   // Write sitemap
-  const sitemap = buildSitemap(artSlugs, pelSlugs);
+  const sitemap = buildSitemap(artSlugs, pelSlugs, catUrls);
   fs.writeFileSync(path.join(ROOT, 'sitemap.xml'), sitemap, 'utf8');
-  console.log('Updated sitemap.xml');
+  console.log(`Updated sitemap.xml (${4 + catUrls.length + artSlugs.length + pelSlugs.length} URLs)`);
 
   console.log('Done.');
 

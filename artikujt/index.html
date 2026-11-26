@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Artikujt — Koleksioni i të brendshmeve | Intal Albania</title>
+  <meta name="description" content="Koleksioni i plotë i të brendshmeve Intal Albania — Meshkuj, Femra, Fëmijë. Pambuk 100%, shitje me shumicë direkt nga fabrika shqiptare." />
+  <link rel="canonical" href="https://intalal.com/artikujt/" />
+  <meta property="og:title" content="Artikujt — Koleksioni i të brendshmeve | Intal Albania" />
+  <meta property="og:description" content="Koleksioni i plotë i të brendshmeve Intal Albania — Meshkuj, Femra, Fëmijë. Pambuk 100%, shitje me shumicë direkt nga fabrika shqiptare." />
+  <meta property="og:url" content="https://intalal.com/artikujt/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://intalal.com/og_image.png" />
+  <meta property="og:site_name" content="Intal Albania" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Switzer',sans-serif;background:#fff;color:#0a0a0a;min-height:100vh;padding-top:64px;}
+    .cat-page{max-width:1200px;margin:0 auto;padding:28px 20px 80px;}
+    .breadcrumb{font-size:13px;color:#555;margin-bottom:16px;display:flex;align-items:center;gap:5px;flex-wrap:wrap;}
+    .breadcrumb a{color:#555;text-decoration:none;}
+    .breadcrumb a:hover{color:#C8003E;}
+    .bc-sep{color:#999;font-weight:300;}
+    .cat-h1{font-size:clamp(22px,3vw,32px);font-weight:800;letter-spacing:-0.5px;margin-bottom:12px;}
+    .cat-intro{font-size:14px;line-height:1.6;color:#555;max-width:640px;margin-bottom:32px;}
+    .cat-sublinks{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:32px;}
+    .cat-sublink{padding:7px 14px;border:1.5px solid #e0e0e0;font-size:11px;font-weight:600;letter-spacing:0.5px;text-decoration:none;color:#0a0a0a;text-transform:uppercase;transition:all .15s;}
+    .cat-sublink:hover,.cat-sublink.active{background:#0a0a0a;color:#fff;border-color:#0a0a0a;}
+    .art-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:28px 20px;}
+    @media(max-width:1000px){.art-grid{grid-template-columns:repeat(3,1fr);}}
+    @media(max-width:680px){.art-grid{grid-template-columns:repeat(2,1fr);gap:16px 10px;}}
+    .art-card{text-decoration:none;color:inherit;display:block;}
+    .art-card-img{aspect-ratio:3/4;overflow:hidden;background:#f0f0f0;}
+    .art-card-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s;}
+    .art-card:hover .art-card-img img{transform:scale(1.04);}
+    .art-card-body{padding:10px 0 0;}
+    .art-card-name{font-size:12px;font-weight:600;line-height:1.4;color:#0a0a0a;}
+    .art-card-code{font-size:10px;color:#999;margin-top:3px;}
+    .cat-section{margin-top:40px;}
+    .cat-section-title{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#aaa;font-weight:700;margin-bottom:20px;padding-bottom:8px;border-bottom:1px solid #f0f0f0;}
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar" role="navigation" aria-label="Navigimi kryesor">
+    <div class="navbar-inner">
+      <div class="navbar-left">
+        <button class="nav-hamburger" aria-label="Menu" onclick="openMenuDrawer()">
+          <i class="ri-menu-line"></i>
+        </button>
+        <div class="nav-links">
+          <a href="/" class="nav-link">Home</a>
+          <a href="/artikujt/" class="nav-link active">Artikujt</a>
+          <a href="/pelhura/" class="nav-link">Pelhura</a>
+          <a href="/rreth-nesh/" class="nav-link">Rreth Nesh</a>
+        </div>
+      </div>
+      <a href="/" class="navbar-brand">Intal Underwear</a>
+      <div class="navbar-right">
+        <div class="navbar-search" id="navbar-search" onclick="toggleNavSearch(event)">
+          <i class="ri-search-line"></i>
+          <input type="search" id="navbar-search-input" placeholder="KËRKO" autocomplete="off" onclick="event.stopPropagation()">
+        </div>
+      </div>
+    </div>
+  </nav>
+  <div class="menu-backdrop" id="menuBackdrop" onclick="closeMenuDrawer()"></div>
+  <aside class="menu-drawer" id="menuDrawer" aria-label="Meniu">
+    <div class="menu-drawer-header">
+      <span class="menu-drawer-brand">Intal <strong>Underwear</strong></span>
+      <button class="menu-drawer-close" onclick="closeMenuDrawer()" aria-label="Mbyll"><i class="ri-close-line"></i></button>
+    </div>
+    <div class="menu-drawer-body">
+      <nav class="menu-drawer-nav">
+        <a href="/" class="menu-drawer-link" onclick="closeMenuDrawer()">Home</a>
+        <a href="/artikujt/" class="menu-drawer-link" onclick="closeMenuDrawer()">Artikujt</a>
+        <a href="/pelhura/" class="menu-drawer-link" onclick="closeMenuDrawer()">Pelhura</a>
+        <a href="/rreth-nesh/" class="menu-drawer-link" onclick="closeMenuDrawer()">Rreth Nesh</a>
+      </nav>
+      <div class="menu-drawer-divider"></div>
+      <p class="menu-drawer-eyebrow">NA KONTAKTONI</p>
+      <div class="menu-drawer-contacts">
+        <a class="menu-drawer-contact-item" href="tel:+355692776636">
+          <div class="menu-drawer-icon"><i class="ri-phone-line"></i></div>
+          <div><span class="menu-drawer-label">Telefon / WhatsApp</span><span class="menu-drawer-value">+355 69 277 6636</span></div>
+        </a>
+        <a class="menu-drawer-contact-item" href="mailto:info@intalal.com">
+          <div class="menu-drawer-icon"><i class="ri-mail-line"></i></div>
+          <div><span class="menu-drawer-label">Email</span><span class="menu-drawer-value">info@intalal.com</span></div>
+        </a>
+      </div>
+    </div>
+    <div class="menu-drawer-footer">
+      <span class="menu-drawer-copy">© <span id="cp-yr-drawer"></span> Intal Albania</span>
+    </div>
+  </aside>
+
+  <main>
+    <div class="cat-page">
+      <div class="breadcrumb"><span>ARTIKUJT</span></div>
+      <h1 class="cat-h1">Koleksioni i të brendshmeve</h1>
+      <p class="cat-intro">Të gjitha artikujt e Intal Albania — bluza, fanella, kanatjere, mbathje dhe more. Prodhim shqiptar me mbi 30 vite eksperiencë, pambuk 100%, shitje me shumicë.</p>
+      <div class="cat-sublinks"><a href="/artikujt/meshkuj/" class="cat-sublink">Meshkuj</a><a href="/artikujt/femra/" class="cat-sublink">Femra</a><a href="/artikujt/femije/" class="cat-sublink">Fëmijë</a></div>
+      <div class="cat-section"><div class="cat-section-title">Meshkuj</div><div class="art-grid"><a class="art-card" href="/artikull/bluze-crz-320-e-bardhe/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795599422/ol7rf9kuzghp82oabdak.webp" alt="Bluze CRZ, Pambuk 100%, për meshkuj, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Bluze CRZ</div>
+          <div class="art-card-code">Art. 320</div>
+        </div>
+      </a><a class="art-card" href="/artikull/bluze-crz-320-gri/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795599451/ppf3jado4rlxz0uoogax.webp" alt="Bluze CRZ, Pambuk 100%, për meshkuj, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Bluze CRZ</div>
+          <div class="art-card-code">Art. 320</div>
+        </div>
+      </a><a class="art-card" href="/artikull/bluze-crz-320-e-zeze/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795599487/dkwpxtttkk8nqgyuncki.webp" alt="Bluze CRZ, Pambuk 100%, për meshkuj, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Bluze CRZ</div>
+          <div class="art-card-code">Art. 320</div>
+        </div>
+      </a><a class="art-card" href="/artikull/kanatjere-crz-318-e-bardhe/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795599523/pryxf5hqiijzt3mqicik.webp" alt="Kanatjere CRZ, Pambuk 100%, për meshkuj, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Kanatjere CRZ</div>
+          <div class="art-card-code">Art. 318</div>
+        </div>
+      </a><a class="art-card" href="/artikull/kanatjere-crz-sup-319/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795599571/ajfxkax3b2x9z3njf1mr.webp" alt="Kanatjere CRZ sup, Pambuk 100%, për meshkuj, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Kanatjere CRZ sup</div>
+          <div class="art-card-code">Art. 319</div>
+        </div>
+      </a><a class="art-card" href="/artikull/kanatjere-crz-318-gri/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795599589/puuhoq9rnemhbkfghfxb.webp" alt="Kanatjere CRZ, Pambuk 100%, për meshkuj, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Kanatjere CRZ</div>
+          <div class="art-card-code">Art. 318</div>
+        </div>
+      </a><a class="art-card" href="/artikull/kanatjere-crz-sup-319-gri/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795599606/d8dgolu2ybx2bmz9krkk.webp" alt="Kanatjere CRZ sup, Pambuk 100%, për meshkuj, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Kanatjere CRZ sup</div>
+          <div class="art-card-code">Art. 319</div>
+        </div>
+      </a><a class="art-card" href="/artikull/kanatjere-crz-318-e-zeze/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795599626/rmxgi7cgdhwvibw9i1fk.webp" alt="Kanatjere CRZ, Pambuk 100%, për meshkuj, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Kanatjere CRZ</div>
+          <div class="art-card-code">Art. 318</div>
+        </div>
+      </a><a class="art-card" href="/artikull/kanatjere-crz-sup-319-e-zeze/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795599644/hbgjwwbl581iyigje6ua.webp" alt="Kanatjere CRZ sup, Pambuk 100%, për meshkuj, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Kanatjere CRZ sup</div>
+          <div class="art-card-code">Art. 319</div>
+        </div>
+      </a><a class="art-card" href="/artikull/fanella-crz-330-e-bardhe/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795599673/zf5gmnd6e6jq3zgqhoqs.webp" alt="Fanella CRZ, Pambuk 100%, për meshkuj, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Fanella CRZ</div>
+          <div class="art-card-code">Art. 330</div>
+        </div>
+      </a><a class="art-card" href="/artikull/fanella-crz-330-e-zeze/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795599699/sdk6ehwanatx9z7xlipl.webp" alt="Fanella CRZ, Pambuk 100%, për meshkuj, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Fanella CRZ</div>
+          <div class="art-card-code">Art. 330</div>
+        </div>
+      </a><a class="art-card" href="/artikull/fanella-crz-330-gri/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795599740/l1cglepgjju8jszmdb9e.webp" alt="Fanella CRZ, Pambuk 100%, për meshkuj, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Fanella CRZ</div>
+          <div class="art-card-code">Art. 330</div>
+        </div>
+      </a><a class="art-card" href="/artikull/mbathje-nothingman-150/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795599804/uyrnq5l70okbcpahxxoa.webp" alt="Mbathje Nothingman, Filo di Scozia 100%, për meshkuj, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Mbathje Nothingman</div>
+          <div class="art-card-code">Art. 150</div>
+        </div>
+      </a><a class="art-card" href="/artikull/mbathje-nothingman-150-gri/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795599823/kj6zzv3srqvwb8xrvllz.webp" alt="Mbathje Nothingman, Filo di Scozia 100%, për meshkuj, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Mbathje Nothingman</div>
+          <div class="art-card-code">Art. 150</div>
+        </div>
+      </a><a class="art-card" href="/artikull/mbathje-nothingman-150-e-zeze/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795599838/ku4o6fce86w3ds4qflnk.webp" alt="Mbathje Nothingman, Filo di Scozia 100%, për meshkuj, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Mbathje Nothingman</div>
+          <div class="art-card-code">Art. 150</div>
+        </div>
+      </a><a class="art-card" href="/artikull/mbathje-shorts-151/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795599868/ieqq2vgfhja6fquo0aoh.webp" alt="Mbathje Shorts, Pambuk 100%, për meshkuj, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Mbathje Shorts</div>
+          <div class="art-card-code">Art. 151</div>
+        </div>
+      </a><a class="art-card" href="/artikull/mbathje-shorts-151-gri/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795599883/uz79dfm8jc7abffwhf5z.webp" alt="Mbathje Shorts, Pambuk 100%, për meshkuj, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Mbathje Shorts</div>
+          <div class="art-card-code">Art. 151</div>
+        </div>
+      </a><a class="art-card" href="/artikull/mbathje-shorts-151-e-zeze/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795599898/ew3v8l6plbsreanbqe4w.webp" alt="Mbathje Shorts, Pambuk 100%, për meshkuj, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Mbathje Shorts</div>
+          <div class="art-card-code">Art. 151</div>
+        </div>
+      </a><a class="art-card" href="/artikull/bokse-uomo-220-e-bardhe/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795599922/jynzqjhf6h2ybjirnott.webp" alt="Bokse UOMO, Pambuk 95%, për meshkuj, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Bokse UOMO</div>
+          <div class="art-card-code">Art. 220</div>
+        </div>
+      </a><a class="art-card" href="/artikull/bokse-uomo-220-gri/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795599959/xyqkzivqnoa2ywfh23ab.webp" alt="Bokse UOMO, Pambuk 95%, për meshkuj, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Bokse UOMO</div>
+          <div class="art-card-code">Art. 220</div>
+        </div>
+      </a><a class="art-card" href="/artikull/bokse-uomo-220-blu/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795599976/pqeiyd49wiubft0lgt7h.webp" alt="Bokse UOMO, Pambuk 95%, për meshkuj, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Bokse UOMO</div>
+          <div class="art-card-code">Art. 220</div>
+        </div>
+      </a><a class="art-card" href="/artikull/mbathje-uomo-221-e-bardhe/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795599995/j0s1tkms1f2lnqqg8cym.webp" alt="Mbathje UOMO, Pambuk 95%, për meshkuj, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Mbathje UOMO</div>
+          <div class="art-card-code">Art. 221</div>
+        </div>
+      </a><a class="art-card" href="/artikull/mbathje-uomo-221-blu/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795600013/q01j84ehpjja1yeupxyj.webp" alt="Mbathje UOMO, Pambuk 95%, për meshkuj, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Mbathje UOMO</div>
+          <div class="art-card-code">Art. 221</div>
+        </div>
+      </a><a class="art-card" href="/artikull/mbathje-uomo-221-gri/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795600026/av7ysoxdlbinpj4whf06.webp" alt="Mbathje UOMO, Pambuk 95%, për meshkuj, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Mbathje UOMO</div>
+          <div class="art-card-code">Art. 221</div>
+        </div>
+      </a><a class="art-card" href="/artikull/bluze-lacombo-152-e-bardhe/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795600051/ycptupaaqflgadmhjepm.webp" alt="Bluze Lacombo, Pambuk 100%, për meshkuj, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Bluze Lacombo</div>
+          <div class="art-card-code">Art. 152</div>
+        </div>
+      </a><a class="art-card" href="/artikull/bluze-lacombo-152-gri/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795600064/htjpb98lswbqkbwgev4v.webp" alt="Bluze Lacombo, Pambuk 100%, për meshkuj, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Bluze Lacombo</div>
+          <div class="art-card-code">Art. 152</div>
+        </div>
+      </a><a class="art-card" href="/artikull/bluze-lacombo-152-e-zeze/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795600079/iokivztvt1yakoutesuz.webp" alt="Bluze Lacombo, Pambuk 100%, për meshkuj, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Bluze Lacombo</div>
+          <div class="art-card-code">Art. 152</div>
+        </div>
+      </a><a class="art-card" href="/artikull/kanatjere-lacombo-153-e-bardhe/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795600095/y1x42eblqemeflqhfy8h.webp" alt="Kanatjere Lacombo, për meshkuj, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Kanatjere Lacombo</div>
+          <div class="art-card-code">Art. 153</div>
+        </div>
+      </a><a class="art-card" href="/artikull/kanatjere-lacombo-153-gri/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795600120/lzlmohdwlzgfcsvwqxtr.webp" alt="Kanatjere Lacombo, për meshkuj, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Kanatjere Lacombo</div>
+          <div class="art-card-code">Art. 153</div>
+        </div>
+      </a><a class="art-card" href="/artikull/kanatjere-lacombo-153-e-zeze/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795600142/vhoz6h0dgil0w9dxtvty.webp" alt="Kanatjere Lacombo, Pambuk 100%, për meshkuj, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Kanatjere Lacombo</div>
+          <div class="art-card-code">Art. 153</div>
+        </div>
+      </a><a class="art-card" href="/artikull/bluze-nothingman-321-e-bardhe/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795600251/mkf6aiobkrqah4rw213n.webp" alt="Bluze Nothingman, Filo di Scozia 100%, për meshkuj, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Bluze Nothingman</div>
+          <div class="art-card-code">Art. 321</div>
+        </div>
+      </a><a class="art-card" href="/artikull/bluze-nothingman-321-e-zeze/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795600271/f4qobldzozrzffcpyuzv.webp" alt="Bluze Nothingman, për meshkuj, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Bluze Nothingman</div>
+          <div class="art-card-code">Art. 321</div>
+        </div>
+      </a><a class="art-card" href="/artikull/kanatjere-riga-317-e-bardhe/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795600305/zjwgxymhghzlrkzmughb.webp" alt="Kanatjere RIGA, Pambuk 100%, për meshkuj, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Kanatjere RIGA</div>
+          <div class="art-card-code">Art. 317</div>
+        </div>
+      </a><a class="art-card" href="/artikull/kanatjere-riga-317-e-zeze/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795600349/ukozxzjs0bdken7tdozl.webp" alt="Kanatjere RIGA, Pambuk 100%, për meshkuj, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Kanatjere RIGA</div>
+          <div class="art-card-code">Art. 317</div>
+        </div>
+      </a><a class="art-card" href="/artikull/benevrek-crz-331-e-bardhe/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795600378/hzktobnbqu9m39e1grhy.webp" alt="Benevrek CRZ, Pambuk 100%, për meshkuj, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Benevrek CRZ</div>
+          <div class="art-card-code">Art. 331</div>
+        </div>
+      </a><a class="art-card" href="/artikull/benevrek-crz-331-gri/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795600395/mepllu9ywaqi6bakowgf.webp" alt="Benevrek CRZ, Pambuk 100%, për meshkuj, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Benevrek CRZ</div>
+          <div class="art-card-code">Art. 331</div>
+        </div>
+      </a><a class="art-card" href="/artikull/mbathje-burrash-6copshe-075/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795600427/ydglyrb9jubro29gr8zj.webp" alt="Mbathje burrash 6copshe, Pambuk 100%, për meshkuj, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Mbathje burrash 6copshe</div>
+          <div class="art-card-code">Art. 075</div>
+        </div>
+      </a><a class="art-card" href="/artikull/bokse-try-me-222-e-bardhe/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795600459/fzzziv47qa0t2cikqpve.webp" alt="Bokse TRY ME, Filo di Scozia 100%, për meshkuj, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Bokse TRY ME</div>
+          <div class="art-card-code">Art. 222</div>
+        </div>
+      </a><a class="art-card" href="/artikull/bokse-try-me-222-gri/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795600473/ba40xvr0nlqjghkewy2l.webp" alt="Bokse TRY ME, Filo di Scozia 100%, për meshkuj, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Bokse TRY ME</div>
+          <div class="art-card-code">Art. 222</div>
+        </div>
+      </a><a class="art-card" href="/artikull/bokse-try-me-222-e-zeze/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795600490/d88r3gnxsfpem4goxuil.webp" alt="Bokse TRY ME, Filo di Scozia 100%, për meshkuj, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Bokse TRY ME</div>
+          <div class="art-card-code">Art. 222</div>
+        </div>
+      </a><a class="art-card" href="/artikull/benevrek-burrash-push-230-blu/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795600550/xuiyqo6mpthisrxojapq.webp" alt="Benevrek burrash push, Pambuk 100%, për meshkuj, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Benevrek burrash push</div>
+          <div class="art-card-code">Art. 230</div>
+        </div>
+      </a><a class="art-card" href="/artikull/benevrek-burrash-push-230-gri-e-erret/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795600670/agnyk1ohnsufhttyywjg.webp" alt="Benevrek burrash push, Pambuk 100%, për meshkuj, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Benevrek burrash push</div>
+          <div class="art-card-code">Art. 230</div>
+        </div>
+      </a><a class="art-card" href="/artikull/benevrek-burrash-push-230-e-zeze/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795600724/vl6qx3qnewe0qk3ybuom.webp" alt="Benevrek burrash push, Pambuk 100%, për meshkuj, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Benevrek burrash push</div>
+          <div class="art-card-code">Art. 230</div>
+        </div>
+      </a><a class="art-card" href="/artikull/fanella-burrash-push-231-blu/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795600751/aaq5fmh6kpnqiyburhoy.webp" alt="Fanella burrash push, Pambuk 100%, për meshkuj, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Fanella burrash push</div>
+          <div class="art-card-code">Art. 231</div>
+        </div>
+      </a><a class="art-card" href="/artikull/fanella-burrash-push-231-gri-e-erret/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795600778/cqs6nqfhxqukqzkbez0f.webp" alt="Fanella burrash push, Pambuk 100%, për meshkuj, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Fanella burrash push</div>
+          <div class="art-card-code">Art. 231</div>
+        </div>
+      </a><a class="art-card" href="/artikull/fanella-burrash-push-231-e-zeze/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795600814/jisawa7mgad3cnmrhlzu.webp" alt="Fanella burrash push, Pambuk 100%, për meshkuj, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Fanella burrash push</div>
+          <div class="art-card-code">Art. 231</div>
+        </div>
+      </a><a class="art-card" href="/artikull/pizhame-fanellat-550-3/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795600854/ydvate4xecq79cjwuxcp.webp" alt="Pizhame fanellat, Pambuk 100%, për meshkuj, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Pizhame fanellat</div>
+          <div class="art-card-code">Art. 550</div>
+        </div>
+      </a><a class="art-card" href="/artikull/pizhame-fanellat-550-4/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795600881/yvyup7c7j2gulyavoaum.webp" alt="Pizhame fanellat, Pambuk 100%, për meshkuj, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Pizhame fanellat</div>
+          <div class="art-card-code">Art. 550</div>
+        </div>
+      </a><a class="art-card" href="/artikull/pizhame-fanellat-550-5/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795600899/ag2k1rvmolvfq2tpdwdb.webp" alt="Pizhame fanellat, Pambuk 100%, për meshkuj, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Pizhame fanellat</div>
+          <div class="art-card-code">Art. 550</div>
+        </div>
+      </a><a class="art-card" href="/artikull/tuta-burrash-551/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1792661232/bur3cmihf1hin5ujr0mt.webp" alt="Tuta burrash, Pambuk 100%, për meshkuj, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Tuta burrash</div>
+          <div class="art-card-code">Art. 551</div>
+        </div>
+      </a><a class="art-card" href="/artikull/tuta-burrash-551-1/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1792661271/w0qmuppudg1uxfjkzzga.webp" alt="Tuta burrash, Pambuk 100%, për meshkuj, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Tuta burrash</div>
+          <div class="art-card-code">Art. 551</div>
+        </div>
+      </a><a class="art-card" href="/artikull/tuta-burrash-551-2/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1792661295/dcorxzvn5otp2oldbbmu.webp" alt="Tuta burrash, Pambuk 100%, për meshkuj, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Tuta burrash</div>
+          <div class="art-card-code">Art. 551</div>
+        </div>
+      </a></div></div><div class="cat-section"><div class="cat-section-title">Femra</div><div class="art-grid"><a class="art-card" href="/artikull/mbathje-stela-131-bezhe/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795601013/ki2scstfhywzecykcyds.webp" alt="Mbathje Stela, Filo di Scozia 100%, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Mbathje Stela</div>
+          <div class="art-card-code">Art. 131</div>
+        </div>
+      </a><a class="art-card" href="/artikull/mbathje-stela-131-e-bardhe/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795601029/k4o5mur1ahe3v2i8y3hw.webp" alt="Mbathje Stela, Filo di Scozia 100%, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Mbathje Stela</div>
+          <div class="art-card-code">Art. 131</div>
+        </div>
+      </a><a class="art-card" href="/artikull/mbathje-stela-131-e-zeze/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795601050/etwbaydzxzdfv7fgorjo.webp" alt="Mbathje Stela, Filo di Scozia 100%, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Mbathje Stela</div>
+          <div class="art-card-code">Art. 131</div>
+        </div>
+      </a><a class="art-card" href="/artikull/mbathje-stela-132/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795601111/l0eqcwu5kbs1z0yiowrv.webp" alt="Mbathje Stela, Filo di Scozia 100%, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Mbathje Stela</div>
+          <div class="art-card-code">Art. 132</div>
+        </div>
+      </a><a class="art-card" href="/artikull/mbathje-stela-132-bezhe/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795601130/tnxcsnfg8dkcqd77ybyd.webp" alt="Mbathje Stela, Filo di Scozia 100%, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Mbathje Stela</div>
+          <div class="art-card-code">Art. 132</div>
+        </div>
+      </a><a class="art-card" href="/artikull/mbathje-stela-133-bezhe/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795601152/ildwzj9cv8wbknaaas1g.webp" alt="Mbathje Stela, Filo di Scozia 100%, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Mbathje Stela</div>
+          <div class="art-card-code">Art. 133</div>
+        </div>
+      </a><a class="art-card" href="/artikull/mbathje-stela-133-e-bardhe/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795601173/ll4jdb4njssuyfnkzeyn.webp" alt="Mbathje Stela, Filo di Scozia 100%, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Mbathje Stela</div>
+          <div class="art-card-code">Art. 133</div>
+        </div>
+      </a><a class="art-card" href="/artikull/mbathje-stela-133-e-zeze/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795601191/sdejwfbchegezc1swhzi.webp" alt="Mbathje Stela, Filo di Scozia 100%, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Mbathje Stela</div>
+          <div class="art-card-code">Art. 133</div>
+        </div>
+      </a><a class="art-card" href="/artikull/mbathje-stela-130/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795601899/ycjbtdewvnjgfa2ttsgi.webp" alt="Mbathje Stela, Filo di Scozia 100%, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Mbathje Stela</div>
+          <div class="art-card-code">Art. 130</div>
+        </div>
+      </a><a class="art-card" href="/artikull/mbathje-stela-130-bezhe/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795601924/nptdsl5qr621igf8vxsc.webp" alt="Mbathje Stela, Filo di Scozia 100%, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Mbathje Stela</div>
+          <div class="art-card-code">Art. 130</div>
+        </div>
+      </a><a class="art-card" href="/artikull/mbathje-stela-130-e-zeze/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795601943/zkxbuv9yfrmu3cvswjvw.webp" alt="Mbathje Stela, Filo di Scozia 100%, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Mbathje Stela</div>
+          <div class="art-card-code">Art. 130</div>
+        </div>
+      </a><a class="art-card" href="/artikull/mbathje-stela-134/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795601969/a8jciio35mrbjs6wt4ex.webp" alt="Mbathje Stela, Filo di Scozia 100%, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Mbathje Stela</div>
+          <div class="art-card-code">Art. 134</div>
+        </div>
+      </a><a class="art-card" href="/artikull/mbathje-stela-134-bezhe/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795601988/d82n4po8xii2cjgzyjmh.webp" alt="Mbathje Stela, Filo di Scozia 100%, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Mbathje Stela</div>
+          <div class="art-card-code">Art. 134</div>
+        </div>
+      </a><a class="art-card" href="/artikull/mbathje-stela-134-e-zeze/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795602008/p3kw3smotrzbqd6h4qsu.webp" alt="Mbathje Stela, Filo di Scozia 100%, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Mbathje Stela</div>
+          <div class="art-card-code">Art. 134</div>
+        </div>
+      </a><a class="art-card" href="/artikull/mbathje-stela-tegel-135-e-bardhe/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795602048/mxlsdyereqzhjjzsp8rx.webp" alt="Mbathje Stela tegel, Filo di Scozia 100%, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Mbathje Stela tegel</div>
+          <div class="art-card-code">Art. 135</div>
+        </div>
+      </a><a class="art-card" href="/artikull/mbathje-stela-tegel-135-bezhe/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795602068/d0reaw5lv6la23dwox1x.webp" alt="Mbathje Stela tegel, Filo di Scozia 100%, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Mbathje Stela tegel</div>
+          <div class="art-card-code">Art. 135</div>
+        </div>
+      </a><a class="art-card" href="/artikull/mbathje-stela-tegel-135-e-zeze/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795602085/kea8bqaicejq6jcqsmnu.webp" alt="Mbathje Stela tegel, Filo di Scozia 100%, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Mbathje Stela tegel</div>
+          <div class="art-card-code">Art. 135</div>
+        </div>
+      </a><a class="art-card" href="/artikull/kanatjere-donna-170/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795602113/wklbswdmqvwtp7d4klc0.webp" alt="Kanatjere Donna, Pambuk 100%, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Kanatjere Donna</div>
+          <div class="art-card-code">Art. 170</div>
+        </div>
+      </a><a class="art-card" href="/artikull/kanatjere-donna-170-bezhe/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795602132/eiftyse29d2ufndzco4f.webp" alt="Kanatjere Donna, Pambuk 100%, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Kanatjere Donna</div>
+          <div class="art-card-code">Art. 170</div>
+        </div>
+      </a><a class="art-card" href="/artikull/kanatjere-donna-170-e-zeze/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795602149/usm1cajc8ia1iwgdt08e.webp" alt="Kanatjere Donna, Pambuk 100%, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Kanatjere Donna</div>
+          <div class="art-card-code">Art. 170</div>
+        </div>
+      </a><a class="art-card" href="/artikull/kanatjere-donna-171-e-bardhe/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795602174/axmylijmymvqpzcgxleu.webp" alt="Kanatjere Donna, Pambuk 100%, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Kanatjere Donna</div>
+          <div class="art-card-code">Art. 171</div>
+        </div>
+      </a><a class="art-card" href="/artikull/kanatjere-donna-171-bezhe/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795602193/tmcvpp8pg3o7w1tktxia.webp" alt="Kanatjere Donna, Pambuk 100%, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Kanatjere Donna</div>
+          <div class="art-card-code">Art. 171</div>
+        </div>
+      </a><a class="art-card" href="/artikull/kanatjere-donna-171-e-zeze/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795602209/oszgoezucvz1hbklxnbf.webp" alt="Kanatjere Donna, Pambuk 100%, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Kanatjere Donna</div>
+          <div class="art-card-code">Art. 171</div>
+        </div>
+      </a><a class="art-card" href="/artikull/pizhame-pyjamas-lule-501/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1784715960/vzdqobsg1vrxnu3e9yce.webp" alt="Pizhame PYJAMAS lule, Pambuk 50%, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Pizhame PYJAMAS lule</div>
+          <div class="art-card-code">Art. 501</div>
+        </div>
+      </a><a class="art-card" href="/artikull/pizhame-pyjamas-vija-501/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1784715964/ejle6l5nbmbuia9plxuz.webp" alt="Pizhame PYJAMAS vija, Pambuk 50%, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Pizhame PYJAMAS vija</div>
+          <div class="art-card-code">Art. 501</div>
+        </div>
+      </a><a class="art-card" href="/artikull/pizhame-pyjamas-vija-501-1/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1784715967/wlapc3py77bkejsbt61j.webp" alt="Pizhame PYJAMAS vija, Pambuk 50%, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Pizhame PYJAMAS vija</div>
+          <div class="art-card-code">Art. 501</div>
+        </div>
+      </a><a class="art-card" href="/artikull/pizhame-pyjamas-zemra-501/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1784715970/y1gvjzcjchee1mnncbjb.webp" alt="Pizhame PYJAMAS zemra, Pambuk 50%, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Pizhame PYJAMAS zemra</div>
+          <div class="art-card-code">Art. 501</div>
+        </div>
+      </a><a class="art-card" href="/artikull/pizhame-pyjamas-arusha-501/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1784715973/s7unhtluq0kzpkklmau0.webp" alt="Pizhame PYJAMAS arusha, Pambuk 50%, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Pizhame PYJAMAS arusha</div>
+          <div class="art-card-code">Art. 501</div>
+        </div>
+      </a><a class="art-card" href="/artikull/pizhame-pyjamas-fiongo-501/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1784715977/obrchvoupvzod0a0h2fz.webp" alt="Pizhame PYJAMAS fiongo, Pambuk 50%, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Pizhame PYJAMAS fiongo</div>
+          <div class="art-card-code">Art. 501</div>
+        </div>
+      </a><a class="art-card" href="/artikull/pizhame-pyjamas-qershi-501/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1784715980/a98nqxtjzwmmmbwahdrt.webp" alt="Pizhame PYJAMAS qershi, Pambuk 50%, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Pizhame PYJAMAS qershi</div>
+          <div class="art-card-code">Art. 501</div>
+        </div>
+      </a><a class="art-card" href="/artikull/kanatjere-lovly-301/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795602269/hlmherbfhnhk2kvbm6ry.webp" alt="Kanatjere Lovly, Modal 100%, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Kanatjere Lovly</div>
+          <div class="art-card-code">Art. 301</div>
+        </div>
+      </a><a class="art-card" href="/artikull/kanatjere-lovly-301-bezhe/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795602287/msjk7kkhs05yyz0vbkq7.webp" alt="Kanatjere Lovly, Modal 100%, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Kanatjere Lovly</div>
+          <div class="art-card-code">Art. 301</div>
+        </div>
+      </a><a class="art-card" href="/artikull/kanatjere-lovly-301-1/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795602324/nahufudw1ifyudj2fycp.webp" alt="Kanatjere Lovly, Modal 100%, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Kanatjere Lovly</div>
+          <div class="art-card-code">Art. 301</div>
+        </div>
+      </a><a class="art-card" href="/artikull/kemisha-lovly-502-bezhe/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795602343/jlixpdlzuenlux47fdsz.webp" alt="Kemisha Lovly, Modal 100%, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Kemisha Lovly</div>
+          <div class="art-card-code">Art. 502</div>
+        </div>
+      </a><a class="art-card" href="/artikull/kemisha-lovly-502/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795602360/yerymu81rjmnf4mbp45b.webp" alt="Kemisha Lovly, Modal 100%, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Kemisha Lovly</div>
+          <div class="art-card-code">Art. 502</div>
+        </div>
+      </a><a class="art-card" href="/artikull/kanatjere-stela-140/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795602386/tltxli2kn50wdvrhdyov.webp" alt="Kanatjere Stela, Filo di Scozia 100%, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Kanatjere Stela</div>
+          <div class="art-card-code">Art. 140</div>
+        </div>
+      </a><a class="art-card" href="/artikull/kanatjere-stela-140-bezhe/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795602418/q7i18ih4n5a3met9vcah.webp" alt="Kanatjere Stela, Filo di Scozia 100%, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Kanatjere Stela</div>
+          <div class="art-card-code">Art. 140</div>
+        </div>
+      </a><a class="art-card" href="/artikull/kanatjere-stela-140-e-zeze/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795602436/lxbsbhicn7nv0xly05fh.webp" alt="Kanatjere Stela, Filo di Scozia 100%, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Kanatjere Stela</div>
+          <div class="art-card-code">Art. 140</div>
+        </div>
+      </a><a class="art-card" href="/artikull/kemisha-nate-490-1/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1784716011/hlpsocmv346wfs13r6ka.webp" alt="Kemisha nate, Pambuk 90%, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Kemisha nate</div>
+          <div class="art-card-code">Art. 490</div>
+        </div>
+      </a><a class="art-card" href="/artikull/kemisha-nate-490-2/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1784716015/nlgxoizqszmhg6nw86pe.webp" alt="Kemisha nate, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Kemisha nate</div>
+          <div class="art-card-code">Art. 490</div>
+        </div>
+      </a><a class="art-card" href="/artikull/kemisha-nate-490-3/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1784716018/u00ccqarqhqxll7nu4i6.webp" alt="Kemisha nate, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Kemisha nate</div>
+          <div class="art-card-code">Art. 490</div>
+        </div>
+      </a><a class="art-card" href="/artikull/kemisha-nate-490-4/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1784716021/rgatcyjtbu740iqf55pl.webp" alt="Kemisha nate, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Kemisha nate</div>
+          <div class="art-card-code">Art. 490</div>
+        </div>
+      </a><a class="art-card" href="/artikull/kemisha-nate-490-5/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1784716024/natkjhqxrtheqd2sogas.webp" alt="Kemisha nate, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Kemisha nate</div>
+          <div class="art-card-code">Art. 490</div>
+        </div>
+      </a><a class="art-card" href="/artikull/kemisha-nate-490-6/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1784716026/wk4phri3s7enj9ieg1lu.webp" alt="Kemisha nate, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Kemisha nate</div>
+          <div class="art-card-code">Art. 490</div>
+        </div>
+      </a><a class="art-card" href="/artikull/kemisha-nate-490-7/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1784716029/m3fdsnvx0ub8516qqogx.webp" alt="Kemisha nate, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Kemisha nate</div>
+          <div class="art-card-code">Art. 490</div>
+        </div>
+      </a><a class="art-card" href="/artikull/kemisha-nate-490-8/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1784716033/u4jmbk4hldtdhn2iwtsr.webp" alt="Kemisha nate, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Kemisha nate</div>
+          <div class="art-card-code">Art. 490</div>
+        </div>
+      </a><a class="art-card" href="/artikull/kostume-verore-491/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1784716035/l1rv4tplkgjchbb553hp.webp" alt="Kostume verore, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Kostume verore</div>
+          <div class="art-card-code">Art. 491</div>
+        </div>
+      </a><a class="art-card" href="/artikull/kostume-verore-491-1/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1784716087/nhnhophcetlp9hy5xcmy.webp" alt="Kostume verore, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Kostume verore</div>
+          <div class="art-card-code">Art. 491</div>
+        </div>
+      </a><a class="art-card" href="/artikull/kostume-verore-491-2/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1784716090/yyypfg5bgfpbeffum69s.webp" alt="Kostume verore, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Kostume verore</div>
+          <div class="art-card-code">Art. 491</div>
+        </div>
+      </a><a class="art-card" href="/artikull/kostume-verore/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1784716091/envaekcbdsm7usb6zyr5.webp" alt="Kostume verore, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Kostume verore</div>
+          
+        </div>
+      </a><a class="art-card" href="/artikull/kostume-verore-491-3/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1784716093/gtf4nr9lc1xxlc0aayv5.webp" alt="Kostume verore, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Kostume verore</div>
+          <div class="art-card-code">Art. 491</div>
+        </div>
+      </a><a class="art-card" href="/artikull/korse-lazer-160/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1784716095/ttkb49xhdmvwtmdqtlyi.webp" alt="Korse Lazer, Elastan 100%, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Korse Lazer</div>
+          <div class="art-card-code">Art. 160</div>
+        </div>
+      </a><a class="art-card" href="/artikull/korse-me-kembe-161/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1784716097/wcqxc7mhw9nu0djgszqf.webp" alt="Korse me kembe, Elastan 100%, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Korse me kembe</div>
+          <div class="art-card-code">Art. 161</div>
+        </div>
+      </a><a class="art-card" href="/artikull/korse-pa-kembe-162/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1784716100/hz3yedfluozeqqe5r5ib.webp" alt="Korse pa kembe, Elastan 100%, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Korse pa kembe</div>
+          <div class="art-card-code">Art. 162</div>
+        </div>
+      </a><a class="art-card" href="/artikull/kemisha-lacombo-503/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795602466/w9hwragz62ahobe4pxem.webp" alt="Kemisha Lacombo, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Kemisha Lacombo</div>
+          <div class="art-card-code">Art. 503</div>
+        </div>
+      </a><a class="art-card" href="/artikull/kemisha-lacombo-503-1/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795602487/pij0mkn1naw2fey6lyzd.webp" alt="Kemisha Lacombo, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Kemisha Lacombo</div>
+          <div class="art-card-code">Art. 503</div>
+        </div>
+      </a><a class="art-card" href="/artikull/kanatjere-riga-316/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795602521/k2vrcpergwrgmcdsxakv.webp" alt="Kanatjere RiGA, Pambuk 100%, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Kanatjere RiGA</div>
+          <div class="art-card-code">Art. 316</div>
+        </div>
+      </a><a class="art-card" href="/artikull/kanatjere-riga-316-e-zeze/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795602559/typwpsxzh0bnzuccet7f.webp" alt="Kanatjere RiGA, Pambuk 100%, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Kanatjere RiGA</div>
+          <div class="art-card-code">Art. 316</div>
+        </div>
+      </a><a class="art-card" href="/artikull/bokse-stela-136/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795602609/ad7ybvmpsdncbq9cvlpd.webp" alt="Bokse Stela, Filo di Scozia 100%, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Bokse Stela</div>
+          <div class="art-card-code">Art. 136</div>
+        </div>
+      </a><a class="art-card" href="/artikull/bokse-stela-136-bezhe/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795602629/btbaqivlegoelp5mqxlb.webp" alt="Bokse Stela, Filo di Scozia 100%, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Bokse Stela</div>
+          <div class="art-card-code">Art. 136</div>
+        </div>
+      </a><a class="art-card" href="/artikull/bokse-stela-136-e-zeze/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795602648/cwgiuhv7qaz6akzkfmlc.webp" alt="Bokse Stela, Filo di Scozia 100%, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Bokse Stela</div>
+          <div class="art-card-code">Art. 136</div>
+        </div>
+      </a><a class="art-card" href="/artikull/mbathje-crz-101/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795602673/nrlfqwxwabuquwqyqfkq.webp" alt="Mbathje CRZ, Pambuk 100%, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Mbathje CRZ</div>
+          <div class="art-card-code">Art. 101</div>
+        </div>
+      </a><a class="art-card" href="/artikull/mbathje-crz-101-bezhe/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1795602692/f9zz44uustddahzzjcqm.webp" alt="Mbathje CRZ, Pambuk 100%, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Mbathje CRZ</div>
+          <div class="art-card-code">Art. 101</div>
+        </div>
+      </a><a class="art-card" href="/artikull/pizhame-fanellat-550/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1789016840/t2doxebbgey8haeunofs.webp" alt="Pizhame fanellat, Pambuk 100%, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Pizhame fanellat</div>
+          <div class="art-card-code">Art. 550</div>
+        </div>
+      </a><a class="art-card" href="/artikull/pizhame-fanellat-550-1/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1789018080/l9dwcvtfkptdqwg72zrx.webp" alt="Pizhame fanellat, Pambuk 100%, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Pizhame fanellat</div>
+          <div class="art-card-code">Art. 550</div>
+        </div>
+      </a><a class="art-card" href="/artikull/pizhame-fanellat-550-2/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1789018109/vqfycdiw0e28ba0vghfu.webp" alt="Pizhame fanellat, Pambuk 100%, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Pizhame fanellat</div>
+          <div class="art-card-code">Art. 550</div>
+        </div>
+      </a><a class="art-card" href="/artikull/kemisha-fanellat-492/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1792574904/j7takwvmvfzgkkse5ubs.webp" alt="Kemisha Fanellat, Pambuk 100%, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Kemisha Fanellat</div>
+          <div class="art-card-code">Art. 492</div>
+        </div>
+      </a><a class="art-card" href="/artikull/kemisha-fanellat-492-1/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1792575045/amgpn6299qrkorvwekmw.webp" alt="Kemisha Fanellat, Pambuk 100%, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Kemisha Fanellat</div>
+          <div class="art-card-code">Art. 492</div>
+        </div>
+      </a><a class="art-card" href="/artikull/kemisha-fanellat-492-2/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1792575098/twedec9wm37prdrd0nub.webp" alt="Kemisha Fanellat, Pambuk 100%, për femra, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Kemisha Fanellat</div>
+          <div class="art-card-code">Art. 492</div>
+        </div>
+      </a></div></div><div class="cat-section"><div class="cat-section-title">Fëmijë</div><div class="art-grid"><a class="art-card" href="/artikull/kanatjere-femijesh-djemsh-110/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1784716000/bbpqd0vlwakeptw3ds1t.png" alt="Kanatjere femijesh djemsh, Pambuk 100%%, për fëmijë, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Kanatjere femijesh djemsh</div>
+          <div class="art-card-code">Art. 110</div>
+        </div>
+      </a><a class="art-card" href="/artikull/kanatjere-femijesh-vajzash-110/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1784716048/trbxelfezouhym1tcmxp.webp" alt="Kanatjere femijesh vajzash, Pambuk 100%%, për fëmijë, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Kanatjere femijesh vajzash</div>
+          <div class="art-card-code">Art. 110</div>
+        </div>
+      </a><a class="art-card" href="/artikull/fanella-femijesh-111/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1784716050/cbyrthdodlhtrur83ci3.webp" alt="Fanella femijesh, Pambuk 100%, për fëmijë, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Fanella femijesh</div>
+          <div class="art-card-code">Art. 111</div>
+        </div>
+      </a><a class="art-card" href="/artikull/bluze-femijesh-112/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1784716053/k81rmvazzfyjro2dca0y.webp" alt="Bluze femijesh, Pambuk 100%, për fëmijë, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Bluze femijesh</div>
+          <div class="art-card-code">Art. 112</div>
+        </div>
+      </a><a class="art-card" href="/artikull/bokse-femijesh-105/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1784716055/ixqgsdpczd52p2svqxnw.webp" alt="Bokse femijesh, për fëmijë, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Bokse femijesh</div>
+          <div class="art-card-code">Art. 105</div>
+        </div>
+      </a><a class="art-card" href="/artikull/bokse-vajzash-104/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1784716062/ohxozbpsn95cryypzgib.webp" alt="Bokse vajzash, Pambuk 95%%, për fëmijë, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Bokse vajzash</div>
+          <div class="art-card-code">Art. 104</div>
+        </div>
+      </a><a class="art-card" href="/artikull/mbathje-femijesh-101/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1784716065/dzpskebogdrid0jatf2j.webp" alt="Mbathje femijesh, për fëmijë, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Mbathje femijesh</div>
+          <div class="art-card-code">Art. 101</div>
+        </div>
+      </a><a class="art-card" href="/artikull/bokse-femijesh-105-1/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1784716069/lwh83lj6ydiefjiqsoiw.webp" alt="Bokse femijesh, për fëmijë, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Bokse femijesh</div>
+          <div class="art-card-code">Art. 105</div>
+        </div>
+      </a><a class="art-card" href="/artikull/bokse-femijesh-105-2/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1784716076/am0ew42j6ay1nczzfcaa.webp" alt="Bokse femijesh, për fëmijë, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Bokse femijesh</div>
+          <div class="art-card-code">Art. 105</div>
+        </div>
+      </a><a class="art-card" href="/artikull/bokse-femijesh-105-3/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1784716082/ft4308n08k3gqmaqzyja.webp" alt="Bokse femijesh, për fëmijë, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Bokse femijesh</div>
+          <div class="art-card-code">Art. 105</div>
+        </div>
+      </a></div></div><div class="cat-section"><div class="cat-section-title">tjera</div><div class="art-grid"><a class="art-card" href="/artikull/fustane-500/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1784715928/mwcgbheqq0yqylv7mjib.webp" alt="Fustane, Pambuk 90%, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Fustane</div>
+          <div class="art-card-code">Art. 500</div>
+        </div>
+      </a><a class="art-card" href="/artikull/fustane-500-1/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1784715930/mqaomoxw1lapo9gqruea.webp" alt="Fustane, Pambuk 90%, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Fustane</div>
+          <div class="art-card-code">Art. 500</div>
+        </div>
+      </a><a class="art-card" href="/artikull/fustane-500-2/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1784715931/g8ivdasjhorolzbvdugi.webp" alt="Fustane, Pambuk 90%, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Fustane</div>
+          <div class="art-card-code">Art. 500</div>
+        </div>
+      </a><a class="art-card" href="/artikull/fustane-500-3/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1784715933/az2gv8afwvbhbuq3dbdw.webp" alt="Fustane, Pambuk 90%, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Fustane</div>
+          <div class="art-card-code">Art. 500</div>
+        </div>
+      </a><a class="art-card" href="/artikull/fustane-500-4/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1784715935/wynw2vpigpq7dvfh1qkf.webp" alt="Fustane, Pambuk 90%, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Fustane</div>
+          <div class="art-card-code">Art. 500</div>
+        </div>
+      </a><a class="art-card" href="/artikull/fustane-500-5/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1784715951/abaz3jtsxt5shelunxy8.webp" alt="Fustane, Pambuk 90%, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Fustane</div>
+          <div class="art-card-code">Art. 500</div>
+        </div>
+      </a><a class="art-card" href="/artikull/fustane-500-6/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1784715953/qvpezaqwfga99st0pym1.webp" alt="Fustane, Pambuk 90%, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Fustane</div>
+          <div class="art-card-code">Art. 500</div>
+        </div>
+      </a><a class="art-card" href="/artikull/fustane-500-7/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1784715954/inolpgusts4dx74stnth.webp" alt="Fustane, Pambuk 90%, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Fustane</div>
+          <div class="art-card-code">Art. 500</div>
+        </div>
+      </a><a class="art-card" href="/artikull/fustane-500-8/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1784715956/oaz96zyndbfmtjh0gyw6.webp" alt="Fustane, Pambuk 90%, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Fustane</div>
+          <div class="art-card-code">Art. 500</div>
+        </div>
+      </a><a class="art-card" href="/artikull/fustane-500-9/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1784715957/b50vagvjueemapgsszih.webp" alt="Fustane, Pambuk 90%, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Fustane</div>
+          <div class="art-card-code">Art. 500</div>
+        </div>
+      </a><a class="art-card" href="/artikull/fustane-500-10/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1784715959/g4hjsh5nm50depwxwepa.webp" alt="Fustane, Pambuk 90%, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Fustane</div>
+          <div class="art-card-code">Art. 500</div>
+        </div>
+      </a><a class="art-card" href="/artikull/kemisha-nate-490/">
+        <div class="art-card-img"><img src="https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_400/v1784716009/g9agxkxeaqsnwpnbjflq.webp" alt="Kemisha nate, Pambuk 90%, pamje përpara" loading="lazy"></div>
+        <div class="art-card-body">
+          <div class="art-card-name">Kemisha nate</div>
+          <div class="art-card-code">Art. 490</div>
+        </div>
+      </a></div></div>
+    </div>
+  </main>
+
+  <footer class="simple-footer">
+    <div class="contact-locations">
+      <a class="contact-loc" href="https://maps.google.com/?q=Rrobaqep%C3%ABsi+INTAL,+Rruga+Arbanes,+Vaqarr,+Tiran%C3%AB+1035" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;display:block;cursor:pointer;">
+        <p class="contact-loc-name">Selia Kryesore</p>
+        <p class="contact-loc-addr">Rrobaqepësi INTAL, Rruga Arbanes, Vaqarr, Tiranë 1035</p>
+      </a>
+      <a class="contact-loc" href="https://maps.google.com/?q=Intal,+Rruga+5+Maji+67%2F1,+Tiran%C3%AB+1032" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;display:block;cursor:pointer;">
+        <p class="contact-loc-name">Pika e shitjes</p>
+        <p class="contact-loc-addr">Intal, Rruga 5 Maji 67/1, Tiranë 1032</p>
+      </a>
+    </div>
+    <footer class="contact-footer">
+      <span class="contact-brand">Intal <strong>UNDERWEAR</strong></span>
+      <span class="contact-copy">© <span id="cp-yr"></span> Intal Albania</span>
+    </footer>
+  </footer>
+  <script src="/js/main.js"></script>
+  <script>
+    (function(){var y=new Date().getFullYear();['cp-yr','cp-yr-drawer'].forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=y;});})();
+    window.toggleNavSearch=function(e){var w=document.getElementById('navbar-search'),inp=document.getElementById('navbar-search-input');if(!w)return;if(!w.classList.contains('open')){w.classList.add('open');setTimeout(function(){inp&&inp.focus();},260);}};
+    document.addEventListener('click',function(e){var w=document.getElementById('navbar-search');if(w&&!w.contains(e.target))w.classList.remove('open');});
+    document.addEventListener('DOMContentLoaded',function(){var inp=document.getElementById('navbar-search-input');if(inp){inp.addEventListener('keydown',function(e){if(e.key==='Enter'&&inp.value.trim()){window.location.href='/artikujt/#kerkim/'+encodeURIComponent(inp.value.trim());}});}});
+  </script>
+</body>
+</html>
