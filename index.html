@@ -522,14 +522,14 @@
           <i class="ri-menu-line"></i>
         </button>
         <div class="nav-links">
-          <a href="index.html" class="nav-link active" data-t="nav-home">Home</a>
-          <a href="artikujt.html" class="nav-link" data-t="nav-art">Artikujt</a>
-          <a href="pelhura.html" class="nav-link" data-t="nav-pel">Pelhura</a>
-          <a href="rreth-nesh.html" class="nav-link" data-t="nav-rr">Rreth Nesh</a>
+          <a href="/" class="nav-link active" data-t="nav-home">Home</a>
+          <a href="/artikujt/" class="nav-link" data-t="nav-art">Artikujt</a>
+          <a href="/pelhura/" class="nav-link" data-t="nav-pel">Pelhura</a>
+          <a href="/rreth-nesh/" class="nav-link" data-t="nav-rr">Rreth Nesh</a>
         </div>
       </div>
 
-      <a href="index.html" class="navbar-brand">Intal Albania Underwear</a>
+      <a href="/" class="navbar-brand">Intal Albania Underwear</a>
 
       <div class="navbar-right">
         <div class="navbar-search" id="navbar-search" onclick="toggleNavSearch(event)">
@@ -551,8 +551,8 @@
       <p class="hero-eyebrow" data-t="hero-eyebrow">Prodhim Shqiptar</p>
       <h1 class="hero-heading" data-t="hero-heading">Fabrikë e të Brendshmeve në Tiranë — Shitje me Shumicë</h1>
       <div class="hero-buttons">
-        <a href="artikujt.html" class="btn-primary" data-t="hero-btn1">Shiko Artikujt</a>
-        <a href="index.html?goto=kontakt" class="btn-outline" data-t="hero-btn2">Na Kontakto</a>
+        <a href="/artikujt/" class="btn-primary" data-t="hero-btn1">Shiko Artikujt</a>
+        <a href="/?goto=kontakt" class="btn-outline" data-t="hero-btn2">Na Kontakto</a>
       </div>
     </div>
   </section>
@@ -647,7 +647,7 @@
           <div id="art-detail-perberja" style="margin-bottom:14px;"></div>
         </div>
         <div style="padding:16px 28px 24px;">
-          <button onclick="closeArtDetail&&closeArtDetail();closeArtOverlay&&closeArtOverlay();window.location.href='index.html?goto=kontakt';" style="width:100%;background:var(--black);color:#fff;border:none;padding:12px;font-size:11px;font-weight:500;letter-spacing:1px;text-transform:uppercase;cursor:pointer;" data-t="about-btn">Na Kontaktoni</button>
+          <button onclick="closeArtDetail&&closeArtDetail();closeArtOverlay&&closeArtOverlay();window.location.href='/?goto=kontakt';" style="width:100%;background:var(--black);color:#fff;border:none;padding:12px;font-size:11px;font-weight:500;letter-spacing:1px;text-transform:uppercase;cursor:pointer;" data-t="about-btn">Na Kontaktoni</button>
         </div>
       </div>
     </div>
@@ -660,7 +660,7 @@
         <p class="about-eyebrow" data-t="about-eyebrow">Rreth Nesh</p>
         <h2 class="about-heading" data-t="about-heading">Intal — Prodhim Shqiptar i Brendshmeve</h2>
         <p class="about-body" data-t="about-body">Në Intal, jemi të dedicuar për të ofruar të brendshme premium që kombinon rehati, cilësi dhe stil. Çdo produkt prodhohet me kujdes nga materialet më të mira, për të siguruar kënaqësinë tuaj të përditshme.</p>
-        <a href="index.html?goto=kontakt" class="about-btn" data-t="about-btn">Na Kontaktoni</a>
+        <a href="/?goto=kontakt" class="about-btn" data-t="about-btn">Na Kontaktoni</a>
       </div>
       <div class="about-right">
         <div class="about-stat">
@@ -826,10 +826,10 @@
     </div>
     <div class="menu-drawer-body">
       <nav class="menu-drawer-nav">
-        <a href="index.html" class="menu-drawer-link" onclick="closeMenuDrawer()" data-t="nav-home">Home</a>
-        <a href="artikujt.html" class="menu-drawer-link" onclick="closeMenuDrawer()" data-t="nav-art">Artikujt</a>
-        <a href="pelhura.html" class="menu-drawer-link" onclick="closeMenuDrawer()" data-t="nav-pel">Pelhura</a>
-        <a href="rreth-nesh.html" class="menu-drawer-link" onclick="closeMenuDrawer()" data-t="nav-rr">Rreth Nesh</a>
+        <a href="/" class="menu-drawer-link" onclick="closeMenuDrawer()" data-t="nav-home">Home</a>
+        <a href="/artikujt/" class="menu-drawer-link" onclick="closeMenuDrawer()" data-t="nav-art">Artikujt</a>
+        <a href="/pelhura/" class="menu-drawer-link" onclick="closeMenuDrawer()" data-t="nav-pel">Pelhura</a>
+        <a href="/rreth-nesh/" class="menu-drawer-link" onclick="closeMenuDrawer()" data-t="nav-rr">Rreth Nesh</a>
         <a href="#kontakt" class="menu-drawer-link" onclick="goKontakt();return false;" data-t="nav-kontakt">Kontakt</a>
       </nav>
 
@@ -1279,7 +1279,7 @@
       var html = '';
       kats.forEach(function(kat, i){
         var img = sbImgUrl(kryesoreFoto[kat] || firstPhotoOfCat(artikujt, kat) || FALLBACK_IMGS[i % FALLBACK_IMGS.length]);
-        var href = kat.toLowerCase()==='pelhura' ? 'pelhura.html' : 'artikujt.html#'+encodeURIComponent(kat.toLowerCase());
+        var href = kat.toLowerCase()==='pelhura' ? '/pelhura/' : '/artikujt/#'+encodeURIComponent(kat.toLowerCase());
         var customDesc = data && data.kategoriSettings && data.kategoriSettings.kryesoreDesc && data.kategoriSettings.kryesoreDesc[kat];
         var defaultDesc = tDict['sc-desc-'+kat] || (lang==='en'
           ? 'Explore the complete '+tCat(kat).toLowerCase()+' collection with high-quality Albanian production.'

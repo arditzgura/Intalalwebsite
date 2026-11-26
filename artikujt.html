@@ -7,13 +7,13 @@
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-1L8B69RQW9');</script>
   <meta charset="UTF-8">
   <meta name="description" content="Artikujt e të brendshmeve Intal Albania — Meshkuj, Femra, Fëmijë. Blerje me shumicë direkt nga fabrika shqiptare." />
-  <link rel="canonical" href="https://intalal.com/artikujt" />
+  <link rel="canonical" href="https://intalal.com/artikujt/" />
   <link rel="icon" type="image/png" href="favicon.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Artikujt — Intal Underwear</title>
   <meta property="og:title" content="Artikujt — Intal Underwear" />
   <meta property="og:description" content="Koleksioni i plotë i të brendshmeve — Meshkuj, Femra, Fëmijë. Cilësi shqiptare direkt nga fabrika." />
-  <meta property="og:url" content="https://intalal.com/artikujt" />
+  <meta property="og:url" content="https://intalal.com/artikujt/" />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="https://intalal.com/og_image.png" />
   <meta property="og:image:secure_url" content="https://intalal.com/og_image.png" />
@@ -237,14 +237,14 @@
           <i class="ri-menu-line"></i>
         </button>
         <div class="nav-links">
-          <a href="index.html" class="nav-link" data-t="nav-home">Home</a>
-          <a href="artikujt.html" class="nav-link active" data-t="nav-art">Artikujt</a>
-          <a href="pelhura.html" class="nav-link" data-t="nav-pel">Pelhura</a>
-          <a href="rreth-nesh.html" class="nav-link" data-t="nav-rr">Rreth Nesh</a>
+          <a href="/" class="nav-link" data-t="nav-home">Home</a>
+          <a href="/artikujt/" class="nav-link active" data-t="nav-art">Artikujt</a>
+          <a href="/pelhura/" class="nav-link" data-t="nav-pel">Pelhura</a>
+          <a href="/rreth-nesh/" class="nav-link" data-t="nav-rr">Rreth Nesh</a>
         </div>
       </div>
 
-      <a href="index.html" class="navbar-brand">Intal Underwear</a>
+      <a href="/" class="navbar-brand">Intal Underwear</a>
 
       <div class="navbar-right">
         <div class="navbar-search" id="navbar-search" onclick="toggleNavSearch(event)">
@@ -356,11 +356,11 @@
     </div>
     <div class="menu-drawer-body">
       <nav class="menu-drawer-nav">
-        <a href="index.html" class="menu-drawer-link" onclick="closeMenuDrawer()" data-t="nav-home">Home</a>
-        <a href="artikujt.html" class="menu-drawer-link" onclick="closeMenuDrawer()" data-t="nav-art">Artikujt</a>
-        <a href="pelhura.html" class="menu-drawer-link" onclick="closeMenuDrawer()" data-t="nav-pel">Pelhura</a>
-        <a href="rreth-nesh.html" class="menu-drawer-link" onclick="closeMenuDrawer()" data-t="nav-rr">Rreth Nesh</a>
-        <a href="index.html#kontakt" class="menu-drawer-link" onclick="goKontakt();return false;" data-t="nav-kontakt">Kontakt</a>
+        <a href="/" class="menu-drawer-link" onclick="closeMenuDrawer()" data-t="nav-home">Home</a>
+        <a href="/artikujt/" class="menu-drawer-link" onclick="closeMenuDrawer()" data-t="nav-art">Artikujt</a>
+        <a href="/pelhura/" class="menu-drawer-link" onclick="closeMenuDrawer()" data-t="nav-pel">Pelhura</a>
+        <a href="/rreth-nesh/" class="menu-drawer-link" onclick="closeMenuDrawer()" data-t="nav-rr">Rreth Nesh</a>
+        <a href="/#kontakt" class="menu-drawer-link" onclick="goKontakt();return false;" data-t="nav-kontakt">Kontakt</a>
       </nav>
 
       <div class="menu-drawer-divider"></div>
@@ -587,7 +587,7 @@
       var cat=_state.cat||'';
       var filter=_state.filter&&_state.filter!=='te-gjitha'?_state.filter:'';
       var parts=[];
-      parts.push('<a href="index.html">HOME</a>');
+      parts.push('<a href="/">HOME</a>');
       var isRoot=!sub&&!kat&&!cat;
       parts.push(isRoot
         ?'<span class="cur">'+_t('ARTIKUJT')+'</span>'
@@ -873,7 +873,7 @@
       // mbyll popup nëse nuk ka artId
       if(!h.artId){ if(popupOpen){ ov.style.display='none'; ov.querySelectorAll('.art-nav-btn').forEach(function(b){b.remove();}); } }
       if(!h.cat){ showAll(data); }
-      else if(h.cat==='pelhura'){ location.href='pelhura.html'; }
+      else if(h.cat==='pelhura'){ location.href='/pelhura/'; }
       else if(h.cat==='kerkim'){
         var q=decodeURIComponent(h.filter==='te-gjitha'?'':h.filter);
         showAll(data);
@@ -1201,7 +1201,7 @@
       var val=a.name+(a.code?' ('+a.code+')':'');
       sessionStorage.setItem('intal_art_order', val);
       document.getElementById('art-detail-overlay').style.display='none';
-      window.location.href='index.html?goto=kontakt';
+      window.location.href='/?goto=kontakt';
     };
     window.prevDet=function(){ if(_det.artIdx<=0) return; _det.artIdx--; _det.photoIdx=0; setArtHash(_det.articles[_det.artIdx].id); renderDetPhotos(); renderDetInfo(); };
     window.nextDet=function(){ if(_det.artIdx>=_det.articles.length-1) return; _det.artIdx++; _det.photoIdx=0; setArtHash(_det.articles[_det.artIdx].id); renderDetPhotos(); renderDetInfo(); };

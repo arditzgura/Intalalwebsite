@@ -125,7 +125,7 @@ function articleHtml(art, slug, suggestions, colorVariants) {
   const bcSub = rawSub ? `${sep}<a href="/artikujt#${subHash}">${cap(rawSub)}</a>` : '';
   const bcKat = rawKat ? `${sep}<a href="/artikujt#${subHash ? subHash+'/' : ''}${katHash}">${cap(rawKat)}</a>` : '';
   const breadcrumbHtml = `<div class="breadcrumb">
-      <a href="/artikujt">ARTIKUJT</a>
+      <a href="/artikujt/">ARTIKUJT</a>
       ${bcSub}${bcKat}
     </div>`;
   const comp    = (art.perberja || []).map(p => `<div class="comp-row"><span>${esc(p.material||p.name||'')}</span><span>${esc(String(p.perqindje||p.pct||p.value||''))}%</span></div>`).join('');
@@ -148,7 +148,7 @@ function articleHtml(art, slug, suggestions, colorVariants) {
         const cls = isCurrent ? ' active' : (!variant ? ' unavailable' : '');
         const dot = `<span class="color-dot${cls}" style="background:${esc(c.hex||'#ccc')}" title="${esc(c.name||'')}"></span>`;
         if (isCurrent || !variant) return dot;
-        return `<a href="/artikull/${variant.slug}" class="color-dot-link">${dot}</a>`;
+        return `<a href="/artikull/${variant.slug}/" class="color-dot-link">${dot}</a>`;
       }).join('')}</div>`
     : '';
 
@@ -307,9 +307,9 @@ function articleHtml(art, slug, suggestions, colorVariants) {
         </button>
         <div class="nav-links">
           <a href="/" class="nav-link">Home</a>
-          <a href="/artikujt" class="nav-link active">Artikujt</a>
-          <a href="/pelhura" class="nav-link">Pelhura</a>
-          <a href="/rreth-nesh" class="nav-link">Rreth Nesh</a>
+          <a href="/artikujt/" class="nav-link active">Artikujt</a>
+          <a href="/pelhura/" class="nav-link">Pelhura</a>
+          <a href="/rreth-nesh/" class="nav-link">Rreth Nesh</a>
         </div>
       </div>
       <a href="/" class="navbar-brand">Intal Underwear</a>
@@ -332,9 +332,9 @@ function articleHtml(art, slug, suggestions, colorVariants) {
     <div class="menu-drawer-body">
       <nav class="menu-drawer-nav">
         <a href="/" class="menu-drawer-link" onclick="closeMenuDrawer()">Home</a>
-        <a href="/artikujt" class="menu-drawer-link" onclick="closeMenuDrawer()">Artikujt</a>
-        <a href="/pelhura" class="menu-drawer-link" onclick="closeMenuDrawer()">Pelhura</a>
-        <a href="/rreth-nesh" class="menu-drawer-link" onclick="closeMenuDrawer()">Rreth Nesh</a>
+        <a href="/artikujt/" class="menu-drawer-link" onclick="closeMenuDrawer()">Artikujt</a>
+        <a href="/pelhura/" class="menu-drawer-link" onclick="closeMenuDrawer()">Pelhura</a>
+        <a href="/rreth-nesh/" class="menu-drawer-link" onclick="closeMenuDrawer()">Rreth Nesh</a>
       </nav>
       <div class="menu-drawer-divider"></div>
       <p class="menu-drawer-eyebrow">NA KONTAKTONI</p>
@@ -357,7 +357,7 @@ function articleHtml(art, slug, suggestions, colorVariants) {
   <main class="page">
   <div class="page-inner">
 
-    <a href="/artikujt" class="back-top">
+    <a href="/artikujt/" class="back-top">
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 12L6 8l4-4"/></svg>
       MBRAPA
     </a>
@@ -434,7 +434,7 @@ function articleHtml(art, slug, suggestions, colorVariants) {
       </button>
       <div class="sugg-track-wrap" id="sugg-wrap">
         <div class="sugg-track" id="sugg-track">
-          ${suggestions.map(s => `<a class="sugg-card" href="/artikull/${s.slug}">
+          ${suggestions.map(s => `<a class="sugg-card" href="/artikull/${s.slug}/">
             <div class="sugg-card-img">${s.img ? `<img src="${s.img}" alt="${esc(s.name)}" loading="lazy" draggable="false">` : ''}</div>
             <div class="sugg-card-body">
               <div class="sugg-card-name">${esc(s.name)}</div>
@@ -797,9 +797,9 @@ function fabricHtml(fab, slug, suggestions) {
         </button>
         <div class="nav-links">
           <a href="/" class="nav-link">Home</a>
-          <a href="/artikujt" class="nav-link">Artikujt</a>
-          <a href="/pelhura" class="nav-link active">Pelhura</a>
-          <a href="/rreth-nesh" class="nav-link">Rreth Nesh</a>
+          <a href="/artikujt/" class="nav-link">Artikujt</a>
+          <a href="/pelhura/" class="nav-link active">Pelhura</a>
+          <a href="/rreth-nesh/" class="nav-link">Rreth Nesh</a>
         </div>
       </div>
       <a href="/" class="navbar-brand">Intal Underwear</a>
@@ -822,9 +822,9 @@ function fabricHtml(fab, slug, suggestions) {
     <div class="menu-drawer-body">
       <nav class="menu-drawer-nav">
         <a href="/" class="menu-drawer-link" onclick="closeMenuDrawer()">Home</a>
-        <a href="/artikujt" class="menu-drawer-link" onclick="closeMenuDrawer()">Artikujt</a>
-        <a href="/pelhura" class="menu-drawer-link" onclick="closeMenuDrawer()">Pelhura</a>
-        <a href="/rreth-nesh" class="menu-drawer-link" onclick="closeMenuDrawer()">Rreth Nesh</a>
+        <a href="/artikujt/" class="menu-drawer-link" onclick="closeMenuDrawer()">Artikujt</a>
+        <a href="/pelhura/" class="menu-drawer-link" onclick="closeMenuDrawer()">Pelhura</a>
+        <a href="/rreth-nesh/" class="menu-drawer-link" onclick="closeMenuDrawer()">Rreth Nesh</a>
       </nav>
       <div class="menu-drawer-divider"></div>
       <p class="menu-drawer-eyebrow">NA KONTAKTONI</p>
@@ -847,13 +847,13 @@ function fabricHtml(fab, slug, suggestions) {
   <main class="page">
   <div class="page-inner">
 
-    <a href="/pelhura" class="back-top">
+    <a href="/pelhura/" class="back-top">
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 12L6 8l4-4"/></svg>
       MBRAPA
     </a>
 
     <div class="breadcrumb">
-      <a href="/pelhura">PELHURA</a>
+      <a href="/pelhura/">PELHURA</a>
       ${katVal ? `<span class="bc-sep">/</span><a href="/pelhura#${encodeURIComponent(katVal.toLowerCase())}">${katVal.toUpperCase()}</a>` : ''}
     </div>
 
@@ -924,7 +924,7 @@ function fabricHtml(fab, slug, suggestions) {
       </button>
       <div class="sugg-track-wrap" id="sugg-wrap">
         <div class="sugg-track" id="sugg-track">
-          ${suggestions.map(s => `<a class="sugg-card" href="/pelhura/${s.slug}">
+          ${suggestions.map(s => `<a class="sugg-card" href="/pelhura/${s.slug}/">
             <div class="sugg-card-img">${s.img ? `<img src="${s.img}" alt="${esc(s.name)}" loading="lazy" draggable="false">` : ''}</div>
             <div class="sugg-card-body">
               <div class="sugg-card-name">${esc(s.name)}</div>
@@ -1357,6 +1357,47 @@ async function main() {
   console.log('Updated sitemap.xml');
 
   console.log('Done.');
+
+  // ── Kontroll automatik i URL-ve ──────────────────────────────
+  checkLinks(artSlugs, pelSlugs);
+}
+
+function checkLinks(artSlugs, pelSlugs) {
+  const errors = [];
+  const artSet = new Set(artSlugs.map(s => `/artikull/${s}/`));
+  const pelSet = new Set(pelSlugs.map(s => `/pelhura/${s}/`));
+
+  // Kontrollo sitemap
+  const sitemap = fs.readFileSync(path.join(ROOT, 'sitemap.xml'), 'utf8');
+  for (const m of sitemap.matchAll(/<loc>(https:\/\/intalal\.com([^<]+))<\/loc>/g)) {
+    const path_ = m[2];
+    if (!path_.endsWith('/')) errors.push(`sitemap: URL pa /: ${m[1]}`);
+  }
+
+  // Kontrollo faqet e gjeneruara: canonical dhe lidhje të brendshme
+  const internalRe = /href="(\/(?:artikull|pelhura|artikujt|pelhura|rreth-nesh)[^"#?]*)"/g;
+  const canonRe = /<link rel="canonical" href="https:\/\/intalal\.com([^"]+)"/g;
+
+  for (const slug of artSlugs) {
+    const html = fs.readFileSync(path.join(ROOT, 'artikull', slug, 'index.html'), 'utf8');
+    for (const m of html.matchAll(canonRe)) {
+      if (!m[1].endsWith('/')) errors.push(`/artikull/${slug}/ canonical pa /: ${m[1]}`);
+    }
+    for (const m of html.matchAll(internalRe)) {
+      const href = m[1];
+      if (href.startsWith('/artikull/') || href.startsWith('/pelhura/')) {
+        if (!href.endsWith('/')) errors.push(`/artikull/${slug}/: lidhje pa /: ${href}`);
+      }
+    }
+  }
+
+  if (errors.length) {
+    console.error('\n⚠ GABIME URL (trailing slash):');
+    errors.forEach(e => console.error('  ' + e));
+    process.exit(1);
+  } else {
+    console.log('✓ URL check: të gjitha URL-të kanë /');
+  }
 }
 
 main().catch(err => { console.error(err); process.exit(1); });
