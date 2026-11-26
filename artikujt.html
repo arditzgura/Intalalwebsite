@@ -65,6 +65,28 @@
     #dyn-grid { display:none; grid-template-columns:repeat(4,1fr); gap:44px 36px; padding:24px var(--art-side) 80px; }
     @media(max-width:900px){ #dyn-grid { grid-template-columns:repeat(3,1fr); gap:36px 28px; } }
     @media(max-width:600px){ #dyn-grid { grid-template-columns:repeat(2,1fr); gap:20px 12px; padding:var(--side) var(--side) 50px; } #dyn-filter-bar { padding:0 var(--side); } .art-card-name { font-size:10px !important; letter-spacing:0 !important; } .art-card-code { font-size:8.5px !important; letter-spacing:1px !important; } }
+    /* ── Mobile kategori (≤768px) ── */
+    @media(max-width:768px){
+      /* L1: tab bar me gjerësi të barabartë + vijë rrëshqitëse */
+      .dfc-row-main { justify-content:flex-start; overflow-x:hidden; position:relative; }
+      .dfc-row-main .dfc { flex:1; min-width:0; text-align:center; padding:14px 8px; font-size:11px !important; letter-spacing:.3px; border-bottom:none !important; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+      .dfc-row-main .dfc.active { font-size:11px !important; font-weight:700; border-bottom:none !important; }
+      .mob-tab-ind { position:absolute; bottom:0; height:2px; background:var(--black,#0a0a0a); left:0; width:0; transition:left 300ms ease,width 300ms ease; will-change:left,width; pointer-events:none; }
+      /* L2: chips pill me zonë prekjeje 44px */
+      .dfc-row-sub { padding:10px 16px; gap:8px; }
+      .dfc-sub { border-radius:999px !important; border:1.5px solid #e0e0e0 !important; padding:8px 14px !important; font-size:12px !important; min-height:36px; display:inline-flex !important; align-items:center; letter-spacing:.2px; color:var(--black,#0a0a0a); background:#fff; transition:background 150ms,color 150ms,border-color 150ms; }
+      .dfc-sub.active { background:var(--black,#0a0a0a) !important; color:#fff !important; border-color:var(--black,#0a0a0a) !important; text-decoration:none !important; }
+      /* Gradient fade në anët e chips */
+      .mob-chips-wrap { position:relative; overflow:hidden; }
+      .mob-chips-wrap::before,.mob-chips-wrap::after { content:''; position:absolute; top:0; bottom:0; width:28px; pointer-events:none; z-index:2; transition:opacity 200ms; }
+      .mob-chips-wrap::before { left:0; background:linear-gradient(to right,#fff 50%,transparent); }
+      .mob-chips-wrap::after { right:0; background:linear-gradient(to left,#fff 50%,transparent); }
+      .mob-chips-wrap.mob-at-start::before { opacity:0; }
+      .mob-chips-wrap.mob-at-end::after { opacity:0; }
+      /* Hija kur filtri është ngjitur lart (position:fixed) */
+      #dyn-filter-bar.mob-shadowed { box-shadow:0 2px 8px rgba(0,0,0,.08); }
+    }
+    @media(prefers-reduced-motion:reduce){ .mob-tab-ind { transition:none !important; } }
 .art-card { cursor:pointer; position:relative; }
     .art-card-img-wrap { aspect-ratio:3/4; overflow:hidden; background:#f0f0f0; position:relative; }
     .art-card-img-wrap img { width:100%; height:100%; object-fit:cover; display:block; }
@@ -645,6 +667,43 @@
       scrollToGrid();
     };
 
+    // Mobile UX: sliding tab indicator + chip fade gradients + sticky shadow
+    function mobPostRender(){
+      if(window.innerWidth>768) return;
+      requestAnimationFrame(function(){
+        // 1. Tab indicator
+        var row=document.querySelector('.dfc-row-main');
+        var ind=document.getElementById('mob-tab-ind');
+        if(row&&ind){
+          var active=row.querySelector('.dfc.active');
+          if(active){ ind.style.left=active.offsetLeft+'px'; ind.style.width=active.offsetWidth+'px'; }
+          else { ind.style.width='0'; }
+        }
+        // 2. Chip fade gradients + scroll centering
+        document.querySelectorAll('.mob-chips-wrap').forEach(function(wrap){
+          var inner=wrap.querySelector('.dfc-row-sub');
+          if(!inner) return;
+          function updFade(){
+            wrap.classList.toggle('mob-at-start',inner.scrollLeft<=2);
+            wrap.classList.toggle('mob-at-end',inner.scrollLeft+inner.clientWidth>=inner.scrollWidth-2);
+          }
+          updFade();
+          inner.removeEventListener('scroll',inner._mobFade||null);
+          inner._mobFade=updFade;
+          inner.addEventListener('scroll',updFade,{passive:true});
+          // scroll active chip to center
+          var activeChip=inner.querySelector('.dfc-sub.active');
+          if(activeChip){ inner.scrollLeft=activeChip.offsetLeft-(inner.clientWidth/2)+(activeChip.offsetWidth/2); updFade(); }
+        });
+      });
+    }
+    // Shadow on filter bar when page scrolled
+    (function(){
+      var bar=document.getElementById('dyn-filter-bar');
+      if(!bar) return;
+      window.addEventListener('scroll',function(){ bar.classList.toggle('mob-shadowed',window.scrollY>4); },{passive:true});
+    })();
+
     function syncWrapH(){
       var bar=document.getElementById('dyn-filter-bar');
       var spacer=document.getElementById('filter-bar-spacer');
@@ -688,10 +747,12 @@
         arr.forEach(function(v){ if(v&&!subs.includes(v)) subs.push(v); });
       });
       // row 1: sub categories
-      var row1='<div class="dfc-row dfc-row-main">';
+      var row1='<div class="dfc-row dfc-row-main" role="tablist">';
       subs.forEach(function(s){
-        row1+='<button class="dfc'+(activeSub===s?' active':'')+'" onclick="applySubFilter(\''+s.replace(/'/g,"\\'")+'\')">'+_tCat(s)+'</button>';
+        var isSel=(activeSub===s);
+        row1+='<button class="dfc'+(isSel?' active':'')+'" role="tab" aria-selected="'+(isSel?'true':'false')+'" onclick="applySubFilter(\''+s.replace(/'/g,"\\'")+'\')">'+_tCat(s)+'</button>';
       });
+      row1+='<span class="mob-tab-ind" id="mob-tab-ind" aria-hidden="true"></span>';
       row1+='</div>';
 
       var row2='', row3='';
@@ -716,22 +777,22 @@
           var subkats=[];
           typeSource.forEach(function(a){ artKatArr(a).forEach(function(k){ if(!isSeasonKat(k)&&!subkats.includes(k)) subkats.push(k); }); });
           if(subkats.length){
-            row3='<div class="dfc-row dfc-row-sub">';
+            row3='<div class="mob-chips-wrap"><div class="dfc-row dfc-row-sub">';
             subkats.forEach(function(k){
               row3+='<button class="dfc-sub'+(activeSubKat===k?' active':'')+'" onclick="applySubKatFilter(\''+k.replace(/'/g,"\\'")+'\')">'+_tCat(k)+'</button>';
             });
-            row3+='</div>';
+            row3+='</div></div>';
           }
         } else {
           // Normal subs: row2 = all kats (dfc-sub underline)
           var kats=[];
           subArts.forEach(function(a){ artKatArr(a).forEach(function(k){ if(k&&!kats.includes(k)) kats.push(k); }); });
           if(kats.length){
-            row2='<div class="dfc-row dfc-row-sub">';
+            row2='<div class="mob-chips-wrap"><div class="dfc-row dfc-row-sub">';
             kats.forEach(function(k){
               row2+='<button class="dfc-sub'+(activeKat===k?' active':'')+'" onclick="applyKatFilter(\''+k.replace(/'/g,"\\'")+'\')">'+_tCat(k)+'</button>';
             });
-            row2+='</div>';
+            row2+='</div></div>';
           }
         }
       }
@@ -756,6 +817,7 @@
         }
       }
       syncWrapH();
+      mobPostRender();
     }
 
     function buildCardHtml(a, opener){
@@ -968,6 +1030,7 @@
       var title=label+' — Intal Underwear';
       var desc='Koleksioni i plotë i të brendshmeve — '+label+'. Cilësi shqiptare direkt nga fabrika.';
       updatePageOg(title,desc,firstPhotoFromList(filtered),window.location.href);
+      if(typeof gtag==='function') gtag('event','category_l1_select',{category:newSub,method:'tap'});
     };
 
     // Level-2 filter for normal subs: kat (Mbathje, Kanatjere...) — klik sërish çaktivizoj
@@ -985,6 +1048,7 @@
       else { filtered=_state.allArticles.filter(function(a){ return (sub&&sub!=='te-gjitha'?artMatchesCat(a,sub):true)&&artKatArr(a).includes(kat); }); }
       var label=kat==='te-gjitha'?(sub&&sub!=='te-gjitha'?sub:'Artikujt'):kat;
       updatePageOg(label+' — Intal Underwear','Koleksioni i plotë i të brendshmeve — '+label+'. Cilësi shqiptare direkt nga fabrika.',firstPhotoFromList(filtered),window.location.href);
+      if(typeof gtag==='function') gtag('event','category_l2_select',{category:kat,method:'tap'});
     };
 
     // Level-2 filter for Stinore: season (Dimër, Verë) — toggle
