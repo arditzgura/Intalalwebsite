@@ -377,6 +377,7 @@ function articleHtml(art, slug, suggestions, colorVariants) {
           <a href="/artikujt/" class="nav-link active">Artikujt</a>
           <a href="/pelhura/" class="nav-link">Pelhura</a>
           <a href="/rreth-nesh/" class="nav-link">Rreth Nesh</a>
+          <a href="/me-shumice/" class="nav-link">Me Shumicë</a>
         </div>
       </div>
       <a href="/" class="navbar-brand">Intal Underwear</a>
@@ -402,6 +403,7 @@ function articleHtml(art, slug, suggestions, colorVariants) {
         <a href="/artikujt/" class="menu-drawer-link" onclick="closeMenuDrawer()">Artikujt</a>
         <a href="/pelhura/" class="menu-drawer-link" onclick="closeMenuDrawer()">Pelhura</a>
         <a href="/rreth-nesh/" class="menu-drawer-link" onclick="closeMenuDrawer()">Rreth Nesh</a>
+        <a href="/me-shumice/" class="menu-drawer-link" onclick="closeMenuDrawer()">Me Shumicë</a>
       </nav>
       <div class="menu-drawer-divider"></div>
       <p class="menu-drawer-eyebrow">NA KONTAKTONI</p>
@@ -919,6 +921,7 @@ function fabricHtml(fab, slug, suggestions) {
           <a href="/artikujt/" class="nav-link">Artikujt</a>
           <a href="/pelhura/" class="nav-link active">Pelhura</a>
           <a href="/rreth-nesh/" class="nav-link">Rreth Nesh</a>
+          <a href="/me-shumice/" class="nav-link">Me Shumicë</a>
         </div>
       </div>
       <a href="/" class="navbar-brand">Intal Underwear</a>
@@ -944,6 +947,7 @@ function fabricHtml(fab, slug, suggestions) {
         <a href="/artikujt/" class="menu-drawer-link" onclick="closeMenuDrawer()">Artikujt</a>
         <a href="/pelhura/" class="menu-drawer-link" onclick="closeMenuDrawer()">Pelhura</a>
         <a href="/rreth-nesh/" class="menu-drawer-link" onclick="closeMenuDrawer()">Rreth Nesh</a>
+        <a href="/me-shumice/" class="menu-drawer-link" onclick="closeMenuDrawer()">Me Shumicë</a>
       </nav>
       <div class="menu-drawer-divider"></div>
       <p class="menu-drawer-eyebrow">NA KONTAKTONI</p>
@@ -1232,6 +1236,7 @@ function catalogNavFooter() {
           <a href="/artikujt/" class="nav-link active">Artikujt</a>
           <a href="/pelhura/" class="nav-link">Pelhura</a>
           <a href="/rreth-nesh/" class="nav-link">Rreth Nesh</a>
+          <a href="/me-shumice/" class="nav-link">Me Shumicë</a>
         </div>
       </div>
       <a href="/" class="navbar-brand">Intal Underwear</a>
@@ -1255,6 +1260,7 @@ function catalogNavFooter() {
         <a href="/artikujt/" class="menu-drawer-link" onclick="closeMenuDrawer()">Artikujt</a>
         <a href="/pelhura/" class="menu-drawer-link" onclick="closeMenuDrawer()">Pelhura</a>
         <a href="/rreth-nesh/" class="menu-drawer-link" onclick="closeMenuDrawer()">Rreth Nesh</a>
+        <a href="/me-shumice/" class="menu-drawer-link" onclick="closeMenuDrawer()">Me Shumicë</a>
       </nav>
       <div class="menu-drawer-divider"></div>
       <p class="menu-drawer-eyebrow">NA KONTAKTONI</p>
