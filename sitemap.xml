@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 
   <url>
     <loc>https://intalal.com/</loc>
@@ -135,908 +136,1307 @@
 
   <url>
     <loc>https://intalal.com/artikull/bluze-crz-320-e-bardhe/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795599422/ol7rf9kuzghp82oabdak.webp</image:loc>
+      <image:title>Bluze CRZ</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/bluze-crz-320-gri/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795599451/ppf3jado4rlxz0uoogax.webp</image:loc>
+      <image:title>Bluze CRZ</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/bluze-crz-320-e-zeze/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795599487/dkwpxtttkk8nqgyuncki.webp</image:loc>
+      <image:title>Bluze CRZ</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/kanatjere-crz-318-e-bardhe/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795599523/pryxf5hqiijzt3mqicik.webp</image:loc>
+      <image:title>Kanatjere CRZ</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/kanatjere-crz-sup-319/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795599571/ajfxkax3b2x9z3njf1mr.webp</image:loc>
+      <image:title>Kanatjere CRZ sup</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/kanatjere-crz-318-gri/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795599589/puuhoq9rnemhbkfghfxb.webp</image:loc>
+      <image:title>Kanatjere CRZ</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/kanatjere-crz-sup-319-gri/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795599606/d8dgolu2ybx2bmz9krkk.webp</image:loc>
+      <image:title>Kanatjere CRZ sup</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/kanatjere-crz-318-e-zeze/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795599626/rmxgi7cgdhwvibw9i1fk.webp</image:loc>
+      <image:title>Kanatjere CRZ</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/kanatjere-crz-sup-319-e-zeze/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795599644/hbgjwwbl581iyigje6ua.webp</image:loc>
+      <image:title>Kanatjere CRZ sup</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/fanella-crz-330-e-bardhe/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795599673/zf5gmnd6e6jq3zgqhoqs.webp</image:loc>
+      <image:title>Fanella CRZ</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/fanella-crz-330-e-zeze/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795599699/sdk6ehwanatx9z7xlipl.webp</image:loc>
+      <image:title>Fanella CRZ</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/fanella-crz-330-gri/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795599740/l1cglepgjju8jszmdb9e.webp</image:loc>
+      <image:title>Fanella CRZ</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/mbathje-nothingman-150/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795599804/uyrnq5l70okbcpahxxoa.webp</image:loc>
+      <image:title>Mbathje Nothingman</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/mbathje-nothingman-150-gri/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795599823/kj6zzv3srqvwb8xrvllz.webp</image:loc>
+      <image:title>Mbathje Nothingman</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/mbathje-nothingman-150-e-zeze/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795599838/ku4o6fce86w3ds4qflnk.webp</image:loc>
+      <image:title>Mbathje Nothingman</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/mbathje-shorts-151/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795599868/ieqq2vgfhja6fquo0aoh.webp</image:loc>
+      <image:title>Mbathje Shorts</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/mbathje-shorts-151-gri/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795599883/uz79dfm8jc7abffwhf5z.webp</image:loc>
+      <image:title>Mbathje Shorts</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/mbathje-shorts-151-e-zeze/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795599898/ew3v8l6plbsreanbqe4w.webp</image:loc>
+      <image:title>Mbathje Shorts</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/mbathje-stela-131-bezhe/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795601013/ki2scstfhywzecykcyds.webp</image:loc>
+      <image:title>Mbathje Stela</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/mbathje-stela-131-e-bardhe/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795601029/k4o5mur1ahe3v2i8y3hw.webp</image:loc>
+      <image:title>Mbathje Stela</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/mbathje-stela-131-e-zeze/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795601050/etwbaydzxzdfv7fgorjo.webp</image:loc>
+      <image:title>Mbathje Stela</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/mbathje-stela-132/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795601111/l0eqcwu5kbs1z0yiowrv.webp</image:loc>
+      <image:title>Mbathje Stela</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/mbathje-stela-132-bezhe/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795601130/tnxcsnfg8dkcqd77ybyd.webp</image:loc>
+      <image:title>Mbathje Stela</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/mbathje-stela-133-bezhe/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795601152/ildwzj9cv8wbknaaas1g.webp</image:loc>
+      <image:title>Mbathje Stela</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/mbathje-stela-133-e-bardhe/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795601173/ll4jdb4njssuyfnkzeyn.webp</image:loc>
+      <image:title>Mbathje Stela</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/mbathje-stela-133-e-zeze/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795601191/sdejwfbchegezc1swhzi.webp</image:loc>
+      <image:title>Mbathje Stela</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/mbathje-stela-130/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795601899/ycjbtdewvnjgfa2ttsgi.webp</image:loc>
+      <image:title>Mbathje Stela</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/mbathje-stela-130-bezhe/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795601924/nptdsl5qr621igf8vxsc.webp</image:loc>
+      <image:title>Mbathje Stela</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/mbathje-stela-130-e-zeze/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795601943/zkxbuv9yfrmu3cvswjvw.webp</image:loc>
+      <image:title>Mbathje Stela</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/mbathje-stela-134/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795601969/a8jciio35mrbjs6wt4ex.webp</image:loc>
+      <image:title>Mbathje Stela</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/mbathje-stela-134-bezhe/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795601988/d82n4po8xii2cjgzyjmh.webp</image:loc>
+      <image:title>Mbathje Stela</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/mbathje-stela-134-e-zeze/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795602008/p3kw3smotrzbqd6h4qsu.webp</image:loc>
+      <image:title>Mbathje Stela</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/mbathje-stela-tegel-135-e-bardhe/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795602048/mxlsdyereqzhjjzsp8rx.webp</image:loc>
+      <image:title>Mbathje Stela tegel</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/mbathje-stela-tegel-135-bezhe/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795602068/d0reaw5lv6la23dwox1x.webp</image:loc>
+      <image:title>Mbathje Stela tegel</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/mbathje-stela-tegel-135-e-zeze/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795602085/kea8bqaicejq6jcqsmnu.webp</image:loc>
+      <image:title>Mbathje Stela tegel</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/bokse-uomo-220-e-bardhe/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795599922/jynzqjhf6h2ybjirnott.webp</image:loc>
+      <image:title>Bokse UOMO</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/bokse-uomo-220-gri/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795599959/xyqkzivqnoa2ywfh23ab.webp</image:loc>
+      <image:title>Bokse UOMO</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/bokse-uomo-220-blu/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795599976/pqeiyd49wiubft0lgt7h.webp</image:loc>
+      <image:title>Bokse UOMO</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/mbathje-uomo-221-e-bardhe/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795599995/j0s1tkms1f2lnqqg8cym.webp</image:loc>
+      <image:title>Mbathje UOMO</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/mbathje-uomo-221-blu/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795600013/q01j84ehpjja1yeupxyj.webp</image:loc>
+      <image:title>Mbathje UOMO</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/mbathje-uomo-221-gri/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795600026/av7ysoxdlbinpj4whf06.webp</image:loc>
+      <image:title>Mbathje UOMO</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/kanatjere-donna-170/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795602113/wklbswdmqvwtp7d4klc0.webp</image:loc>
+      <image:title>Kanatjere Donna</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/kanatjere-donna-170-bezhe/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795602132/eiftyse29d2ufndzco4f.webp</image:loc>
+      <image:title>Kanatjere Donna</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/kanatjere-donna-170-e-zeze/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795602149/usm1cajc8ia1iwgdt08e.webp</image:loc>
+      <image:title>Kanatjere Donna</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/kanatjere-donna-171-e-bardhe/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795602174/axmylijmymvqpzcgxleu.webp</image:loc>
+      <image:title>Kanatjere Donna</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/kanatjere-donna-171-bezhe/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795602193/tmcvpp8pg3o7w1tktxia.webp</image:loc>
+      <image:title>Kanatjere Donna</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/kanatjere-donna-171-e-zeze/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795602209/oszgoezucvz1hbklxnbf.webp</image:loc>
+      <image:title>Kanatjere Donna</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/fustane-500/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784715928/mwcgbheqq0yqylv7mjib.webp</image:loc>
+      <image:title>Fustane</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/fustane-500-1/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784715930/mqaomoxw1lapo9gqruea.webp</image:loc>
+      <image:title>Fustane</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/fustane-500-2/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784715931/g8ivdasjhorolzbvdugi.webp</image:loc>
+      <image:title>Fustane</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/fustane-500-3/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784715933/az2gv8afwvbhbuq3dbdw.webp</image:loc>
+      <image:title>Fustane</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/fustane-500-4/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784715935/wynw2vpigpq7dvfh1qkf.webp</image:loc>
+      <image:title>Fustane</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/bluze-lacombo-152-e-bardhe/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795600051/ycptupaaqflgadmhjepm.webp</image:loc>
+      <image:title>Bluze Lacombo</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/bluze-lacombo-152-gri/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795600064/htjpb98lswbqkbwgev4v.webp</image:loc>
+      <image:title>Bluze Lacombo</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/bluze-lacombo-152-e-zeze/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795600079/iokivztvt1yakoutesuz.webp</image:loc>
+      <image:title>Bluze Lacombo</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/kanatjere-lacombo-153-e-bardhe/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795600095/y1x42eblqemeflqhfy8h.webp</image:loc>
+      <image:title>Kanatjere Lacombo</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/kanatjere-lacombo-153-gri/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795600120/lzlmohdwlzgfcsvwqxtr.webp</image:loc>
+      <image:title>Kanatjere Lacombo</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/kanatjere-lacombo-153-e-zeze/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795600142/vhoz6h0dgil0w9dxtvty.webp</image:loc>
+      <image:title>Kanatjere Lacombo</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/fustane-500-5/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784715951/abaz3jtsxt5shelunxy8.webp</image:loc>
+      <image:title>Fustane</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/fustane-500-6/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784715953/qvpezaqwfga99st0pym1.webp</image:loc>
+      <image:title>Fustane</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/fustane-500-7/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784715954/inolpgusts4dx74stnth.webp</image:loc>
+      <image:title>Fustane</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/fustane-500-8/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784715956/oaz96zyndbfmtjh0gyw6.webp</image:loc>
+      <image:title>Fustane</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/fustane-500-9/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784715957/b50vagvjueemapgsszih.webp</image:loc>
+      <image:title>Fustane</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/fustane-500-10/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784715959/g4hjsh5nm50depwxwepa.webp</image:loc>
+      <image:title>Fustane</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/pizhame-pyjamas-lule-501/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784715960/vzdqobsg1vrxnu3e9yce.webp</image:loc>
+      <image:title>Pizhame PYJAMAS lule</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/pizhame-pyjamas-vija-501/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784715964/ejle6l5nbmbuia9plxuz.webp</image:loc>
+      <image:title>Pizhame PYJAMAS vija</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/pizhame-pyjamas-vija-501-1/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784715967/wlapc3py77bkejsbt61j.webp</image:loc>
+      <image:title>Pizhame PYJAMAS vija</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/pizhame-pyjamas-zemra-501/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784715970/y1gvjzcjchee1mnncbjb.webp</image:loc>
+      <image:title>Pizhame PYJAMAS zemra</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/pizhame-pyjamas-arusha-501/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784715973/s7unhtluq0kzpkklmau0.webp</image:loc>
+      <image:title>Pizhame PYJAMAS arusha</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/pizhame-pyjamas-fiongo-501/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784715977/obrchvoupvzod0a0h2fz.webp</image:loc>
+      <image:title>Pizhame PYJAMAS fiongo</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/pizhame-pyjamas-qershi-501/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784715980/a98nqxtjzwmmmbwahdrt.webp</image:loc>
+      <image:title>Pizhame PYJAMAS qershi</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/kanatjere-lovly-301/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795602269/hlmherbfhnhk2kvbm6ry.webp</image:loc>
+      <image:title>Kanatjere Lovly</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/kanatjere-lovly-301-bezhe/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795602287/msjk7kkhs05yyz0vbkq7.webp</image:loc>
+      <image:title>Kanatjere Lovly</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/kanatjere-lovly-301-1/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795602324/nahufudw1ifyudj2fycp.webp</image:loc>
+      <image:title>Kanatjere Lovly</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/kemisha-lovly-502-bezhe/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795602343/jlixpdlzuenlux47fdsz.webp</image:loc>
+      <image:title>Kemisha Lovly</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/kemisha-lovly-502/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795602360/yerymu81rjmnf4mbp45b.webp</image:loc>
+      <image:title>Kemisha Lovly</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/kanatjere-femijesh-djemsh-110/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784716000/bbpqd0vlwakeptw3ds1t.png</image:loc>
+      <image:title>Kanatjere femijesh djemsh</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/kanatjere-stela-140/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795602386/tltxli2kn50wdvrhdyov.webp</image:loc>
+      <image:title>Kanatjere Stela</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/kanatjere-stela-140-bezhe/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795602418/q7i18ih4n5a3met9vcah.webp</image:loc>
+      <image:title>Kanatjere Stela</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/kanatjere-stela-140-e-zeze/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795602436/lxbsbhicn7nv0xly05fh.webp</image:loc>
+      <image:title>Kanatjere Stela</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/kemisha-nate-490/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784716009/g9agxkxeaqsnwpnbjflq.webp</image:loc>
+      <image:title>Kemisha nate</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/kemisha-nate-490-1/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784716011/hlpsocmv346wfs13r6ka.webp</image:loc>
+      <image:title>Kemisha nate</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/kemisha-nate-490-2/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784716015/nlgxoizqszmhg6nw86pe.webp</image:loc>
+      <image:title>Kemisha nate</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/kemisha-nate-490-3/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784716018/u00ccqarqhqxll7nu4i6.webp</image:loc>
+      <image:title>Kemisha nate</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/kemisha-nate-490-4/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784716021/rgatcyjtbu740iqf55pl.webp</image:loc>
+      <image:title>Kemisha nate</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/kemisha-nate-490-5/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784716024/natkjhqxrtheqd2sogas.webp</image:loc>
+      <image:title>Kemisha nate</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/kemisha-nate-490-6/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784716026/wk4phri3s7enj9ieg1lu.webp</image:loc>
+      <image:title>Kemisha nate</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/kemisha-nate-490-7/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784716029/m3fdsnvx0ub8516qqogx.webp</image:loc>
+      <image:title>Kemisha nate</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/kemisha-nate-490-8/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784716033/u4jmbk4hldtdhn2iwtsr.webp</image:loc>
+      <image:title>Kemisha nate</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/kostume-verore-491/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784716035/l1rv4tplkgjchbb553hp.webp</image:loc>
+      <image:title>Kostume verore</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/bluze-nothingman-321-e-bardhe/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795600251/mkf6aiobkrqah4rw213n.webp</image:loc>
+      <image:title>Bluze Nothingman</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/bluze-nothingman-321-e-zeze/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795600271/f4qobldzozrzffcpyuzv.webp</image:loc>
+      <image:title>Bluze Nothingman</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/kanatjere-femijesh-vajzash-110/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784716048/trbxelfezouhym1tcmxp.webp</image:loc>
+      <image:title>Kanatjere femijesh vajzash</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/fanella-femijesh-111/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784716050/cbyrthdodlhtrur83ci3.webp</image:loc>
+      <image:title>Fanella femijesh</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/bluze-femijesh-112/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784716053/k81rmvazzfyjro2dca0y.webp</image:loc>
+      <image:title>Bluze femijesh</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/bokse-femijesh-105/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784716055/ixqgsdpczd52p2svqxnw.webp</image:loc>
+      <image:title>Bokse femijesh</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/bokse-vajzash-104/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784716062/ohxozbpsn95cryypzgib.webp</image:loc>
+      <image:title>Bokse vajzash</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/mbathje-femijesh-101/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784716065/dzpskebogdrid0jatf2j.webp</image:loc>
+      <image:title>Mbathje femijesh</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/bokse-femijesh-105-1/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784716069/lwh83lj6ydiefjiqsoiw.webp</image:loc>
+      <image:title>Bokse femijesh</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/bokse-femijesh-105-2/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784716076/am0ew42j6ay1nczzfcaa.webp</image:loc>
+      <image:title>Bokse femijesh</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/bokse-femijesh-105-3/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784716082/ft4308n08k3gqmaqzyja.webp</image:loc>
+      <image:title>Bokse femijesh</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/kostume-verore-491-1/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784716087/nhnhophcetlp9hy5xcmy.webp</image:loc>
+      <image:title>Kostume verore</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/kostume-verore-491-2/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784716090/yyypfg5bgfpbeffum69s.webp</image:loc>
+      <image:title>Kostume verore</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/kostume-verore/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784716091/envaekcbdsm7usb6zyr5.webp</image:loc>
+      <image:title>Kostume verore</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/kostume-verore-491-3/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784716093/gtf4nr9lc1xxlc0aayv5.webp</image:loc>
+      <image:title>Kostume verore</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/korse-lazer-160/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784716095/ttkb49xhdmvwtmdqtlyi.webp</image:loc>
+      <image:title>Korse Lazer</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/korse-me-kembe-161/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784716097/wcqxc7mhw9nu0djgszqf.webp</image:loc>
+      <image:title>Korse me kembe</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/korse-pa-kembe-162/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784716100/hz3yedfluozeqqe5r5ib.webp</image:loc>
+      <image:title>Korse pa kembe</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/kemisha-lacombo-503/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795602466/w9hwragz62ahobe4pxem.webp</image:loc>
+      <image:title>Kemisha Lacombo</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/kemisha-lacombo-503-1/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795602487/pij0mkn1naw2fey6lyzd.webp</image:loc>
+      <image:title>Kemisha Lacombo</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/kanatjere-riga-317-e-bardhe/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795600305/zjwgxymhghzlrkzmughb.webp</image:loc>
+      <image:title>Kanatjere RIGA</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/kanatjere-riga-317-e-zeze/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795600349/ukozxzjs0bdken7tdozl.webp</image:loc>
+      <image:title>Kanatjere RIGA</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/kanatjere-riga-316/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795602521/k2vrcpergwrgmcdsxakv.webp</image:loc>
+      <image:title>Kanatjere RiGA</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/kanatjere-riga-316-e-zeze/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795602559/typwpsxzh0bnzuccet7f.webp</image:loc>
+      <image:title>Kanatjere RiGA</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/bokse-stela-136/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795602609/ad7ybvmpsdncbq9cvlpd.webp</image:loc>
+      <image:title>Bokse Stela</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/bokse-stela-136-bezhe/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795602629/btbaqivlegoelp5mqxlb.webp</image:loc>
+      <image:title>Bokse Stela</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/bokse-stela-136-e-zeze/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795602648/cwgiuhv7qaz6akzkfmlc.webp</image:loc>
+      <image:title>Bokse Stela</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/mbathje-crz-101/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795602673/nrlfqwxwabuquwqyqfkq.webp</image:loc>
+      <image:title>Mbathje CRZ</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/mbathje-crz-101-bezhe/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795602692/f9zz44uustddahzzjcqm.webp</image:loc>
+      <image:title>Mbathje CRZ</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/benevrek-crz-331-e-bardhe/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795600378/hzktobnbqu9m39e1grhy.webp</image:loc>
+      <image:title>Benevrek CRZ</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/benevrek-crz-331-gri/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795600395/mepllu9ywaqi6bakowgf.webp</image:loc>
+      <image:title>Benevrek CRZ</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/mbathje-burrash-6copshe-075/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795600427/ydglyrb9jubro29gr8zj.webp</image:loc>
+      <image:title>Mbathje burrash 6copshe</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/bokse-try-me-222-e-bardhe/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795600459/fzzziv47qa0t2cikqpve.webp</image:loc>
+      <image:title>Bokse TRY ME</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/bokse-try-me-222-gri/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795600473/ba40xvr0nlqjghkewy2l.webp</image:loc>
+      <image:title>Bokse TRY ME</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/bokse-try-me-222-e-zeze/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795600490/d88r3gnxsfpem4goxuil.webp</image:loc>
+      <image:title>Bokse TRY ME</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/pizhame-fanellat-550/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1789016840/t2doxebbgey8haeunofs.webp</image:loc>
+      <image:title>Pizhame fanellat</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/pizhame-fanellat-550-1/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1789018080/l9dwcvtfkptdqwg72zrx.webp</image:loc>
+      <image:title>Pizhame fanellat</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/pizhame-fanellat-550-2/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1789018109/vqfycdiw0e28ba0vghfu.webp</image:loc>
+      <image:title>Pizhame fanellat</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/benevrek-burrash-push-230-blu/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795600550/xuiyqo6mpthisrxojapq.webp</image:loc>
+      <image:title>Benevrek burrash push</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/benevrek-burrash-push-230-gri-e-erret/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795600670/agnyk1ohnsufhttyywjg.webp</image:loc>
+      <image:title>Benevrek burrash push</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/benevrek-burrash-push-230-e-zeze/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795600724/vl6qx3qnewe0qk3ybuom.webp</image:loc>
+      <image:title>Benevrek burrash push</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/fanella-burrash-push-231-blu/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795600751/aaq5fmh6kpnqiyburhoy.webp</image:loc>
+      <image:title>Fanella burrash push</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/fanella-burrash-push-231-gri-e-erret/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795600778/cqs6nqfhxqukqzkbez0f.webp</image:loc>
+      <image:title>Fanella burrash push</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/fanella-burrash-push-231-e-zeze/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795600814/jisawa7mgad3cnmrhlzu.webp</image:loc>
+      <image:title>Fanella burrash push</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/kemisha-fanellat-492/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1792574904/j7takwvmvfzgkkse5ubs.webp</image:loc>
+      <image:title>Kemisha Fanellat</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/kemisha-fanellat-492-1/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1792575045/amgpn6299qrkorvwekmw.webp</image:loc>
+      <image:title>Kemisha Fanellat</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/kemisha-fanellat-492-2/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1792575098/twedec9wm37prdrd0nub.webp</image:loc>
+      <image:title>Kemisha Fanellat</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/pizhame-fanellat-550-3/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795600854/ydvate4xecq79cjwuxcp.webp</image:loc>
+      <image:title>Pizhame fanellat</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/pizhame-fanellat-550-4/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795600881/yvyup7c7j2gulyavoaum.webp</image:loc>
+      <image:title>Pizhame fanellat</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/pizhame-fanellat-550-5/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1795600899/ag2k1rvmolvfq2tpdwdb.webp</image:loc>
+      <image:title>Pizhame fanellat</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/tuta-burrash-551/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1792661232/bur3cmihf1hin5ujr0mt.webp</image:loc>
+      <image:title>Tuta burrash</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/tuta-burrash-551-1/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1792661271/w0qmuppudg1uxfjkzzga.webp</image:loc>
+      <image:title>Tuta burrash</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/artikull/tuta-burrash-551-2/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1792661295/dcorxzvn5otp2oldbbmu.webp</image:loc>
+      <image:title>Tuta burrash</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/pelhura/30-1-penye-ribana/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.5</priority>
-  </url>
-
-  <url>
-    <loc>https://intalal.com/pelhura/30-1-penye-ribana-1/</loc>
-    <lastmod>2026-11-26</lastmod>
-    <priority>0.5</priority>
-  </url>
-
-  <url>
-    <loc>https://intalal.com/pelhura/30-1-penye-ribana-2/</loc>
-    <lastmod>2026-11-26</lastmod>
-    <priority>0.5</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784716139/ns9oev3jn8effpxqjuyx.webp</image:loc>
+      <image:title>30/1 Penye Ribana</image:title>
+    </image:image>
   </url>
 
   <url>
     <loc>https://intalal.com/pelhura/20-1-suprem-print/</loc>
-    <lastmod>2026-11-26</lastmod>
     <priority>0.5</priority>
-  </url>
-
-  <url>
-    <loc>https://intalal.com/pelhura/20-1-suprem-print-1/</loc>
-    <lastmod>2026-11-26</lastmod>
-    <priority>0.5</priority>
-  </url>
-
-  <url>
-    <loc>https://intalal.com/pelhura/20-1-suprem-print-2/</loc>
-    <lastmod>2026-11-26</lastmod>
-    <priority>0.5</priority>
-  </url>
-
-  <url>
-    <loc>https://intalal.com/pelhura/20-1-suprem-print-3/</loc>
-    <lastmod>2026-11-26</lastmod>
-    <priority>0.5</priority>
-  </url>
-
-  <url>
-    <loc>https://intalal.com/pelhura/20-1-suprem-print-4/</loc>
-    <lastmod>2026-11-26</lastmod>
-    <priority>0.5</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/djfrquwex/image/upload/f_auto,q_auto,w_1200/v1784716145/wwstxwsaxtbm6gpkfxbt.webp</image:loc>
+      <image:title>20/1 Suprem print</image:title>
+    </image:image>
   </url>
 
 </urlset>

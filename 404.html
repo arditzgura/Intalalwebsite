@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Faqja nuk u gjet — Intal Albania</title>
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css">
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Switzer',sans-serif;background:#fff;color:#0a0a0a;min-height:100vh;padding-top:64px;}
+    .err-page{max-width:600px;margin:80px auto;padding:0 24px;text-align:center;}
+    .err-code{font-size:96px;font-weight:900;color:#f0f0f0;line-height:1;margin-bottom:16px;}
+    .err-title{font-size:24px;font-weight:700;margin-bottom:12px;}
+    .err-desc{font-size:14px;color:#666;line-height:1.6;margin-bottom:36px;}
+    .err-links{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;}
+    .err-link{padding:10px 20px;border:1.5px solid #e0e0e0;font-size:12px;font-weight:600;letter-spacing:0.5px;text-decoration:none;color:#0a0a0a;text-transform:uppercase;transition:all .15s;}
+    .err-link:hover{background:#0a0a0a;color:#fff;border-color:#0a0a0a;}
+    .err-link.primary{background:#0a0a0a;color:#fff;border-color:#0a0a0a;}
+    .err-link.primary:hover{background:#333;}
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar" role="navigation" aria-label="Navigimi kryesor">
+    <div class="navbar-inner">
+      <div class="navbar-left">
+        <button class="nav-hamburger" aria-label="Menu" onclick="openMenuDrawer()">
+          <i class="ri-menu-line"></i>
+        </button>
+        <div class="nav-links">
+          <a href="/" class="nav-link">Home</a>
+          <a href="/artikujt/" class="nav-link active">Artikujt</a>
+          <a href="/pelhura/" class="nav-link">Pelhura</a>
+          <a href="/rreth-nesh/" class="nav-link">Rreth Nesh</a>
+        </div>
+      </div>
+      <a href="/" class="navbar-brand">Intal Underwear</a>
+      <div class="navbar-right">
+        <div class="navbar-search" id="navbar-search" onclick="toggleNavSearch(event)">
+          <i class="ri-search-line"></i>
+          <input type="search" id="navbar-search-input" placeholder="KËRKO" autocomplete="off" onclick="event.stopPropagation()">
+        </div>
+      </div>
+    </div>
+  </nav>
+  <div class="menu-backdrop" id="menuBackdrop" onclick="closeMenuDrawer()"></div>
+  <aside class="menu-drawer" id="menuDrawer" aria-label="Meniu">
+    <div class="menu-drawer-header">
+      <span class="menu-drawer-brand">Intal <strong>Underwear</strong></span>
+      <button class="menu-drawer-close" onclick="closeMenuDrawer()" aria-label="Mbyll"><i class="ri-close-line"></i></button>
+    </div>
+    <div class="menu-drawer-body">
+      <nav class="menu-drawer-nav">
+        <a href="/" class="menu-drawer-link" onclick="closeMenuDrawer()">Home</a>
+        <a href="/artikujt/" class="menu-drawer-link" onclick="closeMenuDrawer()">Artikujt</a>
+        <a href="/pelhura/" class="menu-drawer-link" onclick="closeMenuDrawer()">Pelhura</a>
+        <a href="/rreth-nesh/" class="menu-drawer-link" onclick="closeMenuDrawer()">Rreth Nesh</a>
+      </nav>
+      <div class="menu-drawer-divider"></div>
+      <p class="menu-drawer-eyebrow">NA KONTAKTONI</p>
+      <div class="menu-drawer-contacts">
+        <a class="menu-drawer-contact-item" href="tel:+355692776636">
+          <div class="menu-drawer-icon"><i class="ri-phone-line"></i></div>
+          <div><span class="menu-drawer-label">Telefon / WhatsApp</span><span class="menu-drawer-value">+355 69 277 6636</span></div>
+        </a>
+        <a class="menu-drawer-contact-item" href="mailto:info@intalal.com">
+          <div class="menu-drawer-icon"><i class="ri-mail-line"></i></div>
+          <div><span class="menu-drawer-label">Email</span><span class="menu-drawer-value">info@intalal.com</span></div>
+        </a>
+      </div>
+    </div>
+    <div class="menu-drawer-footer">
+      <span class="menu-drawer-copy">© <span id="cp-yr-drawer"></span> Intal Albania</span>
+    </div>
+  </aside>
+  <main>
+    <div class="err-page">
+      <div class="err-code">404</div>
+      <h1 class="err-title">Faqja nuk u gjet</h1>
+      <p class="err-desc">Faqja që kërkoni nuk ekziston ose është zhvendosur. Provoni të navigoni nga menuja ose shkoni te katalogu i artikujve.</p>
+      <div class="err-links">
+        <a href="/" class="err-link">Ballina</a>
+        <a href="/artikujt/" class="err-link primary">Artikujt</a>
+        <a href="/pelhura/" class="err-link">Pelhura</a>
+        <a href="/rreth-nesh/" class="err-link">Rreth Nesh</a>
+        <a href="/artikujt/meshkuj/" class="err-link">Meshkuj</a>
+        <a href="/artikujt/femra/" class="err-link">Femra</a>
+        <a href="/artikujt/femije/" class="err-link">Fëmijë</a>
+      </div>
+    </div>
+  </main>
+  <footer class="simple-footer">
+    <div class="contact-locations">
+      <a class="contact-loc" href="https://maps.google.com/?q=Rrobaqep%C3%ABsi+INTAL,+Rruga+Arbanes,+Vaqarr,+Tiran%C3%AB+1035" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;display:block;cursor:pointer;">
+        <p class="contact-loc-name">Selia Kryesore</p>
+        <p class="contact-loc-addr">Rrobaqepësi INTAL, Rruga Arbanes, Vaqarr, Tiranë 1035</p>
+      </a>
+      <a class="contact-loc" href="https://maps.google.com/?q=Intal,+Rruga+5+Maji+67%2F1,+Tiran%C3%AB+1032" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;display:block;cursor:pointer;">
+        <p class="contact-loc-name">Pika e shitjes</p>
+        <p class="contact-loc-addr">Intal, Rruga 5 Maji 67/1, Tiranë 1032</p>
+      </a>
+    </div>
+    <footer class="contact-footer">
+      <span class="contact-brand">Intal <strong>UNDERWEAR</strong></span>
+      <span class="contact-copy">© <span id="cp-yr"></span> Intal Albania</span>
+    </footer>
+  </footer>
+  <script src="/js/main.js"></script>
+  <script>
+    (function(){var y=new Date().getFullYear();['cp-yr','cp-yr-drawer'].forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=y;});})();
+    window.toggleNavSearch=function(e){var w=document.getElementById('navbar-search'),inp=document.getElementById('navbar-search-input');if(!w)return;if(!w.classList.contains('open')){w.classList.add('open');setTimeout(function(){inp&&inp.focus();},260);}};
+    document.addEventListener('click',function(e){var w=document.getElementById('navbar-search');if(w&&!w.contains(e.target))w.classList.remove('open');});
+    document.addEventListener('DOMContentLoaded',function(){var inp=document.getElementById('navbar-search-input');if(inp){inp.addEventListener('keydown',function(e){if(e.key==='Enter'&&inp.value.trim()){window.location.href='/artikujt/#kerkim/'+encodeURIComponent(inp.value.trim());}});}});
+  </script>
+</body>
+</html>

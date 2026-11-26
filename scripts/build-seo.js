@@ -1579,22 +1579,172 @@ function injectHomepageShowcase(artEntries) {
   console.log(`Injected ${featured.length} static products into homepage showcase`);
 }
 
+/* ── Old slug redirect map ───────────────────────────────────── */
+const ART_REDIRECTS = {
+  'kanatjere-crz-318':      'kanatjere-crz-318-e-bardhe',
+  'kanatjere-lovly-301-2':  'kanatjere-lovly-301-bezhe',
+  'kanatjere-riga-316-1':   'kanatjere-riga-316-e-zeze',
+  'kanatjere-stela-140-1':  'kanatjere-stela-140-bezhe',
+  'kanatjere-stela-140-2':  'kanatjere-stela-140-e-zeze',
+  'kemisha-lovly-502-1':    'kemisha-lovly-502-bezhe',
+  'bokse-stela-136-1':      'bokse-stela-136-bezhe',
+  'bokse-stela-136-2':      'bokse-stela-136-e-zeze',
+  'mbathje-crz-101-1':      'mbathje-crz-101-bezhe',
+};
+
+function redirectHtml(newUrl) {
+  return `<!DOCTYPE html>
+<html lang="sq">
+<head>
+  <meta charset="UTF-8">
+  <meta name="robots" content="noindex,nofollow">
+  <meta http-equiv="refresh" content="0; url=${newUrl}">
+  <link rel="canonical" href="${newUrl}">
+  <title>Ridrejtim — Intal Albania</title>
+</head>
+<body>
+  <p>Faqja u zhvendos. <a href="${newUrl}">Kliko këtu</a> nëse nuk ridrejtohet automatikisht.</p>
+</body>
+</html>`;
+}
+
+/* ── Generate redirect pages ─────────────────────────────────── */
+function generateRedirects(newArtSlugSet, pelEntries) {
+  let count = 0;
+  // Article old-slug redirects
+  for (const [oldSlug, newSlug] of Object.entries(ART_REDIRECTS)) {
+    if (!newArtSlugSet.has(newSlug)) {
+      console.warn(`  ⚠ Redirect target not found: /artikull/${newSlug}/`);
+      continue;
+    }
+    const dir = path.join(ROOT, 'artikull', oldSlug);
+    if (!fs.existsSync(dir)) {
+      ensureDir(dir);
+      fs.writeFileSync(path.join(dir, 'index.html'), redirectHtml(`${BASE_URL}/artikull/${newSlug}/`), 'utf8');
+      count++;
+    }
+  }
+
+  // Pelhura duplicate redirects: slugs ending in -N where base exists
+  const pelCanonicals = new Set();
+  const pelDups = [];
+  for (const { slug } of pelEntries) {
+    const m = slug.match(/^(.+)-(\d+)$/);
+    if (m && pelEntries.some(e => e.slug === m[1])) {
+      pelDups.push({ dup: slug, canonical: m[1] });
+    } else {
+      pelCanonicals.add(slug);
+    }
+  }
+  for (const { dup, canonical } of pelDups) {
+    const dir = path.join(ROOT, 'pelhura', dup);
+    ensureDir(dir);
+    fs.writeFileSync(path.join(dir, 'index.html'), redirectHtml(`${BASE_URL}/pelhura/${canonical}/`), 'utf8');
+    count++;
+  }
+
+  console.log(`Generated ${count} redirect pages`);
+  return { pelDups };
+}
+
+/* ── 404.html ────────────────────────────────────────────────── */
+function generate404() {
+  const nf = catalogNavFooter();
+  const html = `<!DOCTYPE html>
+<html lang="sq">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Faqja nuk u gjet — Intal Albania</title>
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css">
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Switzer',sans-serif;background:#fff;color:#0a0a0a;min-height:100vh;padding-top:64px;}
+    .err-page{max-width:600px;margin:80px auto;padding:0 24px;text-align:center;}
+    .err-code{font-size:96px;font-weight:900;color:#f0f0f0;line-height:1;margin-bottom:16px;}
+    .err-title{font-size:24px;font-weight:700;margin-bottom:12px;}
+    .err-desc{font-size:14px;color:#666;line-height:1.6;margin-bottom:36px;}
+    .err-links{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;}
+    .err-link{padding:10px 20px;border:1.5px solid #e0e0e0;font-size:12px;font-weight:600;letter-spacing:0.5px;text-decoration:none;color:#0a0a0a;text-transform:uppercase;transition:all .15s;}
+    .err-link:hover{background:#0a0a0a;color:#fff;border-color:#0a0a0a;}
+    .err-link.primary{background:#0a0a0a;color:#fff;border-color:#0a0a0a;}
+    .err-link.primary:hover{background:#333;}
+  </style>
+</head>
+<body>
+${nf.nav}
+  <main>
+    <div class="err-page">
+      <div class="err-code">404</div>
+      <h1 class="err-title">Faqja nuk u gjet</h1>
+      <p class="err-desc">Faqja që kërkoni nuk ekziston ose është zhvendosur. Provoni të navigoni nga menuja ose shkoni te katalogu i artikujve.</p>
+      <div class="err-links">
+        <a href="/" class="err-link">Ballina</a>
+        <a href="/artikujt/" class="err-link primary">Artikujt</a>
+        <a href="/pelhura/" class="err-link">Pelhura</a>
+        <a href="/rreth-nesh/" class="err-link">Rreth Nesh</a>
+        <a href="/artikujt/meshkuj/" class="err-link">Meshkuj</a>
+        <a href="/artikujt/femra/" class="err-link">Femra</a>
+        <a href="/artikujt/femije/" class="err-link">Fëmijë</a>
+      </div>
+    </div>
+  </main>
+${nf.footer}
+${nf.script}
+</body>
+</html>`;
+  fs.writeFileSync(path.join(ROOT, '404.html'), html, 'utf8');
+  console.log('Generated 404.html');
+}
+
 /* ── Sitemap ─────────────────────────────────────────────────── */
-function buildSitemap(artSlugs, pelSlugs, catUrls) {
+function buildSitemap(artEntries, pelEntries, catUrls, pelDups) {
+  const pelDupSlugs = new Set((pelDups || []).map(d => d.dup));
+
   const staticUrls = [
-    { loc: `${BASE_URL}/`,             priority: '1.0' },
-    { loc: `${BASE_URL}/artikujt/`,   priority: '0.9' },
-    { loc: `${BASE_URL}/pelhura/`,    priority: '0.8' },
-    { loc: `${BASE_URL}/rreth-nesh/`, priority: '0.7' },
+    { loc: `${BASE_URL}/`,             lastmod: TODAY, priority: '1.0' },
+    { loc: `${BASE_URL}/artikujt/`,   lastmod: TODAY, priority: '0.9' },
+    { loc: `${BASE_URL}/pelhura/`,    lastmod: TODAY, priority: '0.8' },
+    { loc: `${BASE_URL}/rreth-nesh/`, lastmod: TODAY, priority: '0.7' },
   ];
 
-  const artUrls = artSlugs.map(s => ({ loc: `${BASE_URL}/artikull/${s}/`, priority: '0.6' }));
-  const pelUrls = pelSlugs.map(s => ({ loc: `${BASE_URL}/pelhura/${s}/`,  priority: '0.5' }));
+  // Category URLs with lastmod
+  const catUrlsWithDate = (catUrls || []).map(u => ({ ...u, lastmod: TODAY }));
 
-  const all = [...staticUrls, ...(catUrls || []), ...artUrls, ...pelUrls];
-  const rows = all.map(u => `  <url>\n    <loc>${u.loc}</loc>\n    <lastmod>${TODAY}</lastmod>\n    <priority>${u.priority}</priority>\n  </url>`).join('\n\n');
+  // Article URLs: no lastmod (no updatedAt in Firestore), with image:image
+  const artUrls = artEntries.map(({ art, slug }) => {
+    const img = clImg(photoUrl((art.photos || [])[0]), 1200);
+    const imgBlock = img ? `\n    <image:image>\n      <image:loc>${esc(img)}</image:loc>\n      <image:title>${esc(art.name||slug)}</image:title>\n    </image:image>` : '';
+    return { loc: `${BASE_URL}/artikull/${slug}/`, priority: '0.6', imgBlock };
+  });
 
-  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n\n${rows}\n\n</urlset>\n`;
+  // Fabric URLs: no lastmod, no duplicates
+  const pelUrls = pelEntries
+    .filter(({ slug }) => !pelDupSlugs.has(slug))
+    .map(({ fab, slug }) => {
+      const img = clImg(photoUrl((fab.photos || [])[0]), 1200);
+      const imgBlock = img ? `\n    <image:image>\n      <image:loc>${esc(img)}</image:loc>\n      <image:title>${esc(fab.name||slug)}</image:title>\n    </image:image>` : '';
+      return { loc: `${BASE_URL}/pelhura/${slug}/`, priority: '0.5', imgBlock };
+    });
+
+  const rows = [
+    ...staticUrls.map(u => `  <url>\n    <loc>${u.loc}</loc>\n    <lastmod>${u.lastmod}</lastmod>\n    <priority>${u.priority}</priority>\n  </url>`),
+    ...catUrlsWithDate.map(u => `  <url>\n    <loc>${u.loc}</loc>\n    <lastmod>${u.lastmod}</lastmod>\n    <priority>${u.priority}</priority>\n  </url>`),
+    ...artUrls.map(u => `  <url>\n    <loc>${u.loc}</loc>\n    <priority>${u.priority}</priority>${u.imgBlock}\n  </url>`),
+    ...pelUrls.map(u => `  <url>\n    <loc>${u.loc}</loc>\n    <priority>${u.priority}</priority>${u.imgBlock}\n  </url>`),
+  ].join('\n\n');
+
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+
+${rows}
+
+</urlset>
+`;
 }
 
 /* ── Main ────────────────────────────────────────────────────── */
@@ -1838,10 +1988,16 @@ async function main() {
   const catUrls = generateCategoryPages(artEntries);
   injectHomepageShowcase(artEntries);
 
-  // Write sitemap
-  const sitemap = buildSitemap(artSlugs, pelSlugs, catUrls);
+  // Faza 4: redirects, 404, sitemap with images
+  const newArtSlugSet = new Set(artSlugs);
+  const { pelDups } = generateRedirects(newArtSlugSet, pelEntries);
+  generate404();
+
+  // Write sitemap (with image sitemap, no lastmod for products)
+  const sitemap = buildSitemap(artEntries, pelEntries, catUrls, pelDups);
+  const pelCanonCount = pelEntries.filter(({ slug }) => !pelDups.some(d => d.dup === slug)).length;
   fs.writeFileSync(path.join(ROOT, 'sitemap.xml'), sitemap, 'utf8');
-  console.log(`Updated sitemap.xml (${4 + catUrls.length + artSlugs.length + pelSlugs.length} URLs)`);
+  console.log(`Updated sitemap.xml (${4 + catUrls.length + artSlugs.length + pelCanonCount} URLs, me image sitemap)`);
 
   console.log('Done.');
 
