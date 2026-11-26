@@ -538,6 +538,7 @@ function articleHtml(art, slug, suggestions, colorVariants) {
   </footer>
 
   <script src="/js/main.js"></script>
+  <script src="/js/analytics.js"></script>
   <script>
     (function(){var y=new Date().getFullYear();['cp-yr','cp-yr-drawer'].forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=y;});document.querySelectorAll('.cp-yr').forEach(function(el){el.textContent=y;});})();
     window.toggleNavSearch=function(e){var w=document.getElementById('navbar-search'),inp=document.getElementById('navbar-search-input');if(!w)return;if(!w.classList.contains('open')){w.classList.add('open');setTimeout(function(){inp&&inp.focus();},260);}};
@@ -1082,6 +1083,7 @@ function fabricHtml(fab, slug, suggestions) {
   </footer>
 
   <script src="/js/main.js"></script>
+  <script src="/js/analytics.js"></script>
   <script>
     (function(){var y=new Date().getFullYear();['cp-yr','cp-yr-drawer'].forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=y;});document.querySelectorAll('.cp-yr').forEach(function(el){el.textContent=y;});})();
     window.toggleNavSearch=function(e){var w=document.getElementById('navbar-search'),inp=document.getElementById('navbar-search-input');if(!w)return;if(!w.classList.contains('open')){w.classList.add('open');setTimeout(function(){inp&&inp.focus();},260);}};
@@ -1296,6 +1298,7 @@ function catalogNavFooter() {
     </footer>
   </footer>`,
     script: `  <script src="/js/main.js"></script>
+  <script src="/js/analytics.js"></script>
   <script>
     (function(){var y=new Date().getFullYear();['cp-yr','cp-yr-drawer'].forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=y;});})();
     window.toggleNavSearch=function(e){var w=document.getElementById('navbar-search'),inp=document.getElementById('navbar-search-input');if(!w)return;if(!w.classList.contains('open')){w.classList.add('open');setTimeout(function(){inp&&inp.focus();},260);}};
