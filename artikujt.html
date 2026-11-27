@@ -435,7 +435,7 @@
     function isSeasonKat(v){ return _SEASON_VALS.indexOf((v||'').toLowerCase())>=0; }
     function subHasSeasons(list,sub){
       if(!sub||sub==='te-gjitha') return false;
-      return list.some(function(a){ return artMatchesCat(a,sub)&&artKatArr(a).some(isSeasonKat); });
+      return (sub||'').toLowerCase()==='stinore';
     }
 
     // mode: '' = show all, 'sub' = filter by sub category, 'kat' = filter by kat
