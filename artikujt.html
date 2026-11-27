@@ -122,15 +122,6 @@
     .det-th { width:52px; height:52px; border-radius:3px; object-fit:cover; border:2px solid transparent; cursor:pointer; flex-shrink:0; transition:border-color .15s,opacity .15s; display:block; opacity:.7; }
     .det-th:hover { opacity:1; }
     .det-th.active { border-color:#fff; opacity:1; }
-    /* Page Hero Banner */
-    .art-page-hero { display:none; position:relative; min-height:420px; background:#111; overflow:hidden; align-items:flex-end; }
-    .art-page-hero.visible { display:flex; }
-    .art-page-hero-bg { position:absolute; inset:0; background-size:cover; background-position:center top; }
-    .art-page-hero-bg::after { content:''; position:absolute; inset:0; background:linear-gradient(to bottom,rgba(0,0,0,.15) 0%,rgba(0,0,0,.55) 100%); }
-    .art-page-hero-content { position:relative; z-index:1; padding:clamp(80px,12vw,160px) var(--side) clamp(60px,9vw,120px); display:flex; flex-direction:column; gap:8px; width:100%; max-width:700px; }
-    .art-page-hero-eyebrow { font-size:10px; font-weight:600; letter-spacing:3px; text-transform:uppercase; color:rgba(255,255,255,.7); }
-    .art-page-hero-heading { font-size:clamp(26px,3.5vw,48px); font-weight:700; color:#fff; letter-spacing:-0.5px; line-height:1.1; }
-    .art-page-hero-sub { font-size:13px; color:rgba(255,255,255,.75); max-width:480px; line-height:1.6; margin-top:2px; }
     @media(max-width:700px){
       /* Overlay — 2px hapesire nga lart, popup del nga poshtë */
       #art-detail-overlay {
@@ -278,15 +269,6 @@
     </div>
   </nav>
   <main id="main-content">
-  <!-- Page Hero Banner (shown if set via panel) -->
-  <div class="art-page-hero" id="art-page-hero">
-    <div class="art-page-hero-bg" id="art-page-hero-bg"></div>
-    <div class="art-page-hero-content">
-      <p class="art-page-hero-eyebrow" id="art-page-hero-eyebrow"></p>
-      <h1 class="art-page-hero-heading" id="art-page-hero-heading"></h1>
-      <p class="art-page-hero-sub" id="art-page-hero-sub"></p>
-    </div>
-  </div>
 
   <div id="filter-bar-spacer" style="height:0;"></div>
 
