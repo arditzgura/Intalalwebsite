@@ -1494,6 +1494,9 @@ function generateCategoryPages(artEntries) {
     // Build sub-category links (only those with ≥2 products)
     const sublinks = [];
     const katKeys = Object.keys(bySubKat[subKey] || {}).filter(k => k !== '__none__' && bySubKat[subKey][k].entries.length >= 2);
+    if (katKeys.length > 0) {
+      sublinks.push({ href: `/artikujt/${subKey}/`, label: 'Të gjitha', active: true });
+    }
     for (const katKey of katKeys) {
       const { kat } = bySubKat[subKey][katKey];
       const katLabel = KAT_LABELS[kat] || (kat ? kat.charAt(0).toUpperCase() + kat.slice(1) : katKey);
