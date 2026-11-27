@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 /**
  * build-seo.js — gjeneron faqe statike SEO për artikujt dhe pelhurat nga Firebase REST API.
  * Ekzekutohet nga GitHub Actions (nightly) ose manualisht: node scripts/build-seo.js
@@ -374,7 +374,7 @@ function articleHtml(art, slug, suggestions, colorVariants) {
         </button>
         <div class="nav-links">
           <a href="/" class="nav-link">Home</a>
-          <a href="/artikujt/" class="nav-link active">Artikujt</a>
+          <a href="/artikujt" class="nav-link active">Artikujt</a>
           <a href="/pelhura/" class="nav-link">Pelhura</a>
           <a href="/rreth-nesh/" class="nav-link">Rreth Nesh</a>
           <a href="/me-shumice/" class="nav-link">Me Shumicë</a>
@@ -400,7 +400,7 @@ function articleHtml(art, slug, suggestions, colorVariants) {
     <div class="menu-drawer-body">
       <nav class="menu-drawer-nav">
         <a href="/" class="menu-drawer-link" onclick="closeMenuDrawer()">Home</a>
-        <a href="/artikujt/" class="menu-drawer-link" onclick="closeMenuDrawer()">Artikujt</a>
+        <a href="/artikujt" class="menu-drawer-link" onclick="closeMenuDrawer()">Artikujt</a>
         <a href="/pelhura/" class="menu-drawer-link" onclick="closeMenuDrawer()">Pelhura</a>
         <a href="/rreth-nesh/" class="menu-drawer-link" onclick="closeMenuDrawer()">Rreth Nesh</a>
         <a href="/me-shumice/" class="menu-drawer-link" onclick="closeMenuDrawer()">Me Shumicë</a>
@@ -919,7 +919,7 @@ function fabricHtml(fab, slug, suggestions) {
         </button>
         <div class="nav-links">
           <a href="/" class="nav-link">Home</a>
-          <a href="/artikujt/" class="nav-link">Artikujt</a>
+          <a href="/artikujt" class="nav-link">Artikujt</a>
           <a href="/pelhura/" class="nav-link active">Pelhura</a>
           <a href="/rreth-nesh/" class="nav-link">Rreth Nesh</a>
           <a href="/me-shumice/" class="nav-link">Me Shumicë</a>
@@ -945,7 +945,7 @@ function fabricHtml(fab, slug, suggestions) {
     <div class="menu-drawer-body">
       <nav class="menu-drawer-nav">
         <a href="/" class="menu-drawer-link" onclick="closeMenuDrawer()">Home</a>
-        <a href="/artikujt/" class="menu-drawer-link" onclick="closeMenuDrawer()">Artikujt</a>
+        <a href="/artikujt" class="menu-drawer-link" onclick="closeMenuDrawer()">Artikujt</a>
         <a href="/pelhura/" class="menu-drawer-link" onclick="closeMenuDrawer()">Pelhura</a>
         <a href="/rreth-nesh/" class="menu-drawer-link" onclick="closeMenuDrawer()">Rreth Nesh</a>
         <a href="/me-shumice/" class="menu-drawer-link" onclick="closeMenuDrawer()">Me Shumicë</a>
@@ -1236,7 +1236,7 @@ function catalogNavFooter(activeLink = 'artikujt') {
         </button>
         <div class="nav-links">
           <a href="/" class="nav-link">Home</a>
-          <a href="/artikujt/" class="nav-link${isActive('artikujt')}">Artikujt</a>
+          <a href="/artikujt" class="nav-link${isActive('artikujt')}">Artikujt</a>
           <a href="/pelhura/" class="nav-link${isActive('pelhura')}">Pelhura</a>
           <a href="/rreth-nesh/" class="nav-link">Rreth Nesh</a>
           <a href="/me-shumice/" class="nav-link">Me Shumicë</a>
@@ -1260,7 +1260,7 @@ function catalogNavFooter(activeLink = 'artikujt') {
     <div class="menu-drawer-body">
       <nav class="menu-drawer-nav">
         <a href="/" class="menu-drawer-link" onclick="closeMenuDrawer()">Home</a>
-        <a href="/artikujt/" class="menu-drawer-link" onclick="closeMenuDrawer()">Artikujt</a>
+        <a href="/artikujt" class="menu-drawer-link" onclick="closeMenuDrawer()">Artikujt</a>
         <a href="/pelhura/" class="menu-drawer-link" onclick="closeMenuDrawer()">Pelhura</a>
         <a href="/rreth-nesh/" class="menu-drawer-link" onclick="closeMenuDrawer()">Rreth Nesh</a>
         <a href="/me-shumice/" class="menu-drawer-link" onclick="closeMenuDrawer()">Me Shumicë</a>
