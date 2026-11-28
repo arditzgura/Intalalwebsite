@@ -363,15 +363,9 @@ document.addEventListener('DOMContentLoaded', applyDrawerContact);
 (function () {
   if (window.innerWidth > 768) return;
 
-  var path = window.location.pathname;
-  var isArtRoot = (path === '/artikujt/' || path === '/artikujt');
-
   function initFilter() {
     var catSublinks = document.querySelector('.cat-sublinks');
-    if (!catSublinks) return;
-    if (isArtRoot) {
-      catSublinks.classList.add('mob-main-cats');
-    }
+    if (catSublinks) catSublinks.classList.add('mob-main-cats');
   }
 
   if (document.readyState === 'loading') {
