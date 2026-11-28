@@ -1383,6 +1383,7 @@ a.menu-drawer-loc:hover .menu-drawer-loc-addr {
     border-color: #0a0a0a !important;
   }
 
+  .btn-back { display: none; }
 }
 
 /* ── Reduced motion ─────────────────────────────────────── */
