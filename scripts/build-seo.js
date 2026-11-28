@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 /**
  * build-seo.js — gjeneron faqe statike SEO për artikujt dhe pelhurat nga Firebase REST API.
  * Ekzekutohet nga GitHub Actions (nightly) ose manualisht: node scripts/build-seo.js
