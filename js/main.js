@@ -359,13 +359,40 @@ function applyDrawerContact() {
 }
 document.addEventListener('DOMContentLoaded', applyDrawerContact);
 
-/* ── Mobile category filter — bordered grid ── */
+/* ── Mobile category filter ── */
 (function () {
   if (window.innerWidth > 768) return;
 
+  var path = window.location.pathname;
+  var isArtRoot = (path === '/artikujt/' || path === '/artikujt');
+  var isPelhuraRoot = (path === '/pelhura/' || path === '/pelhura');
+  var isSub = !isArtRoot && !isPelhuraRoot;
+
   function initFilter() {
     var catSublinks = document.querySelector('.cat-sublinks');
-    if (catSublinks) catSublinks.classList.add('mob-main-cats');
+    if (!catSublinks) return;
+
+    if (isArtRoot || isPelhuraRoot) {
+      catSublinks.classList.add('mob-main-cats');
+      return;
+    }
+
+    if (isSub) {
+      catSublinks.classList.add('mob-chips');
+      var sticky = document.createElement('div');
+      sticky.className = 'mob-chips-sticky';
+      catSublinks.parentNode.insertBefore(sticky, catSublinks);
+      sticky.appendChild(catSublinks);
+      requestAnimationFrame(function () {
+        var active = catSublinks.querySelector('.cat-sublink.active');
+        if (active) {
+          catSublinks.scrollLeft = active.offsetLeft - catSublinks.clientWidth / 2 + active.offsetWidth / 2;
+        }
+        window.addEventListener('scroll', function () {
+          sticky.classList.toggle('shadowed', window.scrollY > 4);
+        }, { passive: true });
+      });
+    }
   }
 
   if (document.readyState === 'loading') {

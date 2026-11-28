@@ -1383,7 +1383,51 @@ a.menu-drawer-loc:hover .menu-drawer-loc-addr {
     border-color: #0a0a0a !important;
   }
 
-  .btn-back { display: none; }
+  /* Nënkategoritë: sticky scrolling underline chips */
+  .mob-chips-sticky {
+    position: sticky;
+    top: var(--navbar-h, 55px);
+    z-index: 90;
+    background: #fff;
+    transition: box-shadow 150ms;
+  }
+  .mob-chips-sticky.shadowed { box-shadow: 0 2px 8px rgba(0,0,0,.08); }
+
+  .cat-sublinks.mob-chips {
+    flex-wrap: nowrap !important;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    padding: 0 !important;
+    gap: 0 !important;
+    margin-bottom: 0 !important;
+    border-bottom: 1px solid #e8e8e8;
+  }
+  .cat-sublinks.mob-chips::-webkit-scrollbar { display: none; }
+  .cat-sublinks.mob-chips .cat-sublink {
+    flex-shrink: 0 !important;
+    display: inline-flex !important;
+    align-items: center;
+    padding: 10px 16px !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    letter-spacing: .4px !important;
+    text-transform: uppercase !important;
+    white-space: nowrap;
+    min-height: 44px !important;
+    color: #aaa !important;
+    background: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    border-bottom: 2px solid transparent !important;
+    margin-bottom: -1px;
+    transition: color 150ms, border-color 150ms;
+  }
+  .cat-sublinks.mob-chips .cat-sublink.active {
+    color: #0a0a0a !important;
+    border-bottom-color: #0a0a0a !important;
+    font-weight: 700 !important;
+  }
 }
 
 /* ── Reduced motion ─────────────────────────────────────── */
