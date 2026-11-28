@@ -80,8 +80,9 @@
       .dfc-row-main .dfc.active { font-size:11px !important; font-weight:700; border-bottom:none !important; }
       .mob-tab-ind { position:absolute; bottom:0; height:2px; background:var(--black,#0a0a0a); left:0; width:0; transition:left 300ms ease,width 300ms ease; will-change:left,width; pointer-events:none; }
       /* L2: chips pill me zonë prekjeje 44px */
+      .dfc-row-main .dfc { min-height:44px; }
       .dfc-row-sub { padding:10px 16px; gap:8px; }
-      .dfc-sub { border-radius:999px !important; border:1.5px solid #e0e0e0 !important; padding:8px 14px !important; font-size:12px !important; min-height:36px; display:inline-flex !important; align-items:center; letter-spacing:.2px; color:var(--black,#0a0a0a); background:#fff; transition:background 150ms,color 150ms,border-color 150ms; }
+      .dfc-sub { border-radius:999px !important; border:1.5px solid #e0e0e0 !important; padding:8px 16px !important; font-size:12px !important; min-height:44px; display:inline-flex !important; align-items:center; letter-spacing:.2px; color:var(--black,#0a0a0a); background:#fff; transition:background 150ms,color 150ms,border-color 150ms; }
       .dfc-sub.active { background:var(--black,#0a0a0a) !important; color:#fff !important; border-color:var(--black,#0a0a0a) !important; text-decoration:none !important; }
       /* Gradient fade në anët e chips */
       .mob-chips-wrap { position:relative; overflow:hidden; }
@@ -94,6 +95,9 @@
       #dyn-filter-bar.mob-shadowed { box-shadow:0 2px 8px rgba(0,0,0,.08); }
     }
     @media(prefers-reduced-motion:reduce){ .mob-tab-ind { transition:none !important; } }
+    @keyframes _gridFade { from { opacity:0; } to { opacity:1; } }
+    .grid-fade { animation:_gridFade 150ms ease; }
+    @media(prefers-reduced-motion:reduce){ .grid-fade { animation:none !important; } }
 .art-card { cursor:pointer; position:relative; }
     .art-card-img-wrap { aspect-ratio:3/4; overflow:hidden; background:#f0f0f0; position:relative; }
     .art-card-img-wrap img { width:100%; height:100%; object-fit:cover; display:block; }
@@ -846,13 +850,19 @@
       var wrap = document.getElementById('load-more-wrap');
       var slice = _pgList.slice(append ? _pgShown : 0, _pgShown + _PG_SIZE);
       if (!append) {
-        if (!_pgList.length){ grid.innerHTML='<div style="grid-column:1/-1;padding:80px 0;text-align:center;color:var(--muted);font-size:13px;">'+_t('no-filter')+'</div>'; wrap.style.display='none'; _pgShown=0; return; }
+        if (!_pgList.length){
+        var _hasActiveFilter=(_state.activeSub&&_state.activeSub!=='te-gjitha')||(_state.activeKat&&_state.activeKat!=='te-gjitha')||(_state.filter&&_state.filter!=='te-gjitha');
+        var _clearBtn=_hasActiveFilter?'<br><button onclick="clearAllFilters()" style="margin-top:14px;padding:10px 20px;background:#0a0a0a;color:#fff;border:none;font-size:11px;font-weight:700;letter-spacing:.5px;cursor:pointer;text-transform:uppercase;">Pastro filtrat</button>':'';
+        grid.innerHTML='<div style="grid-column:1/-1;padding:80px 0;text-align:center;color:var(--muted);font-size:13px;">'+_t('no-filter')+_clearBtn+'</div>';
+        wrap.style.display='none'; _pgShown=0; return;
+      }
         // nëse ka artikull të fundit të hapur, rendero deri tek ai
         var lastId = ''; try{ lastId=sessionStorage.getItem('intal_last_art_id')||''; }catch(e){}
         var lastIdx = lastId ? _pgList.findIndex(function(a){ return String(a.id)===lastId; }) : -1;
         var initialCount = lastIdx >= 0 ? Math.max(_PG_SIZE, lastIdx + 1) : _PG_SIZE;
         slice = _pgList.slice(0, initialCount);
         grid.innerHTML = slice.map(function(a){ return buildCardHtml(a,_pgOpener+'(\''+a.id+'\')'); }).join('');
+        grid.classList.remove('grid-fade'); void grid.offsetWidth; grid.classList.add('grid-fade');
         _pgShown = slice.length;
         // scroll tek artikulli i fundit
         if(lastIdx >= 0 && lastIdx < _pgShown){
@@ -1014,11 +1024,17 @@
     // Level-1 filter: sub category (Meshkuj, Femra...) — klik sërish e çaktivizon
     window.applySubFilter=function(sub){
       var newSub = (_state.activeSub===sub) ? 'te-gjitha' : sub;
-      _state.activeSub=newSub; _state.activeKat='te-gjitha'; _state.activeSubKat='te-gjitha';
-      setHash(newSub==='te-gjitha'?'':newSub,'te-gjitha',true);
+      var keepKat='te-gjitha';
+      if(newSub!=='te-gjitha' && _state.activeKat && _state.activeKat!=='te-gjitha'){
+        var _subArtsChk=(_state.allArticles||[]).filter(function(a){ return artMatchesCat(a,newSub); });
+        var _katsInNew=[]; _subArtsChk.forEach(function(a){ artKatArr(a).forEach(function(k){ if(k&&!_katsInNew.includes(k)) _katsInNew.push(k); }); });
+        if(_katsInNew.includes(_state.activeKat)) keepKat=_state.activeKat;
+      }
+      _state.activeSub=newSub; _state.activeKat=keepKat; _state.activeSubKat='te-gjitha';
+      setHash(newSub==='te-gjitha'?'':newSub,keepKat==='te-gjitha'?'te-gjitha':keepKat,true);
       renderBreadcrumb();
-      renderFilterBarAll(_state.allArticles,newSub,'te-gjitha','te-gjitha');
-      renderGridAll(_state.allArticles,newSub,'te-gjitha','te-gjitha');
+      renderFilterBarAll(_state.allArticles,newSub,keepKat,'te-gjitha');
+      renderGridAll(_state.allArticles,newSub,keepKat,'te-gjitha');
       scrollToGrid();
       /* OG for sub-category */
       var filtered=newSub==='te-gjitha'?_state.allArticles:_state.allArticles.filter(function(a){ return artMatchesCat(a,newSub); });
@@ -1027,6 +1043,16 @@
       var desc='Koleksioni i plotë i të brendshmeve — '+label+'. Cilësi shqiptare direkt nga fabrika.';
       updatePageOg(title,desc,firstPhotoFromList(filtered),window.location.href);
       if(typeof gtag==='function') gtag('event','category_l1_select',{category:newSub,method:'tap'});
+    };
+
+    window.clearAllFilters=function(){
+      if(_state.allArticles&&_state.allArticles.length){
+        _state.activeSub='te-gjitha'; _state.activeKat='te-gjitha'; _state.activeSubKat='te-gjitha';
+        setHash('','te-gjitha',true);
+        renderBreadcrumb();
+        renderFilterBarAll(_state.allArticles,'te-gjitha','te-gjitha','te-gjitha');
+        renderGridAll(_state.allArticles,'te-gjitha','te-gjitha','te-gjitha');
+      } else if(_state.cat){ applyFilter('te-gjitha'); }
     };
 
     // Level-2 filter for normal subs: kat (Mbathje, Kanatjere...) — klik sërish çaktivizoj
