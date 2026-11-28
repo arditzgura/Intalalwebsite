@@ -359,6 +359,106 @@ function applyDrawerContact() {
 }
 document.addEventListener('DOMContentLoaded', applyDrawerContact);
 
+/* ── Mobile category filter — L1 tab bar + L2 chips ────── */
+(function () {
+  if (window.innerWidth > 768) return;
+
+  var path = window.location.pathname;
+
+  // L1 categories config for /artikujt/
+  var ART_SUBS = [
+    { key: 'meshkuj', label: 'Meshkuj', href: '/artikujt/meshkuj/' },
+    { key: 'femra',   label: 'Femra',   href: '/artikujt/femra/'   },
+    { key: 'femije',  label: 'Fëmijë',  href: '/artikujt/femije/'  },
+    { key: 'stinore', label: 'Stinore', href: '/artikujt/stinore/' },
+  ];
+
+  // Detect if we're in /artikujt/XXX/ or /artikujt/XXX/YYY/
+  var artSubMatch = path.match(/^\/artikujt\/([^\/]+)\//);
+
+  function initFilter() {
+    var catSublinks = document.querySelector('.cat-sublinks');
+    if (!catSublinks) return;
+
+    // Wrap cat-sublinks in chips outer
+    var outer = document.createElement('div');
+    outer.className = 'mob-chips-outer';
+    catSublinks.parentNode.insertBefore(outer, catSublinks);
+    outer.appendChild(catSublinks);
+    catSublinks.classList.add('mob-chips');
+
+    // If we're on a sub-page, inject L1 nav above
+    if (artSubMatch) {
+      var activeSub = artSubMatch[1];
+      var navEl = document.createElement('div');
+      navEl.className = 'mob-cat-nav';
+      navEl.setAttribute('role', 'tablist');
+      ART_SUBS.forEach(function (s) {
+        var a = document.createElement('a');
+        a.href = s.href;
+        a.className = 'mob-cat-tab' + (s.key === activeSub ? ' active' : '');
+        a.setAttribute('role', 'tab');
+        a.setAttribute('aria-selected', s.key === activeSub ? 'true' : 'false');
+        a.textContent = s.label;
+        navEl.appendChild(a);
+      });
+      var ind = document.createElement('span');
+      ind.className = 'mob-cat-ind';
+      ind.setAttribute('aria-hidden', 'true');
+      navEl.appendChild(ind);
+      outer.parentNode.insertBefore(navEl, outer);
+    }
+
+    // Wrap both rows in sticky container
+    var sticky = document.createElement('div');
+    sticky.className = 'mob-filter-sticky';
+    var navEl2 = outer.previousElementSibling;
+    if (navEl2 && navEl2.classList.contains('mob-cat-nav')) {
+      outer.parentNode.insertBefore(sticky, navEl2);
+      sticky.appendChild(navEl2);
+    } else {
+      outer.parentNode.insertBefore(sticky, outer);
+    }
+    sticky.appendChild(outer);
+
+    requestAnimationFrame(function () {
+      // Position L1 indicator
+      var nav = sticky.querySelector('.mob-cat-nav');
+      var ind2 = nav && nav.querySelector('.mob-cat-ind');
+      var activeTab = nav && nav.querySelector('.mob-cat-tab.active');
+      if (activeTab && ind2) {
+        ind2.style.left = activeTab.offsetLeft + 'px';
+        ind2.style.width = activeTab.offsetWidth + 'px';
+      }
+
+      // L2 chip fade gradients
+      function updFade() {
+        var sl = catSublinks.scrollLeft;
+        var sw = catSublinks.scrollWidth;
+        var cw = catSublinks.clientWidth;
+        outer.classList.toggle('at-start', sl <= 2);
+        outer.classList.toggle('at-end', sl + cw >= sw - 2);
+      }
+      updFade();
+      catSublinks.addEventListener('scroll', updFade, { passive: true });
+
+      // Scroll active chip to center
+      var activeChip = catSublinks.querySelector('.cat-sublink.active');
+      if (activeChip) {
+        catSublinks.scrollLeft = activeChip.offsetLeft - catSublinks.clientWidth / 2 + activeChip.offsetWidth / 2;
+        updFade();
+      }
+
+      // Sticky shadow on scroll
+      window.addEventListener('scroll', function () {
+        sticky.classList.toggle('shadowed', window.scrollY > 4);
+      }, { passive: true });
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', initFilter);
+})();
+
 /* ── Google Translate sq→en (free gtx endpoint, no API key) ── */
 window._gtTranslate = (function(){
   var _cache = {};
