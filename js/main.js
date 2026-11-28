@@ -456,7 +456,11 @@ document.addEventListener('DOMContentLoaded', applyDrawerContact);
     });
   }
 
-  document.addEventListener('DOMContentLoaded', initFilter);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initFilter);
+  } else {
+    initFilter();
+  }
 })();
 
 /* ── Google Translate sq→en (free gtx endpoint, no API key) ── */
