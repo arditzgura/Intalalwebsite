@@ -359,70 +359,19 @@ function applyDrawerContact() {
 }
 document.addEventListener('DOMContentLoaded', applyDrawerContact);
 
-/* ── Mobile category filter — bordered grid + underline tabs ── */
+/* ── Mobile category filter — bordered grid ── */
 (function () {
   if (window.innerWidth > 768) return;
 
   var path = window.location.pathname;
   var isArtRoot = (path === '/artikujt/' || path === '/artikujt');
-  var artSubMatch = path.match(/^\/artikujt\/([^\/]+)\//);
-
-  var ART_SUBS = [
-    { key: 'meshkuj', label: 'Meshkuj', href: '/artikujt/meshkuj/' },
-    { key: 'femra',   label: 'Femra',   href: '/artikujt/femra/'   },
-    { key: 'femije',  label: 'Fëmijë',  href: '/artikujt/femije/'  },
-    { key: 'stinore', label: 'Stinore', href: '/artikujt/stinore/' },
-  ];
 
   function initFilter() {
     var catSublinks = document.querySelector('.cat-sublinks');
     if (!catSublinks) return;
-
     if (isArtRoot) {
-      // /artikujt/: 4 bordered square buttons, all visible
       catSublinks.classList.add('mob-main-cats');
-      return;
     }
-
-    if (!artSubMatch) return;
-    var activeSub = artSubMatch[1];
-
-    // Build L1 underline tab nav
-    var navEl = document.createElement('nav');
-    navEl.className = 'mob-cat-nav';
-    navEl.setAttribute('role', 'tablist');
-    navEl.setAttribute('aria-label', 'Kategoritë');
-    ART_SUBS.forEach(function (s) {
-      var a = document.createElement('a');
-      a.href = s.href;
-      a.className = 'mob-cat-tab' + (s.key === activeSub ? ' active' : '');
-      a.setAttribute('role', 'tab');
-      a.setAttribute('aria-selected', s.key === activeSub ? 'true' : 'false');
-      a.textContent = s.label;
-      navEl.appendChild(a);
-    });
-
-    // L2: underline tabs
-    catSublinks.classList.add('mob-tabs');
-
-    // Sticky wrapper
-    var sticky = document.createElement('div');
-    sticky.className = 'mob-filter-sticky';
-    catSublinks.parentNode.insertBefore(sticky, catSublinks);
-    sticky.appendChild(navEl);
-    sticky.appendChild(catSublinks);
-
-    requestAnimationFrame(function () {
-      // Scroll active L2 tab into center
-      var activeChip = catSublinks.querySelector('.cat-sublink.active');
-      if (activeChip) {
-        catSublinks.scrollLeft = activeChip.offsetLeft - catSublinks.clientWidth / 2 + activeChip.offsetWidth / 2;
-      }
-      // Sticky shadow
-      window.addEventListener('scroll', function () {
-        sticky.classList.toggle('shadowed', window.scrollY > 4);
-      }, { passive: true });
-    });
   }
 
   if (document.readyState === 'loading') {
